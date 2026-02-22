@@ -1,0 +1,161 @@
+.formOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    padding: var(--spacing-4);
+}
+
+.formContainer {
+    width: 100%;
+    max-width: 600px;
+    background: var(--color-bg-primary);
+    border: var(--border-style);
+    box-shadow: var(--shadow-xl);
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    padding: var(--spacing-6);
+    border-bottom: var(--border-style);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header h2 {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.closeBtn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-text-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-1);
+}
+
+.closeBtn:hover {
+    color: var(--color-text-primary);
+}
+
+.form {
+    padding: var(--spacing-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-6);
+    max-height: 75vh;
+    overflow-y: auto;
+}
+
+.twoCol {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-4);
+}
+
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+}
+
+.inputGroup label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+}
+
+.inputGroup input,
+.inputGroup textarea {
+    width: 100%;
+    padding: var(--spacing-3);
+    background: var(--color-bg-secondary);
+    border: var(--border-style);
+    font-size: 14px;
+    outline: none;
+}
+
+.inputGroup input:focus,
+.inputGroup textarea:focus {
+    border-color: var(--color-text-primary);
+    background: var(--color-bg-primary);
+}
+
+.codeArea {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.errorMsg {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    color: var(--color-text-primary);
+    background: var(--color-bg-secondary);
+    padding: var(--spacing-3);
+    font-size: 13px;
+    border: 1px dashed var(--color-text-primary);
+}
+
+.submitBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-2);
+    background: var(--color-text-primary);
+    color: var(--color-bg-primary);
+    border: none;
+    padding: var(--spacing-4);
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.submitBtn:hover {
+    opacity: 0.9;
+}
+
+.submitBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.successState {
+    padding: var(--spacing-12);
+    text-align: center;
+    background: var(--color-bg-primary);
+    border: var(--border-style);
+    max-width: 440px;
+    width: 100%;
+}
+
+.successIcon {
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-6);
+}
+
+.successState h2 {
+    margin-bottom: var(--spacing-3);
+    font-weight: 700;
+}
+
+.successState p {
+    color: var(--color-text-secondary);
+    font-size: 14px;
+}

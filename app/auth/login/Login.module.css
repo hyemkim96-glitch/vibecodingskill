@@ -1,0 +1,137 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 120px);
+    padding: var(--spacing-4);
+}
+
+.loginBox {
+    width: 100%;
+    max-width: 400px;
+    background: var(--color-bg-primary);
+    border: var(--border-style);
+    padding: var(--spacing-8);
+}
+
+.header {
+    text-align: center;
+    margin-bottom: var(--spacing-8);
+}
+
+.header h1 {
+    font-size: 24px;
+    font-weight: 700;
+    margin: var(--spacing-4) 0 var(--spacing-2);
+}
+
+.header p {
+    color: var(--color-text-secondary);
+    font-size: 14px;
+}
+
+.form {
+    margin-bottom: var(--spacing-6);
+}
+
+.inputGroup {
+    margin-bottom: var(--spacing-6);
+}
+
+.inputGroup label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: var(--spacing-2);
+}
+
+.inputGroup input {
+    width: 100%;
+    padding: var(--spacing-4);
+    background: var(--color-bg-secondary);
+    border: var(--border-style);
+    outline: none;
+    font-size: 14px;
+}
+
+.inputGroup input:focus {
+    border-color: var(--color-text-primary);
+}
+
+.magicLinkBtn {
+    width: 100%;
+    padding: var(--spacing-4);
+    background: var(--color-text-primary);
+    color: var(--color-bg-primary);
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-2);
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.magicLinkBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: var(--spacing-8) 0;
+    color: var(--color-text-subtle);
+    font-size: 12px;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--color-bg-tertiary);
+}
+
+.divider span {
+    padding: 0 var(--spacing-4);
+}
+
+.googleBtn {
+    width: 100%;
+    padding: var(--spacing-4);
+    background: var(--color-bg-primary);
+    border: var(--border-style);
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-2);
+    cursor: pointer;
+}
+
+.googleBtn:hover {
+    background: var(--color-bg-secondary);
+}
+
+.message {
+    margin-top: var(--spacing-6);
+    padding: var(--spacing-4);
+    font-size: 13px;
+    border: 1px solid var(--color-text-primary);
+    text-align: center;
+}
+
+.success {
+    background: var(--color-text-primary);
+    color: var(--color-bg-primary);
+}
+
+.error {
+    background: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+    border-style: dashed;
+}

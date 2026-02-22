@@ -1,0 +1,114 @@
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.header {
+    margin-bottom: var(--spacing-10);
+}
+
+.header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: var(--spacing-2);
+}
+
+.header p {
+    color: var(--color-text-secondary);
+}
+
+.list {
+    display: grid;
+    gap: var(--spacing-6);
+}
+
+.card {
+    background: var(--color-bg-primary);
+    border: var(--border-style);
+    padding: var(--spacing-6);
+}
+
+.skillHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-3);
+}
+
+.skillHeader h3 {
+    font-weight: 700;
+    font-size: 18px;
+}
+
+.tag {
+    font-size: 11px;
+    padding: 2px 8px;
+    background: var(--color-bg-secondary);
+    border: var(--border-style);
+}
+
+.desc {
+    font-size: 14px;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-6);
+}
+
+.actions {
+    display: flex;
+    gap: var(--spacing-4);
+}
+
+.approveBtn {
+    flex: 1;
+    padding: var(--spacing-3);
+    background: var(--color-text-primary);
+    color: var(--color-bg-primary);
+    border: none;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.rejectBtn {
+    flex: 1;
+    padding: var(--spacing-3);
+    background: var(--color-bg-primary);
+    border: var(--border-style);
+    color: var(--color-text-secondary);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.empty {
+    padding: var(--spacing-16);
+    text-align: center;
+    color: var(--color-text-subtle);
+    border: var(--border-style);
+    border-style: dashed;
+}
+
+.errorContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    text-align: center;
+}
+
+.errorContainer h1 {
+    margin: var(--spacing-6) 0 var(--spacing-2);
+    font-size: 24px;
+}
+
+.errorContainer p {
+    color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-8);
+}
+
+.errorContainer a {
+    padding: var(--spacing-3) var(--spacing-6);
+    background: var(--color-text-primary);
+    color: var(--color-bg-primary);
+    text-decoration: none;
+    font-weight: 700;
+}
