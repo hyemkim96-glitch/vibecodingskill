@@ -22,9 +22,7 @@ export default async function RootLayout({
       {/* ⚠️ 수동 <head> 태그를 제거하고 Script를 <body> 안으로 이동합니다. */}
       <body>
         <Script
-          async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1232237340609183"
-          // React에서는 대문자 O를 사용해야 에러가 나지 않습니다.
           crossOrigin="anonymous"
           strategy="afterInteractive"
         />
