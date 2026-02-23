@@ -96,14 +96,6 @@ export default function SkillLibrary({ initialSkills, tipArticles = [] }: { init
                     />
                     <button className={styles.searchBtn}>검색</button>
                 </div>
-
-                <button
-                    className={styles.suggestBtn}
-                    onClick={() => setIsSubmitModalOpen(true)}
-                >
-                    <Plus size={18} />
-                    스킬 제안하기
-                </button>
             </div>
 
             {allTags.length > 0 && (
@@ -143,6 +135,15 @@ export default function SkillLibrary({ initialSkills, tipArticles = [] }: { init
                             {searchTerm ? '검색 결과가 없습니다.' : '등록된 스킬셋이 없습니다.'}
                         </div>
                     )}
+                    <div className={styles.suggestRow}>
+                        <button
+                            className={styles.suggestBtn}
+                            onClick={() => setIsSubmitModalOpen(true)}
+                        >
+                            <Plus size={18} />
+                            스킬 제안하기
+                        </button>
+                    </div>
                 </main>
 
                 {tipArticles.length > 0 && (
