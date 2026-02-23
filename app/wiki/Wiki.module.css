@@ -62,7 +62,32 @@
 .termHeader {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: var(--spacing-3);
+}
+
+.termMeta {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    flex-shrink: 0;
+}
+
+.termUrl {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-1);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    padding: 2px var(--spacing-2);
+    border: var(--border-style);
+}
+
+.termUrl:hover {
+    background: var(--color-bg-secondary);
+    color: var(--color-text-primary);
 }
 
 .termName {
@@ -89,29 +114,6 @@
     color: var(--color-text-secondary);
 }
 
-.exampleBlock {
-    background: var(--color-bg-secondary);
-    border: var(--border-style);
-    padding: var(--spacing-4);
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-2);
-}
-
-.exampleLabel {
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--color-text-subtle);
-}
-
-.exampleText {
-    margin: 0;
-    font-size: 14px;
-    line-height: 1.6;
-    color: var(--color-text-primary);
-}
 
 .empty {
     text-align: center;

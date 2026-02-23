@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { ExternalLink } from 'lucide-react';
 import { IWikiTerm } from '@/types/wiki';
 import styles from './Wiki.module.css';
 
@@ -58,17 +59,24 @@ export default function WikiClient({ terms }: { terms: IWikiTerm[] }) {
                         <div key={term.id} className={styles.termCard}>
                             <div className={styles.termHeader}>
                                 <h2 className={styles.termName}>{term.term}</h2>
-                                {term.category && (
-                                    <span className={styles.categoryBadge}>{term.category}</span>
-                                )}
+                                <div className={styles.termMeta}>
+                                    {term.category && (
+                                        <span className={styles.categoryBadge}>{term.category}</span>
+                                    )}
+                                    {term.url && (
+                                        <a
+                                            href={term.url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className={styles.termUrl}
+                                        >
+                                            <ExternalLink size={14} />
+                                            바로가기
+                                        </a>
+                                    )}
+                                </div>
                             </div>
                             <p className={styles.definition}>{term.definition}</p>
-                            {term.example && (
-                                <div className={styles.exampleBlock}>
-                                    <span className={styles.exampleLabel}>예시</span>
-                                    <p className={styles.exampleText}>{term.example}</p>
-                                </div>
-                            )}
                         </div>
                     ))}
                 </div>

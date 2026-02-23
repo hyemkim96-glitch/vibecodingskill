@@ -3,7 +3,7 @@ export interface IWikiTerm {
     term: string;
     definition: string;
     category: string | null;
-    example: string | null;
+    url: string | null;
     published: boolean;
     created_at: string;
 }
