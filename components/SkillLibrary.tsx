@@ -1,11 +1,20 @@
 'use client';
 
 import { useState } from 'react';
-import { Plus, ChevronLeft, ChevronRight, X, Copy, Check, Info, Zap, Layers, Tag } from 'lucide-react';
+import { Plus, ChevronLeft, ChevronRight, X, Copy, Check, Info, Zap, Layers, Tag, BookOpen, ArrowRight } from 'lucide-react';
+import Link from 'next/link';
 import SkillCard from '@/components/SkillCard';
 import SubmitSkillForm from '@/components/SubmitSkillForm';
 import { ISkill } from '@/types/skill';
 import styles from './SkillLibrary.module.css';
+
+interface TipArticle {
+    id: string;
+    title: string;
+    description: string | null;
+    color: string | null;
+    read_time: number | null;
+}
 
 function normalizeTags(tags: unknown): string[] {
     if (Array.isArray(tags)) return tags;
@@ -24,7 +33,7 @@ function parseDescription(desc: string) {
     return { stack: null, text: desc };
 }
 
-export default function SkillLibrary({ initialSkills }: { initialSkills: ISkill[] }) {
+export default function SkillLibrary({ initialSkills, tipArticles = [] }: { initialSkills: ISkill[]; tipArticles?: TipArticle[] }) {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedTag, setSelectedTag] = useState<string | null>(null);
     const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
@@ -117,11 +126,33 @@ export default function SkillLibrary({ initialSkills }: { initialSkills: ISkill[
                 </div>
             )}
 
-            <div className={styles.adBanner}>
-                <span className={styles.adLabel}>AD</span>
-                {/* 여기에 Google AdSense 코드를 삽입하세요 */}
-                <span className={styles.adPlaceholder}>광고 영역</span>
-            </div>
+            {tipArticles.length > 0 && (
+                <div className={styles.tipsBanner}>
+                    <div className={styles.tipsBannerHeader}>
+                        <BookOpen size={16} />
+                        <span>스킬셋, 어떻게 쓰나요? 꿀팁 가이드</span>
+                        <Link href="/tips" className={styles.tipsMoreLink}>
+                            전체 보기 <ArrowRight size={14} />
+                        </Link>
+                    </div>
+                    <div className={styles.tipsGrid}>
+                        {tipArticles.map(article => (
+                            <Link key={article.id} href={`/tips/${article.id}`} className={styles.tipCard}>
+                                <div
+                                    className={styles.tipCardAccent}
+                                    style={{ background: article.color || 'var(--color-text-primary)' }}
+                                />
+                                <div className={styles.tipCardBody}>
+                                    <p className={styles.tipCardTitle}>{article.title}</p>
+                                    {article.read_time && (
+                                        <span className={styles.tipCardMeta}>{article.read_time} min read</span>
+                                    )}
+                                </div>
+                            </Link>
+                        ))}
+                    </div>
+                </div>
+            )}
 
             {filteredSkills.length > 0 ? (
                 <div className={styles.grid}>

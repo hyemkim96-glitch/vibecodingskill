@@ -78,31 +78,82 @@
     border-color: var(--color-text-primary);
 }
 
-.adBanner {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--spacing-3);
-    width: 100%;
-    height: 90px;
-    border: 1px dashed var(--border-color);
+.tipsBanner {
+    border: var(--border-style);
     background: var(--color-bg-secondary);
     margin-bottom: var(--spacing-6);
-    position: relative;
+    padding: var(--spacing-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3);
 }
 
-.adLabel {
-    position: absolute;
-    top: var(--spacing-1);
-    left: var(--spacing-2);
-    font-size: 10px;
-    font-weight: 700;
-    color: var(--color-text-subtle);
-    letter-spacing: 0.05em;
-}
-
-.adPlaceholder {
+.tipsBannerHeader {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
     font-size: 13px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+}
+
+.tipsMoreLink {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-1);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+}
+
+.tipsMoreLink:hover {
+    color: var(--color-text-primary);
+}
+
+.tipsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: var(--spacing-3);
+}
+
+.tipCard {
+    display: flex;
+    align-items: stretch;
+    border: var(--border-style);
+    background: var(--color-bg-primary);
+    text-decoration: none;
+    transition: background 0.15s;
+    overflow: hidden;
+}
+
+.tipCard:hover {
+    background: var(--color-bg-tertiary);
+}
+
+.tipCardAccent {
+    width: 4px;
+    flex-shrink: 0;
+}
+
+.tipCardBody {
+    padding: var(--spacing-3);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-1);
+}
+
+.tipCardTitle {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    line-height: 1.4;
+}
+
+.tipCardMeta {
+    font-size: 11px;
     color: var(--color-text-subtle);
 }
 
@@ -235,6 +286,8 @@
     display: flex;
     flex-direction: column;
     gap: var(--spacing-3);
+    flex: 1;
+    min-height: 0;
 }
 
 .contentHeader {
@@ -286,7 +339,8 @@
     color: var(--color-text-primary);
     margin: 0;
     font-family: inherit;
-    height: 200px;
+    flex: 1;
+    min-height: 0;
     overflow-y: auto;
 }
 
