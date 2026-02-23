@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import "./globals.css";
 import Navigation from "@/components/Navigation";
+import WikiProvider from "@/components/WikiProvider";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
@@ -15,7 +16,10 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const [{ data: { user } }, { data: wikiTerms }] = await Promise.all([
+    supabase.auth.getUser(),
+    supabase.from('wiki_terms').select('*').eq('published', true),
+  ]);
 
   return (
     <html lang="ko">
@@ -26,10 +30,12 @@ export default async function RootLayout({
           crossOrigin="anonymous"
           strategy="afterInteractive"
         />
-        <Navigation user={user} />
-        <main className="main-container">
-          {children}
-        </main>
+        <WikiProvider terms={wikiTerms ?? []}>
+          <Navigation user={user} />
+          <main className="main-container">
+            {children}
+          </main>
+        </WikiProvider>
       </body>
     </html>
   );

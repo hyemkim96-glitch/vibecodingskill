@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { ExternalLink, Clock, BookOpen } from 'lucide-react';
 import Link from 'next/link';
 import { IArticle } from '@/types/article';
+import WikiHighlight from '@/components/WikiHighlight';
 import styles from './Tips.module.css';
 
 export default function TipsClient({ guides, tools }: { guides: IArticle[]; tools: IArticle[] }) {
@@ -25,8 +26,8 @@ export default function TipsClient({ guides, tools }: { guides: IArticle[]; tool
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
-                    <span className={styles.count}>{filtered.length} Articles</span>
                 </div>
+                <span className={styles.count}>{filtered.length} Articles</span>
 
                 {filtered.length > 0 ? filtered.map((guide) => (
                     <Link key={guide.id} href={`/tips/${guide.id}`} className={styles.articleCard}>
@@ -45,7 +46,7 @@ export default function TipsClient({ guides, tools }: { guides: IArticle[]; tool
                                 </span>
                             </div>
                             <h3 className={styles.articleTitle}>{guide.title}</h3>
-                            <p className={styles.articleDesc}>{guide.description}</p>
+                            <p className={styles.articleDesc}><WikiHighlight text={guide.description ?? ''} /></p>
                         </div>
                     </Link>
                 )) : (

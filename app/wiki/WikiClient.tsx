@@ -5,9 +5,12 @@ import { ExternalLink } from 'lucide-react';
 import { IWikiTerm } from '@/types/wiki';
 import styles from './Wiki.module.css';
 
+type SortOrder = 'default' | 'abc' | 'korean';
+
 export default function WikiClient({ terms }: { terms: IWikiTerm[] }) {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+    const [sortOrder, setSortOrder] = useState<SortOrder>('default');
 
     const allCategories = Array.from(
         new Set(terms.map(t => t.category).filter(Boolean))
@@ -21,6 +24,18 @@ export default function WikiClient({ terms }: { terms: IWikiTerm[] }) {
         return matchesSearch && matchesCategory;
     });
 
+    const sorted = [...filtered].sort((a, b) => {
+        if (sortOrder === 'abc') return a.term.localeCompare(b.term, 'en', { sensitivity: 'base' });
+        if (sortOrder === 'korean') return a.term.localeCompare(b.term, 'ko', { sensitivity: 'base' });
+        return 0;
+    });
+
+    const sortOptions: { label: string; value: SortOrder }[] = [
+        { label: '기본', value: 'default' },
+        { label: 'ABC', value: 'abc' },
+        { label: '가나다', value: 'korean' },
+    ];
+
     return (
         <div>
             <div className={styles.toolbar}>
@@ -31,6 +46,17 @@ export default function WikiClient({ terms }: { terms: IWikiTerm[] }) {
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
+                <div className={styles.sortGroup}>
+                    {sortOptions.map(opt => (
+                        <button
+                            key={opt.value}
+                            className={`${styles.sortBtn} ${sortOrder === opt.value ? styles.sortBtnActive : ''}`}
+                            onClick={() => setSortOrder(opt.value)}
+                        >
+                            {opt.label}
+                        </button>
+                    ))}
+                </div>
             </div>
 
             {allCategories.length > 0 && (
@@ -53,9 +79,9 @@ export default function WikiClient({ terms }: { terms: IWikiTerm[] }) {
                 </div>
             )}
 
-            {filtered.length > 0 ? (
+            {sorted.length > 0 ? (
                 <div className={styles.termList}>
-                    {filtered.map(term => (
+                    {sorted.map(term => (
                         <div key={term.id} className={styles.termCard}>
                             {term.category && (
                                 <span className={styles.categoryBadge}>{term.category}</span>

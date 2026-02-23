@@ -1,5 +1,41 @@
 .toolbar {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-4);
     margin-bottom: var(--spacing-6);
+}
+
+.sortGroup {
+    display: flex;
+    gap: 0;
+    border: var(--border-style);
+    overflow: hidden;
+}
+
+.sortBtn {
+    padding: var(--spacing-2) var(--spacing-3);
+    background: var(--color-bg-primary);
+    border: none;
+    border-right: var(--border-style);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.sortBtn:last-child {
+    border-right: none;
+}
+
+.sortBtn:hover {
+    background: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+}
+
+.sortBtnActive {
+    background: var(--color-text-primary);
+    color: var(--color-bg-primary);
 }
 
 .searchInput {

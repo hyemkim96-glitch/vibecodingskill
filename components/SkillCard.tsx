@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Copy, Check } from 'lucide-react';
+import WikiHighlight from './WikiHighlight';
 import styles from './SkillCard.module.css';
 
 interface SkillCardProps {
@@ -66,7 +67,7 @@ export default function SkillCard({ name, content, description, tags, onOpen }: 
                 </button>
             </div>
 
-                <p className={styles.description}>{parseDescription(description).text}</p>
+                <p className={styles.description}><WikiHighlight text={parseDescription(description).text} /></p>
 
             <div className={styles.footer}>
                 <div className={styles.preview}>
