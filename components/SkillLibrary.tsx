@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Plus, ChevronLeft, ChevronRight, X, Copy, Check, Info, Zap, Layers, Tag, BookOpen, ArrowRight } from 'lucide-react';
+import { Plus, ChevronLeft, ChevronRight, X, Copy, Check, Info, Zap, Layers, Tag, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import SkillCard from '@/components/SkillCard';
 import SubmitSkillForm from '@/components/SubmitSkillForm';
@@ -126,49 +126,49 @@ export default function SkillLibrary({ initialSkills, tipArticles = [] }: { init
                 </div>
             )}
 
-            {tipArticles.length > 0 && (
-                <div className={styles.tipsBanner}>
-                    <div className={styles.tipsBannerHeader}>
-                        <BookOpen size={16} />
-                        <span>스킬셋, 어떻게 쓰나요? 꿀팁 가이드</span>
-                        <Link href="/tips" className={styles.tipsMoreLink}>
-                            전체 보기 <ArrowRight size={14} />
-                        </Link>
-                    </div>
-                    <div className={styles.tipsGrid}>
-                        {tipArticles.map(article => (
-                            <Link key={article.id} href={`/tips/${article.id}`} className={styles.tipCard}>
-                                <div
-                                    className={styles.tipCardAccent}
-                                    style={{ background: article.color || 'var(--color-text-primary)' }}
+            <div className={styles.contentLayout}>
+                <main>
+                    {filteredSkills.length > 0 ? (
+                        <div className={styles.grid}>
+                            {filteredSkills.map((skill, idx) => (
+                                <SkillCard
+                                    key={skill.id || idx}
+                                    {...skill}
+                                    onOpen={() => setSelectedIndex(idx)}
                                 />
-                                <div className={styles.tipCardBody}>
-                                    <p className={styles.tipCardTitle}>{article.title}</p>
-                                    {article.read_time && (
-                                        <span className={styles.tipCardMeta}>{article.read_time} min read</span>
-                                    )}
-                                </div>
-                            </Link>
-                        ))}
-                    </div>
-                </div>
-            )}
+                            ))}
+                        </div>
+                    ) : (
+                        <div className={styles.empty}>
+                            {searchTerm ? '검색 결과가 없습니다.' : '등록된 스킬셋이 없습니다.'}
+                        </div>
+                    )}
+                </main>
 
-            {filteredSkills.length > 0 ? (
-                <div className={styles.grid}>
-                    {filteredSkills.map((skill, idx) => (
-                        <SkillCard
-                            key={skill.id || idx}
-                            {...skill}
-                            onOpen={() => setSelectedIndex(idx)}
-                        />
-                    ))}
-                </div>
-            ) : (
-                <div className={styles.empty}>
-                    {searchTerm ? '검색 결과가 없습니다.' : '등록된 스킬셋이 없습니다.'}
-                </div>
-            )}
+                {tipArticles.length > 0 && (
+                    <aside>
+                        <div className={styles.sidebarSection}>
+                            <h3>For Beginners</h3>
+                            <div className={styles.toolList}>
+                                {tipArticles.map(article => (
+                                    <Link key={article.id} href={`/tips/${article.id}`} className={styles.toolLink}>
+                                        <div className={styles.toolTitle}>
+                                            <strong>{article.title}</strong>
+                                            <ArrowRight size={14} />
+                                        </div>
+                                        {article.description && (
+                                            <p>{article.description}</p>
+                                        )}
+                                        {article.read_time && (
+                                            <span className={styles.readTime}>{article.read_time} min read</span>
+                                        )}
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
+                    </aside>
+                )}
+            </div>
 
             {isSubmitModalOpen && (
                 <SubmitSkillForm onClose={() => setIsSubmitModalOpen(false)} />

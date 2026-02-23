@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Library, Lightbulb, FileText, Menu, X, User, LogOut } from 'lucide-react';
+import { Library, Lightbulb, FileText, BookOpen, Menu, X, User, LogOut } from 'lucide-react';
 import { useState } from 'react';
 import styles from './Navigation.module.css';
 import { createClient } from '@/lib/supabase/client';
@@ -19,6 +19,7 @@ interface NavItem {
 const navItems: NavItem[] = [
     { name: '스킬셋 라이브러리', href: '/', icon: Library },
     { name: '바이브 코딩 꿀팁', href: '/tips', icon: Lightbulb },
+    { name: '바이브 코딩 위키', href: '/wiki', icon: BookOpen },
     { name: 'PRD 생성기', href: '/prd-gen', icon: FileText, comingSoon: true },
 ];
 
