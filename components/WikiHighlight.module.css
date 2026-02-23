@@ -1,7 +1,7 @@
 .term {
     position: relative;
     display: inline;
-    border-bottom: 1px dashed var(--color-text-subtle);
+    border-bottom: 1px solid var(--color-text-primary);
     cursor: help;
 }
 
