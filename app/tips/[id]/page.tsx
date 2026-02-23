@@ -2,9 +2,8 @@ import { createClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Clock, Calendar, BookOpen } from 'lucide-react';
-import ReactMarkdown from 'react-markdown';
-import PageHeader from '@/components/PageHeader';
 import WikiHighlight from '@/components/WikiHighlight';
+import ArticleContent from './ArticleContent';
 import styles from './Detail.module.css';
 import { IArticle } from '@/types/article';
 
@@ -57,9 +56,7 @@ export default async function TipDetailPage({ params }: { params: Promise<{ id: 
 
                 <div className={styles.content}>
                     {typedArticle.content ? (
-                        <ReactMarkdown>
-                            {typedArticle.content.replace(/\\n/g, '\n')}
-                        </ReactMarkdown>
+                        <ArticleContent content={typedArticle.content} />
                     ) : (
                         <div className={styles.emptyContent}>
                             아직 상세 내용이 준비되지 않은 아티클입니다.
