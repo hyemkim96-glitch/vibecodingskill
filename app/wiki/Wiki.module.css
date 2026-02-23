@@ -62,7 +62,7 @@
 .termHeader {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
     gap: var(--spacing-3);
 }
 
@@ -98,6 +98,7 @@
     background: var(--color-bg-secondary);
     border: var(--border-style);
     color: var(--color-text-subtle);
+    width: fit-content;
 }
 
 .definition {
