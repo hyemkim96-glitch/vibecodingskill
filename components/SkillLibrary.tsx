@@ -85,41 +85,38 @@ export default function SkillLibrary({ initialSkills, tipArticles = [] }: { init
 
     return (
         <div>
-            <div className={styles.searchBar}>
-                <div className={styles.inputWrapper}>
-                    <input
-                        type="text"
-                        className={styles.searchInput}
-                        placeholder="스킬셋 검색 (예: 기획, 마케팅, CSS...)"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                    <button className={styles.searchBtn}>검색</button>
-                </div>
-            </div>
-
-            {allTags.length > 0 && (
-                <div className={styles.tagFilter}>
-                    <button
-                        className={`${styles.tagChip} ${selectedTag === null ? styles.tagChipActive : ''}`}
-                        onClick={() => setSelectedTag(null)}
-                    >
-                        전체
-                    </button>
-                    {allTags.map(tag => (
-                        <button
-                            key={tag}
-                            className={`${styles.tagChip} ${selectedTag === tag ? styles.tagChipActive : ''}`}
-                            onClick={() => setSelectedTag(selectedTag === tag ? null : tag)}
-                        >
-                            #{tag}
-                        </button>
-                    ))}
-                </div>
-            )}
-
             <div className={styles.contentLayout}>
                 <main>
+                    <div className={styles.searchBar}>
+                        <input
+                            type="text"
+                            className={styles.searchInput}
+                            placeholder="스킬셋 검색 (예: 기획, 마케팅, CSS...)"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                    </div>
+
+                    {allTags.length > 0 && (
+                        <div className={styles.tagFilter}>
+                            <button
+                                className={`${styles.tagChip} ${selectedTag === null ? styles.tagChipActive : ''}`}
+                                onClick={() => setSelectedTag(null)}
+                            >
+                                전체
+                            </button>
+                            {allTags.map(tag => (
+                                <button
+                                    key={tag}
+                                    className={`${styles.tagChip} ${selectedTag === tag ? styles.tagChipActive : ''}`}
+                                    onClick={() => setSelectedTag(selectedTag === tag ? null : tag)}
+                                >
+                                    #{tag}
+                                </button>
+                            ))}
+                        </div>
+                    )}
+
                     {filteredSkills.length > 0 ? (
                         <div className={styles.grid}>
                             {filteredSkills.map((skill, idx) => (
@@ -135,6 +132,7 @@ export default function SkillLibrary({ initialSkills, tipArticles = [] }: { init
                             {searchTerm ? '검색 결과가 없습니다.' : '등록된 스킬셋이 없습니다.'}
                         </div>
                     )}
+
                     <div className={styles.suggestRow}>
                         <button
                             className={styles.suggestBtn}

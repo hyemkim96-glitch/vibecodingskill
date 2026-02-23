@@ -1,3 +1,31 @@
+.searchBar {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-4);
+    margin-bottom: var(--spacing-8);
+}
+
+.searchInput {
+    flex: 1;
+    max-width: 480px;
+    padding: var(--spacing-3) var(--spacing-4);
+    border: var(--border-style);
+    background: var(--color-bg-secondary);
+    font-size: 14px;
+    outline: none;
+}
+
+.searchInput:focus {
+    border-color: var(--color-text-primary);
+}
+
+.empty {
+    text-align: center;
+    padding: var(--spacing-16);
+    color: var(--color-text-subtle);
+    border: 1px dashed var(--border-color);
+}
+
 .contentLayout {
     display: grid;
     grid-template-columns: 1fr 300px;

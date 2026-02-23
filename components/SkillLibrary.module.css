@@ -5,14 +5,8 @@
     margin-bottom: var(--spacing-8);
 }
 
-.inputWrapper {
-    flex: 1;
-    display: flex;
-    max-width: 600px;
-}
-
 .searchInput {
-    flex: 1;
+    width: 100%;
     padding: var(--spacing-3) var(--spacing-4);
     border: var(--border-style);
     background: var(--color-bg-secondary);
@@ -22,17 +16,6 @@
 
 .searchInput:focus {
     border-color: var(--color-text-primary);
-}
-
-.searchBtn {
-    padding: var(--spacing-3) var(--spacing-6);
-    border: var(--border-style);
-    border-left: none;
-    font-weight: 700;
-    font-size: 14px;
-    background: var(--color-bg-primary);
-    white-space: nowrap;
-    cursor: pointer;
 }
 
 .suggestRow {
