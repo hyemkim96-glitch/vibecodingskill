@@ -15,7 +15,7 @@ export default async function SkillsPage() {
       .from('articles')
       .select('id, title, description, color, read_time')
       .eq('published', true)
-      .eq('category', 'guide')
+      .eq('featured', true)
       .order('created_at', { ascending: true })
       .limit(4),
   ]);
