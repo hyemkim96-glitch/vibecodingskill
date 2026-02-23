@@ -66,13 +66,6 @@
     gap: var(--spacing-3);
 }
 
-.termMeta {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-2);
-    flex-shrink: 0;
-}
-
 .termUrl {
     display: flex;
     align-items: center;

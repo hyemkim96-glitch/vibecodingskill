@@ -57,24 +57,22 @@ export default function WikiClient({ terms }: { terms: IWikiTerm[] }) {
                 <div className={styles.termList}>
                     {filtered.map(term => (
                         <div key={term.id} className={styles.termCard}>
+                            {term.category && (
+                                <span className={styles.categoryBadge}>{term.category}</span>
+                            )}
                             <div className={styles.termHeader}>
                                 <h2 className={styles.termName}>{term.term}</h2>
-                                <div className={styles.termMeta}>
-                                    {term.category && (
-                                        <span className={styles.categoryBadge}>{term.category}</span>
-                                    )}
-                                    {term.url && (
-                                        <a
-                                            href={term.url}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className={styles.termUrl}
-                                        >
-                                            <ExternalLink size={14} />
-                                            바로가기
-                                        </a>
-                                    )}
-                                </div>
+                                {term.url && (
+                                    <a
+                                        href={term.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className={styles.termUrl}
+                                    >
+                                        <ExternalLink size={14} />
+                                        바로가기
+                                    </a>
+                                )}
                             </div>
                             <p className={styles.definition}>{term.definition}</p>
                         </div>
