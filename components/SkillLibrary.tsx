@@ -5,6 +5,7 @@ import { Plus, ChevronLeft, ChevronRight, X, Copy, Check, Info, Zap, Layers, Tag
 import Link from 'next/link';
 import SkillCard from '@/components/SkillCard';
 import SubmitSkillForm from '@/components/SubmitSkillForm';
+import WikiHighlight from '@/components/WikiHighlight';
 import { ISkill } from '@/types/skill';
 import styles from './SkillLibrary.module.css';
 
@@ -188,7 +189,7 @@ export default function SkillLibrary({ initialSkills, tipArticles = [] }: { init
                             const tags = normalizeTags(selectedSkill.tags);
                             return (
                                 <>
-                                    <p className={styles.modalDesc}>{text}</p>
+                                    <p className={styles.modalDesc}><WikiHighlight text={text} /></p>
                                     <div className={styles.metaGrid}>
                                         {tags.length > 0 && (
                                             <div className={styles.metaItem}>

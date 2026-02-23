@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { ArrowLeft, Clock, Calendar, BookOpen } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import PageHeader from '@/components/PageHeader';
+import WikiHighlight from '@/components/WikiHighlight';
 import styles from './Detail.module.css';
 import { IArticle } from '@/types/article';
 
@@ -40,7 +41,7 @@ export default async function TipDetailPage({ params }: { params: Promise<{ id: 
                         </span>
                     </div>
                     <h1 className={styles.title}>{typedArticle.title}</h1>
-                    <p className={styles.description}>{typedArticle.description}</p>
+                    <p className={styles.description}><WikiHighlight text={typedArticle.description ?? ''} /></p>
 
                     <div className={styles.infoBar}>
                         <div className={styles.infoItem}>
