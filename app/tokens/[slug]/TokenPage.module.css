@@ -76,6 +76,67 @@
   flex-direction: column;
   font-family: 'Pretendard', -apple-system, sans-serif;
   min-height: 260px;
+  padding: 16px;
+  gap: 10px;
+}
+
+/* Interactive elements inside the UI preview */
+.uiPreview [data-ui="btn"] {
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s, filter 0.15s;
+  user-select: none;
+}
+.uiPreview [data-ui="btn"]:hover {
+  filter: brightness(1.08);
+}
+.uiPreview [data-ui="btn"]:active {
+  transform: scale(0.97);
+  opacity: 0.85;
+}
+.uiPreview [data-ui="btn"][data-disabled="true"] {
+  opacity: 0.38;
+  pointer-events: none;
+}
+
+.uiPreview [data-ui="card"] {
+  cursor: pointer;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.uiPreview [data-ui="card"]:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+  transform: translateY(-1px);
+}
+.uiPreview [data-ui="card"]:active {
+  transform: scale(0.99);
+}
+
+.uiPreview [data-ui="row"] {
+  cursor: pointer;
+  transition: background 0.12s;
+  border-radius: 6px;
+}
+.uiPreview [data-ui="row"]:hover {
+  background: rgba(0,0,0,0.04) !important;
+}
+
+.uiPreview [data-ui="chip"] {
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s;
+}
+.uiPreview [data-ui="chip"]:hover {
+  opacity: 0.85;
+}
+.uiPreview [data-ui="chip"]:active {
+  transform: scale(0.95);
+}
+
+.uiPreview [data-ui="input"] {
+  cursor: text;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.uiPreview [data-ui="input"]:focus-within,
+.uiPreview [data-ui="input"]:hover {
+  border-color: var(--color-ash) !important;
 }
 
 .platformBtn {
