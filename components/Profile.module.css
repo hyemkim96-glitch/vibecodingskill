@@ -4,32 +4,35 @@
 }
 
 .header {
-    margin-bottom: var(--spacing-12);
+    margin-bottom: var(--spacing-8);
 }
 
 .userCard {
     display: flex;
     align-items: center;
     gap: var(--spacing-6);
-    padding: var(--spacing-8);
-    background: var(--color-bg-primary);
-    border: var(--border-style);
+    padding: var(--spacing-7);
+    background: var(--color-carbon);
+    border: 1px solid var(--color-graphite);
+    border-radius: var(--radius);
 }
 
 .avatar {
     width: 80px;
     height: 80px;
-    background: var(--color-bg-secondary);
-    border: var(--border-style);
+    background: var(--color-void);
+    border: 1px solid var(--color-graphite);
+    border-radius: var(--radius);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--color-text-subtle);
+    color: var(--color-ash);
 }
 
 .info h2 {
-    font-size: 24px;
-    font-weight: 700;
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-regular);
+    color: var(--color-bone);
     margin-bottom: var(--spacing-2);
 }
 
@@ -39,23 +42,23 @@
 }
 
 .badge {
-    font-size: 11px;
-    font-weight: 600;
-    padding: 2px 8px;
-    background: var(--color-text-primary);
-    color: var(--color-bg-primary);
+    font-size: var(--font-size-base);
+    padding: 2px var(--spacing-3);
+    border: 1px solid var(--color-bone);
+    border-radius: var(--radius);
+    color: var(--color-bone);
 }
 
 .rank {
-    font-size: 11px;
-    font-weight: 600;
-    padding: 2px 8px;
-    background: var(--color-bg-tertiary);
-    color: var(--color-text-secondary);
+    font-size: var(--font-size-base);
+    padding: 2px var(--spacing-3);
+    border: 1px solid var(--color-graphite);
+    border-radius: var(--radius);
+    color: var(--color-ash);
 }
 
 .section {
-    margin-bottom: var(--spacing-16);
+    margin-bottom: var(--spacing-12);
 }
 
 .sectionHeader {
@@ -63,67 +66,92 @@
     align-items: center;
     gap: var(--spacing-2);
     margin-bottom: var(--spacing-6);
-    padding-bottom: var(--spacing-2);
-    border-bottom: 2px solid var(--color-text-primary);
+    padding-bottom: var(--spacing-3);
+    border-bottom: 1px solid var(--color-graphite);
 }
 
 .sectionHeader h3 {
-    font-size: 18px;
-    font-weight: 700;
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-regular);
+    color: var(--color-bone);
 }
 
 .prdList {
     display: grid;
-    gap: var(--spacing-4);
+    gap: var(--spacing-3);
 }
 
 .prdCard {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: var(--spacing-4) var(--spacing-6);
-    background: var(--color-bg-primary);
-    border: var(--border-style);
+    padding: var(--spacing-4) var(--spacing-5);
+    background: var(--color-carbon);
+    border: 1px solid var(--color-graphite);
+    border-radius: var(--radius);
+    transition: border-color 0.15s ease;
+}
+
+.prdCard:hover {
+    border-color: var(--color-bone);
 }
 
 .prdInfo h4 {
-    font-weight: 700;
-    font-size: 15px;
+    font-weight: var(--font-weight-regular);
+    font-size: var(--font-size-base);
+    color: var(--color-bone);
 }
 
 .date {
-    font-size: 12px;
-    color: var(--color-text-subtle);
+    font-size: var(--font-size-base);
+    color: var(--color-ash);
 }
 
 .viewBtn {
     padding: var(--spacing-2) var(--spacing-4);
-    background: var(--color-bg-secondary);
-    border: var(--border-style);
-    font-size: 13px;
-    font-weight: 600;
+    background: transparent;
+    border: 1px solid var(--color-graphite);
+    border-radius: var(--radius);
+    font-size: var(--font-size-base);
+    font-family: var(--font-mono);
+    color: var(--color-bone);
     cursor: pointer;
+    transition: border-color 0.15s ease;
+}
+
+.viewBtn:hover {
+    border-color: var(--color-bone);
 }
 
 .empty {
     padding: var(--spacing-12);
     text-align: center;
-    color: var(--color-text-subtle);
-    border: var(--border-style);
-    border-style: dashed;
+    color: var(--color-ash);
+    border: 1px dashed var(--color-graphite);
+    border-radius: var(--radius);
 }
 
 .adminSection {
-    padding: var(--spacing-8);
-    border: 4px solid var(--color-text-primary);
+    padding: var(--spacing-7);
+    border: 1px solid var(--color-graphite);
+    border-radius: var(--radius);
+    background: var(--color-carbon);
 }
 
 .adminBtn {
     display: inline-block;
     padding: var(--spacing-3) var(--spacing-6);
-    background: var(--color-text-primary);
-    color: var(--color-bg-primary);
-    font-weight: 700;
+    background: var(--color-bone);
+    color: var(--color-void);
+    font-weight: var(--font-weight-regular);
     text-decoration: none;
-    font-size: 14px;
+    font-size: var(--font-size-base);
+    font-family: var(--font-mono);
+    border-radius: var(--radius);
+    transition: opacity 0.15s ease;
+}
+
+.adminBtn:hover {
+    opacity: 0.8;
+    color: var(--color-void);
 }

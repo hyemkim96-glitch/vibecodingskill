@@ -7,49 +7,48 @@
 
 .sortGroup {
     display: flex;
-    gap: 0;
-    border: var(--border-style);
-    overflow: hidden;
+    gap: var(--spacing-2);
 }
 
 .sortBtn {
     padding: var(--spacing-2) var(--spacing-3);
-    background: var(--color-bg-primary);
-    border: none;
-    border-right: var(--border-style);
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--color-text-secondary);
+    background: transparent;
+    border: 1px solid var(--color-graphite);
+    border-radius: var(--radius);
+    font-size: var(--font-size-base);
+    font-family: var(--font-mono);
+    color: var(--color-ash);
     cursor: pointer;
-    transition: all 0.15s ease;
-}
-
-.sortBtn:last-child {
-    border-right: none;
+    transition: color 0.15s ease, border-color 0.15s ease;
 }
 
 .sortBtn:hover {
-    background: var(--color-bg-secondary);
-    color: var(--color-text-primary);
+    color: var(--color-bone);
+    border-color: var(--color-bone);
 }
 
 .sortBtnActive {
-    background: var(--color-text-primary);
-    color: var(--color-bg-primary);
+    color: var(--color-bone);
+    border-color: var(--color-bone);
 }
 
 .searchInput {
     width: 100%;
     max-width: 480px;
     padding: var(--spacing-3) var(--spacing-4);
-    border: var(--border-style);
-    background: var(--color-bg-secondary);
-    font-size: 14px;
+    border: 1px solid var(--color-graphite);
+    border-radius: var(--radius);
+    background: var(--color-carbon);
+    color: var(--color-bone);
+    font-size: var(--font-size-base);
+    font-family: var(--font-mono);
+    letter-spacing: var(--letter-spacing);
     outline: none;
+    transition: border-color 0.15s ease;
 }
 
 .searchInput:focus {
-    border-color: var(--color-text-primary);
+    border-color: var(--color-bone);
 }
 
 .categoryFilter {
@@ -61,38 +60,45 @@
 
 .chip {
     padding: var(--spacing-2) var(--spacing-4);
-    border: var(--border-style);
-    background: var(--color-bg-primary);
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--color-text-secondary);
+    border: 1px solid var(--color-graphite);
+    border-radius: var(--radius);
+    background: transparent;
+    font-size: var(--font-size-base);
+    font-family: var(--font-mono);
+    color: var(--color-ash);
     cursor: pointer;
-    transition: all 0.15s ease;
+    transition: color 0.15s ease, border-color 0.15s ease;
 }
 
 .chip:hover {
-    background: var(--color-bg-secondary);
-    color: var(--color-text-primary);
+    color: var(--color-bone);
+    border-color: var(--color-bone);
 }
 
 .chipActive {
-    background: var(--color-text-primary);
-    color: var(--color-bg-primary);
-    border-color: var(--color-text-primary);
+    color: var(--color-bone);
+    border-color: var(--color-bone);
 }
 
 .termList {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-4);
+    gap: var(--spacing-3);
 }
 
 .termCard {
-    padding: var(--spacing-6);
-    border: var(--border-style);
+    padding: var(--spacing-7);
+    border: 1px solid var(--color-graphite);
+    border-radius: var(--radius);
+    background: var(--color-carbon);
     display: flex;
     flex-direction: column;
     gap: var(--spacing-3);
+    transition: border-color 0.15s ease;
+}
+
+.termCard:hover {
+    border-color: var(--color-bone);
 }
 
 .termHeader {
@@ -106,48 +112,47 @@
     display: flex;
     align-items: center;
     gap: var(--spacing-1);
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--color-text-secondary);
+    font-size: var(--font-size-base);
+    color: var(--color-ash);
     text-decoration: none;
     padding: 2px var(--spacing-2);
-    border: var(--border-style);
+    border: 1px solid var(--color-graphite);
+    border-radius: var(--radius);
+    transition: color 0.15s ease, border-color 0.15s ease;
 }
 
 .termUrl:hover {
-    background: var(--color-bg-secondary);
-    color: var(--color-text-primary);
+    color: var(--color-bone);
+    border-color: var(--color-bone);
 }
 
 .termName {
-    font-size: 20px;
-    font-weight: 700;
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-regular);
+    color: var(--color-bone);
     margin: 0;
 }
 
 .categoryBadge {
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+    font-size: var(--font-size-base);
+    color: var(--color-ash);
     padding: 2px var(--spacing-2);
-    background: var(--color-bg-secondary);
-    border: var(--border-style);
-    color: var(--color-text-subtle);
+    border: 1px solid var(--color-graphite);
+    border-radius: var(--radius);
     width: fit-content;
 }
 
 .definition {
     margin: 0;
-    font-size: 15px;
-    line-height: 1.7;
-    color: var(--color-text-secondary);
+    font-size: var(--font-size-base);
+    line-height: 1.4;
+    color: var(--color-ash);
 }
-
 
 .empty {
     text-align: center;
     padding: var(--spacing-16);
-    color: var(--color-text-subtle);
-    border: 1px dashed var(--border-color);
+    color: var(--color-ash);
+    border: 1px dashed var(--color-graphite);
+    border-radius: var(--radius);
 }

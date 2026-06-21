@@ -1,16 +1,17 @@
 .card {
-    border: var(--border-style);
-    background: var(--color-bg-primary);
-    padding: var(--spacing-6);
+    border: 1px solid var(--color-graphite);
+    background: var(--color-carbon);
+    padding: var(--spacing-7);
     display: flex;
     flex-direction: column;
     gap: var(--spacing-4);
-    transition: border-color 0.2s ease;
     cursor: pointer;
+    border-radius: var(--radius);
+    transition: border-color 0.15s ease;
 }
 
 .card:hover {
-    border-color: var(--color-text-primary);
+    border-color: var(--color-bone);
 }
 
 .header {
@@ -28,9 +29,9 @@
 
 .name {
     margin: 0;
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--color-text-primary);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-regular);
+    color: var(--color-bone);
 }
 
 .tags {
@@ -40,12 +41,12 @@
 }
 
 .tag {
-    font-size: 12px;
-    color: var(--color-text-secondary);
-    background: var(--color-bg-secondary);
-    border: var(--border-style);
+    font-size: var(--font-size-base);
+    color: var(--color-ash);
+    border: 1px solid var(--color-graphite);
     padding: 2px var(--spacing-2);
     white-space: nowrap;
+    border-radius: var(--radius);
 }
 
 .copyBtn {
@@ -53,29 +54,29 @@
     align-items: center;
     gap: var(--spacing-2);
     padding: var(--spacing-2) var(--spacing-4);
-    border: var(--border-style);
-    color: var(--color-text-primary);
-    font-weight: 600;
-    font-size: 13px;
-    background: var(--color-bg-primary);
-    transition: all 0.2s ease;
+    border: 1px solid var(--color-graphite);
+    color: var(--color-bone);
+    font-size: var(--font-size-base);
+    background: transparent;
+    border-radius: var(--radius);
+    transition: border-color 0.15s ease;
+    white-space: nowrap;
 }
 
 .copyBtn:hover {
-    background: var(--color-bg-tertiary);
+    border-color: var(--color-bone);
 }
 
 .copied {
-    background: var(--color-text-primary) !important;
-    color: var(--color-bg-primary) !important;
-    border-color: var(--color-text-primary) !important;
+    border-color: var(--color-bone) !important;
+    color: var(--color-ash) !important;
 }
 
 .description {
     margin: 0;
-    color: var(--color-text-secondary);
-    font-size: 14px;
-    line-height: 1.6;
+    color: var(--color-ash);
+    font-size: var(--font-size-base);
+    line-height: 1.4;
     display: -webkit-box;
     -webkit-line-clamp: 3;
     line-clamp: 3;
@@ -88,28 +89,28 @@
     grid-template-columns: 1fr;
     gap: var(--spacing-2);
     padding: var(--spacing-3);
-    background: var(--color-bg-secondary);
+    background: var(--color-void);
+    border-radius: var(--radius);
 }
 
 .metaItem {
     display: flex;
     align-items: flex-start;
     gap: var(--spacing-2);
-    font-size: 12px;
+    font-size: var(--font-size-base);
 }
 
 .icon {
-    color: var(--color-text-subtle);
+    color: var(--color-ash);
 }
 
 .metaLabel {
-    font-weight: 600;
-    color: var(--color-text-secondary);
+    color: var(--color-ash);
     min-width: 60px;
 }
 
 .metaValue {
-    color: var(--color-text-primary);
+    color: var(--color-bone);
 }
 
 .footer {
@@ -117,8 +118,9 @@
 }
 
 .preview {
-    padding: var(--spacing-2);
-    border: 1px dashed var(--color-bg-tertiary);
+    padding: var(--spacing-3);
+    border: 1px dashed var(--color-graphite);
+    border-radius: var(--radius);
     overflow: hidden;
 }
 
@@ -129,14 +131,13 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    color: var(--color-text-subtle);
+    color: var(--color-ash);
 }
 
-/* Modal - moved to SkillLibrary.module.css */
 .overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.8);
     z-index: 200;
     display: flex;
     align-items: center;
@@ -145,8 +146,9 @@
 }
 
 .modal {
-    background: var(--color-bg-primary);
-    border: var(--border-style);
+    background: var(--color-carbon);
+    border: 1px solid var(--color-graphite);
+    border-radius: var(--radius);
     width: 100%;
     max-width: 680px;
     max-height: 85vh;
@@ -165,33 +167,36 @@
 }
 
 .modalTitle {
-    font-size: 22px;
-    font-weight: 700;
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-regular);
     margin: 0 0 var(--spacing-2) 0;
+    color: var(--color-bone);
 }
 
 .modalDesc {
     margin: 0;
-    color: var(--color-text-secondary);
-    font-size: 14px;
-    line-height: 1.6;
+    color: var(--color-ash);
+    font-size: var(--font-size-base);
+    line-height: 1.4;
 }
 
 .closeBtn {
     flex-shrink: 0;
     padding: var(--spacing-2);
-    border: var(--border-style);
+    border: 1px solid var(--color-graphite);
+    border-radius: var(--radius);
     background: none;
     cursor: pointer;
-    color: var(--color-text-secondary);
+    color: var(--color-ash);
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: color 0.15s ease, border-color 0.15s ease;
 }
 
 .closeBtn:hover {
-    background: var(--color-bg-secondary);
-    color: var(--color-text-primary);
+    color: var(--color-bone);
+    border-color: var(--color-bone);
 }
 
 .modalContent {
@@ -207,22 +212,20 @@
 }
 
 .contentLabel {
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--color-text-subtle);
+    font-size: var(--font-size-base);
+    color: var(--color-ash);
 }
 
 .fullContent {
-    background: var(--color-bg-secondary);
-    border: var(--border-style);
+    background: var(--color-void);
+    border: 1px solid var(--color-graphite);
+    border-radius: var(--radius);
     padding: var(--spacing-6);
-    font-size: 14px;
+    font-size: var(--font-size-base);
     line-height: 1.7;
     white-space: pre-wrap;
     word-break: break-word;
-    color: var(--color-text-primary);
+    color: var(--color-bone);
     margin: 0;
-    font-family: inherit;
+    font-family: var(--font-mono);
 }

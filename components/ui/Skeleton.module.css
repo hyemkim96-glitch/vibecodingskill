@@ -1,5 +1,6 @@
 .skeleton {
-    background: var(--color-bg-secondary);
+    background: var(--color-carbon);
+    border-radius: var(--radius);
     position: relative;
     overflow: hidden;
 }
@@ -13,19 +14,14 @@
     bottom: 0;
     background: linear-gradient(90deg,
             rgba(255, 255, 255, 0) 0%,
-            rgba(255, 255, 255, 0.4) 50%,
+            rgba(255, 255, 255, 0.04) 50%,
             rgba(255, 255, 255, 0) 100%);
     animation: shimmer 1.5s infinite;
 }
 
 @keyframes shimmer {
-    0% {
-        transform: translateX(-100%);
-    }
-
-    100% {
-        transform: translateX(100%);
-    }
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
 }
 
 .margin {

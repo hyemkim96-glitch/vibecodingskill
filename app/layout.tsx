@@ -6,8 +6,8 @@ import WikiProvider from "@/components/WikiProvider";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
-  title: "Vibe Coding Skills - 비개발자를 위한 AI 코딩 스킬 플랫폼",
-  description: "AI 코딩 툴에 바로 붙여넣을 수 있는 스킬셋을 탐색하고 복사하세요.",
+  title: "Design MD — AI 빌더를 위한 브랜드 디자인 토큰",
+  description: "세계 유수 브랜드의 디자인 시스템을 AI에 바로 넣을 수 있는 .md 토큰으로 제공합니다.",
 };
 
 export default async function RootLayout({

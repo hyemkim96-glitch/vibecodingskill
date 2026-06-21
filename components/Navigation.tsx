@@ -37,7 +37,7 @@ export default function Navigation({ user }: { user: SupabaseUser | null }) {
             <header className={styles.header}>
                 <div className={styles.headerContent}>
                     <Link href="/" className={styles.logo}>
-                        Vibe Coding Skills
+                        Design MD
                     </Link>
                     <button className={styles.menuButton} onClick={() => setIsOpen(!isOpen)}>
                         {isOpen ? <X size={24} /> : <Menu size={24} />}
