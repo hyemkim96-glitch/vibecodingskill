@@ -10,6 +10,7 @@ import {
   ResolvedType,
   ThemeMode,
 } from '@/lib/tokens/resolveTheme';
+import { getServiceType } from '@/lib/serviceCategories';
 
 /**
  * Design System Engine — UI Renderer
@@ -41,6 +42,7 @@ export default function BrandUIPreview({
   const t = resolveTheme(token, platform, mode);
   const { space } = t;
   const isMobile = t.isMobile;
+  const service = getServiceType(token);
 
   /* ── primitives ── */
 
@@ -255,7 +257,7 @@ export default function BrandUIPreview({
   /* ── category layouts ── */
 
   // 핀테크/금융
-  if (t.category === '핀테크/금융') {
+  if (service === 'finance') {
     if (isMobile) {
       return (
         <Screen>
@@ -352,8 +354,8 @@ export default function BrandUIPreview({
     );
   }
 
-  // 플랫폼 (배달/검색)
-  if (t.category === '플랫폼' && !t.isLocal) {
+  // 배달/O2O
+  if (service === 'delivery') {
     if (isMobile) {
       return (
         <Screen>
@@ -418,7 +420,7 @@ export default function BrandUIPreview({
   }
 
   // 커머스
-  if (t.category === '커머스') {
+  if (service === 'commerce') {
     if (isMobile) {
       return (
         <Screen>
@@ -492,7 +494,7 @@ export default function BrandUIPreview({
   }
 
   // 지역/커뮤니티
-  if (t.isLocal) {
+  if (service === 'local') {
     if (isMobile) {
       return (
         <Screen>
@@ -548,32 +550,145 @@ export default function BrandUIPreview({
     );
   }
 
-  // 패션/라이프스타일 (default)
+  // 메신저/소셜 — 채팅 UI
+  if (service === 'messaging') {
+    const Avatar = ({ size = 40 }: { size?: number }) => (
+      <div className="shrink-0" style={{ width: size, height: size, borderRadius: '9999px', background: t.surfaceAlt }} />
+    );
+    const Bubble = ({ text, me = false }: { text: string; me?: boolean }) => (
+      <div className={cn('flex', me ? 'justify-end' : 'justify-start')}>
+        <div
+          style={{
+            maxWidth: '74%',
+            padding: `${space.sm}px ${space.md}px`,
+            borderRadius: t.radius.card,
+            background: me ? t.primary : t.surface,
+            color: me ? t.onPrimary : t.textMain,
+            border: me ? 'none' : `1px solid ${t.border}`,
+          }}
+        >
+          <Text role="bodySm" color={me ? t.onPrimary : t.textMain}>{text}</Text>
+        </div>
+      </div>
+    );
+    const InputBar = () => (
+      <div className="flex items-center" style={{ gap: space.sm }}>
+        <div
+          className="flex-1 flex items-center cursor-text"
+          style={{ background: t.surface, borderRadius: t.radius.chip, border: `1px solid ${t.border}`, padding: `${space.sm}px ${space.md}px` }}
+        >
+          <Text role="bodySm" color={t.textMuted}>메시지 입력…</Text>
+        </div>
+        <Btn variant="primary" size="sm">전송</Btn>
+      </div>
+    );
+
+    if (isMobile) {
+      return (
+        <Screen>
+          {/* 대화 목록 */}
+          {[
+            { name: '김토스', msg: '오늘 저녁 어때요?', time: '오후 2:14', unread: 2 },
+            { name: '동네모임 💬', msg: '사진 보냈어요', time: '오후 1:02', unread: 0 },
+          ].map((c, i) => (
+            <div
+              key={c.name}
+              className="flex items-center cursor-pointer transition-colors hover:bg-black/[0.03] rounded-md"
+              style={{ gap: space.md, paddingTop: space.sm, paddingBottom: space.sm, borderBottom: i === 0 ? `1px solid ${t.border}` : 'none' }}
+            >
+              <Avatar />
+              <div className="flex-1 flex flex-col" style={{ gap: 2 }}>
+                <Text role="bodySm" weight={t.weightBold}>{c.name}</Text>
+                <Text role="caption" color={t.textSub}>{c.msg}</Text>
+              </div>
+              <div className="flex flex-col items-end" style={{ gap: 4 }}>
+                <Text role="caption" color={t.textMuted}>{c.time}</Text>
+                {c.unread > 0 && <Badge tone="solid">{c.unread}</Badge>}
+              </div>
+            </div>
+          ))}
+
+          {/* 대화 말풍선 */}
+          <div className="flex flex-col" style={{ gap: space.sm, marginTop: space.xs }}>
+            <Bubble text="안녕하세요! 지금 시간 괜찮으세요?" />
+            <Bubble text="네 좋아요 😊" me />
+            <Bubble text="그럼 6시에 봬요" />
+          </div>
+
+          <InputBar />
+        </Screen>
+      );
+    }
+
+    return (
+      <Screen>
+        <div className="flex" style={{ gap: space.md, minHeight: 240 }}>
+          {/* 좌: 대화 목록 */}
+          <div className="flex flex-col shrink-0" style={{ width: 200, gap: space.xs }}>
+            {['김토스', '동네모임 💬', '점심팟', '가족방'].map((name, i) => (
+              <div
+                key={name}
+                className="flex items-center cursor-pointer transition-colors rounded-md"
+                style={{ gap: space.sm, padding: `${space.sm}px`, background: i === 0 ? t.surface : 'transparent' }}
+              >
+                <Avatar size={32} />
+                <div className="flex-1 min-w-0">
+                  <Text role="caption" weight={t.weightBold} style={{ display: 'block' }}>{name}</Text>
+                  <Text role="caption" color={t.textSub} className="truncate" style={{ display: 'block' }}>대화 미리보기…</Text>
+                </div>
+                {i === 0 && <Badge tone="solid">2</Badge>}
+              </div>
+            ))}
+          </div>
+          {/* 우: 대화창 */}
+          <div className="flex-1 flex flex-col" style={{ gap: space.sm, borderLeft: `1px solid ${t.border}`, paddingLeft: space.md }}>
+            <Bubble text="안녕하세요! 지금 시간 괜찮으세요?" />
+            <Bubble text="네 좋아요 😊" me />
+            <Bubble text="그럼 6시에 봬요" />
+            <div style={{ marginTop: 'auto' }}>
+              <InputBar />
+            </div>
+          </div>
+        </div>
+      </Screen>
+    );
+  }
+
+  // 검색/포털 (search) — default fallback
+  const shortcuts = ['메일', '카페', '뉴스', '지도', '쇼핑', '증권', '지식인', '더보기'];
   if (isMobile) {
     return (
       <Screen>
-        <Card style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
-          <Text role="caption" color={t.textSub} weight={t.weightMedium} style={{ letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-            New Arrivals
-          </Text>
-          <Text role="h2" weight={t.weightBold}>{token.tagline}</Text>
-          <div>
-            <Btn variant="primary" size="sm">지금 보기</Btn>
-          </div>
-        </Card>
+        <div
+          className="flex items-center justify-between cursor-text"
+          style={{ background: t.bg, borderRadius: t.radius.chip, border: `2px solid ${t.primary}`, padding: `${space.sm}px ${space.md}px` }}
+        >
+          <Text role="bodySm" color={t.textMuted}>검색어를 입력하세요</Text>
+          <Text role="bodySm" color={t.primary} weight={t.weightBold}>🔍</Text>
+        </div>
 
-        <div className="grid grid-cols-2" style={{ gap: space.sm }}>
-          {['오버핏 셔츠', '와이드 팬츠'].map((name, i) => (
-            <Card key={name} pad={false}>
-              <Thumb h={96} />
-              <div style={{ padding: space.sm }}>
-                <Text role="caption" color={t.textSub} weight={t.weightMedium} style={{ display: 'block', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 2 }}>
-                  {['BRAND A', 'BRAND B'][i]}
-                </Text>
-                <Text role="caption" weight={t.weightBold} style={{ display: 'block' }}>{name}</Text>
-                <Text role="caption" weight={t.weightBold} color={t.primary} style={{ marginTop: 2, display: 'block' }}>{['89,000', '129,000'][i]}원</Text>
+        <div className="grid grid-cols-4" style={{ gap: space.sm }}>
+          {shortcuts.map((s) => (
+            <div key={s} className="flex flex-col items-center cursor-pointer hover:opacity-80 transition-opacity" style={{ gap: space.xs }}>
+              <div style={{ width: 36, height: 36, borderRadius: t.radius.card, background: t.surface, border: `1px solid ${t.border}` }} />
+              <Text role="caption" color={t.textSub}>{s}</Text>
+            </div>
+          ))}
+        </div>
+
+        <div className="flex flex-col">
+          {['오늘의 주요 뉴스 헤드라인', '실시간 급상승 키워드 정리', '날씨 · 미세먼지 정보'].map((title, i) => (
+            <div
+              key={title}
+              className="flex items-center justify-between cursor-pointer transition-colors hover:bg-black/[0.03] rounded-md"
+              style={{ gap: space.md, paddingTop: space.sm, paddingBottom: space.sm, borderBottom: i < 2 ? `1px solid ${t.border}` : 'none' }}
+            >
+              <div className="flex-1">
+                <Text role="bodySm" weight={t.weightMedium} style={{ display: 'block' }}>{title}</Text>
+                <Text role="caption" color={t.textSub}>연합뉴스 · {i + 1}시간 전</Text>
               </div>
-            </Card>
+              <Thumb h={48} style={{ width: 64, borderRadius: t.radius.card }} />
+            </div>
           ))}
         </div>
       </Screen>
@@ -582,27 +697,29 @@ export default function BrandUIPreview({
 
   return (
     <Screen>
-      <div className="flex" style={{ gap: space.lg }}>
-        <Card style={{ width: 200, display: 'flex', flexDirection: 'column', gap: space.md }}>
-          <Text role="caption" color={t.textSub} weight={t.weightBold} style={{ letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-            Featured
-          </Text>
-          <Text role="h1" weight={t.weightBold}>{token.tagline}</Text>
-          <div>
-            <Btn variant="primary">쇼핑하기</Btn>
+      <div
+        className="flex items-center justify-between cursor-text self-center"
+        style={{ width: '70%', background: t.bg, borderRadius: t.radius.chip, border: `2px solid ${t.primary}`, padding: `${space.sm}px ${space.lg}px` }}
+      >
+        <Text role="body" color={t.textMuted}>검색어를 입력하세요</Text>
+        <Text role="body" color={t.primary} weight={t.weightBold}>🔍</Text>
+      </div>
+      <div className="grid grid-cols-8" style={{ gap: space.sm }}>
+        {shortcuts.map((s) => (
+          <div key={s} className="flex flex-col items-center cursor-pointer hover:opacity-80 transition-opacity" style={{ gap: space.xs }}>
+            <div style={{ width: 34, height: 34, borderRadius: t.radius.card, background: t.surface, border: `1px solid ${t.border}` }} />
+            <Text role="caption" color={t.textSub}>{s}</Text>
           </div>
-        </Card>
-        <div className="flex-1 grid grid-cols-3" style={{ gap: space.sm }}>
-          {['셔츠', '팬츠', '자켓'].map((name, i) => (
-            <Card key={name} pad={false}>
-              <Thumb h={72} />
-              <div style={{ padding: space.xs + 2 }}>
-                <Text role="caption" weight={t.weightBold} style={{ display: 'block' }}>{name}</Text>
-                <Text role="caption" weight={t.weightBold} color={t.primary} style={{ marginTop: 2, display: 'block' }}>{['89,000', '149,000', '219,000'][i]}원</Text>
-              </div>
-            </Card>
-          ))}
-        </div>
+        ))}
+      </div>
+      <div className="grid grid-cols-3" style={{ gap: space.md }}>
+        {['주요 뉴스', '실시간 키워드', '오늘의 날씨'].map((title) => (
+          <Card key={title}>
+            <Text role="bodySm" weight={t.weightBold} style={{ display: 'block', marginBottom: space.xs }}>{title}</Text>
+            <Text role="caption" color={t.textSub} style={{ display: 'block', marginBottom: 2 }}>관련 콘텐츠 미리보기 라인 1</Text>
+            <Text role="caption" color={t.textSub}>관련 콘텐츠 미리보기 라인 2</Text>
+          </Card>
+        ))}
       </div>
     </Screen>
   );

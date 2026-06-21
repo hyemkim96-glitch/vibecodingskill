@@ -1,38 +1,63 @@
 'use client';
 
-import { BrandToken } from '@/types/token';
+import { useState } from 'react';
 import BrandUIPreview from '@/components/BrandUIPreview';
+import { getCategoryGroups } from '@/lib/serviceCategories';
 
-export default function PatternsClient({ tokens }: { tokens: BrandToken[] }) {
+export default function PatternsClient() {
+  const groups = getCategoryGroups();
+  const [platform, setPlatform] = useState<'mobile' | 'web'>('mobile');
+
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-1">
-        <h1 className="text-sm font-medium tracking-widest uppercase" style={{ color: 'var(--color-ash)' }}>
-          UI Patterns
-        </h1>
-        <p className="text-xs" style={{ color: 'var(--color-ash)' }}>
-          각 브랜드의 토큰(여백·타입스케일·밀도·radii)으로 렌더링된 대표 UI 패턴 — 와이어프레임 · 모바일 기준
-        </p>
+    <div className="flex flex-col gap-8">
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex flex-col gap-1">
+          <h1 className="text-sm font-medium tracking-widest uppercase" style={{ color: 'var(--color-ash)' }}>
+            UI Patterns
+          </h1>
+          <p className="text-xs" style={{ color: 'var(--color-ash)' }}>
+            서비스 유형별 대표 화면 패턴 — 토큰(여백·타입·radii·밀도) 기반 와이어프레임
+          </p>
+        </div>
+        <div className="flex gap-1 shrink-0">
+          {(['mobile', 'web'] as const).map((p) => (
+            <button
+              key={p}
+              onClick={() => setPlatform(p)}
+              className="text-xs px-3 py-1.5 rounded-md transition-all cursor-pointer"
+              style={{
+                background: platform === p ? 'var(--color-bone)' : 'transparent',
+                color: platform === p ? 'var(--color-void)' : 'var(--color-ash)',
+                border: '1px solid var(--color-graphite)',
+              }}
+            >
+              {p === 'mobile' ? '모바일' : '웹'}
+            </button>
+          ))}
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
-        {tokens.map((token) => (
-          <div key={token.slug} className="flex flex-col gap-2">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-medium tracking-wider uppercase" style={{ color: 'var(--color-bone)' }}>
-                {token.tagline}
-              </span>
-              <span className="text-xs" style={{ color: 'var(--color-ash)' }}>
-                {token.category}
-              </span>
+      <div className="flex flex-col gap-10">
+        {groups.map(({ category, representative }) => (
+          <section key={category.key} className="flex flex-col gap-3">
+            <div className="flex flex-col gap-0.5">
+              <h2 className="text-sm font-semibold" style={{ color: 'var(--color-bone)' }}>
+                {category.label}
+              </h2>
+              <p className="text-xs" style={{ color: 'var(--color-ash)' }}>
+                {category.description}
+              </p>
             </div>
             <div
-              className="rounded-lg overflow-hidden"
-              style={{ border: '1px solid var(--color-graphite)' }}
+              className="rounded-lg overflow-hidden self-start w-full"
+              style={{
+                border: '1px solid var(--color-graphite)',
+                maxWidth: platform === 'mobile' ? 390 : '100%',
+              }}
             >
-              <BrandUIPreview token={token} platform="mobile" mode="wireframe" />
+              <BrandUIPreview token={representative} platform={platform} mode="wireframe" />
             </div>
-          </div>
+          </section>
         ))}
       </div>
     </div>
