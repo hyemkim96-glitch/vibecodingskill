@@ -1,9 +1,10 @@
+/* ── Top navigation bar ── */
 .header {
     height: var(--nav-height);
     border-bottom: 1px solid var(--color-graphite);
     display: flex;
     align-items: center;
-    padding: 0 var(--spacing-5);
+    padding: 0 var(--spacing-6);
     background: var(--color-void);
     position: fixed;
     top: 0;
@@ -14,17 +15,116 @@
 
 .headerContent {
     width: 100%;
+    max-width: var(--page-max-width);
+    margin: 0 auto;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
+.headerLeft {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-6);
+}
+
+.headerRight {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+}
+
 .logo {
-    font-family: var(--font-mono);
+    font-family: var(--font-ui);
     font-size: var(--font-size-base);
     font-weight: var(--font-weight-regular);
     color: var(--color-bone);
-    letter-spacing: var(--letter-spacing);
+    letter-spacing: var(--letter-spacing-ui);
+    white-space: nowrap;
+}
+
+/* Desktop nav links */
+.desktopNav {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-1);
+}
+
+.desktopNavItem {
+    padding: var(--spacing-2) var(--spacing-3);
+    font-size: var(--font-size-base);
+    font-family: var(--font-body);
+    color: var(--color-ash);
+    border-radius: var(--radius);
+    transition: color 0.15s ease, background 0.15s ease;
+    white-space: nowrap;
+}
+
+.desktopNavItem:hover {
+    color: var(--color-bone);
+    background: var(--color-carbon);
+}
+
+.desktopNavItem.active {
+    color: var(--color-bone);
+}
+
+/* User actions */
+.userActions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+}
+
+.profileBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--color-graphite);
+    border-radius: var(--radius);
+    color: var(--color-ash);
+    transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.profileBtn:hover {
+    color: var(--color-bone);
+    border-color: var(--color-bone);
+}
+
+.logoutBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: none;
+    border: 1px solid var(--color-graphite);
+    border-radius: var(--radius);
+    color: var(--color-ash);
+    cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.logoutBtn:hover {
+    color: var(--color-bone);
+    border-color: var(--color-bone);
+}
+
+.loginBtn {
+    padding: var(--spacing-2) var(--spacing-3);
+    font-size: var(--font-size-base);
+    font-family: var(--font-body);
+    color: var(--color-bone);
+    border: 1px solid var(--color-graphite);
+    border-radius: var(--radius);
+    transition: border-color 0.15s ease;
+}
+
+.loginBtn:hover {
+    border-color: var(--color-bone);
+    color: var(--color-bone);
 }
 
 .menuButton {
@@ -34,147 +134,84 @@
     border: none;
     cursor: pointer;
     padding: var(--spacing-2);
-}
-
-.nav {
-    width: var(--nav-width);
-    height: calc(100vh - var(--nav-height));
-    position: fixed;
-    left: 0;
-    top: var(--nav-height);
-    border-right: 1px solid var(--color-graphite);
-    background: var(--color-void);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    z-index: 90;
-}
-
-.navLinks {
-    padding: var(--spacing-4) var(--spacing-3);
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-1);
-}
-
-.navItem {
-    display: flex;
+    line-height: 0;
     align-items: center;
-    gap: var(--spacing-3);
-    padding: var(--spacing-3) var(--spacing-3);
-    color: var(--color-ash);
+    justify-content: center;
+}
+
+/* Mobile drawer */
+.mobileDrawer {
+    display: none;
+    position: fixed;
+    top: var(--nav-height);
+    left: 0;
+    right: 0;
+    background: var(--color-void);
+    border-bottom: 1px solid var(--color-graphite);
+    flex-direction: column;
+    z-index: 90;
+    padding: var(--spacing-3);
+    gap: 2px;
+}
+
+.mobileNavItem {
+    display: block;
+    padding: var(--spacing-3) var(--spacing-4);
     font-size: var(--font-size-base);
-    font-family: var(--font-mono);
-    letter-spacing: var(--letter-spacing);
+    font-family: var(--font-body);
+    color: var(--color-ash);
     border-radius: var(--radius);
     transition: color 0.15s ease, background 0.15s ease;
 }
 
-.navItem:hover {
-    color: var(--color-bone);
-    background: var(--color-carbon);
-    opacity: 1;
-}
-
-.active {
+.mobileNavItem:hover,
+.mobileNavItem.active {
     color: var(--color-bone);
     background: var(--color-carbon);
 }
 
-.disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
-    pointer-events: none;
-}
-
-.navFooter {
-    padding: var(--spacing-4) var(--spacing-3);
-    border-top: 1px solid var(--color-graphite);
-}
-
-.userSection {
-    padding: var(--spacing-2) 0;
-}
-
-.userInfo {
+.mobileLogout {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     gap: var(--spacing-2);
-}
-
-.profileLink {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-3);
-    padding: var(--spacing-3);
-    background: var(--color-carbon);
-    border: 1px solid var(--color-graphite);
-    border-radius: var(--radius);
-    color: var(--color-bone);
+    padding: var(--spacing-3) var(--spacing-4);
     font-size: var(--font-size-base);
-    font-family: var(--font-mono);
-    text-decoration: none;
-    transition: border-color 0.15s ease;
-}
-
-.profileLink:hover {
-    border-color: var(--color-bone);
-    color: var(--color-bone);
-}
-
-.logoutBtn {
-    padding: var(--spacing-3);
-    background: var(--color-carbon);
-    border: 1px solid var(--color-graphite);
-    border-radius: var(--radius);
+    font-family: var(--font-body);
     color: var(--color-ash);
+    background: none;
+    border: none;
+    border-radius: var(--radius);
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: color 0.15s ease, border-color 0.15s ease;
-}
-
-.logoutBtn:hover {
-    color: var(--color-bone);
-    border-color: var(--color-bone);
+    margin-top: var(--spacing-2);
+    border-top: 1px solid var(--color-graphite);
+    padding-top: var(--spacing-4);
 }
 
 .overlay {
-    display: none;
+    position: fixed;
+    top: var(--nav-height);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 85;
 }
 
+/* ── 모바일 ── */
 @media (max-width: 768px) {
     .header {
-        position: fixed;
+        padding: 0 var(--spacing-4);
+    }
+
+    .desktopNav {
+        display: none;
     }
 
     .menuButton {
         display: flex;
     }
 
-    .nav {
-        transform: translateX(-100%);
-        transition: transform 0.2s ease;
-        top: var(--nav-height);
-        height: calc(100vh - var(--nav-height));
-        background: var(--color-void);
-    }
-
-    .nav.open {
-        transform: translateX(0);
-    }
-
-    .overlay {
-        display: block;
-        position: fixed;
-        top: var(--nav-height);
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.7);
-        z-index: 85;
+    .mobileDrawer {
+        display: flex;
     }
 }

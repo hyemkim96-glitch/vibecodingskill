@@ -2,23 +2,15 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Library, BookOpen, Menu, X, User, LogOut } from 'lucide-react';
+import { Menu, X, User, LogOut } from 'lucide-react';
 import { useState } from 'react';
 import styles from './Navigation.module.css';
 import { createClient } from '@/lib/supabase/client';
 import { User as SupabaseUser } from '@supabase/supabase-js';
 
-interface NavItem {
-    name: string;
-    href: string;
-    icon: any;
-    premium?: boolean;
-    comingSoon?: boolean;
-}
-
-const navItems: NavItem[] = [
-    { name: '스킬셋 라이브러리', href: '/', icon: Library },
-    { name: '바이브 코딩 위키', href: '/wiki', icon: BookOpen },
+const navItems = [
+    { name: 'Design MD', href: '/tokens' },
+    { name: '위키', href: '/wiki' },
 ];
 
 export default function Navigation({ user }: { user: SupabaseUser | null }) {
@@ -36,65 +28,64 @@ export default function Navigation({ user }: { user: SupabaseUser | null }) {
         <>
             <header className={styles.header}>
                 <div className={styles.headerContent}>
-                    <Link href="/" className={styles.logo}>
-                        Design MD
-                    </Link>
-                    <button className={styles.menuButton} onClick={() => setIsOpen(!isOpen)}>
-                        {isOpen ? <X size={24} /> : <Menu size={24} />}
-                    </button>
+                    <div className={styles.headerLeft}>
+                        <Link href="/" className={styles.logo}>
+                            Design MD
+                        </Link>
+                        <nav className={styles.desktopNav}>
+                            {navItems.map((item) => (
+                                <Link
+                                    key={item.href}
+                                    href={item.href}
+                                    className={`${styles.desktopNavItem} ${pathname.startsWith(item.href) ? styles.active : ''}`}
+                                >
+                                    {item.name}
+                                </Link>
+                            ))}
+                        </nav>
+                    </div>
+                    <div className={styles.headerRight}>
+                        {user ? (
+                            <div className={styles.userActions}>
+                                <Link href="/profile" className={styles.profileBtn}>
+                                    <User size={16} />
+                                </Link>
+                                <button className={styles.logoutBtn} onClick={handleLogout}>
+                                    <LogOut size={16} />
+                                </button>
+                            </div>
+                        ) : (
+                            <Link href="/auth/login" className={styles.loginBtn}>
+                                로그인
+                            </Link>
+                        )}
+                        <button className={styles.menuButton} onClick={() => setIsOpen(!isOpen)}>
+                            {isOpen ? <X size={20} /> : <Menu size={20} />}
+                        </button>
+                    </div>
                 </div>
             </header>
 
-            <nav className={`${styles.nav} ${isOpen ? styles.open : ''}`}>
-                <div className={styles.navLinks}>
-                    {navItems.map((item) => {
-                        const Icon = item.icon;
-                        const isActive = pathname === item.href;
-
-                        if (item.comingSoon) {
-                            return (
-                                <div key={item.href} className={`${styles.navItem} ${styles.disabled}`}>
-                                    <Icon size={20} />
-                                    <span>{item.name}</span>
-                                    <span className={styles.comingSoonBadge}>오픈 예정</span>
-                                </div>
-                            );
-                        }
-
-                        return (
-                            <Link
-                                key={item.href}
-                                href={item.href}
-                                className={`${styles.navItem} ${isActive ? styles.active : ''}`}
-                                onClick={() => setIsOpen(false)}
-                            >
-                                <Icon size={20} />
-                                <span>{item.name}</span>
-                                {item.premium && <span className={styles.premiumBadge}>Premium</span>}
-                            </Link>
-                        );
-                    })}
+            {/* Mobile drawer */}
+            {isOpen && (
+                <div className={styles.mobileDrawer}>
+                    {navItems.map((item) => (
+                        <Link
+                            key={item.href}
+                            href={item.href}
+                            className={`${styles.mobileNavItem} ${pathname.startsWith(item.href) ? styles.active : ''}`}
+                            onClick={() => setIsOpen(false)}
+                        >
+                            {item.name}
+                        </Link>
+                    ))}
+                    {user && (
+                        <button className={styles.mobileLogout} onClick={handleLogout}>
+                            <LogOut size={16} /> 로그아웃
+                        </button>
+                    )}
                 </div>
-                {user?.email && (
-                    <div className={styles.navFooter}>
-                        <div className={styles.userSection}>
-                            <div className={styles.userInfo}>
-                                <Link
-                                    href="/profile"
-                                    className={styles.profileLink}
-                                    onClick={() => setIsOpen(false)}
-                                >
-                                    <User size={18} />
-                                    <span>프로필</span>
-                                </Link>
-                                <button className={styles.logoutBtn} onClick={handleLogout}>
-                                    <LogOut size={18} />
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                )}
-            </nav>
+            )}
             {isOpen && <div className={styles.overlay} onClick={() => setIsOpen(false)} />}
         </>
     );
