@@ -61,7 +61,21 @@
 .platformToggle {
   display: flex;
   gap: var(--spacing-2);
+  margin-bottom: var(--spacing-4);
+}
+
+.uiPreviewWrapper {
   margin-bottom: var(--spacing-6);
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--color-graphite);
+}
+
+.uiPreview {
+  display: flex;
+  flex-direction: column;
+  font-family: 'Pretendard', -apple-system, sans-serif;
+  min-height: 260px;
 }
 
 .platformBtn {

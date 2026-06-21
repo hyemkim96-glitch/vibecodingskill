@@ -5,6 +5,110 @@ import { BrandToken } from '@/types/token';
 import { Copy, Check, Download } from 'lucide-react';
 import styles from './TokenPage.module.css';
 
+function getContrastColor(hex: string): string {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return (0.299 * r + 0.587 * g + 0.114 * b) / 255 > 0.55 ? '#111111' : '#ffffff';
+}
+
+function getPrimaryColor(colors: BrandToken['colors']) {
+  return colors.find(c => /primary/i.test(c.role))?.value
+    ?? colors.find(c => !/gray|white|black|grey/i.test(c.name))?.value
+    ?? '#888';
+}
+
+function getColor(colors: BrandToken['colors'], role: RegExp, fallback: string) {
+  return colors.find(c => role.test(c.role))?.value ?? fallback;
+}
+
+function BrandUIPreview({ token, platform }: { token: BrandToken; platform: 'mobile' | 'web' }) {
+  const primary = getPrimaryColor(token.colors);
+  const onPrimary = getContrastColor(primary);
+  const bg = getColor(token.colors, /기본 배경/, '#ffffff');
+  const cardBg = getColor(token.colors, /카드 배경|보조 배경/, '#f5f5f5');
+  const textMain = getColor(token.colors, /본문 텍스트|주요 컨텐츠/, '#111111');
+  const textSub = getColor(token.colors, /보조 텍스트/, '#666666');
+  const border = getColor(token.colors, /구분선|보더/, '#e0e0e0');
+  const p = token.platforms[platform];
+  const btnRadius = p.shapes.find(s => s.element === 'button')?.value ?? '8px';
+  const cardRadius = p.shapes.find(s => s.element === 'card')?.value ?? '12px';
+
+  const isMobile = platform === 'mobile';
+
+  return (
+    <div className={styles.uiPreview} style={{ background: bg }}>
+      {/* Nav bar */}
+      <div style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: isMobile ? '10px 16px' : '12px 24px',
+        borderBottom: `1px solid ${border}`,
+        background: bg,
+      }}>
+        <span style={{ fontSize: isMobile ? '15px' : '16px', fontWeight: 700, color: textMain, letterSpacing: '-0.01em' }}>
+          {token.nameKo ?? token.name}
+        </span>
+        <div style={{
+          width: isMobile ? '28px' : '32px',
+          height: isMobile ? '28px' : '32px',
+          borderRadius: '50%',
+          background: primary,
+        }} />
+      </div>
+
+      {/* Main card */}
+      <div style={{ padding: isMobile ? '16px' : '24px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        <div style={{
+          background: cardBg,
+          borderRadius: cardRadius,
+          padding: isMobile ? '16px' : '20px',
+          display: 'flex', flexDirection: 'column', gap: '6px',
+        }}>
+          <span style={{ fontSize: '11px', color: textSub, letterSpacing: '0.02em' }}>{token.tagline}</span>
+          <span style={{ fontSize: isMobile ? '22px' : '26px', fontWeight: 700, color: textMain, letterSpacing: '-0.02em', lineHeight: 1.2 }}>
+            1,234,567<span style={{ fontSize: '13px', fontWeight: 400, marginLeft: '3px' }}>원</span>
+          </span>
+          <span style={{ fontSize: '11px', color: textSub }}>최근 업데이트 방금 전</span>
+        </div>
+
+        {/* Action row */}
+        <div style={{ display: 'flex', gap: '8px' }}>
+          {['이체', '충전', '내역'].map((label, i) => (
+            <div key={label} style={{
+              flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: i === 0 ? primary : cardBg,
+              color: i === 0 ? onPrimary : textMain,
+              borderRadius: btnRadius,
+              padding: '9px 0',
+              fontSize: '12px', fontWeight: 600,
+              border: i === 0 ? 'none' : `1px solid ${border}`,
+            }}>{label}</div>
+          ))}
+        </div>
+
+        {/* List items */}
+        {['어제', '2일 전'].map((day, i) => (
+          <div key={day} style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            padding: '10px 0',
+            borderBottom: i === 0 ? `1px solid ${border}` : 'none',
+          }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+              <span style={{ fontSize: '13px', color: textMain, fontWeight: 500 }}>
+                {i === 0 ? '스타벅스' : '편의점'}
+              </span>
+              <span style={{ fontSize: '11px', color: textSub }}>{day}</span>
+            </div>
+            <span style={{ fontSize: '13px', fontWeight: 600, color: textMain }}>
+              -{i === 0 ? '6,500' : '3,200'}원
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 type TabKey = 'designMd' | 'css' | 'tailwind' | 'json' | 'figma';
 type Platform = 'mobile' | 'web';
 
@@ -87,6 +191,13 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
             웹
           </button>
         </div>
+
+        {/* Brand UI Preview */}
+        <div className={styles.uiPreviewWrapper}>
+          <BrandUIPreview token={token} platform={platform} />
+        </div>
+
+        <div className={styles.divider} />
 
         {/* Color Palette */}
         <section className={styles.section}>

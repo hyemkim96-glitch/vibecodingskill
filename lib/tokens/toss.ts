@@ -1,7 +1,7 @@
 import { BrandToken, BrandDeep } from '@/types/token';
 
 const colors = [
-  { name: 'Blue', value: '#3182F6', variable: '--color-blue', role: '주요 액션, CTA 버튼, 활성 상태' },
+  { name: 'Blue', value: '#246CF8', variable: '--color-blue', role: '주요 액션, CTA 버튼, 활성 상태' },
   { name: 'Blue Light', value: '#EBF3FE', variable: '--color-blue-light', role: '블루 배경, 강조 영역 배경' },
   { name: 'Gray 900', value: '#191F28', variable: '--color-gray-900', role: '본문 텍스트, 주요 컨텐츠' },
   { name: 'Gray 700', value: '#4E5968', variable: '--color-gray-700', role: '보조 텍스트, 라벨' },
@@ -154,7 +154,7 @@ export const tossToken: BrandToken = {
         states: 'default → pressed(scale 0.97) → loading(spinner) → disabled(opacity 0.4)',
         spec: `height: 52px (mobile) / 48px (web)
 border-radius: 8px
-background: #3182F6
+background: #246CF8
 color: #FFFFFF
 font: 600 17px/1 Pretendard
 padding: 0 24px
@@ -175,9 +175,9 @@ font: 500 17px/1 Pretendard`,
       {
         name: 'Text Button',
         anatomy: '텍스트 레이블 [→ 아이콘?]',
-        states: 'default(color: #3182F6) → pressed(opacity 0.7)',
+        states: 'default(color: #246CF8) → pressed(opacity 0.7)',
         spec: `height: auto (min touch 44px)
-color: #3182F6
+color: #246CF8
 font: 500 15px/1 Pretendard
 underline: none (hover 시에도 없음)
 사용처: 보조 액션, "더보기", "자세히"`,
@@ -196,7 +196,7 @@ transition: 200ms cubic-bezier(0.2,0,0,1)`,
       {
         name: 'Input Field',
         anatomy: '레이블 > 입력창 > [보조 텍스트 | 에러 메시지]',
-        states: 'default(border: #E5EAF0) → focus(border: #3182F6, shadow: 0 0 0 3px rgba(49,130,246,0.15)) → error(border: #F04452)',
+        states: 'default(border: #E5EAF0) → focus(border: #246CF8, shadow: 0 0 0 3px rgba(36,108,248,0.15)) → error(border: #F04452)',
         spec: `height: 52px
 border-radius: 8px
 border: 1px solid
@@ -240,7 +240,7 @@ max-width: calc(100% - 40px)`,
     iconStyle: 'Line 스타일, 2px stroke, 24×24px 기준. 모서리 rounded. 채움(fill) 아이콘은 활성 탭/선택 상태에만. 커스텀 아이콘셋 사용 (Lucide 계열 영향 받음).',
     imageStyle: '인물 사진 없음. 추상적 일러스트레이션, 단색 또는 그라데이션. 실사 이미지는 서비스 썸네일(카드 안)에만. aspect-ratio: 16/9 또는 1/1.',
     accessibilityNotes: `최소 터치 영역 48×48px (WCAG 2.5.5)
-포커스 링: 3px solid #3182F6, offset 2px
+포커스 링: 3px solid #246CF8, offset 2px
 색맹 대응: 색상만으로 의미 전달 금지 — 아이콘 또는 텍스트 병기
 에러 상태: aria-invalid="true" + aria-describedby 에러 메시지 ID
 스크린리더: 금액 읽기 — "오만원" 아닌 "50,000원" 포맷으로 aria-label

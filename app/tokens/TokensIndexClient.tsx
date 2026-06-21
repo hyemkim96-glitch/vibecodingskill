@@ -44,9 +44,10 @@ function BrandMiniUI({ token }: { token: BrandToken }) {
     const bg = getBgColor(token.colors);
     const mobileShapes = token.platforms.mobile.shapes;
     const btnRadius = mobileShapes.find(s => s.element === 'button')?.value ?? '8px';
+    const subColors = getBrandColors(token.colors).slice(0, 6);
 
     return (
-        <div className={styles.miniUI} style={{ background: bg }}>
+        <div className={styles.miniUI} style={{ background: bg, flexDirection: 'column', gap: '10px' }}>
             <div style={{
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -64,6 +65,21 @@ function BrandMiniUI({ token }: { token: BrandToken }) {
                 textOverflow: 'ellipsis',
             }}>
                 {token.tagline}
+            </div>
+            <div style={{ display: 'flex', gap: '4px' }}>
+                {subColors.map((c) => (
+                    <div
+                        key={c.variable}
+                        title={`${c.name} ${c.value}`}
+                        style={{
+                            width: '14px',
+                            height: '14px',
+                            borderRadius: '3px',
+                            background: c.value,
+                            border: '1px solid rgba(0,0,0,0.08)',
+                        }}
+                    />
+                ))}
             </div>
         </div>
     );
