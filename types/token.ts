@@ -5,11 +5,18 @@ export interface ColorToken {
   role: string;
 }
 
+export interface TypographySize {
+  role: string;
+  size: string;
+  lineHeight: string;
+  letterSpacing: string;
+}
+
 export interface TypographyToken {
   family: string;
-  weights: number[];
-  sizes: { role: string; size: string; lineHeight: string; letterSpacing: string }[];
   substitute?: string;
+  weights: number[];
+  sizes: TypographySize[];
 }
 
 export interface SpacingToken {
@@ -23,16 +30,7 @@ export interface ShapeToken {
   value: string;
 }
 
-export interface BrandToken {
-  slug: string;
-  name: string;
-  category: string;
-  country: 'KR' | 'GLOBAL';
-  serviceTypes: string[];
-  theme: 'dark' | 'light';
-  description: string;
-  colors: ColorToken[];
-  typography: TypographyToken;
+export interface PlatformToken {
   spacing: {
     baseUnit: string;
     density: string;
@@ -42,6 +40,25 @@ export interface BrandToken {
   layout: {
     maxWidth: string;
     sectionGap: string;
+    columns?: string;
+    touchTarget?: string;
+  };
+  typography: TypographyToken;
+}
+
+export interface BrandToken {
+  slug: string;
+  name: string;
+  nameKo?: string;
+  category: string;
+  country: 'KR' | 'GLOBAL';
+  serviceTypes: string[];
+  theme: 'dark' | 'light';
+  description: string;
+  colors: ColorToken[];
+  platforms: {
+    mobile: PlatformToken;
+    web: PlatformToken;
   };
   guidelines: {
     dos: string[];
