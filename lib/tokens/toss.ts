@@ -43,6 +43,7 @@ export const tossToken: BrandToken = {
   slug: 'toss',
   name: 'Toss',
   nameKo: '토스',
+  tagline: '깔끔한 금융',
   category: '핀테크/금융',
   country: 'KR',
   serviceTypes: ['핀테크 앱', '모바일 퍼스트'],

@@ -43,6 +43,7 @@ export const naverToken: BrandToken = {
   slug: 'naver',
   name: 'Naver',
   nameKo: '네이버',
+  tagline: '정보의 시작',
   category: '플랫폼',
   country: 'KR',
   serviceTypes: ['포털', '검색', '뉴스/콘텐츠 플랫폼'],

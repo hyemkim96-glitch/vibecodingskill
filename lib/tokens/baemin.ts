@@ -43,6 +43,7 @@ export const baeminToken: BrandToken = {
   slug: 'baemin',
   name: 'Baemin',
   nameKo: '배달의민족',
+  tagline: '맛있는 일상',
   category: '플랫폼',
   country: 'KR',
   serviceTypes: ['음식 배달', 'O2O', '푸드테크'],

@@ -48,7 +48,7 @@ export default function TokensIndexClient({ tokens }: { tokens: BrandToken[] }) 
                                         {String(i + 1).padStart(3, '0')}
                                     </span>
                                     <span className={styles.cardName}>
-                                        {token.nameKo ?? token.name}
+                                        {token.tagline}
                                     </span>
                                 </div>
                             </Link>

@@ -43,6 +43,7 @@ export const coupangToken: BrandToken = {
   slug: 'coupang',
   name: 'Coupang',
   nameKo: '쿠팡',
+  tagline: '로켓 쇼핑',
   category: '커머스',
   country: 'KR',
   serviceTypes: ['이커머스', '로켓배송', '쿠팡이츠'],

@@ -43,6 +43,7 @@ export const kakaobankToken: BrandToken = {
   slug: 'kakaobank',
   name: 'KakaoBank',
   nameKo: '카카오뱅크',
+  tagline: '편한 모바일 뱅킹',
   category: '핀테크/금융',
   country: 'KR',
   serviceTypes: ['인터넷 은행', '핀테크', '모바일 퍼스트'],

@@ -43,6 +43,7 @@ export const kakaoToken: BrandToken = {
   slug: 'kakao',
   name: 'Kakao',
   nameKo: '카카오',
+  tagline: '일상의 연결',
   category: '플랫폼',
   country: 'KR',
   serviceTypes: ['메신저', '플랫폼', '소셜'],

@@ -50,6 +50,7 @@ export interface BrandToken {
   slug: string;
   name: string;
   nameKo?: string;
+  tagline: string;
   category: string;
   country: 'KR' | 'GLOBAL';
   serviceTypes: string[];

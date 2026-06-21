@@ -43,6 +43,7 @@ export const ohouseToken: BrandToken = {
   slug: 'ohouse',
   name: 'Ohouse',
   nameKo: '오늘의집',
+  tagline: '집꾸미기 영감',
   category: '커머스',
   country: 'KR',
   serviceTypes: ['인테리어 커머스', '라이프스타일 SNS', 'UGC 플랫폼'],

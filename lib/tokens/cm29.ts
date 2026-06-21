@@ -43,6 +43,7 @@ export const cm29Token: BrandToken = {
   slug: '29cm',
   name: '29CM',
   nameKo: '29CM',
+  tagline: '감성 라이프스타일',
   category: '커머스',
   country: 'KR',
   serviceTypes: ['라이프스타일 커머스', '편집샵', '감성 큐레이션'],

@@ -43,6 +43,7 @@ export const musinsaToken: BrandToken = {
   slug: 'musinsa',
   name: 'Musinsa',
   nameKo: '무신사',
+  tagline: '스트리트 패션',
   category: '커머스',
   country: 'KR',
   serviceTypes: ['패션 커머스', '스트리트웨어', '브랜드 편집샵'],

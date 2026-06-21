@@ -43,6 +43,7 @@ export const daangnToken: BrandToken = {
   slug: 'daangn',
   name: 'Daangn',
   nameKo: '당근',
+  tagline: '동네 생활권',
   category: '플랫폼',
   country: 'KR',
   serviceTypes: ['지역 커뮤니티', '중고거래', 'O2O'],
