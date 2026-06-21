@@ -187,25 +187,34 @@ export default function BrandUIPreview({
 
   const Badge = ({
     children,
-    bg,
+    tone = 'solid',
   }: {
     children: React.ReactNode;
-    bg?: string;
-  }) => (
-    <span
-      className="inline-flex items-center font-bold"
-      style={{
-        fontSize: Math.max(9, t.type.caption.size - 2),
-        lineHeight: 1.2,
-        padding: `2px ${space.xs + 2}px`,
-        borderRadius: t.radius.badge,
-        background: bg ?? t.primary,
-        color: contrastOn(bg ?? t.primary),
-      }}
-    >
-      {children}
-    </span>
-  );
+    tone?: 'solid' | 'soft' | 'accent' | 'muted';
+  }) => {
+    const styleByTone: Record<string, { bg: string; fg: string }> = {
+      solid: { bg: t.primary, fg: t.onPrimary },
+      soft: { bg: t.primaryTint, fg: t.primary },
+      accent: { bg: t.accent, fg: contrastOn(t.accent) },
+      muted: { bg: t.textMuted, fg: contrastOn(t.textMuted) },
+    };
+    const { bg, fg } = styleByTone[tone];
+    return (
+      <span
+        className="inline-flex items-center font-bold"
+        style={{
+          fontSize: Math.max(10, t.type.caption.size - 1),
+          lineHeight: 1.2,
+          padding: `2px ${space.xs + 3}px`,
+          borderRadius: t.radius.badge,
+          background: bg,
+          color: fg,
+        }}
+      >
+        {children}
+      </span>
+    );
+  };
 
   // a neutral image / thumbnail placeholder
   const Thumb = ({ h, style = {} }: { h: number; style?: React.CSSProperties }) => (
@@ -375,7 +384,7 @@ export default function BrandUIPreview({
               <Text role="caption" color={t.textSub}>배달비 2,000원 · 최소 15,000원</Text>
               <div className="flex items-center" style={{ gap: space.sm, marginTop: space.xs }}>
                 <Btn variant="primary" size="sm">주문하기</Btn>
-                <Badge bg={t.accent}>🚀 빠른배달</Badge>
+                <Badge tone="accent">🚀 빠른배달</Badge>
               </div>
             </div>
           </Card>
@@ -398,7 +407,7 @@ export default function BrandUIPreview({
                 <Text role="caption" weight={t.weightBold} style={{ display: 'block', marginBottom: space.xs }}>{name}</Text>
                 <div className="flex justify-between items-center">
                   <Text role="caption" color={t.textSub}>★ {(4.5 + i * 0.1).toFixed(1)}</Text>
-                  <Badge bg={`${t.primary}22`}>주문</Badge>
+                  <Badge tone="soft">주문</Badge>
                 </div>
               </div>
             </Card>
@@ -443,7 +452,7 @@ export default function BrandUIPreview({
                   <Text role="bodySm" weight={t.weightBold} color={t.primary}>{item.price}원</Text>
                   {item.sold && (
                     <div style={{ marginTop: space.xs }}>
-                      <Badge bg={t.textMuted}>품절</Badge>
+                      <Badge tone="muted">품절</Badge>
                     </div>
                   )}
                 </div>
@@ -510,7 +519,7 @@ export default function BrandUIPreview({
               <div className="flex-1 flex flex-col" style={{ gap: space.xs }}>
                 <div className="flex items-center" style={{ gap: space.sm }}>
                   <Text role="bodySm" weight={t.weightBold}>{item.title}</Text>
-                  <Badge bg={`${t.primary}22`}>{item.badge}</Badge>
+                  <Badge tone="solid">{item.badge}</Badge>
                 </div>
                 <Text role="caption" color={t.textSub}>{item.loc}</Text>
                 <Text role="bodySm" weight={t.weightBold}>{item.price}</Text>

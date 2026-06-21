@@ -20,6 +20,7 @@ export interface ResolvedTheme {
   // ── colors (semantic) ──
   primary: string;
   onPrimary: string;
+  primaryTint: string; // light brand background (소프트 배지/칩 배경)
   bg: string;
   surface: string; // card / elevated surface
   surfaceAlt: string; // secondary fill (chips, inputs)
@@ -83,6 +84,17 @@ function contrastOn(hex: string): string {
   return luminance(hex) > 0.62 ? '#111111' : '#ffffff';
 }
 
+/** mix a hex color toward white by ratio (0..1) — used to derive a soft tint */
+function tint(hex: string, ratio: number): string {
+  const h = hex.replace('#', '');
+  if (h.length < 6) return hex;
+  const mix = (c: number) => Math.round(c + (255 - c) * ratio);
+  const r = mix(parseInt(h.slice(0, 2), 16));
+  const g = mix(parseInt(h.slice(2, 4), 16));
+  const b = mix(parseInt(h.slice(4, 6), 16));
+  return '#' + [r, g, b].map((v) => v.toString(16).padStart(2, '0')).join('');
+}
+
 function findColor(
   colors: BrandToken['colors'],
   role: RegExp,
@@ -132,6 +144,7 @@ export type ThemeMode = 'brand' | 'wireframe';
 const WIREFRAME_COLORS = {
   primary: '#52525b',
   onPrimary: '#ffffff',
+  primaryTint: '#e4e4e7',
   bg: '#ffffff',
   surface: '#f4f4f5',
   surfaceAlt: '#e8e8ea',
@@ -204,6 +217,9 @@ export function resolveTheme(
   const brandColors = {
     primary,
     onPrimary,
+    primaryTint:
+      c.find((col) => /강조 영역 배경|강조 배경/.test(col.role))?.value ??
+      tint(primary, 0.85),
     bg: findColor(c, /기본 배경|배경.*표면/, '#ffffff'),
     surface: findColor(c, /카드 배경|카드 표면|보조 배경/, '#f5f6f8'),
     surfaceAlt: findColor(c, /보조 배경|카드 배경/, '#eef0f3'),

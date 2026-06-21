@@ -180,6 +180,15 @@ function deriveComponentSpecs(token: BrandToken, p: PlatformToken): string {
   const bodyWeight = p.typography.weights[1] ?? 500;
   const boldWeight = p.typography.weights.slice(-1)[0] ?? 700;
   const bodySize = p.typography.sizes.find(s => s.role === 'Body 1')?.size ?? '16px';
+  const onPrimary = (() => {
+    const h = primary.replace('#', '');
+    if (h.length < 6) return '#ffffff';
+    const lum = (0.299 * parseInt(h.slice(0, 2), 16) + 0.587 * parseInt(h.slice(2, 4), 16) + 0.114 * parseInt(h.slice(4, 6), 16)) / 255;
+    return lum > 0.62 ? '#111111' : '#ffffff';
+  })();
+  const primaryTint = token.colors.find(c => /강조 영역 배경|강조 배경/.test(c.role))?.value ?? '연한 브랜드 틴트';
+  const badge = p.shapes.find(s => s.element === 'badge')?.value ?? '4px';
+  const captionSize = p.typography.sizes.find(s => s.role === 'Caption')?.size ?? '12px';
 
   return `### Primary Button
 **구조:** [아이콘?] + 텍스트 레이블
@@ -227,6 +236,27 @@ border: 1px solid ${border}
 font: ${bodyWeight} ${bodySize} ${p.typography.family}
 padding: 0 16px
 placeholder-color: ${token.colors.find(c => /비활성|힌트|플레이스홀더/.test(c.role))?.value ?? '#aaa'}
+\`\`\`
+
+### Badge / Chip
+**용도:** 상태(판매중·품절), 카테고리 태그, 강조 라벨. **항상 충분한 대비를 확보해 명확히 보이도록 한다.**
+**금지:** 배경에 brand 색의 낮은 투명도(예: \`${primary}22\`)를 깔고 그 위에 옅은 텍스트를 올리지 말 것 — 가독성이 떨어진다.
+\`\`\`
+border-radius: ${badge}
+font: ${boldWeight} ${captionSize} ${p.typography.family}
+padding: 2px 7px
+
+# Solid (기본 — 상태/강조 라벨)
+background: ${primary}
+color: ${onPrimary}        # 흰/검정 자동 대비, 절대 옅게 깔지 않음
+
+# Soft (보조 라벨, 가독성 유지)
+background: ${primaryTint} # 불투명 틴트색 사용 (alpha 금지)
+color: ${primary}          # 텍스트는 brand 풀컬러로 — 대비 확보
+
+# Muted (품절·비활성)
+background: ${token.colors.find(c => /비활성|힌트/.test(c.role))?.value ?? '#9aa0a6'}
+color: #ffffff
 \`\`\``;
 }
 
