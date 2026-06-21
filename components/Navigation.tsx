@@ -20,10 +20,10 @@ export default function Navigation({ user }: { user: SupabaseUser | null }) {
         <header className={styles.header}>
             <div className={styles.left}>
                 <Link href="/tokens" className={`${styles.filterChip} ${pathname.startsWith('/tokens') ? styles.active : ''}`}>
-                    TOKENS
+                    토큰
                 </Link>
                 <Link href="/wiki" className={`${styles.filterChip} ${pathname.startsWith('/wiki') ? styles.active : ''}`}>
-                    WIKI
+                    위키
                 </Link>
             </div>
 
@@ -34,11 +34,11 @@ export default function Navigation({ user }: { user: SupabaseUser | null }) {
             <div className={styles.right}>
                 {user ? (
                     <>
-                        <Link href="/profile" className={styles.action}>PROFILE</Link>
-                        <button className={styles.action} onClick={handleLogout}>LOGOUT</button>
+                        <Link href="/profile" className={styles.action}>프로필</Link>
+                        <button className={styles.action} onClick={handleLogout}>로그아웃</button>
                     </>
                 ) : (
-                    <Link href="/auth/login" className={styles.action}>LOGIN</Link>
+                    <Link href="/auth/login" className={styles.action}>로그인</Link>
                 )}
             </div>
         </header>

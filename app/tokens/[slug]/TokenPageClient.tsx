@@ -12,8 +12,8 @@ const TABS: { key: TabKey; label: string }[] = [
   { key: 'designMd', label: 'Design.md' },
   { key: 'css', label: 'CSS' },
   { key: 'tailwind', label: 'Tailwind' },
-  { key: 'json', label: 'Design Tokens' },
-  { key: 'figma', label: 'Figma Variables' },
+  { key: 'json', label: '디자인 토큰' },
+  { key: 'figma', label: 'Figma 변수' },
 ];
 
 const FILE_EXTENSIONS: Record<TabKey, string> = {
@@ -63,11 +63,11 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
           <div className={styles.brandMeta}>
             <span className={styles.metaChip}>{token.category}</span>
             <span className={styles.metaChip}>{token.country}</span>
-            <span className={styles.metaChip}>{token.theme}</span>
+            <span className={styles.metaChip}>{token.theme === 'light' ? '라이트' : '다크'}</span>
           </div>
-          <h1 className={styles.brandName}>{token.name}</h1>
+          <h1 className={styles.brandName}>{token.nameKo ?? token.name}</h1>
           <p className={styles.brandDesc}>{token.description}</p>
-          <p className={styles.updatedAt}>Updated: {token.updatedAt}</p>
+          <p className={styles.updatedAt}>업데이트: {token.updatedAt}</p>
         </div>
 
         <div className={styles.divider} />
@@ -78,19 +78,19 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
             className={`${styles.platformBtn} ${platform === 'mobile' ? styles.platformBtnActive : ''}`}
             onClick={() => setPlatform('mobile')}
           >
-            Mobile
+            모바일
           </button>
           <button
             className={`${styles.platformBtn} ${platform === 'web' ? styles.platformBtnActive : ''}`}
             onClick={() => setPlatform('web')}
           >
-            Web
+            웹
           </button>
         </div>
 
         {/* Color Palette */}
         <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>Color Palette</h2>
+          <h2 className={styles.sectionTitle}>컬러 팔레트</h2>
           <div className={styles.colorGrid}>
             {token.colors.map((color) => (
               <div key={color.variable} className={styles.colorItem}>
@@ -112,18 +112,18 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
 
         {/* Typography */}
         <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>Typography</h2>
+          <h2 className={styles.sectionTitle}>타이포그래피</h2>
           <div className={styles.typeMeta}>
             <span className={styles.typeFamily}>{p.typography.family}</span>
-            <span className={styles.typeSubstitute}>Substitute: {p.typography.substitute}</span>
-            <span className={styles.typeWeights}>Weights: {p.typography.weights.join(', ')}</span>
+            <span className={styles.typeSubstitute}>대체: {p.typography.substitute}</span>
+            <span className={styles.typeWeights}>굵기: {p.typography.weights.join(', ')}</span>
           </div>
           <div className={styles.typeScaleTable}>
             <div className={styles.tableHeader}>
-              <span>Role</span>
-              <span>Size</span>
-              <span>Line Height</span>
-              <span>Letter Spacing</span>
+              <span>역할</span>
+              <span>크기</span>
+              <span>행간</span>
+              <span>자간</span>
             </div>
             {p.typography.sizes.map((s) => (
               <div key={s.role} className={styles.tableRow}>
@@ -146,17 +146,17 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
 
         {/* Spacing */}
         <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>Spacing & Shape</h2>
+          <h2 className={styles.sectionTitle}>여백 & 모양</h2>
           <div className={styles.spacingMeta}>
-            <span className={styles.metaChip}>Base: {p.spacing.baseUnit}</span>
-            <span className={styles.metaChip}>{p.spacing.density}</span>
-            <span className={styles.metaChip}>Max: {p.layout.maxWidth}</span>
+            <span className={styles.metaChip}>기준: {p.spacing.baseUnit}</span>
+            <span className={styles.metaChip}>{p.spacing.density === 'comfortable' ? '여유' : p.spacing.density === 'compact' ? '촘촘' : '넉넉'}</span>
+            <span className={styles.metaChip}>최대폭: {p.layout.maxWidth}</span>
           </div>
           <div className={styles.spacingTable}>
             <div className={styles.tableHeader}>
-              <span>Name</span>
-              <span>Value</span>
-              <span>Preview</span>
+              <span>이름</span>
+              <span>값</span>
+              <span>미리보기</span>
             </div>
             {p.spacing.scale.map((s) => (
               <div key={s.token} className={styles.tableRow}>
@@ -170,12 +170,12 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
             ))}
           </div>
 
-          <h3 className={styles.subTitle}>Border Radius</h3>
+          <h3 className={styles.subTitle}>모서리 둥글기</h3>
           <div className={styles.shapeTable}>
             <div className={styles.tableHeader}>
-              <span>Element</span>
-              <span>Value</span>
-              <span>Preview</span>
+              <span>요소</span>
+              <span>값</span>
+              <span>미리보기</span>
             </div>
             {p.shapes.map((s) => (
               <div key={s.element} className={styles.tableRow}>
@@ -194,10 +194,10 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
 
         {/* Guidelines */}
         <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>Guidelines</h2>
+          <h2 className={styles.sectionTitle}>디자인 가이드라인</h2>
           <div className={styles.guidelinesGrid}>
             <div className={styles.guideCol}>
-              <h3 className={styles.guideTitle}>Do</h3>
+              <h3 className={styles.guideTitle}>이렇게 해요</h3>
               <ul className={styles.guideList}>
                 {token.guidelines.dos.map((d, i) => (
                   <li key={i} className={styles.guideItemDo}>{d}</li>
@@ -205,7 +205,7 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
               </ul>
             </div>
             <div className={styles.guideCol}>
-              <h3 className={styles.guideTitle}>Don&apos;t</h3>
+              <h3 className={styles.guideTitle}>이렇게 하지 마세요</h3>
               <ul className={styles.guideList}>
                 {token.guidelines.donts.map((d, i) => (
                   <li key={i} className={styles.guideItemDont}>{d}</li>
@@ -241,11 +241,11 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
                 onClick={handleCopy}
               >
                 {copied ? <Check size={14} /> : <Copy size={14} />}
-                {copied ? 'Copied' : 'Copy'}
+                {copied ? '복사됨' : '복사'}
               </button>
               <button className={styles.actionBtn} onClick={handleDownload}>
                 <Download size={14} />
-                Download
+                다운로드
               </button>
             </div>
           </div>
