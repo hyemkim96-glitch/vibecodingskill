@@ -330,8 +330,8 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  background: #1a1a1a;
-  border: 1px solid #333;
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
   border-radius: var(--radius);
   overflow: hidden;
 }
@@ -339,7 +339,7 @@
 /* Tabs */
 .tabs {
   display: flex;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid #e0e0e0;
   overflow-x: auto;
   flex-shrink: 0;
 }
@@ -363,12 +363,12 @@
 }
 
 .tab:hover {
-  color: #fff;
+  color: #111;
 }
 
 .tabActive {
-  color: #fff;
-  border-bottom-color: #fff;
+  color: #111;
+  border-bottom-color: #111;
 }
 
 /* Actions bar */
@@ -377,7 +377,7 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--spacing-3) var(--spacing-4);
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid #e0e0e0;
   flex-shrink: 0;
 }
 
@@ -398,22 +398,22 @@
   padding: var(--spacing-2) var(--spacing-3);
   font-size: var(--font-size-base);
   font-family: var(--font-mono);
-  color: #ccc;
+  color: #444;
   background: transparent;
-  border: 1px solid #444;
+  border: 1px solid #d0d0d0;
   border-radius: var(--radius);
   cursor: pointer;
   transition: border-color 0.15s ease;
 }
 
 .actionBtn:hover {
-  border-color: #fff;
-  color: #fff;
+  border-color: #111;
+  color: #111;
 }
 
 .actionBtnCopied {
   color: #888;
-  border-color: #555;
+  border-color: #ccc;
 }
 
 /* Code block */
@@ -425,11 +425,11 @@
   font-family: var(--font-mono);
   font-size: var(--font-size-base);
   line-height: 1.6;
-  color: #e8e8e8;
+  color: #1a1a1a;
   white-space: pre;
   word-break: normal;
   overflow-x: auto;
-  background: #111;
+  background: #f8f8f8;
 }
 
 .codeBlock code {
