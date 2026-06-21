@@ -1,4 +1,4 @@
-import { BrandToken } from '@/types/token';
+import { BrandToken, BrandDeep } from '@/types/token';
 
 const colors = [
   { name: 'Blue', value: '#3182F6', variable: '--color-blue', role: '주요 액션, CTA 버튼, 활성 상태' },
@@ -125,4 +125,125 @@ export const tossToken: BrandToken = {
     ],
   },
   updatedAt: '2026.06',
+  deep: {
+    interaction: {
+      duration: '150ms (micro), 200ms (standard), 300ms (page transition)',
+      easing: 'cubic-bezier(0.2, 0, 0, 1) — 빠른 가속 후 부드러운 감속',
+      pressScale: 'scale(0.97) — 버튼 눌림 피드백',
+      notes: '애니메이션은 목적이 있을 때만. 숫자 카운트업은 예외적으로 허용(잔액 표시). Spring physics 지양, CSS transition 선호.',
+    },
+    voice: {
+      tone: '친근하지만 정확한 친구 — 전문 용어 없이, 오해 없이. 존댓말이되 딱딱하지 않게.',
+      examples: [
+        '"아직 내역이 없어요" (빈 상태)',
+        '"잠깐, 확인이 필요해요" (에러)',
+        '"보냈어요! 도착까지 1-2분이에요" (성공)',
+        '"이번 달 xx원 썼어요" (지출 요약)',
+        '"혹시 이 거래 맞나요?" (이상 거래 감지)',
+      ],
+      avoid: [
+        '금융 전문 용어 — "지급 완료", "처리 중" 대신 "보냈어요", "확인 중이에요"',
+        '수동태 — "결제가 완료되었습니다" 대신 "결제했어요"',
+        '부정형 시작 — "잔액 부족으로 실패" 대신 "잔액이 xx원 부족해요"',
+      ],
+    },
+    components: [
+      {
+        name: 'Primary Button',
+        anatomy: '[아이콘?] + 텍스트 레이블',
+        states: 'default → pressed(scale 0.97) → loading(spinner) → disabled(opacity 0.4)',
+        spec: `height: 52px (mobile) / 48px (web)
+border-radius: 8px
+background: #3182F6
+color: #FFFFFF
+font: 600 17px/1 Pretendard
+padding: 0 24px
+min-width: 120px (web), 100% (mobile full-width CTA)
+icon-gap: 6px
+transition: transform 150ms cubic-bezier(0.2,0,0,1), background 150ms`,
+      },
+      {
+        name: 'Secondary Button',
+        anatomy: '[아이콘?] + 텍스트 레이블',
+        states: 'default → hover(bg: #F2F4F6) → pressed(scale 0.97) → disabled(opacity 0.4)',
+        spec: `height: 52px (mobile) / 48px (web)
+border-radius: 8px
+background: #F2F4F6
+color: #191F28
+font: 500 17px/1 Pretendard`,
+      },
+      {
+        name: 'Text Button',
+        anatomy: '텍스트 레이블 [→ 아이콘?]',
+        states: 'default(color: #3182F6) → pressed(opacity 0.7)',
+        spec: `height: auto (min touch 44px)
+color: #3182F6
+font: 500 15px/1 Pretendard
+underline: none (hover 시에도 없음)
+사용처: 보조 액션, "더보기", "자세히"`,
+      },
+      {
+        name: 'Card',
+        anatomy: '컨테이너 > [상단 컬러 바?] > 헤더 행 > 본문 > [하단 액션?]',
+        spec: `border-radius: 12px (mobile) / 16px (web)
+background: #FFFFFF
+border: none (shadow 사용)
+box-shadow: 0 2px 12px rgba(0,0,0,0.06)
+padding: 20px
+hover: box-shadow 0 4px 20px rgba(0,0,0,0.10), transform translateY(-2px)
+transition: 200ms cubic-bezier(0.2,0,0,1)`,
+      },
+      {
+        name: 'Input Field',
+        anatomy: '레이블 > 입력창 > [보조 텍스트 | 에러 메시지]',
+        states: 'default(border: #E5EAF0) → focus(border: #3182F6, shadow: 0 0 0 3px rgba(49,130,246,0.15)) → error(border: #F04452)',
+        spec: `height: 52px
+border-radius: 8px
+border: 1px solid
+padding: 0 16px
+font: 400 17px Pretendard
+label: 400 13px #4E5968, margin-bottom 6px
+error-msg: 400 13px #F04452, margin-top 4px`,
+      },
+      {
+        name: 'Bottom Sheet',
+        anatomy: '딤 배경 > 시트 컨테이너 > 핸들 > 제목? > 콘텐츠 > 액션 버튼',
+        spec: `border-radius: 20px 20px 0 0
+handle: width 36px, height 4px, radius 2px, color #E5EAF0, margin 12px auto
+background: #FFFFFF
+padding: 0 20px 34px (safe area 포함)
+title: 600 18px #191F28
+진입: translateY(100%) → 0, 300ms spring(stiffness 300, damping 30)
+딤: opacity 0 → 0.5, 200ms`,
+      },
+      {
+        name: 'Toast / Snackbar',
+        anatomy: '[아이콘] + 메시지 [+ 액션 텍스트?]',
+        spec: `height: 52px
+border-radius: 12px
+background: #191F28
+color: #FFFFFF
+font: 400 15px
+padding: 0 20px
+위치: 하단에서 84px (탭바 위)
+진입: translateY(20px) + opacity 0 → 0, 200ms
+자동 닫힘: 2000ms
+max-width: calc(100% - 40px)`,
+      },
+    ],
+    breakpoints: [
+      { name: 'Mobile S', value: '375px', behavior: '기준 디자인. 전체 폭 버튼, 단일 컬럼, 하단 탭바' },
+      { name: 'Mobile L', value: '430px', behavior: '여백 24px로 증가. 레이아웃 동일' },
+      { name: 'Tablet', value: '768px', behavior: '하단 탭바 → 사이드 내비. 콘텐츠 최대폭 600px 중앙 정렬' },
+      { name: 'Desktop', value: '1200px', behavior: '2컬럼 레이아웃. 왼쪽 내비 220px + 콘텐츠 영역. 버튼 고정폭' },
+    ],
+    iconStyle: 'Line 스타일, 2px stroke, 24×24px 기준. 모서리 rounded. 채움(fill) 아이콘은 활성 탭/선택 상태에만. 커스텀 아이콘셋 사용 (Lucide 계열 영향 받음).',
+    imageStyle: '인물 사진 없음. 추상적 일러스트레이션, 단색 또는 그라데이션. 실사 이미지는 서비스 썸네일(카드 안)에만. aspect-ratio: 16/9 또는 1/1.',
+    accessibilityNotes: `최소 터치 영역 48×48px (WCAG 2.5.5)
+포커스 링: 3px solid #3182F6, offset 2px
+색맹 대응: 색상만으로 의미 전달 금지 — 아이콘 또는 텍스트 병기
+에러 상태: aria-invalid="true" + aria-describedby 에러 메시지 ID
+스크린리더: 금액 읽기 — "오만원" 아닌 "50,000원" 포맷으로 aria-label
+모션 민감도: prefers-reduced-motion 시 모든 transition 비활성화`,
+  },
 };

@@ -1,8 +1,9 @@
 import { BrandToken } from '@/types/token';
 
 const colors = [
-  { name: 'Brand Green', value: '#1ABF80', variable: '--color-brand-green', role: '브랜드 Primary, CTA 버튼, 활성 상태' },
-  { name: 'Green Light', value: '#E6F9F2', variable: '--color-green-light', role: '그린 배경, 뱃지 배경' },
+  { name: '시그니처 블루', value: '#1A74E9', variable: '--color-brand-blue', role: '브랜드 Primary, CTA 버튼, 활성 상태' },
+  { name: 'Blue Light', value: '#E8F1FD', variable: '--color-blue-light', role: '블루 배경 강조 영역' },
+  { name: 'Teal', value: '#00C4B4', variable: '--color-teal', role: '보조 액센트, 추천 태그' },
   { name: 'Gray 900', value: '#222222', variable: '--color-gray-900', role: '본문 텍스트, 제목' },
   { name: 'Gray 700', value: '#555555', variable: '--color-gray-700', role: '보조 텍스트' },
   { name: 'Gray 500', value: '#888888', variable: '--color-gray-500', role: '메타 텍스트, 날짜' },
@@ -10,7 +11,6 @@ const colors = [
   { name: 'Gray 100', value: '#F7F7F7', variable: '--color-gray-100', role: '배경, 카드 배경' },
   { name: 'White', value: '#FFFFFF', variable: '--color-white', role: '기본 배경, 카드 표면' },
   { name: 'Orange', value: '#FF6B35', variable: '--color-orange', role: '특가, 긴급 할인, 인기 표시' },
-  { name: 'Blue', value: '#3B82F6', variable: '--color-blue', role: '링크, 인포 아이콘' },
 ];
 
 const typography = {

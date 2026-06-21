@@ -14,9 +14,10 @@ function getBrandColors(colors: BrandToken['colors']) {
     return vivid.length > 0 ? vivid : colors;
 }
 
-/** 브랜드 primary 컬러 (유채색 첫 번째) */
+/** 브랜드 primary 컬러 — role에 Primary 명시된 색 우선 */
 function getPrimaryColor(colors: BrandToken['colors']) {
-    return getBrandColors(colors)[0]?.value ?? '#888';
+    const explicit = colors.find(c => /primary/i.test(c.role));
+    return explicit?.value ?? getBrandColors(colors)[0]?.value ?? '#888';
 }
 
 /** primary 위에 올라갈 텍스트 색상 (명도 판단) */

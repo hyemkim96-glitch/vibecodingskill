@@ -23,6 +23,81 @@ function platformDesignMd(token: BrandToken, platform: 'mobile' | 'web'): string
   const dos = token.guidelines.dos.map((d) => `- ${d}`).join('\n');
   const donts = token.guidelines.donts.map((d) => `- ${d}`).join('\n');
 
+  const d = token.deep;
+
+  const deepInteraction = d ? `
+---
+
+## Interaction & Motion
+
+- **Duration:** ${d.interaction.duration}
+- **Easing:** ${d.interaction.easing}
+${d.interaction.pressScale ? `- **Press Scale:** ${d.interaction.pressScale}` : ''}
+- **Notes:** ${d.interaction.notes}
+` : '';
+
+  const deepVoice = d ? `
+---
+
+## Voice & Tone
+
+**Tone:** ${d.voice.tone}
+
+### 텍스트 예시
+${d.voice.examples.map(e => `- ${e}`).join('\n')}
+
+### 피해야 할 표현
+${d.voice.avoid.map(a => `- ${a}`).join('\n')}
+` : '';
+
+  const deepComponents = d && d.components.length > 0 ? `
+---
+
+## Component Specs
+
+${d.components.map(c => `### ${c.name}
+${c.anatomy ? `**구조:** ${c.anatomy}\n` : ''}${c.states ? `**States:** ${c.states}\n` : ''}
+\`\`\`
+${c.spec}
+\`\`\``).join('\n\n')}
+` : '';
+
+  const deepBreakpoints = d ? `
+---
+
+## Breakpoints
+
+| Name | Value | Behavior |
+|------|-------|----------|
+${d.breakpoints.map(b => `| ${b.name} | ${b.value} | ${b.behavior} |`).join('\n')}
+` : '';
+
+  const deepStyle = d ? `
+---
+
+## Icon & Image Style
+
+**Icons:** ${d.iconStyle}
+
+**Images:** ${d.imageStyle}
+` : '';
+
+  const deepA11y = d ? `
+---
+
+## Accessibility
+
+\`\`\`
+${d.accessibilityNotes}
+\`\`\`
+` : '';
+
+  const aiPromptColors = token.colors
+    .filter(c => !/(gray|white|black|grey)/i.test(c.name))
+    .slice(0, 3)
+    .map(c => `  ${c.name}: ${c.value}`)
+    .join('\n');
+
   return `# ${token.tagline} Design Token — ${label}
 > Updated: ${token.updatedAt} | Category: ${token.category} | Theme: ${token.theme}
 
@@ -30,7 +105,7 @@ ${token.description}
 
 ---
 
-## Color
+## Color Palette
 
 ${colors}
 
@@ -67,30 +142,44 @@ ${shapes}
 - Max Width: ${p.layout.maxWidth}
 - Section Gap: ${p.layout.sectionGap}
 ${p.layout.columns ? `- Grid: ${p.layout.columns}` : ''}
-${p.layout.touchTarget ? `- Touch Target: ${p.layout.touchTarget}` : ''}
+${p.layout.touchTarget ? `- Touch Target (min): ${p.layout.touchTarget}` : ''}
 
 ---
 
-## Guidelines
+## Design Guidelines
 
 ### Do
 ${dos}
 
 ### Don't
 ${donts}
-
+${deepInteraction}${deepVoice}${deepComponents}${deepBreakpoints}${deepStyle}${deepA11y}
 ---
 
 ## AI Prompt Ready
 
 \`\`\`
-Use the ${token.tagline} design system (${label}):
-- Primary color: ${token.colors[0]?.value}
-- Font: ${p.typography.family} (substitute: ${p.typography.substitute ?? 'system-ui'})
-- Border radius: ${p.shapes.find(s => s.element === 'card')?.value ?? p.shapes[0]?.value}
-- Spacing base: ${p.spacing.baseUnit}
-- Theme: ${token.theme}
+Design system: ${token.tagline} (${label})
+Category: ${token.category} | Theme: ${token.theme}
+
+Brand colors:
+${aiPromptColors}
+
+Typography: ${p.typography.family} (fallback: ${p.typography.substitute ?? 'system-ui'})
+Font weights: ${p.typography.weights.join(', ')}
+Base font size: ${p.typography.sizes.find(s => s.role === 'Body 1')?.size ?? '16px'}
+
+Border radius (card): ${p.shapes.find(s => s.element === 'card')?.value ?? p.shapes[0]?.value}
+Border radius (button): ${p.shapes.find(s => s.element === 'button')?.value ?? p.shapes[0]?.value}
+Spacing base: ${p.spacing.baseUnit} | Density: ${p.spacing.density}
+Max width: ${p.layout.maxWidth}
+
 ${token.description}
+${d ? `
+Voice: ${d.voice.tone}
+Motion: ${d.interaction.duration}
+Press feedback: ${d.interaction.pressScale ?? 'none'}
+` : ''}
 \`\`\`
 `;
 }

@@ -46,6 +46,33 @@ export interface PlatformToken {
   typography: TypographyToken;
 }
 
+export interface ComponentSpec {
+  name: string;
+  anatomy: string;
+  states?: string;
+  spec: string;
+}
+
+export interface BrandDeep {
+  interaction: {
+    duration: string;
+    easing: string;
+    hoverScale?: string;
+    pressScale?: string;
+    notes: string;
+  };
+  voice: {
+    tone: string;
+    examples: string[];
+    avoid: string[];
+  };
+  components: ComponentSpec[];
+  breakpoints: { name: string; value: string; behavior: string }[];
+  iconStyle: string;
+  imageStyle: string;
+  accessibilityNotes: string;
+}
+
 export interface BrandToken {
   slug: string;
   name: string;
@@ -66,4 +93,5 @@ export interface BrandToken {
     donts: string[];
   };
   updatedAt: string;
+  deep?: BrandDeep;
 }
