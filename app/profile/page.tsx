@@ -10,19 +10,11 @@ export default async function ProfilePage() {
         redirect('/auth/login');
     }
 
-    // Fetch profile data
     const { data: profile } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', user.id)
         .single();
 
-    // Fetch PRD history
-    const { data: prds } = await supabase
-        .from('prds')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false });
-
-    return <Profile user={user} profile={profile} prds={prds || []} />;
+    return <Profile user={user} profile={profile} />;
 }
