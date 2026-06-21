@@ -20,13 +20,13 @@ export default function Navigation({ user }: { user: SupabaseUser | null }) {
         <header className={styles.header}>
             <div className={styles.left}>
                 <Link href="/tokens" className={`${styles.filterChip} ${pathname.startsWith('/tokens') ? styles.active : ''}`}>
-                    토큰
-                </Link>
-                <Link href="/patterns" className={`${styles.filterChip} ${pathname.startsWith('/patterns') ? styles.active : ''}`}>
-                    패턴
+                    템플릿
                 </Link>
                 <Link href="/components" className={`${styles.filterChip} ${pathname.startsWith('/components') ? styles.active : ''}`}>
                     컴포넌트
+                </Link>
+                <Link href="/patterns" className={`${styles.filterChip} ${pathname.startsWith('/patterns') ? styles.active : ''}`}>
+                    패턴
                 </Link>
                 <Link href="/wiki" className={`${styles.filterChip} ${pathname.startsWith('/wiki') ? styles.active : ''}`}>
                     위키

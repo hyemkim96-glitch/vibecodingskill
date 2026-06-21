@@ -3,8 +3,6 @@
 import { BrandToken } from '@/types/token';
 import BrandUIPreview from '@/components/BrandUIPreview';
 
-const PATTERN_TYPES = ['전체', '핀테크/금융', '플랫폼', '커머스', '지역/커뮤니티', '패션/라이프스타일'] as const;
-
 export default function PatternsClient({ tokens }: { tokens: BrandToken[] }) {
   return (
     <div className="flex flex-col gap-6">
@@ -13,7 +11,7 @@ export default function PatternsClient({ tokens }: { tokens: BrandToken[] }) {
           UI Patterns
         </h1>
         <p className="text-xs" style={{ color: 'var(--color-ash)' }}>
-          각 브랜드 디자인 토큰으로 렌더링된 대표 UI 패턴 — 모바일 기준
+          각 브랜드의 토큰(여백·타입스케일·밀도·radii)으로 렌더링된 대표 UI 패턴 — 와이어프레임 · 모바일 기준
         </p>
       </div>
 
@@ -32,7 +30,7 @@ export default function PatternsClient({ tokens }: { tokens: BrandToken[] }) {
               className="rounded-lg overflow-hidden"
               style={{ border: '1px solid var(--color-graphite)' }}
             >
-              <BrandUIPreview token={token} platform="mobile" />
+              <BrandUIPreview token={token} platform="mobile" mode="wireframe" />
             </div>
           </div>
         ))}
