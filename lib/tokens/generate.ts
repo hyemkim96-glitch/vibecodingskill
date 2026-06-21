@@ -1,26 +1,29 @@
-import { BrandToken } from '@/types/token';
+import { BrandToken, PlatformToken } from '@/types/token';
 
-export function generateDesignMd(token: BrandToken): string {
+function platformDesignMd(token: BrandToken, platform: 'mobile' | 'web'): string {
+  const p: PlatformToken = token.platforms[platform];
+  const label = platform === 'mobile' ? 'Mobile (390px)' : 'Web (1440px)';
+
   const colors = token.colors
     .map((c) => `- **${c.name}**: \`${c.value}\` — ${c.role}`)
     .join('\n');
 
-  const typeSizes = token.typography.sizes
+  const typeSizes = p.typography.sizes
     .map((s) => `| ${s.role} | ${s.size} | ${s.lineHeight} | ${s.letterSpacing} |`)
     .join('\n');
 
-  const spacing = token.spacing.scale
+  const spacing = p.spacing.scale
     .map((s) => `- ${s.name}: \`${s.value}\` (${s.token})`)
     .join('\n');
 
-  const shapes = token.shapes
+  const shapes = p.shapes
     .map((s) => `- ${s.element}: \`${s.value}\``)
     .join('\n');
 
   const dos = token.guidelines.dos.map((d) => `- ${d}`).join('\n');
   const donts = token.guidelines.donts.map((d) => `- ${d}`).join('\n');
 
-  return `# ${token.name} Design Token
+  return `# ${token.name} Design Token — ${label}
 > Updated: ${token.updatedAt} | Category: ${token.category} | Theme: ${token.theme}
 
 ${token.description}
@@ -35,9 +38,9 @@ ${colors}
 
 ## Typography
 
-**Font Family:** ${token.typography.family}
-**Substitute:** ${token.typography.substitute ?? 'system-ui'}
-**Weights:** ${token.typography.weights.join(', ')}
+**Font Family:** ${p.typography.family}
+**Substitute:** ${p.typography.substitute ?? 'system-ui'}
+**Weights:** ${p.typography.weights.join(', ')}
 
 | Role | Size | Line Height | Letter Spacing |
 |------|------|-------------|----------------|
@@ -47,7 +50,7 @@ ${typeSizes}
 
 ## Spacing
 
-**Base Unit:** ${token.spacing.baseUnit} | **Density:** ${token.spacing.density}
+**Base Unit:** ${p.spacing.baseUnit} | **Density:** ${p.spacing.density}
 
 ${spacing}
 
@@ -61,8 +64,10 @@ ${shapes}
 
 ## Layout
 
-- Max Width: ${token.layout.maxWidth}
-- Section Gap: ${token.layout.sectionGap}
+- Max Width: ${p.layout.maxWidth}
+- Section Gap: ${p.layout.sectionGap}
+${p.layout.columns ? `- Grid: ${p.layout.columns}` : ''}
+${p.layout.touchTarget ? `- Touch Target: ${p.layout.touchTarget}` : ''}
 
 ---
 
@@ -79,54 +84,60 @@ ${donts}
 ## AI Prompt Ready
 
 \`\`\`
-Use the ${token.name} design system:
+Use the ${token.name} design system (${label}):
 - Primary color: ${token.colors[0]?.value}
-- Font: ${token.typography.family} (substitute: ${token.typography.substitute ?? 'system-ui'})
-- Border radius: ${token.shapes.find(s => s.element === 'cards')?.value ?? token.shapes[0]?.value}
-- Spacing base: ${token.spacing.baseUnit}
+- Font: ${p.typography.family} (substitute: ${p.typography.substitute ?? 'system-ui'})
+- Border radius: ${p.shapes.find(s => s.element === 'card')?.value ?? p.shapes[0]?.value}
+- Spacing base: ${p.spacing.baseUnit}
 - Theme: ${token.theme}
 ${token.description}
 \`\`\`
 `;
 }
 
-export function generateCSS(token: BrandToken): string {
+export function generateDesignMd(token: BrandToken, platform: 'mobile' | 'web' = 'mobile'): string {
+  return platformDesignMd(token, platform);
+}
+
+export function generateCSS(token: BrandToken, platform: 'mobile' | 'web' = 'mobile'): string {
+  const p = token.platforms[platform];
   const colors = token.colors
     .map((c) => `  ${c.variable}: ${c.value};`)
     .join('\n');
 
-  const spacing = token.spacing.scale
+  const spacing = p.spacing.scale
     .map((s) => `  ${s.token}: ${s.value};`)
     .join('\n');
 
-  const shapes = token.shapes
-    .map((s) => `  --radius-${s.element.replace(/\s/g, '-')}: ${s.value};`)
+  const shapes = p.shapes
+    .map((s) => `  --radius-${s.element.replace(/[\s/]/g, '-')}: ${s.value};`)
     .join('\n');
 
   return `:root {
-  /* ${token.name} Design Tokens */
+  /* ${token.name} Design Tokens — ${platform === 'mobile' ? 'Mobile' : 'Web'} */
   /* Updated: ${token.updatedAt} */
 
   /* Colors */
 ${colors}
 
   /* Typography */
-  --font-primary: '${token.typography.family}', ${token.typography.substitute ?? 'system-ui'};
+  --font-primary: '${p.typography.family}', ${p.typography.substitute ?? 'system-ui'};
 
   /* Spacing */
-  --spacing-base: ${token.spacing.baseUnit};
+  --spacing-base: ${p.spacing.baseUnit};
 ${spacing}
 
   /* Border Radius */
 ${shapes}
 
   /* Layout */
-  --page-max-width: ${token.layout.maxWidth};
-  --section-gap: ${token.layout.sectionGap};
+  --page-max-width: ${p.layout.maxWidth};
+  --section-gap: ${p.layout.sectionGap};
 }`;
 }
 
-export function generateTailwind(token: BrandToken): string {
+export function generateTailwind(token: BrandToken, platform: 'mobile' | 'web' = 'mobile'): string {
+  const p = token.platforms[platform];
   const colors = token.colors
     .map((c) => {
       const name = c.name.toLowerCase().replace(/\s/g, '-');
@@ -134,11 +145,11 @@ export function generateTailwind(token: BrandToken): string {
     })
     .join('\n');
 
-  const spacing = token.spacing.scale
+  const spacing = p.spacing.scale
     .map((s) => `    '${s.name}': '${s.value}',`)
     .join('\n');
 
-  return `// tailwind.config.js — ${token.name} Design Tokens
+  return `// tailwind.config.js — ${token.name} Design Tokens (${platform})
 // Updated: ${token.updatedAt}
 
 module.exports = {
@@ -148,20 +159,21 @@ module.exports = {
 ${colors}
       },
       fontFamily: {
-        primary: ['${token.typography.family}', '${token.typography.substitute ?? 'system-ui'}'],
+        primary: ['${p.typography.family}', '${p.typography.substitute ?? 'system-ui'}'],
       },
       spacing: {
 ${spacing}
       },
       borderRadius: {
-${token.shapes.map((s) => `        '${s.element.replace(/\s/g, '-')}': '${s.value}',`).join('\n')}
+${p.shapes.map((s) => `        '${s.element.replace(/[\s/]/g, '-')}': '${s.value}',`).join('\n')}
       },
     },
   },
 };`;
 }
 
-export function generateDesignTokensJSON(token: BrandToken): string {
+export function generateDesignTokensJSON(token: BrandToken, platform: 'mobile' | 'web' = 'mobile'): string {
+  const p = token.platforms[platform];
   const colors: Record<string, { value: string; type: string; description: string }> = {};
   token.colors.forEach((c) => {
     const key = c.name.toLowerCase().replace(/\s/g, '-');
@@ -169,25 +181,25 @@ export function generateDesignTokensJSON(token: BrandToken): string {
   });
 
   const spacing: Record<string, { value: string; type: string }> = {};
-  token.spacing.scale.forEach((s) => {
+  p.spacing.scale.forEach((s) => {
     spacing[s.name] = { value: s.value, type: 'spacing' };
   });
 
   const radius: Record<string, { value: string; type: string }> = {};
-  token.shapes.forEach((s) => {
-    radius[s.element.replace(/\s/g, '-')] = { value: s.value, type: 'borderRadius' };
+  p.shapes.forEach((s) => {
+    radius[s.element.replace(/[\s/]/g, '-')] = { value: s.value, type: 'borderRadius' };
   });
 
   const json = {
     $metadata: { tokenSetOrder: ['color', 'spacing', 'borderRadius'] },
-    $description: `${token.name} Design Tokens — Updated: ${token.updatedAt}`,
+    $description: `${token.name} Design Tokens (${platform}) — Updated: ${token.updatedAt}`,
     color: colors,
     spacing,
     borderRadius: radius,
     typography: {
-      fontFamily: { value: token.typography.family, type: 'fontFamily' },
+      fontFamily: { value: p.typography.family, type: 'fontFamily' },
       weights: Object.fromEntries(
-        token.typography.weights.map((w) => [String(w), { value: String(w), type: 'fontWeight' }])
+        p.typography.weights.map((w) => [String(w), { value: String(w), type: 'fontWeight' }])
       ),
     },
   };
@@ -195,16 +207,17 @@ export function generateDesignTokensJSON(token: BrandToken): string {
   return JSON.stringify(json, null, 2);
 }
 
-export function generateFigmaVariables(token: BrandToken): string {
+export function generateFigmaVariables(token: BrandToken, platform: 'mobile' | 'web' = 'mobile'): string {
+  const p = token.platforms[platform];
   const colorRows = token.colors
     .map((c) => `| Color | ${c.name} | ${c.value} | ${c.variable.replace('--color-', '')} |`)
     .join('\n');
 
-  const spacingRows = token.spacing.scale
+  const spacingRows = p.spacing.scale
     .map((s) => `| Number | spacing/${s.name} | ${s.value} | ${s.token.replace('--spacing-', '')} |`)
     .join('\n');
 
-  return `# ${token.name} — Figma Variables 가이드
+  return `# ${token.name} — Figma Variables 가이드 (${platform})
 > Updated: ${token.updatedAt}
 
 ## Figma Variables 직접 추가 방법
@@ -238,7 +251,7 @@ ${spacingRows}
 3. 아래 JSON을 붙여넣기 → **Import** 클릭
 
 \`\`\`json
-${generateDesignTokensJSON(token)}
+${generateDesignTokensJSON(token, platform)}
 \`\`\`
 
 ---

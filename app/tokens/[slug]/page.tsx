@@ -15,13 +15,21 @@ export default async function TokenPage({ params }: { params: Promise<{ slug: st
 
   if (!token) notFound();
 
-  const codes = {
-    designMd: generateDesignMd(token),
-    css: generateCSS(token),
-    tailwind: generateTailwind(token),
-    json: generateDesignTokensJSON(token),
-    figma: generateFigmaVariables(token),
+  const mobileCodes = {
+    designMd: generateDesignMd(token, 'mobile'),
+    css: generateCSS(token, 'mobile'),
+    tailwind: generateTailwind(token, 'mobile'),
+    json: generateDesignTokensJSON(token, 'mobile'),
+    figma: generateFigmaVariables(token, 'mobile'),
   };
 
-  return <TokenPageClient token={token} codes={codes} />;
+  const webCodes = {
+    designMd: generateDesignMd(token, 'web'),
+    css: generateCSS(token, 'web'),
+    tailwind: generateTailwind(token, 'web'),
+    json: generateDesignTokensJSON(token, 'web'),
+    figma: generateFigmaVariables(token, 'web'),
+  };
+
+  return <TokenPageClient token={token} mobileCodes={mobileCodes} webCodes={webCodes} />;
 }

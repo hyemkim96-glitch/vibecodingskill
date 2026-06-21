@@ -6,6 +6,7 @@ import { Copy, Check, Download } from 'lucide-react';
 import styles from './TokenPage.module.css';
 
 type TabKey = 'designMd' | 'css' | 'tailwind' | 'json' | 'figma';
+type Platform = 'mobile' | 'web';
 
 const TABS: { key: TabKey; label: string }[] = [
   { key: 'designMd', label: 'Design.md' },
@@ -25,12 +26,17 @@ const FILE_EXTENSIONS: Record<TabKey, string> = {
 
 interface Props {
   token: BrandToken;
-  codes: Record<TabKey, string>;
+  mobileCodes: Record<TabKey, string>;
+  webCodes: Record<TabKey, string>;
 }
 
-export default function TokenPageClient({ token, codes }: Props) {
+export default function TokenPageClient({ token, mobileCodes, webCodes }: Props) {
   const [activeTab, setActiveTab] = useState<TabKey>('designMd');
+  const [platform, setPlatform] = useState<Platform>('mobile');
   const [copied, setCopied] = useState(false);
+
+  const codes = platform === 'mobile' ? mobileCodes : webCodes;
+  const p = token.platforms[platform];
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(codes[activeTab]);
@@ -43,7 +49,7 @@ export default function TokenPageClient({ token, codes }: Props) {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${token.slug}-${FILE_EXTENSIONS[activeTab]}`;
+    a.download = `${token.slug}-${platform}-${FILE_EXTENSIONS[activeTab]}`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -65,6 +71,22 @@ export default function TokenPageClient({ token, codes }: Props) {
         </div>
 
         <div className={styles.divider} />
+
+        {/* Platform Toggle */}
+        <div className={styles.platformToggle}>
+          <button
+            className={`${styles.platformBtn} ${platform === 'mobile' ? styles.platformBtnActive : ''}`}
+            onClick={() => setPlatform('mobile')}
+          >
+            Mobile
+          </button>
+          <button
+            className={`${styles.platformBtn} ${platform === 'web' ? styles.platformBtnActive : ''}`}
+            onClick={() => setPlatform('web')}
+          >
+            Web
+          </button>
+        </div>
 
         {/* Color Palette */}
         <section className={styles.section}>
@@ -92,9 +114,9 @@ export default function TokenPageClient({ token, codes }: Props) {
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Typography</h2>
           <div className={styles.typeMeta}>
-            <span className={styles.typeFamily}>{token.typography.family}</span>
-            <span className={styles.typeSubstitute}>Substitute: {token.typography.substitute}</span>
-            <span className={styles.typeWeights}>Weights: {token.typography.weights.join(', ')}</span>
+            <span className={styles.typeFamily}>{p.typography.family}</span>
+            <span className={styles.typeSubstitute}>Substitute: {p.typography.substitute}</span>
+            <span className={styles.typeWeights}>Weights: {p.typography.weights.join(', ')}</span>
           </div>
           <div className={styles.typeScaleTable}>
             <div className={styles.tableHeader}>
@@ -103,7 +125,7 @@ export default function TokenPageClient({ token, codes }: Props) {
               <span>Line Height</span>
               <span>Letter Spacing</span>
             </div>
-            {token.typography.sizes.map((s) => (
+            {p.typography.sizes.map((s) => (
               <div key={s.role} className={styles.tableRow}>
                 <span className={styles.typeRole}>{s.role}</span>
                 <span>{s.size}</span>
@@ -126,8 +148,9 @@ export default function TokenPageClient({ token, codes }: Props) {
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Spacing & Shape</h2>
           <div className={styles.spacingMeta}>
-            <span className={styles.metaChip}>Base: {token.spacing.baseUnit}</span>
-            <span className={styles.metaChip}>{token.spacing.density}</span>
+            <span className={styles.metaChip}>Base: {p.spacing.baseUnit}</span>
+            <span className={styles.metaChip}>{p.spacing.density}</span>
+            <span className={styles.metaChip}>Max: {p.layout.maxWidth}</span>
           </div>
           <div className={styles.spacingTable}>
             <div className={styles.tableHeader}>
@@ -135,7 +158,7 @@ export default function TokenPageClient({ token, codes }: Props) {
               <span>Value</span>
               <span>Preview</span>
             </div>
-            {token.spacing.scale.map((s) => (
+            {p.spacing.scale.map((s) => (
               <div key={s.token} className={styles.tableRow}>
                 <span>{s.name}</span>
                 <span>{s.value}</span>
@@ -154,7 +177,7 @@ export default function TokenPageClient({ token, codes }: Props) {
               <span>Value</span>
               <span>Preview</span>
             </div>
-            {token.shapes.map((s) => (
+            {p.shapes.map((s) => (
               <div key={s.element} className={styles.tableRow}>
                 <span>{s.element}</span>
                 <span>{s.value}</span>
@@ -211,7 +234,7 @@ export default function TokenPageClient({ token, codes }: Props) {
 
           {/* Actions */}
           <div className={styles.codeActions}>
-            <span className={styles.fileName}>{FILE_EXTENSIONS[activeTab]}</span>
+            <span className={styles.fileName}>{platform.toUpperCase()} · {FILE_EXTENSIONS[activeTab]}</span>
             <div className={styles.actionBtns}>
               <button
                 className={`${styles.actionBtn} ${copied ? styles.actionBtnCopied : ''}`}

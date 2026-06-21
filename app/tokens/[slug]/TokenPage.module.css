@@ -58,6 +58,32 @@
   margin: var(--spacing-8) 0;
 }
 
+.platformToggle {
+  display: flex;
+  gap: var(--spacing-2);
+  margin-bottom: var(--spacing-6);
+}
+
+.platformBtn {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: var(--spacing-2) var(--spacing-4);
+  border: 1px solid var(--color-graphite);
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--color-ash);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.platformBtnActive {
+  background: var(--color-bone);
+  color: var(--color-void);
+  border-color: var(--color-bone);
+}
+
 .section {
   display: flex;
   flex-direction: column;
