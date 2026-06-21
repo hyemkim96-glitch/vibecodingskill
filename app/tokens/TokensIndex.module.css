@@ -88,9 +88,11 @@
 /* Mini UI preview */
 .miniUI {
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     aspect-ratio: 4 / 3;
     overflow: hidden;
+    padding: 16px;
 }
 
 /* Card footer — index + name */

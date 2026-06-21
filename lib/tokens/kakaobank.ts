@@ -3,7 +3,7 @@ import { BrandToken } from '@/types/token';
 const colors = [
   { name: '시그니처 옐로우', value: '#FEE500', variable: '--color-brand-yellow', role: '브랜드 Primary, 핵심 CTA 버튼 배경' },
   { name: '시그니처 브라운', value: '#3C1E1E', variable: '--color-brand-brown', role: 'Yellow 버튼 위 텍스트/아이콘' },
-  { name: 'Blue Primary', value: '#1B5BFF', variable: '--color-blue-primary', role: '금융 액션, 이체, 금리 강조' },
+  { name: 'Blue Primary', value: '#1A49C0', variable: '--color-blue-primary', role: '금융 액션, 이체, 금리 강조' },
   { name: 'Blue Light', value: '#EBF0FF', variable: '--color-blue-light', role: '블루 배경 강조 영역' },
   { name: 'Gray 900', value: '#191919', variable: '--color-gray-900', role: '본문 텍스트, 금액 표시' },
   { name: 'Gray 700', value: '#444444', variable: '--color-gray-700', role: '보조 텍스트' },

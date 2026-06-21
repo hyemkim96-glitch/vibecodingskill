@@ -2,7 +2,7 @@ import { BrandToken } from '@/types/token';
 
 const colors = [
   { name: 'Mint', value: '#2AC1BC', variable: '--color-mint', role: '브랜드 Primary, CTA 버튼, 활성 상태' },
-  { name: 'Mint Light', value: '#E8F8F7', variable: '--color-mint-light', role: '민트 배경, 강조 영역' },
+  { name: 'Mint Light', value: '#E6F9F8', variable: '--color-mint-light', role: '민트 배경, 강조 영역' },
   { name: '포인트 옐로우', value: '#FFCE00', variable: '--color-point-yellow', role: '배달 상태 강조, 포인트 액센트' },
   { name: 'Gray 900', value: '#333333', variable: '--color-gray-900', role: '본문 텍스트, 제목' },
   { name: 'Gray 700', value: '#666666', variable: '--color-gray-700', role: '보조 텍스트' },

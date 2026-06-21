@@ -1,8 +1,8 @@
 import { BrandToken } from '@/types/token';
 
 const colors = [
-  { name: '시그니처 레드', value: '#C02323', variable: '--color-brand-red', role: '브랜드 Primary, CTA 버튼, 긴급 세일' },
-  { name: '배송 오렌지', value: '#FF6600', variable: '--color-delivery-orange', role: '빠른 배송 뱃지, 배송 강조' },
+  { name: '시그니처 레드', value: '#E40C2B', variable: '--color-brand-red', role: '브랜드 Primary, CTA 버튼, 긴급 세일' },
+  { name: '배송 오렌지', value: '#FF6700', variable: '--color-delivery-orange', role: '빠른 배송 뱃지, 배송 강조' },
   { name: 'Yellow', value: '#FFD700', variable: '--color-yellow', role: '베스트, 추천, 평점 별' },
   { name: 'Gray 900', value: '#111111', variable: '--color-gray-900', role: '본문 텍스트, 상품명' },
   { name: 'Gray 700', value: '#444444', variable: '--color-gray-700', role: '보조 텍스트, 스펙' },

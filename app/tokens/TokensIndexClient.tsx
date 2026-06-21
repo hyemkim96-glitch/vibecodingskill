@@ -20,6 +20,14 @@ function getPrimaryColor(colors: BrandToken['colors']) {
     return explicit?.value ?? getBrandColors(colors)[0]?.value ?? '#888';
 }
 
+/** 브랜드 배경색 — '메인 배경' 또는 '보조 배경'에서 찾기 */
+function getBgColor(colors: BrandToken['colors']) {
+    const warm = colors.find(c => /메인 배경/.test(c.role));
+    if (warm) return warm.value;
+    const sub = colors.find(c => /카드 배경|보조 배경/.test(c.role));
+    return sub?.value ?? '#f5f5f5';
+}
+
 /** primary 위에 올라갈 텍스트 색상 (명도 판단) */
 function getContrastColor(hex: string): string {
     const r = parseInt(hex.slice(1, 3), 16);
@@ -33,33 +41,29 @@ function getContrastColor(hex: string): string {
 function BrandMiniUI({ token }: { token: BrandToken }) {
     const primary = getPrimaryColor(token.colors);
     const onPrimary = getContrastColor(primary);
-    const brandColors = getBrandColors(token.colors);
+    const bg = getBgColor(token.colors);
     const mobileShapes = token.platforms.mobile.shapes;
     const btnRadius = mobileShapes.find(s => s.element === 'button')?.value ?? '8px';
 
     return (
-        <div className={styles.miniUI}>
-            {/* 상단: 브랜드 primary 컬러 + 버튼 모양 */}
+        <div className={styles.miniUI} style={{ background: bg }}>
             <div style={{
-                flex: 3,
-                background: primary,
-                display: 'flex',
+                display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
+                background: primary,
+                color: onPrimary,
+                borderRadius: btnRadius,
+                padding: '8px 18px',
+                fontSize: '11px',
+                fontWeight: 700,
+                letterSpacing: '0.02em',
+                whiteSpace: 'nowrap',
+                maxWidth: '90%',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
             }}>
-                <div style={{
-                    width: '52px',
-                    height: '22px',
-                    background: onPrimary,
-                    borderRadius: btnRadius,
-                    opacity: 0.85,
-                }} />
-            </div>
-            {/* 하단: 팔레트 스트라이프 */}
-            <div style={{ flex: 1, display: 'flex' }}>
-                {brandColors.slice(0, 5).map((c, i) => (
-                    <div key={i} style={{ flex: 1, background: c.value }} />
-                ))}
+                {token.tagline}
             </div>
         </div>
     );

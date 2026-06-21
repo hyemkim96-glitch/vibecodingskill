@@ -149,7 +149,7 @@
 
 .colorRole {
   font-size: var(--font-size-base);
-  color: var(--color-graphite);
+  color: var(--color-ash);
   line-height: 1.4;
 }
 
@@ -314,7 +314,7 @@
   content: '−';
   position: absolute;
   left: 0;
-  color: var(--color-graphite);
+  color: var(--color-ash);
 }
 
 /* ── Right column — Sticky code panel ── */
