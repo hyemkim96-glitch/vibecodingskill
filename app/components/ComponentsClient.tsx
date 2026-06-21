@@ -1,38 +1,50 @@
 'use client';
 
-import ComponentSheet from '@/components/ComponentSheet';
-import { getCategoryGroups } from '@/lib/serviceCategories';
+import { useState } from 'react';
+import ComponentSheet, { COMPONENT_CATEGORIES, ComponentCategory } from '@/components/ComponentSheet';
+import { allTokens } from '@/lib/tokens';
+
+const representative = allTokens[0];
 
 export default function ComponentsClient() {
-  const groups = getCategoryGroups();
+  const [active, setActive] = useState<ComponentCategory>('buttons');
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-1">
         <h1 className="text-sm font-medium tracking-widest uppercase" style={{ color: 'var(--color-ash)' }}>
           Components
         </h1>
         <p className="text-xs" style={{ color: 'var(--color-ash)' }}>
-          서비스 유형별로 분류된 컴포넌트 와이어프레임 — 해당 서비스에서 쓰이는 버튼·입력·카드·배지·칩을 한 시트에 나열
+          컴포넌트 유형별 와이어프레임 — 버튼·입력·카드·피드백·내비게이션을 한 시트에 나열
         </p>
       </div>
 
-      <div className="flex flex-col gap-10">
-        {groups.map(({ category, representative }) => (
-          <section key={category.key} className="flex flex-col gap-3">
-            <div className="flex flex-col gap-0.5">
-              <h2 className="text-sm font-semibold" style={{ color: 'var(--color-bone)' }}>
-                {category.label}
-              </h2>
-              <p className="text-xs" style={{ color: 'var(--color-ash)' }}>
-                {category.description}
-              </p>
-            </div>
-            <div className="rounded-lg overflow-hidden" style={{ border: '1px solid var(--color-graphite)' }}>
-              <ComponentSheet token={representative} service={category.key} />
-            </div>
-          </section>
+      {/* Tab bar */}
+      <div className="flex overflow-x-auto" style={{ borderBottom: '1px solid var(--color-graphite)' }}>
+        {COMPONENT_CATEGORIES.map(({ key, label }) => (
+          <button
+            key={key}
+            onClick={() => setActive(key)}
+            className="shrink-0 text-xs px-4 py-2.5 cursor-pointer transition-colors"
+            style={{
+              color: active === key ? 'var(--color-bone)' : 'var(--color-ash)',
+              fontWeight: active === key ? 600 : 400,
+              marginBottom: -1,
+              background: 'transparent',
+              border: 'none',
+              borderBottom: active === key
+                ? '2px solid var(--color-bone)'
+                : '2px solid transparent',
+            } as React.CSSProperties}
+          >
+            {label}
+          </button>
         ))}
+      </div>
+
+      <div className="rounded-lg overflow-hidden" style={{ border: '1px solid var(--color-graphite)' }}>
+        <ComponentSheet token={representative} category={active} />
       </div>
     </div>
   );

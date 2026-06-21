@@ -38,7 +38,7 @@ export function motionVars(t: ResolvedTheme): React.CSSProperties {
 }
 
 export interface DS {
-  t: ResolvedTheme;
+  t: ResolvedTheme; // mutable — callers may override (e.g. isMobile)
   Text: React.FC<{
     role?: keyof ResolvedTheme['type'];
     color?: string;

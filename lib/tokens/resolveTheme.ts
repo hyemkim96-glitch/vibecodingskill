@@ -1,36 +1,46 @@
 import { BrandToken } from '@/types/token';
 
 /**
- * Design System Engine — Theme Resolver
+ * Design System Engine — Theme Resolver v2
  *
- * Pure function that maps a raw BrandToken (+ platform) into a fully resolved,
- * semantic theme. Every spacing, type size, radius and color the UI renderer
- * uses comes from here — so the preview is genuinely token-driven, not a
- * mockup with swapped colors.
+ * Pure function: BrandToken + platform + mode → ResolvedTheme.
+ * Every px, color, weight and timing value the renderer uses flows from here.
+ *
+ * Key improvements over v1:
+ * - px(): handles rem units (converts at 16px base), not just px strings
+ * - contrastOn(): WCAG-compliant relative luminance (sRGB linearisation), not
+ *   the simplified weighted-sum shortcut
+ * - surface vs surfaceAlt: separate regex buckets → never the same color
+ * - weightMedium: picks the weight closest to 500 from the brand's actual set,
+ *   so brands with only [400, 700] don't end up requesting a missing 500
+ * - dark-theme support: WIREFRAME_DARK palette used when token.theme === 'dark'
+ * - primaryTint: tint ratio scales with primary luminance so the tint stays
+ *   visible on light backgrounds (pale colours tinted less aggressively)
+ * - resolveMotion: safe against missing deep / missing interaction fields
  */
 
 export interface ResolvedType {
-  size: number; // px
-  lineHeight: number; // unitless multiplier
+  size: number;        // px
+  lineHeight: number;  // unitless multiplier
   letterSpacing: string;
   weight: number;
 }
 
 export interface ResolvedMotion {
-  duration: number; // ms — standard transition
-  easing: string; // css timing function
-  pressScale: number; // active/press feedback (1 = none)
-  hoverScale: number; // hover feedback (1 = none)
+  duration: number;    // ms — standard transition
+  easing: string;      // css timing function
+  pressScale: number;  // active/press feedback (0.97 = slight shrink)
+  hoverScale: number;  // hover lift (1 = none, 1.02 = slight grow)
 }
 
 export interface ResolvedTheme {
-  // ── colors (semantic) ──
+  // ── colors ──
   primary: string;
   onPrimary: string;
-  primaryTint: string; // light brand background (소프트 배지/칩 배경)
+  primaryTint: string;  // opaque soft-badge / chip background
   bg: string;
-  surface: string; // card / elevated surface
-  surfaceAlt: string; // secondary fill (chips, inputs)
+  surface: string;      // card / elevated surface
+  surfaceAlt: string;   // secondary fills, skeleton, striped thumbs
   textMain: string;
   textSub: string;
   textMuted: string;
@@ -55,12 +65,12 @@ export interface ResolvedTheme {
 
   // ── spacing (semantic, px numbers) ──
   space: { xs: number; sm: number; md: number; lg: number; xl: number };
-  containerPad: number; // outer screen padding
-  cardPad: number; // inner card padding
-  stackGap: number; // gap between stacked blocks
-  rowGap: number; // gap inside a row
+  containerPad: number;
+  cardPad: number;
+  stackGap: number;
+  rowGap: number;
 
-  // ── radii (px number or raw string for multi-corner) ──
+  // ── radii ──
   radius: {
     button: string;
     card: string;
@@ -75,27 +85,44 @@ export interface ResolvedTheme {
   // ── meta ──
   density: string;
   isMobile: boolean;
+  isDark: boolean;
   category: string;
   isLocal: boolean;
 }
 
 /* ── helpers ── */
 
-function luminance(hex: string): number {
+/**
+ * WCAG-correct relative luminance.
+ * Uses sRGB linearisation (gamma 2.2 approximation) rather than the
+ * simple 0.299/0.587/0.114 weighted sum — the latter over-estimates
+ * luminance for saturated greens/cyans, causing contrastOn to return
+ * the wrong colour for mid-range hues.
+ */
+function relativeLuminance(hex: string): number {
   const h = hex.replace('#', '');
   if (h.length < 6) return 0.5;
-  const r = parseInt(h.slice(0, 2), 16);
-  const g = parseInt(h.slice(2, 4), 16);
-  const b = parseInt(h.slice(4, 6), 16);
-  return (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  const linearize = (v: number) => {
+    const s = v / 255;
+    return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4);
+  };
+  const r = linearize(parseInt(h.slice(0, 2), 16));
+  const g = linearize(parseInt(h.slice(2, 4), 16));
+  const b = linearize(parseInt(h.slice(4, 6), 16));
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
 }
 
-function contrastOn(hex: string): string {
-  return luminance(hex) > 0.62 ? '#111111' : '#ffffff';
+export function contrastOn(hex: string): string {
+  const L = relativeLuminance(hex);
+  // contrast ratio vs white = (L + 0.05) / (1 + 0.05)
+  // contrast ratio vs black = (0 + 0.05) / (L + 0.05) = 0.05 / (L + 0.05)
+  const onWhite = (1.05) / (L + 0.05);
+  const onBlack = (L + 0.05) / 0.05;
+  return onBlack > onWhite ? '#111111' : '#ffffff';
 }
 
-/** mix a hex color toward white by ratio (0..1) — used to derive a soft tint */
-function tint(hex: string, ratio: number): string {
+/** Mix a hex colour toward white by ratio (0 → original, 1 → white). */
+function tintToward(hex: string, ratio: number): string {
   const h = hex.replace('#', '');
   if (h.length < 6) return hex;
   const mix = (c: number) => Math.round(c + (255 - c) * ratio);
@@ -105,49 +132,89 @@ function tint(hex: string, ratio: number): string {
   return '#' + [r, g, b].map((v) => v.toString(16).padStart(2, '0')).join('');
 }
 
-function findColor(
-  colors: BrandToken['colors'],
-  role: RegExp,
-  fallback: string,
-): string {
+/** Mix a hex colour toward black by ratio (0 → original, 1 → black). */
+function shadeToward(hex: string, ratio: number): string {
+  const h = hex.replace('#', '');
+  if (h.length < 6) return hex;
+  const mix = (c: number) => Math.round(c * (1 - ratio));
+  const r = mix(parseInt(h.slice(0, 2), 16));
+  const g = mix(parseInt(h.slice(2, 4), 16));
+  const b = mix(parseInt(h.slice(4, 6), 16));
+  return '#' + [r, g, b].map((v) => v.toString(16).padStart(2, '0')).join('');
+}
+
+/**
+ * Derive an opaque soft-tint background that reads well on both light and dark
+ * surfaces without alpha. Adapts the ratio to the primary's own luminance so
+ * very pale colours (e.g. Kakao yellow) don't wash out completely.
+ */
+function deriveTint(primary: string, isDark: boolean): string {
+  const L = relativeLuminance(primary);
+  if (isDark) {
+    // On dark surfaces, shade primary slightly for the tint slot
+    return shadeToward(primary, Math.min(0.6, 0.2 + L * 0.5));
+  }
+  // On light surfaces: the more luminous the primary, the less we tint it
+  // (a pale yellow at L=0.8 only needs ~0.6 extra whitening; a dark navy at
+  // L=0.05 can go all the way to 0.90 toward white)
+  const ratio = Math.max(0.60, Math.min(0.90, 1 - L * 0.4));
+  return tintToward(primary, ratio);
+}
+
+function findColor(colors: BrandToken['colors'], role: RegExp, fallback: string): string {
   return colors.find((c) => role.test(c.role))?.value ?? fallback;
 }
 
 function isNeutral(name: string): boolean {
-  return /gray|grey|white|black|neutral/i.test(name);
+  return /gray|grey|white|black|neutral|배경|표면/i.test(name);
 }
 
+/**
+ * Parse a CSS size string to px number.
+ * Handles: '14px', '14', '0.875rem', '1.2rem', '1.5' (treated as px).
+ */
 function px(value: string | undefined, fallback: number): number {
   if (!value) return fallback;
-  const n = parseFloat(value);
+  const trimmed = value.trim();
+  if (trimmed.endsWith('rem')) {
+    const n = parseFloat(trimmed);
+    return Number.isFinite(n) ? Math.round(n * 16) : fallback;
+  }
+  const n = parseFloat(trimmed);
   return Number.isFinite(n) ? n : fallback;
 }
 
-/** Parse the brand's freeform interaction tokens into usable motion values. */
+/**
+ * Resolve the brand's interaction token (freeform text) into usable values.
+ * Safe against missing deep / missing interaction fields.
+ */
 function resolveMotion(deep: BrandToken['deep']): ResolvedMotion {
   const i = deep?.interaction;
-  // duration: prefer the "standard" value, else first number in the string
   let duration = 200;
   if (i?.duration) {
+    // prefer "NNNms (standard)" label
     const std = /(\d+)\s*ms\s*\(standard\)/i.exec(i.duration);
     const first = /(\d+)\s*ms/i.exec(i.duration);
-    duration = parseInt((std?.[1] ?? first?.[1]) ?? '200', 10);
+    const parsed = parseInt((std?.[1] ?? first?.[1]) ?? '', 10);
+    if (Number.isFinite(parsed) && parsed > 0 && parsed < 2000) duration = parsed;
   }
-  // easing: extract a cubic-bezier(...) or a named timing function
+
   let easing = 'cubic-bezier(0.4, 0, 0.2, 1)';
   if (i?.easing) {
     const cb = /cubic-bezier\([^)]*\)/i.exec(i.easing);
     const named = /\b(ease-in-out|ease-out|ease-in|ease|linear)\b/i.exec(i.easing);
     easing = cb?.[0] ?? named?.[0] ?? easing;
   }
-  const scaleFrom = (s: string | undefined, fb: number) => {
+
+  const scaleFrom = (s: string | undefined, fb: number): number => {
     if (!s) return fb;
-    const m = /scale\(([\d.]+)\)|([\d.]+)/.exec(s);
-    const v = parseFloat(m?.[1] ?? m?.[2] ?? '');
-    return Number.isFinite(v) && v > 0 && v <= 1.2 ? v : fb;
+    const m = /scale\(([\d.]+)\)/.exec(s) ?? /([\d.]+)/.exec(s);
+    const v = parseFloat(m?.[1] ?? '');
+    return Number.isFinite(v) && v > 0 && v < 2 ? v : fb;
   };
+
   return {
-    duration: Number.isFinite(duration) ? duration : 200,
+    duration,
     easing,
     pressScale: scaleFrom(i?.pressScale, 0.97),
     hoverScale: scaleFrom(i?.hoverScale, 1),
@@ -163,18 +230,15 @@ function resolveType(
   const found = sizes.find((s) => role.test(s.role));
   return {
     size: px(found?.size, fallbackSize),
-    lineHeight: found ? parseFloat(found.lineHeight) || 1.4 : 1.4,
+    lineHeight: found ? (parseFloat(found.lineHeight) || 1.4) : 1.4,
     letterSpacing: found?.letterSpacing ?? '0',
     weight,
   };
 }
 
-/* ── main resolver ── */
+/* ── wireframe palettes ── */
 
-export type ThemeMode = 'brand' | 'wireframe';
-
-/** Neutral grayscale palette — keeps structure, removes brand color. */
-const WIREFRAME_COLORS = {
+const WIREFRAME_LIGHT = {
   primary: '#52525b',
   onPrimary: '#ffffff',
   primaryTint: '#e4e4e7',
@@ -190,6 +254,27 @@ const WIREFRAME_COLORS = {
   danger: '#71717a',
 };
 
+// Slightly darker for dark-background brands in wireframe mode
+const WIREFRAME_DARK = {
+  primary: '#a1a1aa',
+  onPrimary: '#18181b',
+  primaryTint: '#3f3f46',
+  bg: '#18181b',
+  surface: '#27272a',
+  surfaceAlt: '#3f3f46',
+  textMain: '#f4f4f5',
+  textSub: '#a1a1aa',
+  textMuted: '#71717a',
+  border: '#3f3f46',
+  accent: '#71717a',
+  success: '#71717a',
+  danger: '#71717a',
+};
+
+/* ── main resolver ── */
+
+export type ThemeMode = 'brand' | 'wireframe';
+
 export function resolveTheme(
   token: BrandToken,
   platform: 'mobile' | 'web',
@@ -197,88 +282,86 @@ export function resolveTheme(
 ): ResolvedTheme {
   const c = token.colors;
   const p = token.platforms[platform];
+  const isDark = token.theme === 'dark';
 
-  // colors
+  // ── primary color ──
   const primary =
     c.find((col) => /primary|주요 액션|CTA/i.test(col.role))?.value ??
     c.find((col) => !isNeutral(col.name))?.value ??
     '#3182F6';
   const onPrimary = contrastOn(primary);
+
+  // accent: first non-neutral colour that isn't primary
   const accent =
     c.find((col) => !isNeutral(col.name) && col.value !== primary)?.value ??
     primary;
 
-  // typography
-  const weights = p.typography.weights;
+  // ── typography weights ──
+  const weights = p.typography.weights.slice().sort((a, b) => a - b);
   const weightRegular = weights[0] ?? 400;
-  const weightMedium = weights.find((w) => w >= 500 && w < 700) ?? 500;
   const weightBold = weights[weights.length - 1] ?? 700;
+  // closest to 500 from the actual weight set (avoids requesting missing weights)
+  const weightMedium = weights.reduce((best, w) =>
+    Math.abs(w - 500) < Math.abs(best - 500) ? w : best, weightBold);
+
   const sizes = p.typography.sizes;
 
-  // ── spacing ──
-  // The brand's raw scale is noisy and often lacks intermediate steps, so
-  // mapping each semantic role to the "nearest" raw value collapses duplicates
-  // (e.g. sm and md both → 8) and yields ragged, inconsistent whitespace.
-  // Instead we lock to a clean, monotonic 4px-grid scale and let DENSITY drive
-  // the breathing room (padding / gaps). The scale stays uniform across every
-  // component and pattern; only the rhythm tightens or loosens.
+  // ── spacing — monotonic 4px grid, density drives rhythm ──
   const density = p.spacing.density;
-
-  // base unit from the brand's scale (smallest positive step), clamped to 4–6px
   const scaleNums = p.spacing.scale
     .map((s) => px(s.value, 0))
     .filter((n) => n > 0)
     .sort((a, b) => a - b);
   const baseUnit = Math.min(6, Math.max(4, scaleNums[0] || 4));
-
-  // canonical, always-monotonic semantic scale
   const space = {
-    xs: baseUnit, // 4
-    sm: baseUnit * 2, // 8
-    md: baseUnit * 3, // 12
-    lg: baseUnit * 4, // 16
-    xl: baseUnit * 6, // 24
+    xs: baseUnit,          // 4–6px
+    sm: baseUnit * 2,      // 8–12px
+    md: baseUnit * 3,      // 12–18px
+    lg: baseUnit * 4,      // 16–24px
+    xl: baseUnit * 6,      // 24–36px
   };
 
-  // density only adjusts container/card padding and stack/row gaps
   const rhythm = {
-    compact: { container: 12, card: 12, stack: 8, row: 6 },
-    regular: { container: 16, card: 16, stack: 12, row: 8 },
-    comfortable: { container: 18, card: 16, stack: 14, row: 9 },
-    spacious: { container: 24, card: 20, stack: 16, row: 10 },
+    compact:     { container: 12, card: 12, stack: 8,  row: 6  },
+    regular:     { container: 16, card: 16, stack: 12, row: 8  },
+    comfortable: { container: 18, card: 16, stack: 14, row: 9  },
+    spacious:    { container: 24, card: 20, stack: 16, row: 10 },
   } as const;
   const r = rhythm[(density as keyof typeof rhythm)] ?? rhythm.regular;
-  const containerPad = r.container;
-  const cardPad = r.card;
-  const stackGap = r.stack;
-  const rowGap = r.row;
 
-  // radii
+  // ── radii ──
   const shape = (el: string, fb: string) =>
     p.shapes.find((s) => s.element === el)?.value ?? fb;
 
-  const isLocal = !!token.serviceTypes?.some((s) =>
-    /지역|커뮤니티|중고|동네/.test(s),
-  );
+  // ── brand palette (separate regexes so surface ≠ surfaceAlt) ──
+  const bgFallback = isDark ? '#111111' : '#ffffff';
+  const surfFallback = isDark ? '#1e1e1e' : '#f5f6f8';
+  const surfAltFallback = isDark ? '#2a2a2a' : '#eef0f3';
 
   const brandColors = {
     primary,
     onPrimary,
     primaryTint:
-      c.find((col) => /강조 영역 배경|강조 배경/.test(col.role))?.value ??
-      tint(primary, 0.85),
-    bg: findColor(c, /기본 배경|배경.*표면/, '#ffffff'),
-    surface: findColor(c, /카드 배경|카드 표면|보조 배경/, '#f5f6f8'),
-    surfaceAlt: findColor(c, /보조 배경|카드 배경/, '#eef0f3'),
-    textMain: findColor(c, /본문 텍스트|주요 컨텐츠/, '#1a1a1a'),
-    textSub: findColor(c, /보조 텍스트|라벨/, '#666666'),
-    textMuted: findColor(c, /비활성|플레이스홀더|힌트/, '#9aa0a6'),
-    border: findColor(c, /구분선|보더/, '#e5e7eb'),
+      c.find((col) => /강조 영역 배경|강조 배경|tint/.test(col.role))?.value ??
+      deriveTint(primary, isDark),
+    bg: findColor(c, /^기본 배경$|^배경$|배경 \(기본\)/, bgFallback),
+    // surface: card/elevated — "카드 배경" or "카드 표면" only
+    surface: findColor(c, /카드 배경|카드 표면/, surfFallback),
+    // surfaceAlt: secondary fill — "보조 배경" only, intentionally different regex
+    surfaceAlt: findColor(c, /보조 배경|비활성 배경|입력 배경/, surfAltFallback),
+    textMain: findColor(c, /본문 텍스트|주요 컨텐츠|^텍스트 \(기본\)$/, isDark ? '#f0f0f0' : '#1a1a1a'),
+    textSub: findColor(c, /보조 텍스트|라벨|^텍스트 \(보조\)$/, isDark ? '#a0a0a0' : '#666666'),
+    textMuted: findColor(c, /비활성 텍스트|플레이스홀더|힌트/, isDark ? '#606060' : '#9aa0a6'),
+    border: findColor(c, /구분선|보더|^선$/, isDark ? '#333333' : '#e5e7eb'),
     accent,
-    success: findColor(c, /성공|증가/, '#27B853'),
-    danger: findColor(c, /에러|위험|감소/, '#F04452'),
+    success: findColor(c, /성공|증가|긍정/, '#27B853'),
+    danger: findColor(c, /에러|위험|감소|부정/, '#F04452'),
   };
-  const palette = mode === 'wireframe' ? WIREFRAME_COLORS : brandColors;
+
+  const wireframePalette = isDark ? WIREFRAME_DARK : WIREFRAME_LIGHT;
+  const palette = mode === 'wireframe' ? wireframePalette : brandColors;
+
+  const isLocal = !!token.serviceTypes?.some((s) => /지역|커뮤니티|중고|동네/.test(s));
 
   return {
     ...palette,
@@ -288,35 +371,34 @@ export function resolveTheme(
     weightMedium,
     weightBold,
     type: {
-      display: resolveType(sizes, /display/i, weightBold, 28),
-      h1: resolveType(sizes, /heading 1|h1|제목 1/i, weightBold, 22),
-      h2: resolveType(sizes, /heading 2|h2|제목 2/i, weightBold, 18),
-      body: resolveType(sizes, /body 1|본문 1|^body$/i, weightRegular, 16),
-      bodySm: resolveType(sizes, /body 2|본문 2/i, weightRegular, 14),
-      caption: resolveType(sizes, /caption|캡션/i, weightRegular, 12),
+      display: resolveType(sizes, /display/i,                    weightBold,   28),
+      h1:      resolveType(sizes, /heading\s*1|h1|제목\s*1/i,   weightBold,   22),
+      h2:      resolveType(sizes, /heading\s*2|h2|제목\s*2/i,   weightBold,   18),
+      body:    resolveType(sizes, /body\s*1|본문\s*1|^body$/i,  weightRegular, 16),
+      bodySm:  resolveType(sizes, /body\s*2|본문\s*2/i,         weightRegular, 14),
+      caption: resolveType(sizes, /caption|캡션/i,              weightRegular, 12),
     },
 
     space,
-    containerPad,
-    cardPad,
-    stackGap,
-    rowGap,
+    containerPad: r.container,
+    cardPad:      r.card,
+    stackGap:     r.stack,
+    rowGap:       r.row,
 
     radius: {
       button: shape('button', '8px'),
-      card: shape('card', '12px'),
-      input: shape('input', '8px'),
-      chip: shape('chip', '9999px'),
-      badge: shape('badge', '4px'),
+      card:   shape('card',   '12px'),
+      input:  shape('input',  '8px'),
+      chip:   shape('chip',   '9999px'),
+      badge:  shape('badge',  '4px'),
     },
 
     motion: resolveMotion(token.deep),
 
     density,
     isMobile: platform === 'mobile',
+    isDark,
     category: token.category,
     isLocal,
   };
 }
-
-export { contrastOn };

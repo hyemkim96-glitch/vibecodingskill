@@ -1,24 +1,32 @@
 'use client';
 
 import { useState } from 'react';
-import BrandUIPreview from '@/components/BrandUIPreview';
-import { getCategoryGroups } from '@/lib/serviceCategories';
+import { allTokens } from '@/lib/tokens';
+import { resolveTheme } from '@/lib/tokens/resolveTheme';
+import { createDS, motionVars } from '@/components/ds';
+import { renderPattern, PATTERN_TYPES, PatternType } from '@/components/patterns';
+
+const representative = allTokens[0];
 
 export default function PatternsClient() {
-  const groups = getCategoryGroups();
+  const [activePattern, setActivePattern] = useState<PatternType>('main');
   const [platform, setPlatform] = useState<'mobile' | 'web'>('mobile');
 
+  const theme = resolveTheme(representative, platform, 'wireframe');
+  const ds = createDS(theme, true);
+
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-6">
       <div className="flex items-start justify-between gap-4">
         <div className="flex flex-col gap-1">
           <h1 className="text-sm font-medium tracking-widest uppercase" style={{ color: 'var(--color-ash)' }}>
             UI Patterns
           </h1>
           <p className="text-xs" style={{ color: 'var(--color-ash)' }}>
-            서비스 유형별 대표 화면 패턴 — 토큰(여백·타입·radii·밀도) 기반 와이어프레임
+            {PATTERN_TYPES.find((p) => p.key === activePattern)?.desc}
           </p>
         </div>
+        {/* 플랫폼 토글 */}
         <div className="flex gap-1 shrink-0">
           {(['mobile', 'web'] as const).map((p) => (
             <button
@@ -37,28 +45,40 @@ export default function PatternsClient() {
         </div>
       </div>
 
-      <div className="flex flex-col gap-10">
-        {groups.map(({ category, representative }) => (
-          <section key={category.key} className="flex flex-col gap-3">
-            <div className="flex flex-col gap-0.5">
-              <h2 className="text-sm font-semibold" style={{ color: 'var(--color-bone)' }}>
-                {category.label}
-              </h2>
-              <p className="text-xs" style={{ color: 'var(--color-ash)' }}>
-                {category.description}
-              </p>
-            </div>
-            <div
-              className="rounded-lg overflow-hidden self-start w-full"
-              style={{
-                border: '1px solid var(--color-graphite)',
-                maxWidth: platform === 'mobile' ? 390 : '100%',
-              }}
-            >
-              <BrandUIPreview token={representative} platform={platform} mode="wireframe" />
-            </div>
-          </section>
+      {/* 패턴 탭 바 */}
+      <div className="flex overflow-x-auto" style={{ borderBottom: '1px solid var(--color-graphite)' }}>
+        {PATTERN_TYPES.map(({ key, label }) => (
+          <button
+            key={key}
+            onClick={() => setActivePattern(key)}
+            className="shrink-0 text-xs px-4 py-2.5 cursor-pointer transition-colors"
+            style={{
+              color: activePattern === key ? 'var(--color-bone)' : 'var(--color-ash)',
+              fontWeight: activePattern === key ? 600 : 400,
+              background: 'transparent',
+              border: 'none',
+              borderBottom: activePattern === key
+                ? '2px solid var(--color-bone)'
+                : '2px solid transparent',
+              marginBottom: -1,
+            } as React.CSSProperties}
+          >
+            {label}
+          </button>
         ))}
+      </div>
+
+      {/* 패턴 렌더 */}
+      <div
+        className="rounded-lg overflow-hidden"
+        style={{
+          border: '1px solid var(--color-graphite)',
+          maxWidth: platform === 'mobile' ? 390 : '100%',
+        }}
+      >
+        <div className="ds-root" style={motionVars(theme)}>
+          {renderPattern(activePattern, ds, platform)}
+        </div>
       </div>
     </div>
   );
