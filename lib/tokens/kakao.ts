@@ -1,8 +1,8 @@
 import { BrandToken } from '@/types/token';
 
 const colors = [
-  { name: 'Kakao Yellow', value: '#FEE500', variable: '--color-kakao-yellow', role: '브랜드 아이덴티티, Primary CTA 배경' },
-  { name: 'Kakao Brown', value: '#3C1E1E', variable: '--color-kakao-brown', role: 'CTA 텍스트, 아이콘 (노란 배경 위)' },
+  { name: '시그니처 옐로우', value: '#FEE500', variable: '--color-brand-yellow', role: '브랜드 아이덴티티, Primary CTA 배경' },
+  { name: '시그니처 브라운', value: '#3C1E1E', variable: '--color-brand-brown', role: 'CTA 텍스트, 아이콘 (노란 배경 위)' },
   { name: 'Gray 900', value: '#1A1A1A', variable: '--color-gray-900', role: '본문 텍스트, 제목' },
   { name: 'Gray 700', value: '#3C3C3C', variable: '--color-gray-700', role: '보조 텍스트' },
   { name: 'Gray 500', value: '#767676', variable: '--color-gray-500', role: '비활성 텍스트, 플레이스홀더' },
@@ -14,7 +14,7 @@ const colors = [
 ];
 
 const typography = {
-  family: 'Kakao Regular',
+  family: 'Noto Sans KR',
   substitute: 'Apple SD Gothic Neo, Noto Sans KR, system-ui',
   weights: [400, 500, 700],
   sizes: [
@@ -48,7 +48,7 @@ export const kakaoToken: BrandToken = {
   country: 'KR',
   serviceTypes: ['메신저', '플랫폼', '소셜'],
   theme: 'light',
-  description: '친근하고 대화 중심의 UI. 카카오 노란색은 대화와 연결의 상징. 둥근 말풍선, 따뜻한 배경색, 아이콘 중심 내비게이션이 특징이며 전 연령대를 아우르는 직관적 UX를 추구한다.',
+  description: '친근하고 대화 중심의 UI. 시그니처 노란색은 대화와 연결의 상징. 둥근 말풍선, 따뜻한 배경색, 아이콘 중심 내비게이션이 특징이며 전 연령대를 아우르는 직관적 UX를 추구한다.',
   colors,
   platforms: {
     mobile: {
@@ -110,15 +110,15 @@ export const kakaoToken: BrandToken = {
   },
   guidelines: {
     dos: [
-      '카카오 노란색을 Primary CTA에 — 로그인 버튼, 주요 액션은 FEE500 배경에 갈색 텍스트',
+      '시그니처 노란색을 Primary CTA에 — 로그인 버튼, 주요 액션은 FEE500 배경에 갈색 텍스트',
       '둥근 UI 요소 — 버튼, 말풍선, 카드 모두 충분한 radius로 친근함 표현',
       '아이콘 + 텍스트 병행 — 전 연령 접근성을 위해 텍스트 레이블 항상 포함',
-      '대화 어투 사용 — "카카오로 시작하기", "친구에게 선물하기" 등 동사 중심',
+      '대화 어투 사용 — "시작하기", "친구에게 선물하기" 등 동사 중심',
       '탭바 아이콘 5개 이내 — 홈/채팅/친구/설정 등 핵심 기능만',
     ],
     donts: [
       '노란색 외 다른 컬러를 Primary에 사용 금지 — 브랜드 일관성 최우선',
-      '날카로운 각진 UI 금지 — 카카오 아이덴티티는 곡선과 친근함',
+      '날카로운 각진 UI 금지 — 이 브랜드 아이덴티티는 곡선과 친근함',
       '복잡한 텍스트 메뉴 구조 금지 — 아이콘 내비로 단순화',
       '광고성 팝업 남발 금지 — 첫 실행 시 최대 1개 팝업',
       '작은 터치 영역 금지 — 탭 영역 최소 44px',

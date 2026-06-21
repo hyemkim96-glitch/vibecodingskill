@@ -1,8 +1,8 @@
 import { BrandToken } from '@/types/token';
 
 const colors = [
-  { name: 'Carrot Orange', value: '#FF6F0F', variable: '--color-carrot-orange', role: '브랜드 Primary, CTA 버튼, 활성 상태' },
-  { name: 'Carrot Light', value: '#FFF0E6', variable: '--color-carrot-light', role: '오렌지 배경, 강조 영역 배경' },
+  { name: '시그니처 오렌지', value: '#FF6F0F', variable: '--color-brand-orange', role: '브랜드 Primary, CTA 버튼, 활성 상태' },
+  { name: '오렌지 라이트', value: '#FFF0E6', variable: '--color-orange-light', role: '오렌지 배경, 강조 영역 배경' },
   { name: 'Gray 900', value: '#1D2533', variable: '--color-gray-900', role: '본문 텍스트, 제목' },
   { name: 'Gray 700', value: '#4D5664', variable: '--color-gray-700', role: '보조 텍스트' },
   { name: 'Gray 500', value: '#868E9C', variable: '--color-gray-500', role: '비활성 텍스트, 힌트' },
@@ -48,7 +48,7 @@ export const daangnToken: BrandToken = {
   country: 'KR',
   serviceTypes: ['지역 커뮤니티', '중고거래', 'O2O'],
   theme: 'light',
-  description: '따뜻하고 신뢰 기반의 지역 커뮤니티 UI. 당근 오렌지는 친근함과 에너지를 상징. 피드 형태의 정보 노출, 프로필 신뢰도 지표, 위치 기반 컨텍스트가 디자인 전반에 녹아있다.',
+  description: '따뜻하고 신뢰 기반의 지역 커뮤니티 UI. 시그니처 오렌지는 친근함과 에너지를 상징. 피드 형태의 정보 노출, 프로필 신뢰도 지표, 위치 기반 컨텍스트가 디자인 전반에 녹아있다.',
   colors,
   platforms: {
     mobile: {

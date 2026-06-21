@@ -33,76 +33,31 @@ function BrandMiniUI({ token }: { token: BrandToken }) {
     const primary = getPrimaryColor(token.colors);
     const onPrimary = getContrastColor(primary);
     const brandColors = getBrandColors(token.colors);
-    const accent = brandColors[1]?.value ?? primary;
     const mobileShapes = token.platforms.mobile.shapes;
     const btnRadius = mobileShapes.find(s => s.element === 'button')?.value ?? '8px';
-    const cardRadius = mobileShapes.find(s => s.element === 'card')?.value ?? '12px';
 
     return (
-        <div className={styles.miniUI} style={{ background: '#f5f5f5' }}>
-            {/* 미니 앱 카드 */}
-            <div
-                className={styles.miniCard}
-                style={{ borderRadius: cardRadius, background: '#ffffff', border: '1px solid #e5e5e5' }}
-            >
-                {/* 상단 컬러 바 */}
-                <div style={{ background: primary, height: '6px', borderRadius: `${cardRadius} ${cardRadius} 0 0` }} />
-
-                {/* 콘텐츠 영역 */}
-                <div className={styles.miniContent}>
-                    {/* 타이틀 라인 */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
-                        <div style={{ width: '16px', height: '16px', borderRadius: '50%', background: primary, flexShrink: 0 }} />
-                        <div style={{ flex: 1 }}>
-                            <div style={{ height: '5px', background: '#222', borderRadius: '2px', marginBottom: '3px', width: '60%' }} />
-                            <div style={{ height: '4px', background: '#ccc', borderRadius: '2px', width: '40%' }} />
-                        </div>
-                    </div>
-
-                    {/* 본문 라인들 */}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginBottom: '10px' }}>
-                        <div style={{ height: '4px', background: '#e5e5e5', borderRadius: '2px', width: '100%' }} />
-                        <div style={{ height: '4px', background: '#e5e5e5', borderRadius: '2px', width: '80%' }} />
-                    </div>
-
-                    {/* 하단 버튼 + 뱃지 */}
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '6px' }}>
-                        <div
-                            style={{
-                                flex: 1,
-                                height: '22px',
-                                background: primary,
-                                borderRadius: btnRadius,
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                            }}
-                        >
-                            <div style={{ width: '30px', height: '3px', background: onPrimary, borderRadius: '2px', opacity: 0.8 }} />
-                        </div>
-                        <div
-                            style={{
-                                width: '22px',
-                                height: '22px',
-                                borderRadius: btnRadius,
-                                border: `1.5px solid ${primary}`,
-                                flexShrink: 0,
-                            }}
-                        />
-                    </div>
-                </div>
+        <div className={styles.miniUI}>
+            {/* 상단: 브랜드 primary 컬러 + 버튼 모양 */}
+            <div style={{
+                flex: 3,
+                background: primary,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+            }}>
+                <div style={{
+                    width: '52px',
+                    height: '22px',
+                    background: onPrimary,
+                    borderRadius: btnRadius,
+                    opacity: 0.85,
+                }} />
             </div>
-
-            {/* 하단 유채색 스트라이프 (브랜드 팔레트) */}
-            <div className={styles.miniStripe}>
-                {brandColors.slice(0, 4).map((c, i) => (
-                    <div
-                        key={i}
-                        style={{
-                            flex: i === 0 ? 3 : 1,
-                            background: c.value,
-                        }}
-                    />
+            {/* 하단: 팔레트 스트라이프 */}
+            <div style={{ flex: 1, display: 'flex' }}>
+                {brandColors.slice(0, 5).map((c, i) => (
+                    <div key={i} style={{ flex: 1, background: c.value }} />
                 ))}
             </div>
         </div>

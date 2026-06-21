@@ -1,9 +1,9 @@
 import { BrandToken } from '@/types/token';
 
 const colors = [
-  { name: 'Naver Green', value: '#03C75A', variable: '--color-naver-green', role: '브랜드 Primary, 로그인 버튼, 활성 상태' },
+  { name: '시그니처 그린', value: '#03C75A', variable: '--color-brand-green', role: '브랜드 Primary, 로그인 버튼, 활성 상태' },
   { name: 'Green Dark', value: '#02B351', variable: '--color-green-dark', role: 'Hover, 눌림 상태' },
-  { name: 'Green Light', value: '#E8FBF0', variable: '--color-green-light', role: '네이버 배경 강조 영역' },
+  { name: 'Green Light', value: '#E8FBF0', variable: '--color-green-light', role: '브랜드 배경 강조 영역' },
   { name: 'Gray 900', value: '#1A1A1A', variable: '--color-gray-900', role: '본문 텍스트, 제목' },
   { name: 'Gray 700', value: '#404040', variable: '--color-gray-700', role: '보조 텍스트' },
   { name: 'Gray 500', value: '#808080', variable: '--color-gray-500', role: '메타 텍스트, 날짜' },
@@ -48,7 +48,7 @@ export const naverToken: BrandToken = {
   country: 'KR',
   serviceTypes: ['포털', '검색', '뉴스/콘텐츠 플랫폼'],
   theme: 'light',
-  description: '정보 밀도 높고 신뢰감 있는 포털 UI. 네이버 초록은 한국 인터넷의 상징. 수많은 서비스를 하나의 홈에 연결하는 허브 역할로, 정보 스캔에 최적화된 레이아웃과 명확한 섹션 구분이 핵심.',
+  description: '정보 밀도 높고 신뢰감 있는 포털 UI. 시그니처 초록은 한국 인터넷의 상징. 수많은 서비스를 하나의 홈에 연결하는 허브 역할로, 정보 스캔에 최적화된 레이아웃과 명확한 섹션 구분이 핵심.',
   colors,
   platforms: {
     mobile: {
@@ -107,14 +107,14 @@ export const naverToken: BrandToken = {
   },
   guidelines: {
     dos: [
-      '초록 로그인 버튼 고수 — 네이버 로그인은 반드시 #03C75A 배경, 공식 가이드 준수',
+      '초록 로그인 버튼 고수 — 로그인 버튼은 반드시 #03C75A 배경, 공식 가이드 준수',
       '섹션 명확 구분 — 뉴스/쇼핑/블로그 등 서비스별 배경색/라인으로 영역 분리',
       '검색창 최우선 배치 — 모든 화면에서 검색 기능 1초 내 접근 가능',
       '정보 스캔 최적화 — 뉴스 헤드라인은 2줄 이내, 썸네일 16:9 일관',
       '실시간 업데이트 — 뉴스/랭킹은 타임스탬프 포함, 최신성 강조',
     ],
     donts: [
-      '녹색 남용 금지 — CTA 외 장식적 녹색 사용은 브랜드 희석',
+      '녹색 남용 금지 — CTA 외 장식적 녹색 사용은 브랜드 아이덴티티 희석',
       '광고와 콘텐츠 혼재 금지 — 광고는 명확한 "광고" 레이블 필수',
       '정보 과적재 금지 — 한 섹션에 5개 이상 아이템은 탭/더보기로 분리',
       '모바일에서 PC 레이아웃 금지 — 사이드바는 모바일에서 숨김 처리',

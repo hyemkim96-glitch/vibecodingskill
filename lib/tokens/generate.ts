@@ -23,7 +23,7 @@ function platformDesignMd(token: BrandToken, platform: 'mobile' | 'web'): string
   const dos = token.guidelines.dos.map((d) => `- ${d}`).join('\n');
   const donts = token.guidelines.donts.map((d) => `- ${d}`).join('\n');
 
-  return `# ${token.name} Design Token — ${label}
+  return `# ${token.tagline} Design Token — ${label}
 > Updated: ${token.updatedAt} | Category: ${token.category} | Theme: ${token.theme}
 
 ${token.description}
@@ -84,7 +84,7 @@ ${donts}
 ## AI Prompt Ready
 
 \`\`\`
-Use the ${token.name} design system (${label}):
+Use the ${token.tagline} design system (${label}):
 - Primary color: ${token.colors[0]?.value}
 - Font: ${p.typography.family} (substitute: ${p.typography.substitute ?? 'system-ui'})
 - Border radius: ${p.shapes.find(s => s.element === 'card')?.value ?? p.shapes[0]?.value}
@@ -114,7 +114,7 @@ export function generateCSS(token: BrandToken, platform: 'mobile' | 'web' = 'mob
     .join('\n');
 
   return `:root {
-  /* ${token.name} Design Tokens — ${platform === 'mobile' ? 'Mobile' : 'Web'} */
+  /* ${token.tagline} Design Tokens — ${platform === 'mobile' ? 'Mobile' : 'Web'} */
   /* Updated: ${token.updatedAt} */
 
   /* Colors */
@@ -149,7 +149,7 @@ export function generateTailwind(token: BrandToken, platform: 'mobile' | 'web' =
     .map((s) => `    '${s.name}': '${s.value}',`)
     .join('\n');
 
-  return `// tailwind.config.js — ${token.name} Design Tokens (${platform})
+  return `// tailwind.config.js — ${token.tagline} Design Tokens (${platform})
 // Updated: ${token.updatedAt}
 
 module.exports = {
@@ -192,7 +192,7 @@ export function generateDesignTokensJSON(token: BrandToken, platform: 'mobile' |
 
   const json = {
     $metadata: { tokenSetOrder: ['color', 'spacing', 'borderRadius'] },
-    $description: `${token.name} Design Tokens (${platform}) — Updated: ${token.updatedAt}`,
+    $description: `${token.tagline} Design Tokens (${platform}) — Updated: ${token.updatedAt}`,
     color: colors,
     spacing,
     borderRadius: radius,
@@ -217,13 +217,13 @@ export function generateFigmaVariables(token: BrandToken, platform: 'mobile' | '
     .map((s) => `| Number | spacing/${s.name} | ${s.value} | ${s.token.replace('--spacing-', '')} |`)
     .join('\n');
 
-  return `# ${token.name} — Figma Variables 가이드 (${platform})
+  return `# ${token.tagline} — Figma Variables 가이드 (${platform})
 > Updated: ${token.updatedAt}
 
 ## Figma Variables 직접 추가 방법
 
 1. Figma 파일 열기 → 우측 패널 **Variables** 클릭
-2. **Create variable collection** → 컬렉션명: \`${token.name}\`
+2. **Create variable collection** → 컬렉션명: \`${token.category}\`
 3. 아래 표의 값을 타입별로 추가
 
 ---

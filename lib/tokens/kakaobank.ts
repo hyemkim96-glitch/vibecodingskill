@@ -1,8 +1,8 @@
 import { BrandToken } from '@/types/token';
 
 const colors = [
-  { name: 'Kakao Yellow', value: '#FEE500', variable: '--color-kakao-yellow', role: '브랜드 Primary, 핵심 CTA 버튼 배경' },
-  { name: 'Kakao Brown', value: '#3C1E1E', variable: '--color-kakao-brown', role: 'Yellow 버튼 위 텍스트/아이콘' },
+  { name: '시그니처 옐로우', value: '#FEE500', variable: '--color-brand-yellow', role: '브랜드 Primary, 핵심 CTA 버튼 배경' },
+  { name: '시그니처 브라운', value: '#3C1E1E', variable: '--color-brand-brown', role: 'Yellow 버튼 위 텍스트/아이콘' },
   { name: 'Blue Primary', value: '#1B5BFF', variable: '--color-blue-primary', role: '금융 액션, 이체, 금리 강조' },
   { name: 'Blue Light', value: '#EBF0FF', variable: '--color-blue-light', role: '블루 배경 강조 영역' },
   { name: 'Gray 900', value: '#191919', variable: '--color-gray-900', role: '본문 텍스트, 금액 표시' },
@@ -48,7 +48,7 @@ export const kakaobankToken: BrandToken = {
   country: 'KR',
   serviceTypes: ['인터넷 은행', '핀테크', '모바일 퍼스트'],
   theme: 'light',
-  description: '신뢰와 편의를 동시에 — 카카오의 친근함에 금융의 신뢰감을 결합. 노란 CTA로 카카오 패밀리임을 명확히 하면서, 금액/이체 등 금융 액션에는 블루를 사용해 심각성을 전달. 숫자 정보는 크고 명확하게.',
+  description: '신뢰와 편의를 동시에 — 메신저 플랫폼의 친근함에 금융의 신뢰감을 결합. 노란 CTA로 패밀리 서비스임을 명확히 하면서, 금액/이체 등 금융 액션에는 블루를 사용해 심각성을 전달. 숫자 정보는 크고 명확하게.',
   colors,
   platforms: {
     mobile: {
@@ -110,7 +110,7 @@ export const kakaobankToken: BrandToken = {
   guidelines: {
     dos: [
       '잔액/금액은 가장 크게 — Display 사이즈로 현재 잔액, 이번 달 지출 강조',
-      '카카오 노랑 로그인 CTA — 앱 진입 버튼은 FEE500 배경으로 카카오 패밀리 인식',
+      '시그니처 노랑 로그인 CTA — 앱 진입 버튼은 FEE500 배경으로 패밀리 서비스 인식',
       '금융 액션에 블루 사용 — 이체, 납부 등 금융 트랜잭션은 블루 계열',
       '보안 상태 명시 — 로그인 방식(지문/PIN), 마지막 접속 시간 노출',
       '간결한 이체 플로우 — 계좌선택→금액입력→확인 최대 3단계',

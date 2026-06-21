@@ -89,33 +89,8 @@
 .miniUI {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    padding: 12px 12px 8px;
     aspect-ratio: 4 / 3;
-}
-
-.miniCard {
-    flex: 1;
     overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-}
-
-.miniContent {
-    padding: 8px;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.miniStripe {
-    display: flex;
-    height: 5px;
-    border-radius: 3px;
-    overflow: hidden;
-    gap: 2px;
 }
 
 /* Card footer — index + name */

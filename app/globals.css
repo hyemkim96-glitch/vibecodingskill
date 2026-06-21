@@ -68,7 +68,7 @@
   --color-void: #f7f7f5;       /* 주 배경 */
   --color-carbon: #ffffff;     /* 카드/서피스 */
   --color-graphite: #e5e5e5;   /* 보더 */
-  --color-ash: #999999;        /* 보조 텍스트 */
+  --color-ash: #767676;        /* 보조 텍스트 — WCAG AA (4.54:1 on white) */
   --color-bone: #111111;       /* 주 텍스트 */
 
   /* Semantic aliases */

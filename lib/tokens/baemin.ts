@@ -3,7 +3,7 @@ import { BrandToken } from '@/types/token';
 const colors = [
   { name: 'Mint', value: '#2AC1BC', variable: '--color-mint', role: '브랜드 Primary, CTA 버튼, 활성 상태' },
   { name: 'Mint Light', value: '#E8F8F7', variable: '--color-mint-light', role: '민트 배경, 강조 영역' },
-  { name: 'Baemin Yellow', value: '#FFCE00', variable: '--color-baemin-yellow', role: '배달 상태 강조, 포인트 액센트' },
+  { name: '포인트 옐로우', value: '#FFCE00', variable: '--color-point-yellow', role: '배달 상태 강조, 포인트 액센트' },
   { name: 'Gray 900', value: '#333333', variable: '--color-gray-900', role: '본문 텍스트, 제목' },
   { name: 'Gray 700', value: '#666666', variable: '--color-gray-700', role: '보조 텍스트' },
   { name: 'Gray 400', value: '#AAAAAA', variable: '--color-gray-400', role: '비활성 텍스트, 플레이스홀더' },
@@ -14,7 +14,7 @@ const colors = [
 ];
 
 const typography = {
-  family: 'Baemin',
+  family: '배달체',
   substitute: 'Pretendard, Apple SD Gothic Neo, Noto Sans KR, system-ui',
   weights: [400, 500, 700],
   sizes: [
@@ -114,7 +114,7 @@ export const baeminToken: BrandToken = {
       '배달 상태 시각화 — 주문접수→조리중→배달중→완료 단계 아이콘+색상으로 표현',
       '리뷰/평점 노출 강조 — 별점, 주문수, 사진 리뷰 수를 카드에 항상 표시',
       '음식 사진 퀄리티 우선 — 가게 대표 이미지는 최소 3:2 비율 가로형',
-      '배민 폰트 활용 — 제목과 슬로건에 자체 폰트로 아이덴티티 강화',
+      '자체 폰트 활용 — 제목과 슬로건에 브랜드 전용 폰트로 아이덴티티 강화',
     ],
     donts: [
       '복잡한 카테고리 구조 금지 — 메인 카테고리 8개 이내로 단순화',

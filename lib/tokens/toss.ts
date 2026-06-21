@@ -48,7 +48,7 @@ export const tossToken: BrandToken = {
   country: 'KR',
   serviceTypes: ['핀테크 앱', '모바일 퍼스트'],
   theme: 'light',
-  description: '빠르고 자신감 있는 금융 인터페이스. 복잡한 금융을 단순하게 만드는 것이 토스의 디자인 철학. 여백을 넉넉하게 사용하고, 핵심 정보를 큰 숫자로 강조하며, 친근한 한국어 어투로 사용자와 대화한다.',
+  description: '빠르고 자신감 있는 금융 인터페이스. 복잡한 금융을 단순하게 만드는 것이 핵심 디자인 철학. 여백을 넉넉하게 사용하고, 핵심 정보를 큰 숫자로 강조하며, 친근한 한국어 어투로 사용자와 대화한다.',
   colors,
   platforms: {
     mobile: {
