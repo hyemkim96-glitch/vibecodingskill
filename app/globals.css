@@ -147,6 +147,39 @@
   margin: 0;
 }
 
+/* ── Design-system motion ──
+   Brand motion tokens (duration / easing / press / hover scale) are injected
+   as CSS custom properties on a `.ds-root` scope by the renderer, so these
+   shared classes animate with each brand's own feel. */
+.ds-root {
+  --ds-dur: 180ms;
+  --ds-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --ds-press: 0.97;
+  --ds-hover: 1;
+}
+.ds-press {
+  transition:
+    transform var(--ds-dur) var(--ds-ease),
+    background-color var(--ds-dur) var(--ds-ease),
+    border-color var(--ds-dur) var(--ds-ease),
+    box-shadow var(--ds-dur) var(--ds-ease),
+    filter var(--ds-dur) var(--ds-ease),
+    opacity var(--ds-dur) var(--ds-ease);
+}
+.ds-press:active {
+  transform: scale(var(--ds-press));
+}
+.ds-hover {
+  transition:
+    transform var(--ds-dur) var(--ds-ease),
+    box-shadow var(--ds-dur) var(--ds-ease),
+    filter var(--ds-dur) var(--ds-ease);
+}
+.ds-hover:hover {
+  transform: scale(var(--ds-hover)) translateY(-1px);
+  filter: brightness(0.98);
+}
+
 body {
   color: var(--color-bone);
   background: var(--color-void);

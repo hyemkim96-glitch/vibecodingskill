@@ -16,6 +16,13 @@ export interface ResolvedType {
   weight: number;
 }
 
+export interface ResolvedMotion {
+  duration: number; // ms — standard transition
+  easing: string; // css timing function
+  pressScale: number; // active/press feedback (1 = none)
+  hoverScale: number; // hover feedback (1 = none)
+}
+
 export interface ResolvedTheme {
   // ── colors (semantic) ──
   primary: string;
@@ -61,6 +68,9 @@ export interface ResolvedTheme {
     chip: string;
     badge: string;
   };
+
+  // ── motion ──
+  motion: ResolvedMotion;
 
   // ── meta ──
   density: string;
@@ -113,12 +123,35 @@ function px(value: string | undefined, fallback: number): number {
   return Number.isFinite(n) ? n : fallback;
 }
 
-/** nearest value in a numeric scale to a target */
-function nearest(scale: number[], target: number): number {
-  if (scale.length === 0) return target;
-  return scale.reduce((best, v) =>
-    Math.abs(v - target) < Math.abs(best - target) ? v : best,
-  );
+/** Parse the brand's freeform interaction tokens into usable motion values. */
+function resolveMotion(deep: BrandToken['deep']): ResolvedMotion {
+  const i = deep?.interaction;
+  // duration: prefer the "standard" value, else first number in the string
+  let duration = 200;
+  if (i?.duration) {
+    const std = /(\d+)\s*ms\s*\(standard\)/i.exec(i.duration);
+    const first = /(\d+)\s*ms/i.exec(i.duration);
+    duration = parseInt((std?.[1] ?? first?.[1]) ?? '200', 10);
+  }
+  // easing: extract a cubic-bezier(...) or a named timing function
+  let easing = 'cubic-bezier(0.4, 0, 0.2, 1)';
+  if (i?.easing) {
+    const cb = /cubic-bezier\([^)]*\)/i.exec(i.easing);
+    const named = /\b(ease-in-out|ease-out|ease-in|ease|linear)\b/i.exec(i.easing);
+    easing = cb?.[0] ?? named?.[0] ?? easing;
+  }
+  const scaleFrom = (s: string | undefined, fb: number) => {
+    if (!s) return fb;
+    const m = /scale\(([\d.]+)\)|([\d.]+)/.exec(s);
+    const v = parseFloat(m?.[1] ?? m?.[2] ?? '');
+    return Number.isFinite(v) && v > 0 && v <= 1.2 ? v : fb;
+  };
+  return {
+    duration: Number.isFinite(duration) ? duration : 200,
+    easing,
+    pressScale: scaleFrom(i?.pressScale, 0.97),
+    hoverScale: scaleFrom(i?.hoverScale, 1),
+  };
 }
 
 function resolveType(
@@ -182,29 +215,43 @@ export function resolveTheme(
   const weightBold = weights[weights.length - 1] ?? 700;
   const sizes = p.typography.sizes;
 
-  // spacing scale → semantic
+  // ── spacing ──
+  // The brand's raw scale is noisy and often lacks intermediate steps, so
+  // mapping each semantic role to the "nearest" raw value collapses duplicates
+  // (e.g. sm and md both → 8) and yields ragged, inconsistent whitespace.
+  // Instead we lock to a clean, monotonic 4px-grid scale and let DENSITY drive
+  // the breathing room (padding / gaps). The scale stays uniform across every
+  // component and pattern; only the rhythm tightens or loosens.
+  const density = p.spacing.density;
+
+  // base unit from the brand's scale (smallest positive step), clamped to 4–6px
   const scaleNums = p.spacing.scale
     .map((s) => px(s.value, 0))
     .filter((n) => n > 0)
     .sort((a, b) => a - b);
+  const baseUnit = Math.min(6, Math.max(4, scaleNums[0] || 4));
+
+  // canonical, always-monotonic semantic scale
   const space = {
-    xs: nearest(scaleNums, 4),
-    sm: nearest(scaleNums, 8),
-    md: nearest(scaleNums, 12),
-    lg: nearest(scaleNums, 16),
-    xl: nearest(scaleNums, 24),
+    xs: baseUnit, // 4
+    sm: baseUnit * 2, // 8
+    md: baseUnit * 3, // 12
+    lg: baseUnit * 4, // 16
+    xl: baseUnit * 6, // 24
   };
 
-  // density drives the breathing room
-  const density = p.spacing.density;
-  const padTarget =
-    density === 'compact' ? 12 : density === 'spacious' ? 24 : 16;
-  const gapTarget =
-    density === 'compact' ? 8 : density === 'spacious' ? 16 : 12;
-  const containerPad = nearest(scaleNums, padTarget) || padTarget;
-  const cardPad = nearest(scaleNums, density === 'compact' ? 12 : 16) || 16;
-  const stackGap = nearest(scaleNums, gapTarget) || gapTarget;
-  const rowGap = nearest(scaleNums, density === 'compact' ? 6 : 8) || 8;
+  // density only adjusts container/card padding and stack/row gaps
+  const rhythm = {
+    compact: { container: 12, card: 12, stack: 8, row: 6 },
+    regular: { container: 16, card: 16, stack: 12, row: 8 },
+    comfortable: { container: 18, card: 16, stack: 14, row: 9 },
+    spacious: { container: 24, card: 20, stack: 16, row: 10 },
+  } as const;
+  const r = rhythm[(density as keyof typeof rhythm)] ?? rhythm.regular;
+  const containerPad = r.container;
+  const cardPad = r.card;
+  const stackGap = r.stack;
+  const rowGap = r.row;
 
   // radii
   const shape = (el: string, fb: string) =>
@@ -262,6 +309,8 @@ export function resolveTheme(
       chip: shape('chip', '9999px'),
       badge: shape('badge', '4px'),
     },
+
+    motion: resolveMotion(token.deep),
 
     density,
     isMobile: platform === 'mobile',
