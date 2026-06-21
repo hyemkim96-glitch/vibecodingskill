@@ -24,8 +24,8 @@
 }
 
 @layer base {
-  * { @apply border-border; }
-  body { @apply bg-background text-foreground; }
+  * { border-color: hsl(214 13% 89%); }
+  body { background-color: hsl(0 0% 100%); color: hsl(0 0% 8%); }
 }
 
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&display=swap');
