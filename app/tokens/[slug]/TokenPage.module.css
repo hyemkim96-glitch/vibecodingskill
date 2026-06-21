@@ -117,11 +117,12 @@
   border: 1px solid var(--color-graphite);
   border-radius: var(--radius);
   overflow: hidden;
-  transition: border-color 0.15s ease;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .colorItem:hover {
   border-color: var(--color-bone);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
 .colorSwatch {
@@ -329,8 +330,8 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  background: var(--color-carbon);
-  border: 1px solid var(--color-graphite);
+  background: #1a1a1a;
+  border: 1px solid #333;
   border-radius: var(--radius);
   overflow: hidden;
 }
@@ -338,7 +339,7 @@
 /* Tabs */
 .tabs {
   display: flex;
-  border-bottom: 1px solid var(--color-graphite);
+  border-bottom: 1px solid #333;
   overflow-x: auto;
   flex-shrink: 0;
 }
@@ -351,7 +352,7 @@
   padding: var(--spacing-3) var(--spacing-4);
   font-size: var(--font-size-base);
   font-family: var(--font-mono);
-  color: var(--color-ash);
+  color: #888;
   background: transparent;
   border: none;
   border-bottom: 2px solid transparent;
@@ -362,12 +363,12 @@
 }
 
 .tab:hover {
-  color: var(--color-bone);
+  color: #fff;
 }
 
 .tabActive {
-  color: var(--color-bone);
-  border-bottom-color: var(--color-bone);
+  color: #fff;
+  border-bottom-color: #fff;
 }
 
 /* Actions bar */
@@ -376,13 +377,13 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--spacing-3) var(--spacing-4);
-  border-bottom: 1px solid var(--color-graphite);
+  border-bottom: 1px solid #333;
   flex-shrink: 0;
 }
 
 .fileName {
   font-size: var(--font-size-base);
-  color: var(--color-ash);
+  color: #888;
 }
 
 .actionBtns {
@@ -397,21 +398,22 @@
   padding: var(--spacing-2) var(--spacing-3);
   font-size: var(--font-size-base);
   font-family: var(--font-mono);
-  color: var(--color-bone);
+  color: #ccc;
   background: transparent;
-  border: 1px solid var(--color-graphite);
+  border: 1px solid #444;
   border-radius: var(--radius);
   cursor: pointer;
   transition: border-color 0.15s ease;
 }
 
 .actionBtn:hover {
-  border-color: var(--color-bone);
+  border-color: #fff;
+  color: #fff;
 }
 
 .actionBtnCopied {
-  color: var(--color-ash);
-  border-color: var(--color-ash);
+  color: #888;
+  border-color: #555;
 }
 
 /* Code block */
@@ -423,11 +425,11 @@
   font-family: var(--font-mono);
   font-size: var(--font-size-base);
   line-height: 1.6;
-  color: var(--color-bone);
+  color: #e8e8e8;
   white-space: pre;
   word-break: normal;
   overflow-x: auto;
-  background: var(--color-void);
+  background: #111;
 }
 
 .codeBlock code {

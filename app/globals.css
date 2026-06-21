@@ -64,12 +64,12 @@
 }
 
 :root {
-  /* Colors */
-  --color-void: #000000;
-  --color-carbon: #1d1d1d;
-  --color-graphite: #383838;
-  --color-ash: #888888;
-  --color-bone: #ffffff;
+  /* Colors — light mode */
+  --color-void: #f7f7f5;       /* 주 배경 */
+  --color-carbon: #ffffff;     /* 카드/서피스 */
+  --color-graphite: #e5e5e5;   /* 보더 */
+  --color-ash: #999999;        /* 보조 텍스트 */
+  --color-bone: #111111;       /* 주 텍스트 */
 
   /* Semantic aliases */
   --color-bg-primary: var(--color-void);

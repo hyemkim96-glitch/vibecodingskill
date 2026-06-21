@@ -65,7 +65,7 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
             <span className={styles.metaChip}>{token.country}</span>
             <span className={styles.metaChip}>{token.theme === 'light' ? '라이트' : '다크'}</span>
           </div>
-          <h1 className={styles.brandName}>{token.nameKo ?? token.name}</h1>
+          <h1 className={styles.brandName}>{token.tagline}</h1>
           <p className={styles.brandDesc}>{token.description}</p>
           <p className={styles.updatedAt}>업데이트: {token.updatedAt}</p>
         </div>
