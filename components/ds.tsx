@@ -220,8 +220,8 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
       style={{
         display: 'inline-flex',
         alignItems: 'center',
-        fontSize: 12,
-        lineHeight: 1,
+        fontSize: t.type.caption.size,
+        lineHeight: t.type.caption.lineHeight,
         fontWeight: active ? t.weightBold : t.weightRegular,
         letterSpacing: '0.04em',
         color: active ? t.textMain : t.textMuted,
