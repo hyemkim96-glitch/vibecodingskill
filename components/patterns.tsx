@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
 import { DS } from '@/components/ds';
 
 export type PatternType =
@@ -28,7 +27,7 @@ export const PATTERN_TYPES: { key: PatternType; label: string; desc: string }[] 
 function Screen({ ds, children }: { ds: DS; children: React.ReactNode }) {
   const { t } = ds;
   return (
-    <div className="flex flex-col" style={{ background: t.bg, padding: t.containerPad, gap: t.stackGap, minHeight: t.isMobile ? 320 : 280, fontFamily: t.font }}>
+    <div style={{ display: 'flex', flexDirection: 'column', background: t.bg, padding: t.containerPad, gap: t.stackGap, minHeight: t.isMobile ? 320 : 280, fontFamily: t.font }}>
       {children}
     </div>
   );
@@ -42,17 +41,17 @@ function PatternMain({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' }) {
   if (platform === 'mobile') {
     return (
       <Screen ds={ds}>
-        <div className="relative" style={{ borderRadius: t.radius.card, overflow: 'hidden' }}>
+        <div style={{ position: 'relative', borderRadius: t.radius.card, overflow: 'hidden' }}>
           <Thumb h={120} />
           <div style={{ position: 'absolute', inset: 0, padding: t.cardPad, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', background: t.scrim }}>
             <Text role="h2" weight={t.weightBold} color={t.textOnImage}>오늘의 특가</Text>
             <Text role="caption" color={t.textOnImage} style={{ opacity: 0.85 }}>최대 70% 할인</Text>
           </div>
         </div>
-        <div className="flex overflow-hidden" style={{ gap: space.sm }}>
+        <div style={{ display: 'flex', overflow: 'hidden', gap: space.sm }}>
           {['전체', '신규', '인기', '할인'].map((c, i) => <Chip key={c} active={i === 0}>{c}</Chip>)}
         </div>
-        <div className="grid grid-cols-2" style={{ gap: space.sm }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: space.sm }}>
           {[{ name: '상품 A', price: '9,900', badge: '신규' }, { name: '상품 B', price: '29,000', badge: 'HOT' }].map((item) => (
             <Card key={item.name} pad={false}>
               <div style={{ position: 'relative' }}>
@@ -72,8 +71,8 @@ function PatternMain({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' }) {
 
   return (
     <Screen ds={ds}>
-      <div className="grid grid-cols-3" style={{ gap: space.md }}>
-        <div className="col-span-2 relative" style={{ borderRadius: t.radius.card, overflow: 'hidden' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: space.md }}>
+        <div style={{ gridColumn: 'span 2', position: 'relative', borderRadius: t.radius.card, overflow: 'hidden' }}>
           <Thumb h={160} />
           <div style={{ position: 'absolute', inset: 0, padding: t.cardPad, display: 'flex', alignItems: 'flex-end', background: t.scrim }}>
             <div>
@@ -82,7 +81,7 @@ function PatternMain({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' }) {
             </div>
           </div>
         </div>
-        <div className="flex flex-col" style={{ gap: space.sm }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
           {[{ name: '추천 A', badge: '신규' }, { name: '추천 B', badge: 'HOT' }].map((item) => (
             <Card key={item.name} pad={false}>
               <Thumb h={56} />
@@ -94,7 +93,7 @@ function PatternMain({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' }) {
           ))}
         </div>
       </div>
-      <div className="flex" style={{ gap: space.sm }}>
+      <div style={{ display: 'flex', gap: space.sm }}>
         {['전체', '신규', '인기', '할인', '브랜드'].map((c, i) => <Chip key={c} active={i === 0}>{c}</Chip>)}
       </div>
     </Screen>
@@ -107,27 +106,27 @@ function PatternAuth({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' }) {
   const { space } = t;
 
   const form = (
-    <div className="flex flex-col" style={{ gap: space.md }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: space.md }}>
       <div>
         <Text role="h2" weight={t.weightBold} style={{ display: 'block', marginBottom: space.xs }}>로그인</Text>
         <Text role="caption" color={t.textSub}>계정을 입력해주세요</Text>
       </div>
-      <div className="flex flex-col" style={{ gap: space.sm }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
         <Input label="이메일" placeholder="example@email.com" />
         <Input label="비밀번호" placeholder="••••••••" />
       </div>
       <Button variant="primary" full>로그인</Button>
-      <div className="flex items-center" style={{ gap: space.sm }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: space.sm }}>
         <div style={{ flex: 1, height: 1, background: t.border }} />
         <Text role="caption" color={t.textMuted}>또는</Text>
         <div style={{ flex: 1, height: 1, background: t.border }} />
       </div>
-      <div className="flex flex-col" style={{ gap: space.sm }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
         {['카카오로 계속하기', '네이버로 계속하기', 'Apple로 계속하기'].map((label, i) => (
           <Button key={label} variant={i < 2 ? 'secondary' : 'outline'} full>{label}</Button>
         ))}
       </div>
-      <div className="flex justify-center" style={{ gap: space.sm }}>
+      <div style={{ display: 'flex', justifyContent: 'center', gap: space.sm }}>
         <Text role="caption" color={t.textSub}>계정이 없으신가요?</Text>
         <Text role="caption" color={t.primary} weight={t.weightBold}>회원가입</Text>
       </div>
@@ -136,7 +135,7 @@ function PatternAuth({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' }) {
 
   return (
     <Screen ds={ds}>
-      {platform === 'mobile' ? form : <div className="flex justify-center"><div style={{ width: '100%', maxWidth: 340 }}>{form}</div></div>}
+      {platform === 'mobile' ? form : <div style={{ display: 'flex', justifyContent: 'center' }}><div style={{ width: '100%', maxWidth: 340 }}>{form}</div></div>}
     </Screen>
   );
 }
@@ -148,15 +147,15 @@ function PatternSearch({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' })
 
   return (
     <Screen ds={ds}>
-      <div className="flex items-center" style={{ gap: space.sm, background: t.bg, borderRadius: t.radius.chip, border: `2px solid ${t.primary}`, padding: `${space.sm}px ${space.md}px` }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: space.sm, background: t.bg, borderRadius: t.radius.chip, border: `2px solid ${t.primary}`, padding: `${space.sm}px ${space.md}px` }}>
         <Icon name="search" size={14} color={t.primary} />
         <Text role="bodySm">무선이어폰</Text>
         <span style={{ marginLeft: 'auto', color: t.textMuted, display: 'flex' }}><Icon name="close" size={14} color={t.textMuted} /></span>
       </div>
       <div style={{ background: t.surface, borderRadius: t.radius.card, border: `1px solid ${t.border}`, overflow: 'hidden' }}>
         {['무선이어폰 추천', '무선이어폰 가성비', '무선이어폰 노이즈캔슬링'].map((item, i) => (
-          <div key={item} className="flex items-center justify-between ds-press cursor-pointer" style={{ padding: `${space.sm}px ${space.md}px`, borderBottom: i < 2 ? `1px solid ${t.border}` : 'none' }}>
-            <div className="flex items-center" style={{ gap: space.sm }}>
+          <div key={item} className="ds-press cursor-pointer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: `${space.sm}px ${space.md}px`, borderBottom: i < 2 ? `1px solid ${t.border}` : 'none' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: space.sm }}>
               <Icon name="search" size={13} color={t.textMuted} />
               <Text role="bodySm">{item}</Text>
             </div>
@@ -164,10 +163,10 @@ function PatternSearch({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' })
           </div>
         ))}
       </div>
-      <div className="flex overflow-hidden" style={{ gap: space.xs }}>
+      <div style={{ display: 'flex', overflow: 'hidden', gap: space.xs }}>
         {['전체', '5만원 이하', '브랜드', '무선', '노이즈캔슬링'].map((f, i) => <Chip key={f} active={i === 0}>{f}</Chip>)}
       </div>
-      <div className={platform === 'web' ? 'grid grid-cols-3' : 'grid grid-cols-2'} style={{ gap: space.sm }}>
+      <div style={{ display: 'grid', gridTemplateColumns: platform === 'web' ? 'repeat(3, 1fr)' : 'repeat(2, 1fr)', gap: space.sm }}>
         {[
           { name: '소니 WF-1000XM5', price: '189,000', badge: '인기' },
           { name: '삼성 갤럭시 버즈2', price: '89,000', badge: '할인' },
@@ -196,31 +195,31 @@ function PatternList({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' }) {
 
   return (
     <Screen ds={ds}>
-      <div className="flex items-center justify-between">
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Text role="bodySm" weight={t.weightBold}>상품 목록 <Text role="caption" color={t.textSub}>245개</Text></Text>
-        <div className="flex items-center" style={{ gap: space.sm }}>
-          <Button variant="secondary" size="sm"><span className="flex items-center gap-1"><Icon name="filter" size={12} color={t.textSub} />필터</span></Button>
-          <Button variant="secondary" size="sm"><span className="flex items-center gap-1">정렬<Icon name="chevronDown" size={12} color={t.textSub} /></span></Button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: space.sm }}>
+          <Button variant="secondary" size="sm"><span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><Icon name="filter" size={12} color={t.textSub} />필터</span></Button>
+          <Button variant="secondary" size="sm"><span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>정렬<Icon name="chevronDown" size={12} color={t.textSub} /></span></Button>
         </div>
       </div>
-      <div className="flex overflow-hidden" style={{ gap: space.xs }}>
+      <div style={{ display: 'flex', overflow: 'hidden', gap: space.xs }}>
         {['전체', '5만원 이하', '무료배송', '오늘출발'].map((f, i) => <Chip key={f} active={i === 0}>{f}</Chip>)}
       </div>
       {platform === 'mobile' ? (
-        <div className="flex flex-col" style={{ gap: space.sm }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
           {[
             { name: '무선이어폰 XM5', price: '189,000', ship: '무료배송', rating: '4.8', reviews: '1.2k', badge: '인기' },
             { name: '갤럭시 버즈2 프로', price: '89,000', ship: '오늘출발', rating: '4.6', reviews: '890', badge: '' },
           ].map((item, i) => (
             <ListRow key={item.name} divider={i === 0}>
-              <div className="flex" style={{ gap: space.md, width: '100%' }}>
+              <div style={{ display: 'flex', gap: space.md, width: '100%' }}>
                 <Thumb h={64} w={64} style={{ borderRadius: t.radius.card, flexShrink: 0 }} />
-                <div className="flex-1 flex flex-col" style={{ gap: space.xs }}>
-                  <div className="flex items-start justify-between">
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: space.xs }}>
+                  <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
                     <Text role="bodySm" weight={t.weightMedium}>{item.name}</Text>
                     {item.badge && <Badge tone="solid">{item.badge}</Badge>}
                   </div>
-                  <div className="flex items-center" style={{ gap: space.xs }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: space.xs }}>
                     <Text role="caption" color={t.textSub}>{item.ship} · </Text>
                     <span style={{ color: t.accent, display: 'inline-flex' }}><Icon name="star" size={12} /></span>
                     <Text role="caption" color={t.textSub}>{item.rating} ({item.reviews})</Text>
@@ -232,7 +231,7 @@ function PatternList({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' }) {
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-4" style={{ gap: space.sm }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: space.sm }}>
           {['이어폰 XM5', '버즈2 프로', '에어팟 프로', '갤럭시 버즈'].map((name, i) => (
             <Card key={name} pad={false}>
               <div style={{ position: 'relative' }}>
@@ -240,7 +239,7 @@ function PatternList({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' }) {
                 {i === 0 && <span style={{ position: 'absolute', top: space.xs, left: space.xs }}><Badge tone="solid">인기</Badge></span>}
               </div>
               <div style={{ padding: space.sm }}>
-                <Text role="caption" weight={t.weightMedium} className="truncate" style={{ display: 'block', marginBottom: space.xxs }}>{name}</Text>
+                <Text role="caption" weight={t.weightMedium} style={{ display: 'block', marginBottom: space.xxs, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{name}</Text>
                 <Text role="caption" weight={t.weightBold} color={t.primary}>{['189,000', '89,000', '279,000', '119,000'][i]}원</Text>
               </div>
             </Card>
@@ -257,24 +256,24 @@ function PatternDetail({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' })
   const { space } = t;
 
   const info = (
-    <div className="flex flex-col" style={{ gap: space.sm }}>
-      <div className="flex items-start justify-between">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
         <div>
           <Text role="caption" color={t.textSub} style={{ display: 'block', marginBottom: space.xxs }}>소니 코리아</Text>
           <Text role="h2" weight={t.weightBold}>무선 이어폰 WF-1000XM5</Text>
         </div>
         <Badge tone="soft">인기</Badge>
       </div>
-      <div className="flex items-baseline" style={{ gap: space.sm }}>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: space.sm }}>
         <Text role="h1" weight={t.weightBold} color={t.primary}>189,000원</Text>
         <Text role="bodySm" color={t.textMuted} style={{ textDecoration: 'line-through' }}>229,000원</Text>
         <Badge tone="solid">17%</Badge>
       </div>
-      <div className="flex flex-wrap" style={{ gap: space.xs }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: space.xs }}>
         {['블랙', '화이트', '실버'].map((c, i) => <Chip key={c} active={i === 0}>{c}</Chip>)}
       </div>
       <div style={{ padding: space.sm, borderRadius: t.radius.card, background: t.surface, border: `1px solid ${t.border}` }}>
-        <div className="flex items-center" style={{ gap: space.xs, marginBottom: space.xs }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: space.xs, marginBottom: space.xs }}>
           <Icon name="truck" size={12} color={t.textSub} />
           <Text role="caption" color={t.textSub}>배송 정보</Text>
         </div>
@@ -288,13 +287,13 @@ function PatternDetail({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' })
       <Screen ds={ds}>
         <Thumb h={180} style={{ borderRadius: t.radius.card }} />
         {info}
-        <div className="flex" style={{ gap: space.sm }}>
-          <Button variant="secondary"><span className="flex items-center gap-1"><Icon name="heart" size={14} color={t.textSub} />찜</span></Button>
+        <div style={{ display: 'flex', gap: space.sm }}>
+          <Button variant="secondary"><span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><Icon name="heart" size={14} color={t.textSub} />찜</span></Button>
           <Button variant="primary" full>바로구매</Button>
         </div>
-        <div className="flex" style={{ borderBottom: `1px solid ${t.border}` }}>
+        <div style={{ display: 'flex', borderBottom: `1px solid ${t.border}` }}>
           {['상품정보', '리뷰 128', 'Q&A'].map((tab, i) => (
-            <div key={tab} className="flex-1 flex justify-center ds-press cursor-pointer" style={{ paddingBottom: space.sm, borderBottom: i === 0 ? `2px solid ${t.primary}` : '2px solid transparent', marginBottom: -1 }}>
+            <div key={tab} className="ds-press cursor-pointer" style={{ flex: 1, display: 'flex', justifyContent: 'center', paddingBottom: space.sm, borderBottom: i === 0 ? `2px solid ${t.primary}` : '2px solid transparent', marginBottom: -1 }}>
               <Text role="caption" weight={i === 0 ? t.weightBold : t.weightRegular} color={i === 0 ? t.primary : t.textSub}>{tab}</Text>
             </div>
           ))}
@@ -305,12 +304,12 @@ function PatternDetail({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' })
 
   return (
     <Screen ds={ds}>
-      <div className="grid grid-cols-2" style={{ gap: space.lg }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: space.lg }}>
         <Thumb h={220} style={{ borderRadius: t.radius.card }} />
-        <div className="flex flex-col" style={{ gap: space.md }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: space.md }}>
           {info}
-          <div className="flex" style={{ gap: space.sm }}>
-            <Button variant="secondary"><span className="flex items-center gap-1"><Icon name="heart" size={14} color={t.textSub} />찜</span></Button>
+          <div style={{ display: 'flex', gap: space.sm }}>
+            <Button variant="secondary"><span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><Icon name="heart" size={14} color={t.textSub} />찜</span></Button>
             <Button variant="primary" full>바로구매</Button>
           </div>
         </div>
@@ -332,30 +331,30 @@ function PatternHistory({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' }
 
   return (
     <Screen ds={ds}>
-      <div className="flex items-center justify-between">
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Text role="bodySm" weight={t.weightBold}>주문 내역</Text>
         <Text role="caption" color={t.primary} weight={t.weightBold}>전체 보기</Text>
       </div>
-      <div className={platform === 'web' ? 'grid grid-cols-3' : 'grid grid-cols-2'} style={{ gap: space.sm }}>
+      <div style={{ display: 'grid', gridTemplateColumns: platform === 'web' ? 'repeat(3, 1fr)' : 'repeat(2, 1fr)', gap: space.sm }}>
         {[{ label: '전체', count: 12, icon: 'package' as const }, { label: '진행중', count: 2, icon: 'truck' as const }, ...(platform === 'web' ? [{ label: '완료', count: 8, icon: 'checkCircle' as const }] : [])].map(({ label, count, icon }) => (
           <div key={label} style={{ background: t.surface, borderRadius: t.radius.card, border: `1px solid ${t.border}`, padding: t.cardPad, textAlign: 'center' as const }}>
-            <div className="flex justify-center" style={{ marginBottom: space.xs }}><Icon name={icon} size={16} color={t.primary} /></div>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: space.xs }}><Icon name={icon} size={16} color={t.primary} /></div>
             <Text role="h2" weight={t.weightBold} color={t.primary} style={{ display: 'block' }}>{count}</Text>
             <Text role="caption" color={t.textSub}>{label}</Text>
           </div>
         ))}
       </div>
-      <div className="flex flex-col" style={{ gap: space.xs }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: space.xs }}>
         <Text role="caption" color={t.textMuted} weight={t.weightBold}>2024년 1월</Text>
         {items.map((item, i) => (
           <ListRow key={item.name} divider={i < items.length - 1} style={{ paddingLeft: 0, paddingRight: 0 }}>
-            <div className="flex items-center" style={{ gap: space.md, width: '100%' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: space.md, width: '100%' }}>
               <Thumb h={48} w={48} style={{ borderRadius: t.radius.card, flexShrink: 0 }} />
-              <div className="flex-1 flex flex-col" style={{ gap: space.xxs }}>
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: space.xxs }}>
                 <Text role="bodySm" weight={t.weightMedium}>{item.name}</Text>
                 <Text role="caption" color={t.textSub}>{item.date}</Text>
               </div>
-              <div className="flex flex-col items-end" style={{ gap: space.xs }}>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: space.xs }}>
                 <Text role="bodySm" weight={t.weightBold}>{item.price}</Text>
                 <Badge tone={item.tone}>{item.status}</Badge>
               </div>
@@ -383,13 +382,13 @@ function PatternMyPage({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' })
 
   return (
     <Screen ds={ds}>
-      <div className="flex items-center" style={{ gap: space.md, padding: t.cardPad, background: t.surface, borderRadius: t.radius.card, border: `1px solid ${t.border}` }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: space.md, padding: t.cardPad, background: t.surface, borderRadius: t.radius.card, border: `1px solid ${t.border}` }}>
         <Avatar size={52} />
-        <div className="flex-1">
+        <div style={{ flex: 1 }}>
           <Text role="bodySm" weight={t.weightBold} style={{ display: 'block' }}>홍길동</Text>
           <Text role="caption" color={t.textSub}>gildong@email.com</Text>
         </div>
-        <Button variant="outline" size="sm"><span className="flex items-center gap-1"><Icon name="edit" size={12} color={t.primary} />편집</span></Button>
+        <Button variant="outline" size="sm"><span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><Icon name="edit" size={12} color={t.primary} />편집</span></Button>
       </div>
       <div style={{ background: t.primary, borderRadius: t.radius.card, padding: t.cardPad, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
@@ -398,13 +397,13 @@ function PatternMyPage({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' })
         </div>
         <Badge tone="soft">VIP</Badge>
       </div>
-      <div className="grid grid-cols-3" style={{ gap: space.sm }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: space.sm }}>
         {[
           { label: '주문', count: 12, icon: 'package' as const },
           { label: '찜', count: 38, icon: 'heart' as const },
           { label: '리뷰', count: 7, icon: 'star' as const },
         ].map(({ label, count, icon }) => (
-          <div key={label} className="flex flex-col items-center" style={{ gap: space.xs, padding: space.sm, background: t.surface, borderRadius: t.radius.card, border: `1px solid ${t.border}` }}>
+          <div key={label} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: space.xs, padding: space.sm, background: t.surface, borderRadius: t.radius.card, border: `1px solid ${t.border}` }}>
             <Icon name={icon} size={16} color={t.primary} />
             <Text role="h2" weight={t.weightBold} color={t.primary}>{count}</Text>
             <Text role="caption" color={t.textSub}>{label}</Text>
@@ -414,7 +413,7 @@ function PatternMyPage({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' })
       <div style={{ background: t.surface, borderRadius: t.radius.card, overflow: 'hidden', border: `1px solid ${t.border}` }}>
         {menuItems.map((item, i, arr) => (
           <ListRow key={item.label} divider={i < arr.length - 1} style={{ paddingLeft: space.md, paddingRight: space.md }}>
-            <div className="flex items-center" style={{ gap: space.sm }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: space.sm }}>
               <Icon name={item.icon} size={16} color={item.danger ? t.danger : t.textSub} />
               <Text role="bodySm" weight={t.weightMedium} color={item.danger ? t.danger : t.textMain}>{item.label}</Text>
             </div>
@@ -432,12 +431,12 @@ function PatternPayment({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' }
   const { space } = t;
 
   const summary = (
-    <div className="flex flex-col" style={{ gap: space.sm }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
       <div style={{ background: t.surface, borderRadius: t.radius.card, border: `1px solid ${t.border}`, padding: t.cardPad }}>
         <Text role="caption" weight={t.weightBold} color={t.textSub} style={{ display: 'block', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: space.sm }}>주문 상품</Text>
-        <div className="flex items-center" style={{ gap: space.sm }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: space.sm }}>
           <Thumb h={48} w={48} style={{ borderRadius: t.radius.card, flexShrink: 0 }} />
-          <div className="flex-1">
+          <div style={{ flex: 1 }}>
             <Text role="bodySm" weight={t.weightMedium} style={{ display: 'block', marginBottom: space.xxs }}>무선이어폰 WF-1000XM5</Text>
             <Text role="caption" color={t.textSub}>블랙 / 1개</Text>
           </div>
@@ -447,12 +446,12 @@ function PatternPayment({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' }
       <div style={{ background: t.surface, borderRadius: t.radius.card, border: `1px solid ${t.border}`, padding: t.cardPad }}>
         <Text role="caption" weight={t.weightBold} color={t.textSub} style={{ display: 'block', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: space.sm }}>결제 금액</Text>
         {[{ label: '상품 금액', value: '229,000원', color: t.textMain }, { label: '할인', value: '-40,000원', color: t.danger }, { label: '배송비', value: '무료', color: t.success }].map(({ label, value, color }) => (
-          <div key={label} className="flex justify-between" style={{ marginBottom: space.xs }}>
+          <div key={label} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: space.xs }}>
             <Text role="caption" color={t.textSub}>{label}</Text>
             <Text role="caption" weight={t.weightMedium} color={color}>{value}</Text>
           </div>
         ))}
-        <div style={{ borderTop: `1px solid ${t.border}`, marginTop: space.sm, paddingTop: space.sm }} className="flex justify-between">
+        <div style={{ borderTop: `1px solid ${t.border}`, marginTop: space.sm, paddingTop: space.sm, display: 'flex', justifyContent: 'space-between' }}>
           <Text role="bodySm" weight={t.weightBold}>총 결제 금액</Text>
           <Text role="bodySm" weight={t.weightBold} color={t.primary}>189,000원</Text>
         </div>
@@ -461,12 +460,12 @@ function PatternPayment({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' }
   );
 
   const payMethods = (
-    <div className="flex flex-col" style={{ gap: space.sm }}>
-      <div className="flex items-center" style={{ gap: space.xs }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: space.xs }}>
         <Icon name="card" size={14} color={t.textSub} />
         <Text role="caption" weight={t.weightBold} color={t.textSub} style={{ textTransform: 'uppercase', letterSpacing: '0.06em' }}>결제 수단</Text>
       </div>
-      <div className="flex flex-wrap" style={{ gap: space.xs }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: space.xs }}>
         {['신용카드', '카카오페이', '네이버페이', '계좌이체'].map((m, i) => <Chip key={m} active={i === 0}>{m}</Chip>)}
       </div>
       <div style={{ border: `1px solid ${t.border}`, borderRadius: t.radius.input, padding: `${space.sm}px ${space.md}px`, background: t.bg, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -488,9 +487,9 @@ function PatternPayment({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' }
 
   return (
     <Screen ds={ds}>
-      <div className="grid grid-cols-2" style={{ gap: space.lg }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: space.lg }}>
         <div>{summary}</div>
-        <div className="flex flex-col" style={{ gap: space.md }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: space.md }}>
           {payMethods}
           <Button variant="primary" full>189,000원 결제하기</Button>
         </div>
