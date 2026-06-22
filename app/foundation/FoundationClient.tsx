@@ -9,13 +9,14 @@ import { serviceDS } from '@/lib/tokens/serviceTheme';
 import { neutral, status } from '@/lib/tokens/palette';
 import { lightTokens, darkTokens } from '@/lib/tokens/semanticTokens';
 
-type FoundationCategory = 'color' | 'type' | 'space' | 'radius' | 'motion';
+type FoundationCategory = 'color' | 'type' | 'space' | 'radius' | 'stroke' | 'motion';
 
 const CATEGORIES: { key: FoundationCategory; label: string }[] = [
   { key: 'color',  label: '컬러' },
   { key: 'type',   label: '타이포그래피' },
   { key: 'space',  label: '여백' },
   { key: 'radius', label: '모서리' },
+  { key: 'stroke', label: '스트로크' },
   { key: 'motion', label: '모션' },
 ];
 
@@ -52,6 +53,7 @@ export default function FoundationClient() {
         {active === 'type'   && <TypePanel   t={t} />}
         {active === 'space'  && <SpacePanel  t={t} />}
         {active === 'radius' && <RadiusPanel t={t} />}
+        {active === 'stroke' && <StrokePanel t={t} />}
         {active === 'motion' && <MotionPanel t={t} />}
       </div>
     </div>
@@ -302,58 +304,71 @@ function ColorPanel({ t }: { t: Theme }) {
         </div>
       </Section>
 
-      {/* 4. 스트로크 */}
-      <Section t={t} title="스트로크 — 굵기 스케일 & 컬러 역할">
-        <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.xl }}>
-          {/* 굵기 스케일 */}
-          <div>
-            <div style={{ ...cap(t), fontWeight: t.weightBold, color: t.textSub, marginBottom: t.space.sm }}>굵기 (Width)</div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.md }}>
-              {([
-                { name: 'hairline', w: 0.5, desc: '구분선 (미세)' },
-                { name: 'thin',     w: 1,   desc: '기본 테두리 / 구분선' },
-                { name: 'medium',   w: 1.5, desc: '포커스 인풋 / 선택 상태' },
-                { name: 'thick',    w: 2,   desc: '활성 탭 인디케이터' },
-                { name: 'heavy',    w: 3,   desc: '강조 액센트 바' },
-              ] as { name: string; w: number; desc: string }[]).map(({ name, w, desc }) => (
-                <div key={name} style={{ display: 'flex', alignItems: 'center', gap: t.space.md }}>
-                  <div style={{ width: 56, flexShrink: 0 }}>
-                    <span style={{ ...cap(t), color: t.textSub, fontWeight: t.weightMedium }}>{name}</span>
-                  </div>
-                  <div style={{ flex: 1, height: w, background: t.textMain, borderRadius: w }} />
-                  <span style={{ ...cap(t), color: t.textMuted, fontFamily: 'monospace', width: 32, textAlign: 'right' }}>{w}px</span>
-                  <span style={{ ...cap(t), color: t.textMuted, width: 140, textAlign: 'left' }}>{desc}</span>
-                </div>
-              ))}
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════
+   스트로크 패널
+══════════════════════════════════════════ */
+function StrokePanel({ t }: { t: Theme }) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
+      <Section t={t} title="굵기 (Width)" first>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.md }}>
+          {([
+            { name: 'hairline', w: 0.5, desc: '구분선 (미세)' },
+            { name: 'thin',     w: 1,   desc: '기본 테두리 / 구분선' },
+            { name: 'medium',   w: 1.5, desc: '포커스 인풋 / 선택 상태' },
+            { name: 'thick',    w: 2,   desc: '활성 탭 인디케이터' },
+            { name: 'heavy',    w: 3,   desc: '강조 액센트 바' },
+          ] as { name: string; w: number; desc: string }[]).map(({ name, w, desc }) => (
+            <div key={name} style={{ display: 'flex', alignItems: 'center', gap: t.space.md }}>
+              <div style={{ width: 64, flexShrink: 0 }}>
+                <span style={{ ...cap(t), color: t.textSub, fontWeight: t.weightMedium }}>{name}</span>
+              </div>
+              <div style={{ flex: 1, height: w, background: t.textMain, borderRadius: w }} />
+              <span style={{ ...cap(t), color: t.textMuted, fontFamily: 'monospace', width: 36, textAlign: 'right' }}>{w}px</span>
+              <span style={{ ...cap(t), color: t.textMuted, width: 160 }}>{desc}</span>
             </div>
-          </div>
-          {/* 컬러 역할별 시각 */}
-          <div>
-            <div style={{ ...cap(t), fontWeight: t.weightBold, color: t.textSub, marginBottom: t.space.sm }}>컬러 역할 (Color Role)</div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.sm }}>
-              {([
-                { role: 'normal',  color: lightTokens['--color-border-normal']  ?? t.border, desc: '기본 테두리' },
-                { role: 'strong',  color: lightTokens['--color-border-strong']  ?? t.textSub, desc: '강조 테두리' },
-                { role: 'weak',    color: lightTokens['--color-border-weak']    ?? t.surfaceAlt, desc: '연한 구분선' },
-                { role: 'brand',   color: lightTokens['--color-border-brand']   ?? t.primary, desc: '브랜드 테두리' },
-                { role: 'focus',   color: lightTokens['--color-border-focus']   ?? t.primary, desc: '포커스 링' },
-                { role: 'danger',  color: lightTokens['--color-border-danger']  ?? t.border, desc: '에러 인풋' },
-              ] as { role: string; color: string; desc: string }[]).map(({ role, color, desc }) => (
-                <div key={role} style={{ display: 'flex', alignItems: 'center', gap: t.space.md }}>
-                  <div style={{ width: 80, flexShrink: 0 }}>
-                    <span style={{ ...cap(t), color: t.textSub }}>{role}</span>
-                  </div>
-                  <div style={{ flex: 1, height: 1, background: color }} />
-                  <div style={{ width: 20, height: 20, borderRadius: t.radius.badge, border: `2px solid ${color}`, flexShrink: 0 }} />
-                  <span style={{ ...cap(t), color: t.textMuted, fontFamily: 'monospace', width: 80 }}>{color}</span>
-                  <span style={{ ...cap(t), color: t.textMuted, width: 120 }}>{desc}</span>
-                </div>
-              ))}
-            </div>
-          </div>
+          ))}
         </div>
       </Section>
 
+      <Section t={t} title="컬러 역할 (Color Role)">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.sm }}>
+          {([
+            { role: 'normal', light: lightTokens['--color-border-normal'], dark: darkTokens['--color-border-normal'], desc: '기본 테두리' },
+            { role: 'strong', light: lightTokens['--color-border-strong'], dark: darkTokens['--color-border-strong'], desc: '강조 테두리' },
+            { role: 'weak',   light: lightTokens['--color-border-weak'],   dark: darkTokens['--color-border-weak'],   desc: '연한 구분선' },
+            { role: 'brand',  light: lightTokens['--color-border-brand'],  dark: darkTokens['--color-border-brand'],  desc: '브랜드 테두리' },
+            { role: 'focus',  light: lightTokens['--color-border-focus'],  dark: darkTokens['--color-border-focus'],  desc: '포커스 링' },
+            { role: 'danger', light: lightTokens['--color-border-danger'], dark: darkTokens['--color-border-danger'], desc: '에러 인풋' },
+          ] as { role: string; light: string | undefined; dark: string | undefined; desc: string }[]).map(({ role, light, dark, desc }) => (
+            <div key={role} style={{ display: 'flex', alignItems: 'center', gap: t.space.md }}>
+              <div style={{ width: 64, flexShrink: 0 }}>
+                <span style={{ ...cap(t), color: t.textSub }}>{role}</span>
+              </div>
+              {/* 라이트 */}
+              <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: t.space.sm }}>
+                <div style={{ width: 20, height: 20, borderRadius: t.radius.badge, border: `2px solid ${light ?? t.border}`, flexShrink: 0, background: t.bg }} />
+                <span style={{ ...cap(t), color: t.textMuted, fontFamily: 'monospace' }}>{light ?? '—'}</span>
+              </div>
+              {/* 다크 */}
+              <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: t.space.sm }}>
+                <div style={{ width: 20, height: 20, borderRadius: t.radius.badge, border: `2px solid ${dark ?? t.border}`, flexShrink: 0, background: '#18181b' }} />
+                <span style={{ ...cap(t), color: t.textMuted, fontFamily: 'monospace' }}>{dark ?? '—'}</span>
+              </div>
+              <span style={{ ...cap(t), color: t.textMuted, width: 120 }}>{desc}</span>
+            </div>
+          ))}
+          <div style={{ display: 'flex', gap: t.space.md, paddingLeft: 64 + t.space.md }}>
+            <div style={{ flex: 1, ...cap(t), color: t.textMuted }}>☀ light</div>
+            <div style={{ flex: 1, ...cap(t), color: t.textMuted }}>◑ dark</div>
+            <div style={{ width: 120 }} />
+          </div>
+        </div>
+      </Section>
     </div>
   );
 }
