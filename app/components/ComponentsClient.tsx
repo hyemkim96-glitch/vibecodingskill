@@ -28,8 +28,9 @@ export default function ComponentsClient() {
             onClick={() => setActive(key)}
             className="shrink-0 inline-flex items-center justify-center text-xs px-5 rounded-full cursor-pointer transition-all"
             style={{
-              height: 38,
               lineHeight: 1,
+              paddingTop: 11,
+              paddingBottom: 9,
               color: active === key ? 'var(--color-void)' : 'var(--color-ash)',
               fontWeight: active === key ? 600 : 400,
               background: active === key ? 'var(--color-bone)' : 'transparent',

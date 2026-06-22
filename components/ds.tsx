@@ -178,7 +178,9 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
           fontSize: Math.max(10, t.type.caption.size - 1),
           lineHeight: 1,
           fontWeight: t.weightBold,
-          padding: `3px ${space.xs + 3}px`,
+          // optical centering: SUIT glyphs sit high in the line box, so add
+          // extra top padding to push text down to the visual center
+          padding: `5px ${space.xs + 3}px 3px`,
           borderRadius: t.radius.badge,
           background: s.bg,
           color: s.fg,
@@ -197,7 +199,11 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
         ...typeStyle(t.type.caption),
         lineHeight: 1,
         fontWeight: t.weightMedium,
-        padding: `${space.xs + 1}px ${space.md}px`,
+        // optical centering (see Badge): nudge glyph down
+        paddingTop: space.xs + 2,
+        paddingBottom: space.xs,
+        paddingLeft: space.md,
+        paddingRight: space.md,
         borderRadius: t.radius.chip,
         background: active ? t.primary : t.surface,
         color: active ? t.onPrimary : t.textSub,

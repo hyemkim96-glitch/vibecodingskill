@@ -7,7 +7,7 @@ import {
   Star, MapPin, CreditCard, Settings, MessageCircle, LogOut, Filter,
   SlidersHorizontal, Mail, Newspaper, Map, TrendingUp, Grid2x2,
   ChevronDown, Eye, Edit, RefreshCw, Truck, Clock, Zap,
-  AlertCircle, CheckCircle, RotateCcw, Bookmark
+  AlertCircle, CheckCircle, RotateCcw, Bookmark, Minus, Info, Upload
 } from 'lucide-react';
 
 import {
@@ -21,7 +21,7 @@ import {
   TrendUp, SquaresFour, CaretDown, Eye as PhEye, PencilSimple,
   ArrowClockwise, Truck as PhTruck, Clock as PhClock, Lightning,
   WarningCircle, CheckCircle as PhCheckCircle, ArrowCounterClockwise,
-  BookmarkSimple
+  BookmarkSimple, Minus as PhMinus, Info as PhInfo, UploadSimple
 } from '@phosphor-icons/react';
 
 import {
@@ -33,7 +33,7 @@ import {
   IconMail, IconNews, IconMap, IconTrendingUp, IconLayoutGrid,
   IconChevronDown, IconEye, IconEdit, IconRefresh, IconTruck,
   IconClock, IconBolt, IconAlertCircle, IconCircleCheck,
-  IconRotate, IconBookmark
+  IconRotate, IconBookmark, IconMinus, IconInfoCircle, IconUpload
 } from '@tabler/icons-react';
 
 /**
@@ -56,7 +56,7 @@ export type IconName =
   | 'chat' | 'logout' | 'filter' | 'sliders' | 'mail' | 'news' | 'map'
   | 'trending' | 'grid' | 'chevronDown' | 'eye' | 'edit' | 'refresh'
   | 'truck' | 'clock' | 'zap' | 'alertCircle' | 'checkCircle' | 'undo'
-  | 'bookmark';
+  | 'bookmark' | 'minus' | 'info' | 'upload';
 
 interface IconProps {
   name: IconName;
@@ -77,7 +77,7 @@ const LUCIDE_MAP: Record<IconName, React.ComponentType<{ size?: number; color?: 
   trending: TrendingUp, grid: Grid2x2, chevronDown: ChevronDown, eye: Eye,
   edit: Edit, refresh: RefreshCw, truck: Truck, clock: Clock, zap: Zap,
   alertCircle: AlertCircle, checkCircle: CheckCircle, undo: RotateCcw,
-  bookmark: Bookmark,
+  bookmark: Bookmark, minus: Minus, info: Info, upload: Upload,
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -92,7 +92,7 @@ const PHOSPHOR_MAP: Record<IconName, React.ComponentType<any>> = {
   grid: SquaresFour, chevronDown: CaretDown, eye: PhEye, edit: PencilSimple,
   refresh: ArrowClockwise, truck: PhTruck, clock: PhClock, zap: Lightning,
   alertCircle: WarningCircle, checkCircle: PhCheckCircle, undo: ArrowCounterClockwise,
-  bookmark: BookmarkSimple,
+  bookmark: BookmarkSimple, minus: PhMinus, info: PhInfo, upload: UploadSimple,
 };
 
 const TABLER_MAP: Record<IconName, React.ComponentType<{ size?: number; color?: string; className?: string; stroke?: number }>> = {
@@ -107,6 +107,7 @@ const TABLER_MAP: Record<IconName, React.ComponentType<{ size?: number; color?: 
   eye: IconEye, edit: IconEdit, refresh: IconRefresh, truck: IconTruck,
   clock: IconClock, zap: IconBolt, alertCircle: IconAlertCircle,
   checkCircle: IconCircleCheck, undo: IconRotate, bookmark: IconBookmark,
+  minus: IconMinus, info: IconInfoCircle, upload: IconUpload,
 };
 
 export function Icon({ name, size = 16, color = 'currentColor', style = 'lucide', weight = 'regular', className = '' }: IconProps) {
