@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { BrandToken } from '@/types/token';
-import { resolveTheme } from '@/lib/tokens/resolveTheme';
+import { resolveTheme, ensureContrast } from '@/lib/tokens/resolveTheme';
 import { createDS, motionVars, typeStyle } from '@/components/ds';
 import { Icon } from '@/components/icons';
 
@@ -402,18 +402,21 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
           </Tile>
 
           <Tile t={t} ds={ds} title="토스트 & 알림">
-            {([
-              { color: t.onPrimary,   icon: 'checkCircle' as const, label: '저장되었습니다' },
-              { color: t.dangerText,  icon: 'alertCircle' as const,  label: '오류가 발생했습니다' },
-              { color: t.successText, icon: 'checkCircle' as const, label: '결제가 완료되었습니다' },
-              { color: t.warningText, icon: 'alertCircle' as const,  label: '재고가 부족합니다' },
-              { color: t.infoText,    icon: 'checkCircle' as const, label: '새로운 업데이트가 있어요' },
-            ]).map(({ color, icon, label }) => (
-              <div key={label} style={{ display: 'flex', alignItems: 'center', gap: space.sm, padding: `${space.sm}px ${space.md}px`, borderRadius: t.radius.card, background: t.textMain }}>
-                <Icon name={icon} size={16} color={color} />
-                <Text role="bodySm" color={color} weight={t.weightMedium}>{label}</Text>
-              </div>
-            ))}
+            {(() => {
+              const toastBg = t.textMain;
+              return ([
+                { color: ensureContrast(t.onPrimary, toastBg), icon: 'checkCircle' as const, label: '저장되었습니다' },
+                { color: ensureContrast(t.danger,    toastBg), icon: 'alertCircle' as const,  label: '오류가 발생했습니다' },
+                { color: ensureContrast(t.success,   toastBg), icon: 'checkCircle' as const, label: '결제가 완료되었습니다' },
+                { color: ensureContrast(t.warning,   toastBg), icon: 'alertCircle' as const,  label: '재고가 부족합니다' },
+                { color: ensureContrast(t.info,      toastBg), icon: 'checkCircle' as const, label: '새로운 업데이트가 있어요' },
+              ]).map(({ color, icon, label }) => (
+                <div key={label} style={{ display: 'flex', alignItems: 'center', gap: space.sm, padding: `${space.sm}px ${space.md}px`, borderRadius: t.radius.card, background: toastBg }}>
+                  <Icon name={icon} size={16} color={color} />
+                  <Text role="bodySm" color={color} weight={t.weightMedium}>{label}</Text>
+                </div>
+              ));
+            })()}
           </Tile>
 
           <Tile t={t} ds={ds} title="로딩 상태">
