@@ -79,6 +79,14 @@ export interface DS {
   Thumb: React.FC<{ h: number; w?: number; style?: React.CSSProperties }>;
   Avatar: React.FC<{ size?: number }>;
   Icon: React.FC<{ name: IconName; size?: number; color?: string }>;
+  Checkbox: React.FC<{ checked?: boolean; label?: string; indeterminate?: boolean; disabled?: boolean }>;
+  Switch: React.FC<{ on?: boolean; disabled?: boolean; label?: string }>;
+  Radio: React.FC<{ checked?: boolean; label?: string; disabled?: boolean }>;
+  Textarea: React.FC<{ label?: string; placeholder: string; rows?: number; focus?: boolean }>;
+  Select: React.FC<{ label?: string; placeholder: string; value?: string; disabled?: boolean }>;
+  Divider: React.FC<{ label?: string; vertical?: boolean; style?: React.CSSProperties }>;
+  Skeleton: React.FC<{ w?: number | string; h?: number; radius?: number | string; style?: React.CSSProperties }>;
+  Progress: React.FC<{ value?: number; max?: number; tone?: 'primary' | 'success' | 'danger'; label?: string }>;
 }
 
 export function createDS(t: ResolvedTheme, wireframe = false): DS {
@@ -314,5 +322,140 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
     <IconBase name={name} size={size} color={color} style={iconStyle} />
   );
 
-  return { t, Text, Button, Card, Input, Badge, Chip, NavTab, Stepper, Rating, ListRow, Thumb, Avatar, Icon };
+  const Checkbox: DS['Checkbox'] = ({ checked = false, label, indeterminate = false, disabled = false }) => (
+    <label style={{ display: 'inline-flex', alignItems: 'center', gap: space.sm, cursor: disabled ? 'not-allowed' : 'pointer', opacity: disabled ? 0.4 : 1 }}>
+      <span
+        style={{
+          width: 18, height: 18, borderRadius: t.radius.badge,
+          border: checked || indeterminate ? 'none' : `1.5px solid ${t.border}`,
+          background: checked || indeterminate ? t.primary : t.bg,
+          display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+        }}
+      >
+        {indeterminate
+          ? <span style={{ width: 8, height: 2, background: t.onPrimary, borderRadius: 1 }} />
+          : checked
+            ? <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><polyline points="1,4 4,7 9,1" stroke={t.onPrimary} strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            : null}
+      </span>
+      {label && <span style={{ ...typeStyle(t.type.bodySm), color: disabled ? t.textDisabled : t.textMain }}>{label}</span>}
+    </label>
+  );
+
+  const Switch: DS['Switch'] = ({ on = false, disabled = false, label }) => (
+    <label style={{ display: 'inline-flex', alignItems: 'center', gap: space.sm, cursor: disabled ? 'not-allowed' : 'pointer', opacity: disabled ? 0.4 : 1 }}>
+      <span
+        style={{
+          width: 42, height: 24, borderRadius: 9999,
+          background: on ? t.primary : t.surfaceAlt,
+          border: `1.5px solid ${on ? t.primary : t.border}`,
+          position: 'relative', display: 'inline-block', transition: 'background 0.15s',
+          flexShrink: 0,
+        }}
+      >
+        <span style={{
+          position: 'absolute', top: 2, left: on ? 18 : 2,
+          width: 16, height: 16, borderRadius: 9999,
+          background: on ? t.onPrimary : t.textMuted,
+          transition: 'left 0.15s',
+        }} />
+      </span>
+      {label && <span style={{ ...typeStyle(t.type.bodySm), color: t.textMain }}>{label}</span>}
+    </label>
+  );
+
+  const Radio: DS['Radio'] = ({ checked = false, label, disabled = false }) => (
+    <label style={{ display: 'inline-flex', alignItems: 'center', gap: space.sm, cursor: disabled ? 'not-allowed' : 'pointer', opacity: disabled ? 0.4 : 1 }}>
+      <span style={{
+        width: 18, height: 18, borderRadius: 9999,
+        border: checked ? `5px solid ${t.primary}` : `1.5px solid ${t.border}`,
+        background: t.bg, display: 'inline-block', flexShrink: 0,
+      }} />
+      {label && <span style={{ ...typeStyle(t.type.bodySm), color: disabled ? t.textDisabled : t.textMain }}>{label}</span>}
+    </label>
+  );
+
+  const Textarea: DS['Textarea'] = ({ label, placeholder, rows = 3, focus = false }) => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: space.xs }}>
+      {label && <span style={{ ...typeStyle(t.type.caption), color: t.textMain, fontWeight: t.weightMedium }}>{label}</span>}
+      <div
+        style={{
+          border: focus ? `2px solid ${t.primary}` : `1px solid ${t.border}`,
+          borderRadius: t.radius.input, padding: `${space.sm}px ${space.md}px`,
+          background: t.bg, boxShadow: focus ? `0 0 0 3px ${t.primaryTint}` : 'none',
+          minHeight: rows * 24,
+        }}
+      >
+        <span style={{ ...typeStyle(t.type.bodySm), color: focus ? t.textMain : t.textMuted }}>{placeholder}</span>
+      </div>
+    </div>
+  );
+
+  const Select: DS['Select'] = ({ label, placeholder, value, disabled = false }) => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: space.xs, opacity: disabled ? 0.4 : 1 }}>
+      {label && <span style={{ ...typeStyle(t.type.caption), color: t.textMain, fontWeight: t.weightMedium }}>{label}</span>}
+      <div
+        style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          border: `1px solid ${t.border}`, borderRadius: t.radius.input,
+          padding: `${space.sm}px ${space.md}px`, background: t.bg,
+          cursor: disabled ? 'not-allowed' : 'pointer',
+        }}
+      >
+        <span style={{ ...typeStyle(t.type.bodySm), color: value ? t.textMain : t.textMuted }}>{value ?? placeholder}</span>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <polyline points="4,6 8,10 12,6" stroke={t.textMuted} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </div>
+    </div>
+  );
+
+  const Divider: DS['Divider'] = ({ label, vertical = false, style: extStyle = {} }) => {
+    if (vertical) return (
+      <div style={{ width: 1, background: t.border, alignSelf: 'stretch', ...extStyle }} />
+    );
+    if (!label) return (
+      <div style={{ height: 1, background: t.border, ...extStyle }} />
+    );
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', gap: space.sm, ...extStyle }}>
+        <div style={{ flex: 1, height: 1, background: t.border }} />
+        <span style={{ ...typeStyle(t.type.caption), color: t.textMuted }}>{label}</span>
+        <div style={{ flex: 1, height: 1, background: t.border }} />
+      </div>
+    );
+  };
+
+  const Skeleton: DS['Skeleton'] = ({ w = '100%', h = 16, radius, style: extStyle = {} }) => (
+    <div
+      style={{
+        width: w, height: h,
+        borderRadius: radius ?? t.radius.badge,
+        background: wireframe
+          ? `repeating-linear-gradient(90deg, ${t.surfaceAlt}, ${t.surfaceAlt} 40%, ${t.border} 50%, ${t.surfaceAlt} 60%, ${t.surfaceAlt} 100%)`
+          : t.surfaceAlt,
+        ...extStyle,
+      }}
+    />
+  );
+
+  const Progress: DS['Progress'] = ({ value = 60, max = 100, tone = 'primary', label }) => {
+    const barColor = tone === 'success' ? t.success : tone === 'danger' ? t.danger : t.primary;
+    const ratio = Math.min(1, Math.max(0, value / max));
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: space.xs }}>
+        {label && (
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <span style={{ ...typeStyle(t.type.caption), color: t.textSub }}>{label}</span>
+            <span style={{ ...typeStyle(t.type.caption), color: barColor, fontWeight: t.weightBold }}>{Math.round(ratio * 100)}%</span>
+          </div>
+        )}
+        <div style={{ height: 6, borderRadius: 9999, background: t.surfaceAlt, overflow: 'hidden' }}>
+          <div style={{ height: '100%', width: `${ratio * 100}%`, borderRadius: 9999, background: barColor }} />
+        </div>
+      </div>
+    );
+  };
+
+  return { t, Text, Button, Card, Input, Badge, Chip, NavTab, Stepper, Rating, ListRow, Thumb, Avatar, Icon, Checkbox, Switch, Radio, Textarea, Select, Divider, Skeleton, Progress };
 }

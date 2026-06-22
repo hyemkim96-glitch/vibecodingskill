@@ -57,7 +57,8 @@ function Tile({ t, ds, title, children }: {
 export default function ComponentSheet({ token, category }: { token: BrandToken; category: ComponentCategory }) {
   const t = resolveTheme(token, 'mobile', 'wireframe');
   const ds = createDS(t, true);
-  const { Button, Input, Badge, Chip, Card, Text, Thumb, Avatar, ListRow, Stepper, Rating } = ds;
+  const { Button, Input, Badge, Chip, Card, Text, Thumb, Avatar, ListRow, Stepper, Rating,
+          Checkbox, Switch, Radio, Textarea, Select, Divider, Skeleton, Progress } = ds;
   const { space } = t;
   const all = category === 'all';
 
@@ -118,7 +119,6 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
               </div>
               <span style={{ ...typeStyle(t.type.caption), color: t.danger }}>올바른 형식으로 입력해주세요</span>
             </div>
-            {/* 검색 입력 */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: space.sm, background: t.surface, borderRadius: t.radius.chip, border: `1px solid ${t.border}`, padding: `${space.sm}px ${space.md}px`, color: t.textMuted }}>
                 <Icon name="search" size={16} />
@@ -129,26 +129,14 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
                 <Text role="bodySm">검색 포커스 상태</Text>
               </div>
             </div>
-            {/* 텍스트에어리어 */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: space.xs }}>
-              <span style={{ ...typeStyle(t.type.caption), color: t.textMain, fontWeight: t.weightMedium }}>후기 작성</span>
-              <div style={{ border: `1px solid ${t.border}`, borderRadius: t.radius.input, padding: space.md, background: t.bg, minHeight: 80, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                <Text role="bodySm" color={t.textMuted}>내용을 입력해주세요…</Text>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <Text role="caption" color={t.textMuted}>0 / 500</Text>
-                  <span style={{ color: t.textMuted, display: 'inline-flex' }}><Icon name="camera" size={14} /></span>
-                </div>
-              </div>
-            </div>
+            <Textarea label="후기 작성" placeholder="내용을 입력해주세요…" rows={3} />
           </Tile>
 
           <Tile t={t} ds={ds} title="셀렉트 & 드롭다운">
-            <div style={{ display: 'flex', flexDirection: 'column', gap: space.xs }}>
-              <span style={{ ...typeStyle(t.type.caption), color: t.textMain, fontWeight: t.weightMedium }}>셀렉트</span>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: `1px solid ${t.border}`, borderRadius: t.radius.input, padding: `${space.sm}px ${space.md}px`, background: t.bg }}>
-                <span style={{ ...typeStyle(t.type.bodySm), color: t.textMain }}>옵션 선택</span>
-                <span style={{ color: t.textSub, display: 'inline-flex' }}><Icon name="chevronDown" size={16} /></span>
-              </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
+              <Select label="카테고리" placeholder="옵션 선택" />
+              <Select label="선택됨" placeholder="" value="옵션 1" />
+              <Select label="비활성" placeholder="선택 불가" disabled />
             </div>
             <div style={{ border: `1px solid ${t.border}`, borderRadius: t.radius.card, background: t.surface, overflow: 'hidden' }}>
               {['옵션 1', '옵션 2', '옵션 3'].map((opt, i) => (
@@ -160,32 +148,24 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
             </div>
           </Tile>
 
-          <Tile t={t} ds={ds} title="체크박스 · 라디오 · 토글">
+          <Tile t={t} ds={ds} title="체크박스 · 라디오 · 스위치">
             <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
-              {[true, false].map((on, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: space.sm }}>
-                  <span className="ds-press" style={{ width: 18, height: 18, borderRadius: 4, background: on ? t.primary : t.bg, border: `1.5px solid ${on ? t.primary : t.border}`, color: t.onPrimary, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>{on && <Icon name="check" size={12} />}</span>
-                  <Text role="bodySm">{on ? '선택됨' : '선택 안 됨'}</Text>
-                </div>
-              ))}
+              <Checkbox checked label="선택됨" />
+              <Checkbox label="선택 안 됨" />
+              <Checkbox checked indeterminate label="일부 선택" />
+              <Checkbox checked disabled label="비활성 선택" />
             </div>
+            <Divider label="라디오" />
             <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
-              {[true, false].map((on, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: space.sm }}>
-                  <span style={{ width: 18, height: 18, borderRadius: '9999px', background: t.bg, border: `${on ? 5 : 1.5}px solid ${on ? t.primary : t.border}`, display: 'inline-block' }} />
-                  <Text role="bodySm">{on ? '선택됨' : '선택 안 됨'}</Text>
-                </div>
-              ))}
+              <Radio checked label="옵션 A 선택" />
+              <Radio label="옵션 B" />
+              <Radio checked disabled label="비활성 선택" />
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: space.md }}>
-              <div style={{ width: 44, height: 24, borderRadius: 9999, background: t.primary, position: 'relative' }}>
-                <span style={{ position: 'absolute', top: 2, right: 2, width: 20, height: 20, borderRadius: '9999px', background: t.textOnImage }} />
-              </div>
-              <Text role="bodySm">ON</Text>
-              <div style={{ width: 44, height: 24, borderRadius: 9999, background: t.border, position: 'relative' }}>
-                <span style={{ position: 'absolute', top: 2, left: 2, width: 20, height: 20, borderRadius: '9999px', background: t.textOnImage }} />
-              </div>
-              <Text role="bodySm" color={t.textSub}>OFF</Text>
+            <Divider label="스위치" />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
+              <Switch on label="알림 켜짐" />
+              <Switch label="알림 꺼짐" />
+              <Switch on disabled label="비활성 ON" />
             </div>
           </Tile>
 
@@ -419,40 +399,55 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
             })()}
           </Tile>
 
-          <Tile t={t} ds={ds} title="로딩 상태">
-            {/* 프로그레스 바 */}
+          <Tile t={t} ds={ds} title="프로그레스">
             <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
-              {[0.3, 0.65, 1].map((ratio) => (
-                <div key={ratio}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: space.xs }}>
-                    <Text role="caption" color={t.textSub}>진행 상태</Text>
-                    <Text role="caption" color={t.primary} weight={t.weightBold}>{Math.round(ratio * 100)}%</Text>
-                  </div>
-                  <div style={{ height: 6, borderRadius: 9999, background: t.surfaceAlt }}>
-                    <div style={{ height: '100%', width: `${ratio * 100}%`, borderRadius: 9999, background: ratio === 1 ? t.success : t.primary }} />
-                  </div>
-                </div>
-              ))}
+              <Progress value={30} max={100} label="업로드 중" />
+              <Progress value={65} max={100} label="처리 중" />
+              <Progress value={100} max={100} tone="success" label="완료" />
+              <Progress value={20} max={100} tone="danger" label="오류" />
             </div>
-            {/* 스피너 */}
             <div style={{ display: 'flex', alignItems: 'center', gap: space.md }}>
               {[20, 28, 36].map((sz) => (
                 <div key={sz} style={{ width: sz, height: sz, borderRadius: '9999px', border: `2.5px solid ${t.border}`, borderTopColor: t.primary }} />
               ))}
-              <div style={{ flex: 1, height: 16, borderRadius: 8, background: `repeating-linear-gradient(90deg, ${t.surfaceAlt} 0, ${t.surface} 50%, ${t.surfaceAlt} 100%)` }} />
             </div>
-            {/* 스켈레톤 */}
+          </Tile>
+
+          <Tile t={t} ds={ds} title="스켈레톤">
             <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: space.sm }}>
-                <div style={{ width: 40, height: 40, borderRadius: '9999px', background: t.surfaceAlt }} />
+                <Skeleton w={40} h={40} radius="9999px" />
                 <div style={{ display: 'flex', flexDirection: 'column', flex: 1, gap: space.xs }}>
-                  <div style={{ height: 14, borderRadius: 4, background: t.surfaceAlt, width: '60%' }} />
-                  <div style={{ height: 12, borderRadius: 4, background: t.surfaceAlt, width: '40%' }} />
+                  <Skeleton w="60%" h={14} />
+                  <Skeleton w="40%" h={12} />
                 </div>
               </div>
-              <div style={{ height: 72, borderRadius: t.radius.card, background: t.surfaceAlt }} />
-              <div style={{ height: 14, borderRadius: 4, background: t.surfaceAlt }} />
-              <div style={{ height: 14, borderRadius: 4, background: t.surfaceAlt, width: '75%' }} />
+              <Skeleton h={72} radius={t.radius.card} />
+              <Skeleton h={14} />
+              <Skeleton w="75%" h={14} />
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
+              <div style={{ display: 'flex', gap: space.sm }}>
+                {[1, 2, 3].map((i) => (
+                  <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: space.xs }}>
+                    <Skeleton h={80} radius={t.radius.card} />
+                    <Skeleton h={12} />
+                    <Skeleton w="60%" h={12} />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Tile>
+
+          <Tile t={t} ds={ds} title="구분선">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: space.md }}>
+              <Divider />
+              <Divider label="또는" />
+              <div style={{ display: 'flex', alignItems: 'stretch', gap: space.md, height: 60 }}>
+                <Text role="bodySm" color={t.textSub}>좌측</Text>
+                <Divider vertical />
+                <Text role="bodySm" color={t.textSub}>우측</Text>
+              </div>
             </div>
           </Tile>
 
