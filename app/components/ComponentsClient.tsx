@@ -21,18 +21,19 @@ export default function ComponentsClient() {
       </div>
 
       {/* Tab bar */}
-      <div className="flex gap-1 overflow-x-auto flex-wrap">
+      <div className="flex gap-2 overflow-x-auto flex-wrap">
         {COMPONENT_CATEGORIES.map(({ key, label }) => (
           <button
             key={key}
             onClick={() => setActive(key)}
-            className="shrink-0 text-xs px-4 py-2 rounded-full cursor-pointer transition-all"
+            className="shrink-0 text-xs px-5 py-2.5 rounded-full cursor-pointer transition-all"
             style={{
               color: active === key ? 'var(--color-void)' : 'var(--color-ash)',
               fontWeight: active === key ? 600 : 400,
               background: active === key ? 'var(--color-bone)' : 'transparent',
               border: '1px solid',
               borderColor: active === key ? 'var(--color-bone)' : 'var(--color-graphite)',
+              letterSpacing: '0.01em',
             } as React.CSSProperties}
           >
             {label}
