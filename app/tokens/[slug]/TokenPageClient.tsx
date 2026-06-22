@@ -5,9 +5,6 @@ import { BrandToken } from '@/types/token';
 import { Copy, Check, Download } from 'lucide-react';
 import styles from './TokenPage.module.css';
 
-import BrandUIPreview from '@/components/BrandUIPreview';
-
-
 type TabKey = 'designMd' | 'css' | 'tailwind' | 'json' | 'figma';
 type Platform = 'mobile' | 'web';
 
@@ -90,13 +87,6 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
             웹
           </button>
         </div>
-
-        {/* Brand UI Preview */}
-        <div className={styles.uiPreviewWrapper}>
-          <BrandUIPreview token={token} platform={platform} />
-        </div>
-
-        <div className={styles.divider} />
 
         {/* Color Palette */}
         <section className={styles.section}>
