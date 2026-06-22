@@ -155,13 +155,13 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
             const isDisplay = /display|h1|heading/i.test(s.role);
             return (
               <div style={{
-                marginTop: 12,
-                padding: '20px 24px',
-                borderRadius: 8,
-                border: '1px solid var(--color-border-normal)',
-                background: 'var(--color-bg-alt)',
+                marginTop: 'var(--spacing-3)',
+                padding: 'var(--spacing-6) var(--spacing-6)',
+                borderRadius: 'var(--radius)',
+                border: '1px solid var(--color-graphite)',
+                background: 'var(--color-carbon)',
               }}>
-                <div style={{ fontSize: 'var(--type-caption-size, 12px)', color: 'var(--color-text-assistive)', marginBottom: 12, display: 'flex', gap: 12 }}>
+                <div style={{ fontSize: 'var(--font-size-caption)', fontFamily: 'var(--font-ui)', letterSpacing: '0.04em', color: 'var(--color-ash)', marginBottom: 'var(--spacing-4)', display: 'flex', gap: 'var(--spacing-3)' }}>
                   <span>{s.role}</span>
                   <span>·</span>
                   <span>{fontSize}</span>
@@ -170,10 +170,10 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
                   <span>·</span>
                   <span>ls {letterSpacing}</span>
                 </div>
-                <p style={{ fontSize, lineHeight, letterSpacing, fontFamily: p.typography.family, margin: 0, color: 'var(--color-text-normal)' }}>
+                <p style={{ fontSize, lineHeight, letterSpacing, fontFamily: p.typography.family, margin: 0, color: 'var(--color-bone)' }}>
                   {isDisplay ? 'Aa — ' : ''}{KOREAN_SAMPLE}
                 </p>
-                <p style={{ fontSize, lineHeight, letterSpacing, fontFamily: p.typography.family, margin: '8px 0 0', color: 'var(--color-text-alternative)' }}>
+                <p style={{ fontSize, lineHeight, letterSpacing, fontFamily: p.typography.family, margin: 'var(--spacing-2) 0 0', color: 'var(--color-ash)' }}>
                   {LATIN_SAMPLE}
                 </p>
               </div>
