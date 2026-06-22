@@ -248,19 +248,19 @@ const wl = lightTokens;
 const wd = darkTokens;
 
 const WIREFRAME_LIGHT = {
-  primary:     wl['--color-fill-normal'],
-  onPrimary:   wl['--color-text-on-fill'],
-  primaryTint: wl['--color-fill-brand-weak'],
-  bg:          wl['--color-bg-normal'],
-  surface:     wl['--color-fill-neutral'],
-  surfaceAlt:  wl['--color-fill-neutral-alt'],
-  textMain:    wl['--color-text-normal'],
-  textSub:     wl['--color-text-alternative'],
-  textMuted:   wl['--color-text-assistive'],
-  border:      wl['--color-border-normal'],
-  accent:      wl['--color-fill-accent'],
-  success:     wl['--color-fill-success'],
-  danger:      wl['--color-fill-danger'],
+  primary:     wl['--color-fill-normal'],        // #18181b — primary action
+  onPrimary:   wl['--color-text-on-fill'],       // #ffffff — text on dark fill
+  primaryTint: wl['--color-fill-brand-weak'],    // #f4f4f5 — brand tint
+  bg:          wl['--color-bg-normal'],          // #ffffff — page background
+  surface:     wl['--color-bg-elevated'],        // #ffffff — card / elevated surface
+  surfaceAlt:  wl['--color-fill-neutral'],       // #f4f4f5 — recessed / alt surface
+  textMain:    wl['--color-text-normal'],        // #09090b
+  textSub:     wl['--color-text-alternative'],   // #52525b
+  textMuted:   wl['--color-text-assistive'],     // #a0a0ab
+  border:      wl['--color-border-normal'],      // #e4e4e7
+  accent:      wl['--color-fill-accent'],        // #7c3aed
+  success:     wl['--color-fill-success'],       // #16a34a
+  danger:      wl['--color-fill-danger'],        // #dc2626
 };
 
 // Dark-background wireframe variant

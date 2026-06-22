@@ -65,9 +65,9 @@ export default function FoundationClient() {
 
 type Theme = ReturnType<typeof resolveTheme>;
 
-function GroupTitle({ children }: { children: React.ReactNode }) {
+function GroupTitle({ t, children }: { t: Theme; children: React.ReactNode }) {
   return (
-    <p className="text-xs uppercase tracking-widest mb-3" style={{ color: 'var(--color-ash)', fontWeight: 600 }}>
+    <p style={{ fontSize: 10, letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 600, color: t.textMuted, marginBottom: t.space.sm }}>
       {children}
     </p>
   );
@@ -115,7 +115,7 @@ function ColorPanel({ t }: { t: Theme }) {
     <div className="flex flex-col gap-6">
       {groups.map((g) => (
         <div key={g.title}>
-          <GroupTitle>{g.title}</GroupTitle>
+          <GroupTitle t={t}>{g.title}</GroupTitle>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: t.space.sm }}>
             {g.tokens.map((tok) => (
               <div key={tok.name} style={{ borderRadius: t.radius.card, overflow: 'hidden', border: `1px solid ${t.border}` }}>
@@ -146,14 +146,14 @@ function TypePanel({ t }: { t: Theme }) {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <GroupTitle>타입 스케일</GroupTitle>
-        <div className="flex flex-col gap-4">
+        <GroupTitle t={t}>타입 스케일</GroupTitle>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.md }}>
           {roles.map(({ name, role }) => {
             const ts = t.type[role];
             return (
-              <div key={name} className="flex items-baseline justify-between gap-4 pb-3" style={{ borderBottom: '1px solid var(--color-graphite)' }}>
-                <span style={{ ...typeStyle(ts), color: 'var(--color-bone)', fontFamily: t.font }}>다람쥐 Aa 0123</span>
-                <span className="text-xs font-mono shrink-0" style={{ color: 'var(--color-ash)' }}>
+              <div key={name} style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: t.space.md, paddingBottom: t.space.sm, borderBottom: `1px solid ${t.border}` }}>
+                <span style={{ ...typeStyle(ts), color: t.textMain, fontFamily: t.font }}>다람쥐 Aa 0123</span>
+                <span style={{ fontSize: 10, fontFamily: 'monospace', color: t.textMuted, whiteSpace: 'nowrap' }}>
                   {name} · {ts.size}px / {ts.lineHeight} / w{ts.weight}
                 </span>
               </div>
@@ -162,16 +162,16 @@ function TypePanel({ t }: { t: Theme }) {
         </div>
       </div>
       <div>
-        <GroupTitle>웨이트</GroupTitle>
-        <div className="flex gap-6 flex-wrap">
+        <GroupTitle t={t}>웨이트</GroupTitle>
+        <div style={{ display: 'flex', gap: t.space.xl, flexWrap: 'wrap' }}>
           {[
             { name: 'regular', w: t.weightRegular },
             { name: 'medium', w: t.weightMedium },
             { name: 'bold', w: t.weightBold },
           ].map(({ name, w }) => (
             <div key={name}>
-              <div style={{ fontWeight: w, fontSize: 22, color: 'var(--color-bone)', fontFamily: t.font }}>Aa 가나다</div>
-              <div className="text-xs font-mono" style={{ color: 'var(--color-ash)' }}>{name} · {w}</div>
+              <div style={{ fontWeight: w, fontSize: 22, color: t.textMain, fontFamily: t.font }}>Aa 가나다</div>
+              <div style={{ fontSize: 10, fontFamily: 'monospace', color: t.textMuted, marginTop: t.space.xxs }}>{name} · {w}</div>
             </div>
           ))}
         </div>
@@ -198,24 +198,24 @@ function SpacePanel({ t }: { t: Theme }) {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <GroupTitle>스페이싱 스케일</GroupTitle>
-        <div className="flex flex-col gap-2">
+        <GroupTitle t={t}>스페이싱 스케일</GroupTitle>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.sm }}>
           {scale.map(({ name, value }) => (
-            <div key={name} className="flex items-center gap-3">
-              <span className="text-xs font-mono shrink-0" style={{ color: 'var(--color-ash)', width: 28 }}>{name}</span>
-              <div style={{ height: 16, width: value, background: 'var(--color-bone)', borderRadius: 3 }} />
-              <span className="text-xs font-mono" style={{ color: 'var(--color-ash)' }}>{value}px</span>
+            <div key={name} style={{ display: 'flex', alignItems: 'center', gap: t.space.sm }}>
+              <span style={{ fontSize: 10, fontFamily: 'monospace', color: t.textMuted, width: 28, flexShrink: 0 }}>{name}</span>
+              <div style={{ height: 14, width: value, background: t.textMain, borderRadius: 2 }} />
+              <span style={{ fontSize: 10, fontFamily: 'monospace', color: t.textMuted }}>{value}px</span>
             </div>
           ))}
         </div>
       </div>
       <div>
-        <GroupTitle>시맨틱 여백</GroupTitle>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <GroupTitle t={t}>시맨틱 여백</GroupTitle>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: t.space.sm }}>
           {semantic.map(({ name, value }) => (
-            <div key={name} className="rounded-lg p-3" style={{ border: '1px solid var(--color-graphite)' }}>
-              <div className="text-xs" style={{ color: 'var(--color-bone)', fontWeight: 600 }}>{name}</div>
-              <div className="text-xs font-mono" style={{ color: 'var(--color-ash)' }}>{value}px</div>
+            <div key={name} style={{ borderRadius: t.radius.card, padding: t.space.sm, border: `1px solid ${t.border}` }}>
+              <div style={{ fontSize: 11, fontWeight: t.weightBold, color: t.textMain, marginBottom: t.space.xxs }}>{name}</div>
+              <div style={{ fontSize: 10, fontFamily: 'monospace', color: t.textMuted }}>{value}px</div>
             </div>
           ))}
         </div>
@@ -235,14 +235,14 @@ function RadiusPanel({ t }: { t: Theme }) {
   ];
   return (
     <div>
-      <GroupTitle>라운드(반경)</GroupTitle>
-      <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-5 gap-3">
+      <GroupTitle t={t}>라운드(반경)</GroupTitle>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: t.space.sm }}>
         {radii.map(({ name, value }) => (
-          <div key={name} className="flex flex-col items-center gap-2">
-            <div style={{ width: '100%', height: 64, background: 'var(--color-void)', border: '1px solid var(--color-graphite)', borderRadius: value }} />
-            <div className="text-center">
-              <div className="text-xs" style={{ color: 'var(--color-bone)', fontWeight: 600 }}>{name}</div>
-              <div className="text-xs font-mono" style={{ color: 'var(--color-ash)' }}>{value}</div>
+          <div key={name} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: t.space.sm }}>
+            <div style={{ width: '100%', height: 56, background: t.bg, border: `1px solid ${t.border}`, borderRadius: value }} />
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: 11, fontWeight: t.weightBold, color: t.textMain }}>{name}</div>
+              <div style={{ fontSize: 10, fontFamily: 'monospace', color: t.textMuted }}>{value}</div>
             </div>
           </div>
         ))}
@@ -262,12 +262,12 @@ function MotionPanel({ t }: { t: Theme }) {
   ];
   return (
     <div>
-      <GroupTitle>모션 토큰</GroupTitle>
-      <div className="grid grid-cols-2 xl:grid-cols-4 gap-3">
+      <GroupTitle t={t}>모션 토큰</GroupTitle>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: t.space.sm }}>
         {items.map(({ name, value }) => (
-          <div key={name} className="rounded-lg p-3" style={{ border: '1px solid var(--color-graphite)' }}>
-            <div className="text-xs" style={{ color: 'var(--color-bone)', fontWeight: 600 }}>{name}</div>
-            <div className="text-xs font-mono" style={{ color: 'var(--color-ash)' }}>{value}</div>
+          <div key={name} style={{ borderRadius: t.radius.card, padding: t.space.sm, border: `1px solid ${t.border}` }}>
+            <div style={{ fontSize: 11, fontWeight: t.weightBold, color: t.textMain, marginBottom: t.space.xxs }}>{name}</div>
+            <div style={{ fontSize: 10, fontFamily: 'monospace', color: t.textMuted }}>{value}</div>
           </div>
         ))}
       </div>
