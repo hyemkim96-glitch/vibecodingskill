@@ -403,11 +403,11 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
 
           <Tile t={t} ds={ds} title="토스트 & 알림">
             {([
-              { color: t.onPrimary, icon: 'checkCircle' as const, label: '저장되었습니다' },
-              { color: t.danger,    icon: 'alertCircle' as const,  label: '오류가 발생했습니다' },
-              { color: t.success,   icon: 'checkCircle' as const, label: '결제가 완료되었습니다' },
-              { color: t.warning,   icon: 'alertCircle' as const,  label: '재고가 부족합니다' },
-              { color: t.info,      icon: 'checkCircle' as const, label: '새로운 업데이트가 있어요' },
+              { color: t.onPrimary,   icon: 'checkCircle' as const, label: '저장되었습니다' },
+              { color: t.dangerText,  icon: 'alertCircle' as const,  label: '오류가 발생했습니다' },
+              { color: t.successText, icon: 'checkCircle' as const, label: '결제가 완료되었습니다' },
+              { color: t.warningText, icon: 'alertCircle' as const,  label: '재고가 부족합니다' },
+              { color: t.infoText,    icon: 'checkCircle' as const, label: '새로운 업데이트가 있어요' },
             ]).map(({ color, icon, label }) => (
               <div key={label} style={{ display: 'flex', alignItems: 'center', gap: space.sm, padding: `${space.sm}px ${space.md}px`, borderRadius: t.radius.card, background: t.textMain }}>
                 <Icon name={icon} size={16} color={color} />

@@ -51,8 +51,13 @@ export interface ResolvedTheme {
   danger: string;
   warning: string;
   info: string;
-  disabled: string;      // fill for disabled interactive elements
-  textDisabled: string;  // text color for disabled state
+  disabled: string;
+  textDisabled: string;
+  // Auto-contrast text variants — WCAG AA guaranteed against current bg
+  successText: string;
+  dangerText: string;
+  warningText: string;
+  infoText: string;
   textOnImage: string;   // text placed over imagery (inverse)
   scrim: string;         // gradient overlay for image legibility
 
@@ -127,6 +132,92 @@ export function contrastOn(hex: string): string {
   const onWhite = (1.05) / (L + 0.05);
   const onBlack = (L + 0.05) / 0.05;
   return onBlack > onWhite ? '#111111' : '#ffffff';
+}
+
+function contrastRatio(a: string, b: string): number {
+  const la = relativeLuminance(a);
+  const lb = relativeLuminance(b);
+  const lighter = Math.max(la, lb);
+  const darker  = Math.min(la, lb);
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
+/** Hex → HSL (h: 0–360, s: 0–100, l: 0–100) */
+function hexToHSL(hex: string): { h: number; s: number; l: number } {
+  const h = hex.replace('#', '');
+  const r = parseInt(h.slice(0, 2), 16) / 255;
+  const g = parseInt(h.slice(2, 4), 16) / 255;
+  const b = parseInt(h.slice(4, 6), 16) / 255;
+  const max = Math.max(r, g, b), min = Math.min(r, g, b);
+  const l = (max + min) / 2;
+  if (max === min) return { h: 0, s: 0, l: l * 100 };
+  const d = max - min;
+  const s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+  let hue = 0;
+  if (max === r) hue = ((g - b) / d + (g < b ? 6 : 0)) / 6;
+  else if (max === g) hue = ((b - r) / d + 2) / 6;
+  else hue = ((r - g) / d + 4) / 6;
+  return { h: hue * 360, s: s * 100, l: l * 100 };
+}
+
+/** HSL → hex */
+function hslToHex(h: number, s: number, l: number): string {
+  const hn = h / 360, sn = s / 100, ln = l / 100;
+  const hue2rgb = (p: number, q: number, t: number) => {
+    if (t < 0) t += 1; if (t > 1) t -= 1;
+    if (t < 1/6) return p + (q - p) * 6 * t;
+    if (t < 1/2) return q;
+    if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+    return p;
+  };
+  let r, g, b;
+  if (sn === 0) { r = g = b = ln; }
+  else {
+    const q = ln < 0.5 ? ln * (1 + sn) : ln + sn - ln * sn;
+    const p = 2 * ln - q;
+    r = hue2rgb(p, q, hn + 1/3);
+    g = hue2rgb(p, q, hn);
+    b = hue2rgb(p, q, hn - 1/3);
+  }
+  return '#' + [r, g, b].map((v) => Math.round(v * 255).toString(16).padStart(2, '0')).join('');
+}
+
+/**
+ * Given any foreground color and a background, binary-search the HSL
+ * lightness until WCAG contrast ratio ≥ minRatio (default 4.5 = AA).
+ * Hue and saturation are preserved — only lightness changes.
+ */
+/**
+ * Given any foreground color and a background, binary-search the HSL
+ * lightness until WCAG contrast ratio ≥ minRatio (default 4.5 = AA).
+ * Hue is preserved. Saturation is clamped proportionally to the lightness
+ * shift so the color stays in sRGB gamut and doesn't wash out at extremes.
+ */
+export function ensureContrast(fg: string, bg: string, minRatio = 4.5): string {
+  if (contrastRatio(fg, bg) >= minRatio) return fg;
+  const bgLum = relativeLuminance(bg);
+  const lighten = bgLum < 0.18; // dark bg → push fg lighter; light bg → push darker
+  const { h, s: sOrig, l: lOrig } = hexToHSL(fg);
+  let lo = lighten ? lOrig : 0;
+  let hi = lighten ? 100 : lOrig;
+  let result = fg;
+  for (let i = 0; i < 24; i++) {
+    const mid = (lo + hi) / 2;
+    // Chroma clamp: reduce saturation proportionally to how far we push lightness.
+    // At extremes (l→100 or l→0) full saturation clips out of gamut and looks washed.
+    // Scale factor: 1.0 at original l, shrinks as l moves toward 0 or 100.
+    const deltaL = Math.abs(mid - lOrig);
+    const sScale = Math.max(0, 1 - (deltaL / 80));
+    const s = sOrig * sScale;
+    const candidate = hslToHex(h, s, mid);
+    if (contrastRatio(candidate, bg) >= minRatio) {
+      result = candidate;
+      if (lighten) hi = mid; else lo = mid;
+    } else {
+      if (lighten) lo = mid; else hi = mid;
+    }
+  }
+  return result;
 }
 
 /** Mix a hex colour toward white by ratio (0 → original, 1 → white). */
@@ -269,6 +360,7 @@ const WIREFRAME_LIGHT = {
   info:         wl['--color-fill-info'],
   disabled:     wl['--color-fill-neutral-alt'],
   textDisabled: wl['--color-text-disabled'],
+  successText: '', dangerText: '', warningText: '', infoText: '',
 };
 
 // Dark-background wireframe variant
@@ -290,6 +382,7 @@ const WIREFRAME_DARK = {
   info:         wd['--color-fill-info'],
   disabled:     wd['--color-fill-neutral-alt'],
   textDisabled: wd['--color-text-disabled'],
+  successText: '', dangerText: '', warningText: '', infoText: '',
 };
 
 /* ── main resolver ── */
@@ -382,6 +475,7 @@ export function resolveTheme(
     info:         '#3182F6',
     disabled:     isDark ? '#2a2a2a' : '#f0f0f2',
     textDisabled: isDark ? '#505050' : '#b0b0b8',
+    successText: '', dangerText: '', warningText: '', infoText: '',
   };
 
   const wireframePalette = isDark ? WIREFRAME_DARK : WIREFRAME_LIGHT;
@@ -389,8 +483,15 @@ export function resolveTheme(
 
   const isLocal = !!token.serviceTypes?.some((s) => /지역|커뮤니티|중고|동네/.test(s));
 
+  const bgColor = palette.bg;
+
   return {
     ...palette,
+
+    successText: ensureContrast(palette.success, bgColor),
+    dangerText:  ensureContrast(palette.danger,  bgColor),
+    warningText: ensureContrast(palette.warning, bgColor),
+    infoText:    ensureContrast(palette.info,    bgColor),
 
     textOnImage: '#ffffff',
     scrim: 'linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 60%)',
