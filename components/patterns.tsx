@@ -60,7 +60,7 @@ function PatternMain({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' }) {
                 <span style={{ position: 'absolute', top: space.xs, left: space.xs }}><Badge tone="solid">{item.badge}</Badge></span>
               </div>
               <div style={{ padding: space.sm }}>
-                <Text role="caption" weight={t.weightMedium} style={{ display: 'block', marginBottom: 2 }}>{item.name}</Text>
+                <Text role="caption" weight={t.weightMedium} style={{ display: 'block', marginBottom: space.xxs }}>{item.name}</Text>
                 <Text role="caption" weight={t.weightBold} color={t.primary}>{item.price}원</Text>
               </div>
             </Card>
@@ -87,7 +87,7 @@ function PatternMain({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' }) {
             <Card key={item.name} pad={false}>
               <Thumb h={56} />
               <div style={{ padding: space.sm }}>
-                <Text role="caption" weight={t.weightMedium} style={{ display: 'block', marginBottom: 2 }}>{item.name}</Text>
+                <Text role="caption" weight={t.weightMedium} style={{ display: 'block', marginBottom: space.xxs }}>{item.name}</Text>
                 <Badge tone="soft">{item.badge}</Badge>
               </div>
             </Card>
@@ -179,7 +179,7 @@ function PatternSearch({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' })
               <span style={{ position: 'absolute', top: space.xs, right: space.xs }}><Badge tone="soft">{item.badge}</Badge></span>
             </div>
             <div style={{ padding: space.sm }}>
-              <Text role="caption" weight={t.weightMedium} style={{ display: 'block', marginBottom: 2 }}>{item.name}</Text>
+              <Text role="caption" weight={t.weightMedium} style={{ display: 'block', marginBottom: space.xxs }}>{item.name}</Text>
               <Text role="caption" weight={t.weightBold} color={t.primary}>{item.price}원</Text>
             </div>
           </Card>
@@ -220,7 +220,7 @@ function PatternList({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' }) {
                     <Text role="bodySm" weight={t.weightMedium}>{item.name}</Text>
                     {item.badge && <Badge tone="solid">{item.badge}</Badge>}
                   </div>
-                  <div className="flex items-center" style={{ gap: 4 }}>
+                  <div className="flex items-center" style={{ gap: space.xs }}>
                     <Text role="caption" color={t.textSub}>{item.ship} · </Text>
                     <span style={{ color: t.accent, display: 'inline-flex' }}><Icon name="star" size={12} /></span>
                     <Text role="caption" color={t.textSub}>{item.rating} ({item.reviews})</Text>
@@ -240,7 +240,7 @@ function PatternList({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' }) {
                 {i === 0 && <span style={{ position: 'absolute', top: space.xs, left: space.xs }}><Badge tone="solid">인기</Badge></span>}
               </div>
               <div style={{ padding: space.sm }}>
-                <Text role="caption" weight={t.weightMedium} className="truncate" style={{ display: 'block', marginBottom: 2 }}>{name}</Text>
+                <Text role="caption" weight={t.weightMedium} className="truncate" style={{ display: 'block', marginBottom: space.xxs }}>{name}</Text>
                 <Text role="caption" weight={t.weightBold} color={t.primary}>{['189,000', '89,000', '279,000', '119,000'][i]}원</Text>
               </div>
             </Card>
@@ -260,7 +260,7 @@ function PatternDetail({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' })
     <div className="flex flex-col" style={{ gap: space.sm }}>
       <div className="flex items-start justify-between">
         <div>
-          <Text role="caption" color={t.textSub} style={{ display: 'block', marginBottom: 2 }}>소니 코리아</Text>
+          <Text role="caption" color={t.textSub} style={{ display: 'block', marginBottom: space.xxs }}>소니 코리아</Text>
           <Text role="h2" weight={t.weightBold}>무선 이어폰 WF-1000XM5</Text>
         </div>
         <Badge tone="soft">인기</Badge>
@@ -351,11 +351,11 @@ function PatternHistory({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' }
           <ListRow key={item.name} divider={i < items.length - 1} style={{ paddingLeft: 0, paddingRight: 0 }}>
             <div className="flex items-center" style={{ gap: space.md, width: '100%' }}>
               <Thumb h={48} w={48} style={{ borderRadius: t.radius.card, flexShrink: 0 }} />
-              <div className="flex-1 flex flex-col" style={{ gap: 2 }}>
+              <div className="flex-1 flex flex-col" style={{ gap: space.xxs }}>
                 <Text role="bodySm" weight={t.weightMedium}>{item.name}</Text>
                 <Text role="caption" color={t.textSub}>{item.date}</Text>
               </div>
-              <div className="flex flex-col items-end" style={{ gap: 4 }}>
+              <div className="flex flex-col items-end" style={{ gap: space.xs }}>
                 <Text role="bodySm" weight={t.weightBold}>{item.price}</Text>
                 <Badge tone={item.tone}>{item.status}</Badge>
               </div>
@@ -393,7 +393,7 @@ function PatternMyPage({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' })
       </div>
       <div style={{ background: t.primary, borderRadius: t.radius.card, padding: t.cardPad, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
-          <Text role="caption" color={t.onPrimary} style={{ opacity: 0.8, display: 'block', marginBottom: 2 }}>현재 등급</Text>
+          <Text role="caption" color={t.onPrimary} style={{ opacity: 0.8, display: 'block', marginBottom: space.xxs }}>현재 등급</Text>
           <Text role="bodySm" weight={t.weightBold} color={t.onPrimary}>골드 멤버</Text>
         </div>
         <Badge tone="soft">VIP</Badge>
@@ -438,7 +438,7 @@ function PatternPayment({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' }
         <div className="flex items-center" style={{ gap: space.sm }}>
           <Thumb h={48} w={48} style={{ borderRadius: t.radius.card, flexShrink: 0 }} />
           <div className="flex-1">
-            <Text role="bodySm" weight={t.weightMedium} style={{ display: 'block', marginBottom: 2 }}>무선이어폰 WF-1000XM5</Text>
+            <Text role="bodySm" weight={t.weightMedium} style={{ display: 'block', marginBottom: space.xxs }}>무선이어폰 WF-1000XM5</Text>
             <Text role="caption" color={t.textSub}>블랙 / 1개</Text>
           </div>
           <Text role="bodySm" weight={t.weightBold}>189,000원</Text>

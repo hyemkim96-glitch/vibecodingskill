@@ -66,7 +66,7 @@ export interface ResolvedTheme {
   };
 
   // ── spacing (semantic, px numbers) ──
-  space: { xs: number; sm: number; md: number; lg: number; xl: number };
+  space: { xxs: number; xs: number; sm: number; md: number; lg: number; xl: number };
   containerPad: number;
   cardPad: number;
   stackGap: number;
@@ -317,6 +317,7 @@ export function resolveTheme(
     .sort((a, b) => a - b);
   const baseUnit = Math.min(6, Math.max(4, scaleNums[0] || 4));
   const space = {
+    xxs: Math.round(baseUnit / 2), // 2–3px — micro gaps (label/value, badge stacks)
     xs: baseUnit,          // 4–6px
     sm: baseUnit * 2,      // 8–12px
     md: baseUnit * 3,      // 12–18px

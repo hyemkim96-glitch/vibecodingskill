@@ -215,7 +215,7 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
             <Card pad={false}>
               <Thumb h={80} />
               <div style={{ padding: space.md }}>
-                <Text role="bodySm" weight={t.weightBold} style={{ display: 'block', marginBottom: 2 }}>미디어 카드 제목</Text>
+                <Text role="bodySm" weight={t.weightBold} style={{ display: 'block', marginBottom: space.xxs }}>미디어 카드 제목</Text>
                 <Text role="caption" color={t.textSub}>서브 텍스트 · 날짜</Text>
               </div>
             </Card>
@@ -224,7 +224,7 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
                 <Card key={i} pad={false}>
                   <Thumb h={56} />
                   <div style={{ padding: space.sm }}>
-                    <Text role="caption" weight={t.weightBold} style={{ display: 'block', marginBottom: 2 }}>항목 {i + 1}</Text>
+                    <Text role="caption" weight={t.weightBold} style={{ display: 'block', marginBottom: space.xxs }}>항목 {i + 1}</Text>
                     <Text role="caption" color={t.primary} weight={t.weightBold}>9,900원</Text>
                   </div>
                 </Card>
@@ -266,7 +266,7 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
                 <div key={i} className="shrink-0" style={{ width: 100, background: t.surface, borderRadius: t.radius.card, border: `1px solid ${t.border}`, overflow: 'hidden' }}>
                   <Thumb h={60} />
                   <div style={{ padding: space.sm }}>
-                    <Text role="caption" weight={t.weightMedium} style={{ display: 'block', marginBottom: 2 }}>카드 {i + 1}</Text>
+                    <Text role="caption" weight={t.weightMedium} style={{ display: 'block', marginBottom: space.xxs }}>카드 {i + 1}</Text>
                     <Text role="caption" color={t.textSub}>12,000원</Text>
                   </div>
                 </div>
@@ -345,7 +345,7 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
             <div className="flex flex-col" style={{ gap: space.sm }}>
               {[0.3, 0.65, 1].map((ratio) => (
                 <div key={ratio}>
-                  <div className="flex justify-between" style={{ marginBottom: 4 }}>
+                  <div className="flex justify-between" style={{ marginBottom: space.xs }}>
                     <Text role="caption" color={t.textSub}>진행 상태</Text>
                     <Text role="caption" color={t.primary} weight={t.weightBold}>{Math.round(ratio * 100)}%</Text>
                   </div>
@@ -416,7 +416,7 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
                   { icon: 'heart' as const, label: '찜', active: false },
                   { icon: 'user' as const, label: '마이', active: false },
                 ].map(({ icon, label, active }) => (
-                  <div key={label} className="flex flex-col items-center ds-press cursor-pointer" style={{ gap: 2, paddingTop: space.xs, paddingBottom: space.xs }}>
+                  <div key={label} className="flex flex-col items-center ds-press cursor-pointer" style={{ gap: space.xxs, paddingTop: space.xs, paddingBottom: space.xs }}>
                     <Icon name={icon} size={18} color={active ? t.primary : t.textMuted} />
                     <Text role="caption" weight={active ? t.weightBold : t.weightRegular} color={active ? t.primary : t.textMuted}>{label}</Text>
                   </div>
@@ -426,7 +426,7 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
           </Tile>
 
           <Tile t={t} ds={ds} title="세그먼트 탭">
-            <div style={{ background: t.surface, borderRadius: t.radius.button, padding: 2, display: 'flex' }}>
+            <div style={{ background: t.surface, borderRadius: t.radius.button, padding: space.xxs, display: 'flex' }}>
               {['전체', '판매중', '거래완료'].map((label, i) => (
                 <div key={label} className="flex-1 ds-press flex items-center justify-center cursor-pointer" style={{ padding: `${space.xs + 2}px ${space.sm}px`, borderRadius: t.radius.button, background: i === 0 ? t.bg : 'transparent', boxShadow: i === 0 ? '0 1px 3px rgba(0,0,0,0.08)' : 'none' }}>
                   <Text role="caption" weight={i === 0 ? t.weightBold : t.weightRegular} color={i === 0 ? t.textMain : t.textSub}>{label}</Text>

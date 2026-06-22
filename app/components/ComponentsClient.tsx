@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import ComponentSheet, { COMPONENT_CATEGORIES, ComponentCategory } from '@/components/ComponentSheet';
+import PillTabs from '@/components/PillTabs';
 import { allTokens } from '@/lib/tokens';
 
 const representative = allTokens[0];
@@ -20,31 +21,8 @@ export default function ComponentsClient() {
         </p>
       </div>
 
-      {/* Tab bar */}
-      <div className="flex gap-2 overflow-x-auto flex-wrap">
-        {COMPONENT_CATEGORIES.map(({ key, label }) => (
-          <button
-            key={key}
-            onClick={() => setActive(key)}
-            className="shrink-0 inline-flex items-center justify-center text-xs rounded-full cursor-pointer transition-all"
-            style={{
-              lineHeight: 1,
-              paddingTop: 11,
-              paddingBottom: 9,
-              paddingLeft: 22,
-              paddingRight: 22,
-              color: active === key ? 'var(--color-void)' : 'var(--color-ash)',
-              fontWeight: active === key ? 600 : 400,
-              background: active === key ? 'var(--color-bone)' : 'transparent',
-              border: '1px solid',
-              borderColor: active === key ? 'var(--color-bone)' : 'var(--color-graphite)',
-              letterSpacing: '0.01em',
-            } as React.CSSProperties}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
+      {/* Tab bar — shared PillTabs */}
+      <PillTabs tabs={COMPONENT_CATEGORIES} active={active} onChange={setActive} />
 
       <div className="rounded-lg overflow-hidden" style={{ border: '1px solid var(--color-graphite)' }}>
         <ComponentSheet token={representative} category={active} />

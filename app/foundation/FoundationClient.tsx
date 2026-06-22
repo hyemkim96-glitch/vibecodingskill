@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { allTokens } from '@/lib/tokens';
 import { resolveTheme } from '@/lib/tokens/resolveTheme';
 import { typeStyle } from '@/components/ds';
+import PillTabs from '@/components/PillTabs';
 
 /**
  * Foundation — the design tokens that every component is built from.
@@ -45,31 +46,8 @@ export default function FoundationClient() {
         </p>
       </div>
 
-      {/* Tab bar — same pill style as Components/Patterns */}
-      <div className="flex gap-2 overflow-x-auto flex-wrap">
-        {CATEGORIES.map(({ key, label }) => (
-          <button
-            key={key}
-            onClick={() => setActive(key)}
-            className="shrink-0 inline-flex items-center justify-center text-xs rounded-full cursor-pointer transition-all"
-            style={{
-              lineHeight: 1,
-              paddingTop: 11,
-              paddingBottom: 9,
-              paddingLeft: 22,
-              paddingRight: 22,
-              color: active === key ? 'var(--color-void)' : 'var(--color-ash)',
-              fontWeight: active === key ? 600 : 400,
-              background: active === key ? 'var(--color-bone)' : 'transparent',
-              border: '1px solid',
-              borderColor: active === key ? 'var(--color-bone)' : 'var(--color-graphite)',
-              letterSpacing: '0.01em',
-            } as React.CSSProperties}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
+      {/* Tab bar — shared PillTabs */}
+      <PillTabs tabs={CATEGORIES} active={active} onChange={setActive} />
 
       <div className="rounded-lg overflow-hidden p-5" style={{ border: '1px solid var(--color-graphite)', background: 'var(--color-carbon)' }}>
         {active === 'color' && <ColorPanel t={t} />}

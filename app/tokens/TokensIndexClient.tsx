@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { BrandToken } from '@/types/token';
+import PillTabs from '@/components/PillTabs';
 import styles from './TokensIndex.module.css';
 
 const CATEGORIES = ['전체', '핀테크/금융', '플랫폼', '커머스', '개발자 도구', '디자인 강자'];
@@ -94,17 +95,13 @@ export default function TokensIndexClient({ tokens }: { tokens: BrandToken[] }) 
 
     return (
         <div className={styles.page}>
-            {/* 필터 바 */}
+            {/* 필터 바 — shared PillTabs */}
             <div className={styles.filterBar}>
-                {CATEGORIES.map((cat) => (
-                    <button
-                        key={cat}
-                        className={`${styles.chip} ${activeFilter === cat ? styles.chipActive : ''}`}
-                        onClick={() => setActiveFilter(cat)}
-                    >
-                        {cat}
-                    </button>
-                ))}
+                <PillTabs
+                    tabs={CATEGORIES.map((c) => ({ key: c, label: c }))}
+                    active={activeFilter}
+                    onChange={setActiveFilter}
+                />
             </div>
 
             {filtered.length > 0 && (
