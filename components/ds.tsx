@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { ResolvedTheme, ResolvedType } from '@/lib/tokens/resolveTheme';
+import { ResolvedTheme, ResolvedType, ensureContrast } from '@/lib/tokens/resolveTheme';
 import { Icon as IconBase, IconName } from '@/components/icons';
 
 /**
@@ -92,6 +92,17 @@ export interface DS {
     back?: boolean;
     actions?: Array<{ icon: IconName; label?: string }>;
     transparent?: boolean;
+    style?: React.CSSProperties;
+  }>;
+  Table: React.FC<{
+    rows: Array<{ label: string; value: React.ReactNode; tone?: 'default' | 'danger' | 'success' | 'muted' }>;
+    footer?: { label: string; value: React.ReactNode };
+    style?: React.CSSProperties;
+  }>;
+  Toast: React.FC<{
+    message: string;
+    tone?: 'default' | 'success' | 'danger' | 'warning' | 'info';
+    action?: string;
     style?: React.CSSProperties;
   }>;
 }
@@ -501,5 +512,38 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
     </div>
   );
 
-  return { t, Text, Button, Card, Input, Badge, Chip, NavTab, Stepper, Rating, ListRow, Thumb, Avatar, Icon, Checkbox, Switch, Radio, Textarea, Select, Divider, Skeleton, Progress, TopBar };
+  const Table: DS['Table'] = ({ rows, footer, style }) => (
+    <div style={{ borderRadius: t.radius.card, border: `1px solid ${t.border}`, overflow: 'hidden', ...style }}>
+      {rows.map(({ label, value, tone }, i) => {
+        const valueColor = tone === 'danger' ? t.danger : tone === 'success' ? t.success : tone === 'muted' ? t.textMuted : t.textMain;
+        return (
+          <div key={label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: `${space.sm}px ${space.md}px`, borderBottom: (footer || i < rows.length - 1) ? `1px solid ${t.border}` : 'none', background: t.surface }}>
+            <span style={{ ...typeStyle(t.type.caption), color: t.textSub }}>{label}</span>
+            <span style={{ ...typeStyle(t.type.caption), fontWeight: t.weightMedium, color: valueColor }}>{value}</span>
+          </div>
+        );
+      })}
+      {footer && (
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: `${space.sm}px ${space.md}px`, background: t.surfaceAlt }}>
+          <span style={{ ...typeStyle(t.type.bodySm), fontWeight: t.weightBold, color: t.textMain }}>{footer.label}</span>
+          <span style={{ ...typeStyle(t.type.bodySm), fontWeight: t.weightBold, color: t.primary }}>{footer.value}</span>
+        </div>
+      )}
+    </div>
+  );
+
+  const Toast: DS['Toast'] = ({ message, tone = 'default', action, style }) => {
+    const bg = tone === 'success' ? t.success : tone === 'danger' ? t.danger : tone === 'warning' ? t.warning : tone === 'info' ? t.info : t.textMain;
+    const fg = ensureContrast(t.bg, bg);
+    const iconName: Record<string, IconName> = { success: 'checkCircle', danger: 'alertCircle', warning: 'alertCircle', info: 'info', default: 'info' };
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', gap: space.sm, padding: `${space.sm}px ${space.md}px`, borderRadius: t.radius.card, background: bg, ...style }}>
+        <Icon name={iconName[tone]} size={16} color={fg} />
+        <span style={{ ...typeStyle(t.type.bodySm), color: fg, flex: 1 }}>{message}</span>
+        {action && <span className="ds-press" style={{ ...typeStyle(t.type.bodySm), color: fg, fontWeight: t.weightBold, cursor: 'pointer', opacity: 0.9, flexShrink: 0 }}>{action}</span>}
+      </div>
+    );
+  };
+
+  return { t, Text, Button, Card, Input, Badge, Chip, NavTab, Stepper, Rating, ListRow, Thumb, Avatar, Icon, Checkbox, Switch, Radio, Textarea, Select, Divider, Skeleton, Progress, TopBar, Table, Toast };
 }

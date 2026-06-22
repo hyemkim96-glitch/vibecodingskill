@@ -428,7 +428,7 @@ function PatternMyPage({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' })
 
 /* ── 결제 ── */
 function PatternPayment({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' }) {
-  const { t, Button, Chip, Text, Thumb, Icon, TopBar } = ds;
+  const { t, Button, Chip, Text, Thumb, Icon, TopBar, Table } = ds;
   const { space } = t;
 
   const summary = (
@@ -444,18 +444,16 @@ function PatternPayment({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' }
           <Text role="bodySm" weight={t.weightBold}>189,000원</Text>
         </div>
       </div>
-      <div style={{ background: t.surface, borderRadius: t.radius.card, border: `1px solid ${t.border}`, padding: t.cardPad }}>
-        <Text role="caption" weight={t.weightBold} color={t.textSub} style={{ display: 'block', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: space.sm }}>결제 금액</Text>
-        {[{ label: '상품 금액', value: '229,000원', color: t.textMain }, { label: '할인', value: '-40,000원', color: t.danger }, { label: '배송비', value: '무료', color: t.success }].map(({ label, value, color }) => (
-          <div key={label} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: space.xs }}>
-            <Text role="caption" color={t.textSub}>{label}</Text>
-            <Text role="caption" weight={t.weightMedium} color={color}>{value}</Text>
-          </div>
-        ))}
-        <div style={{ borderTop: `1px solid ${t.border}`, marginTop: space.sm, paddingTop: space.sm, display: 'flex', justifyContent: 'space-between' }}>
-          <Text role="bodySm" weight={t.weightBold}>총 결제 금액</Text>
-          <Text role="bodySm" weight={t.weightBold} color={t.primary}>189,000원</Text>
-        </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: space.xs }}>
+        <Text role="caption" weight={t.weightBold} color={t.textSub} style={{ display: 'block', textTransform: 'uppercase', letterSpacing: '0.06em' }}>결제 금액</Text>
+        <Table
+          rows={[
+            { label: '상품 금액', value: '229,000원' },
+            { label: '할인', value: '-40,000원', tone: 'danger' },
+            { label: '배송비', value: '무료', tone: 'success' },
+          ]}
+          footer={{ label: '총 결제 금액', value: '189,000원' }}
+        />
       </div>
     </div>
   );

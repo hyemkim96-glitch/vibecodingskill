@@ -58,7 +58,7 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
   const t = resolveTheme(token, 'mobile', 'wireframe');
   const ds = createDS(t, true);
   const { Button, Input, Badge, Chip, Card, Text, Thumb, Avatar, ListRow, Stepper, Rating,
-          Checkbox, Switch, Radio, Textarea, Select, Divider, Skeleton, Progress, TopBar } = ds;
+          Checkbox, Switch, Radio, Textarea, Select, Divider, Skeleton, Progress, TopBar, Table, Toast } = ds;
   const { space } = t;
   const all = category === 'all';
 
@@ -306,6 +306,27 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
             </div>
           </Tile>
 
+          <Tile t={t} ds={ds} title="테이블 (키-값)">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: space.md }}>
+              <Table
+                rows={[
+                  { label: '상품 금액', value: '229,000원' },
+                  { label: '할인', value: '-40,000원', tone: 'danger' },
+                  { label: '배송비', value: '무료', tone: 'success' },
+                ]}
+                footer={{ label: '총 결제 금액', value: '189,000원' }}
+              />
+              <Table
+                rows={[
+                  { label: '브랜드', value: '소니 코리아' },
+                  { label: '모델명', value: 'WF-1000XM5' },
+                  { label: '색상', value: '블랙' },
+                  { label: '재고', value: '품절', tone: 'danger' },
+                ]}
+              />
+            </div>
+          </Tile>
+
         </div>
         </section>
       )}
@@ -384,21 +405,13 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
           </Tile>
 
           <Tile t={t} ds={ds} title="토스트 & 알림">
-            {(() => {
-              const toastBg = t.textMain;
-              return ([
-                { color: ensureContrast(t.onPrimary, toastBg), icon: 'checkCircle' as const, label: '저장되었습니다' },
-                { color: ensureContrast(t.danger,    toastBg), icon: 'alertCircle' as const,  label: '오류가 발생했습니다' },
-                { color: ensureContrast(t.success,   toastBg), icon: 'checkCircle' as const, label: '결제가 완료되었습니다' },
-                { color: ensureContrast(t.warning,   toastBg), icon: 'alertCircle' as const,  label: '재고가 부족합니다' },
-                { color: ensureContrast(t.info,      toastBg), icon: 'checkCircle' as const, label: '새로운 업데이트가 있어요' },
-              ]).map(({ color, icon, label }) => (
-                <div key={label} style={{ display: 'flex', alignItems: 'center', gap: space.sm, padding: `${space.sm}px ${space.md}px`, borderRadius: t.radius.card, background: toastBg }}>
-                  <Icon name={icon} size={16} color={color} />
-                  <Text role="bodySm" color={color} weight={t.weightMedium}>{label}</Text>
-                </div>
-              ));
-            })()}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
+              <Toast message="저장되었습니다" />
+              <Toast message="결제가 완료되었습니다" tone="success" />
+              <Toast message="오류가 발생했습니다" tone="danger" action="다시 시도" />
+              <Toast message="재고가 부족합니다" tone="warning" />
+              <Toast message="새로운 업데이트가 있어요" tone="info" action="확인" />
+            </div>
           </Tile>
 
           <Tile t={t} ds={ds} title="프로그레스">
