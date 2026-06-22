@@ -73,15 +73,15 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
 
           <Tile t={t} ds={ds} title="아이콘 버튼 & FAB">
             <div className="flex items-center" style={{ gap: space.sm }}>
-              {['◀', '✕', '⋯', '↑'].map((ic) => (
-                <div key={ic} className="ds-press flex items-center justify-center cursor-pointer" style={{ width: 40, height: 40, borderRadius: t.radius.button, background: t.surface, border: `1px solid ${t.border}`, fontSize: 16, color: t.textMain }}>
-                  {ic}
+              {(['arrowLeft', 'close', 'more', 'settings'] as const).map((ic) => (
+                <div key={ic} className="ds-press flex items-center justify-center cursor-pointer" style={{ width: 40, height: 40, borderRadius: t.radius.button, background: t.surface, border: `1px solid ${t.border}`, color: t.textMain }}>
+                  <Icon name={ic} size={18} />
                 </div>
               ))}
             </div>
             <div className="flex" style={{ gap: space.sm }}>
-              <div className="ds-press flex items-center justify-center cursor-pointer" style={{ width: 56, height: 56, borderRadius: '9999px', background: t.primary, color: t.onPrimary, fontSize: 22 }}>+</div>
-              <div className="ds-press flex items-center justify-center cursor-pointer" style={{ width: 48, height: 48, borderRadius: '9999px', background: t.primary, color: t.onPrimary, fontSize: 18 }}>↑</div>
+              <div className="ds-press flex items-center justify-center cursor-pointer" style={{ width: 56, height: 56, borderRadius: '9999px', background: t.primary, color: t.onPrimary }}><Icon name="plus" size={24} /></div>
+              <div className="ds-press flex items-center justify-center cursor-pointer" style={{ width: 48, height: 48, borderRadius: '9999px', background: t.primary, color: t.onPrimary }}><Icon name="edit" size={18} /></div>
             </div>
           </Tile>
 
@@ -108,14 +108,14 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
               <span style={{ ...typeStyle(t.type.caption), color: t.textMain, fontWeight: t.weightMedium }}>셀렉트</span>
               <div className="flex items-center justify-between" style={{ border: `1px solid ${t.border}`, borderRadius: t.radius.input, padding: `${space.sm}px ${space.md}px`, background: t.bg }}>
                 <span style={{ ...typeStyle(t.type.bodySm), color: t.textMain }}>옵션 선택</span>
-                <span style={{ ...typeStyle(t.type.caption), color: t.textSub }}>▾</span>
+                <span style={{ color: t.textSub, display: 'inline-flex' }}><Icon name="chevronDown" size={16} /></span>
               </div>
             </div>
             <div style={{ border: `1px solid ${t.border}`, borderRadius: t.radius.card, background: t.surface, overflow: 'hidden' }}>
               {['옵션 1', '옵션 2', '옵션 3'].map((opt, i) => (
                 <div key={opt} className="flex items-center justify-between ds-press cursor-pointer" style={{ padding: `${space.sm}px ${space.md}px`, borderBottom: i < 2 ? `1px solid ${t.border}` : 'none', background: i === 0 ? t.primaryTint : 'transparent' }}>
                   <Text role="bodySm" weight={i === 0 ? t.weightBold : t.weightRegular} color={i === 0 ? t.primary : t.textMain}>{opt}</Text>
-                  {i === 0 && <span style={{ color: t.primary, fontSize: 12 }}>✓</span>}
+                  {i === 0 && <span style={{ color: t.primary, display: 'inline-flex' }}><Icon name="check" size={14} /></span>}
                 </div>
               ))}
             </div>
@@ -125,7 +125,7 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
             <div className="flex flex-col" style={{ gap: space.sm }}>
               {[true, false].map((on, i) => (
                 <div key={i} className="flex items-center" style={{ gap: space.sm }}>
-                  <span className="ds-press" style={{ width: 18, height: 18, borderRadius: 4, background: on ? t.primary : t.bg, border: `1.5px solid ${on ? t.primary : t.border}`, color: t.onPrimary, fontSize: 11, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>{on ? '✓' : ''}</span>
+                  <span className="ds-press" style={{ width: 18, height: 18, borderRadius: 4, background: on ? t.primary : t.bg, border: `1.5px solid ${on ? t.primary : t.border}`, color: t.onPrimary, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>{on && <Icon name="check" size={12} />}</span>
                   <Text role="bodySm">{on ? '선택됨' : '선택 안 됨'}</Text>
                 </div>
               ))}
@@ -151,12 +151,12 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
           </Tile>
 
           <Tile t={t} ds={ds} title="검색 입력">
-            <div className="flex items-center" style={{ gap: space.sm, background: t.surface, borderRadius: t.radius.chip, border: `1px solid ${t.border}`, padding: `${space.sm}px ${space.md}px` }}>
-              <span style={{ color: t.textMuted, fontSize: 14 }}>🔍</span>
+            <div className="flex items-center" style={{ gap: space.sm, background: t.surface, borderRadius: t.radius.chip, border: `1px solid ${t.border}`, padding: `${space.sm}px ${space.md}px`, color: t.textMuted }}>
+              <Icon name="search" size={16} />
               <Text role="bodySm" color={t.textMuted}>검색어를 입력하세요</Text>
             </div>
-            <div className="flex items-center" style={{ gap: space.sm, background: t.bg, borderRadius: t.radius.chip, border: `2px solid ${t.primary}`, padding: `${space.sm}px ${space.md}px` }}>
-              <span style={{ color: t.primary, fontSize: 14 }}>🔍</span>
+            <div className="flex items-center" style={{ gap: space.sm, background: t.bg, borderRadius: t.radius.chip, border: `2px solid ${t.primary}`, padding: `${space.sm}px ${space.md}px`, color: t.primary }}>
+              <Icon name="search" size={16} />
               <Text role="bodySm">검색 포커스 상태</Text>
             </div>
           </Tile>
@@ -168,7 +168,7 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
                 <Text role="bodySm" color={t.textMuted}>내용을 입력해주세요…</Text>
                 <div className="flex justify-between">
                   <Text role="caption" color={t.textMuted}>0 / 500</Text>
-                  <Text role="caption" color={t.textMuted}>📷</Text>
+                  <span style={{ color: t.textMuted, display: 'inline-flex' }}><Icon name="camera" size={14} /></span>
                 </div>
               </div>
             </div>
@@ -223,7 +223,7 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
                       <Text role="caption" color={t.textSub}>서브 텍스트</Text>
                     </div>
                   </div>
-                  <Text role="caption" color={t.textSub}>→</Text>
+                  <span style={{ color: t.textSub, display: 'inline-flex' }}><Icon name="chevronRight" size={16} /></span>
                 </ListRow>
               ))}
             </div>
@@ -306,12 +306,13 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
           </Tile>
 
           <Tile t={t} ds={ds} title="토스트 & 알림">
-            {[
-              { bg: t.textMain, fg: contrastOnHex(t.textMain), label: '✓  저장되었습니다' },
-              { bg: t.danger, fg: '#fff', label: '⚠  오류가 발생했습니다' },
-              { bg: t.success, fg: '#fff', label: '✓  결제가 완료되었습니다' },
-            ].map(({ bg, fg, label }) => (
-              <div key={label} style={{ padding: `${space.sm}px ${space.md}px`, borderRadius: t.radius.card, background: bg }}>
+            {([
+              { bg: t.textMain, fg: contrastOnHex(t.textMain), icon: 'checkCircle' as const, label: '저장되었습니다' },
+              { bg: t.danger, fg: '#fff', icon: 'alertCircle' as const, label: '오류가 발생했습니다' },
+              { bg: t.success, fg: '#fff', icon: 'checkCircle' as const, label: '결제가 완료되었습니다' },
+            ]).map(({ bg, fg, icon, label }) => (
+              <div key={label} className="flex items-center" style={{ gap: space.sm, padding: `${space.sm}px ${space.md}px`, borderRadius: t.radius.card, background: bg, color: fg }}>
+                <Icon name={icon} size={16} />
                 <Text role="bodySm" color={fg} weight={t.weightMedium}>{label}</Text>
               </div>
             ))}
@@ -363,7 +364,7 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
           <Tile t={t} ds={ds} title="탑 내비게이션 바">
             <div style={{ background: t.bg, borderBottom: `1px solid ${t.border}`, padding: `${space.sm}px ${space.md}px` }}>
               <div className="flex items-center justify-between">
-                <Text role="bodySm" color={t.textSub}>←</Text>
+                <span style={{ color: t.textSub, display: 'inline-flex' }}><Icon name="arrowLeft" size={18} /></span>
                 <Text role="bodySm" weight={t.weightBold}>페이지 제목</Text>
                 <Text role="bodySm" color={t.primary}>완료</Text>
               </div>
@@ -417,18 +418,18 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
 
           <Tile t={t} ds={ds} title="사이드 메뉴 항목">
             <div style={{ background: t.surface, borderRadius: t.radius.card, overflow: 'hidden', border: `1px solid ${t.border}` }}>
-              {[
-                { icon: '👤', label: '내 프로필' },
-                { icon: '🛍', label: '주문 내역' },
-                { icon: '❤', label: '찜 목록' },
-                { icon: '⚙', label: '설정' },
-              ].map((item, i) => (
+              {([
+                { icon: 'user' as const, label: '내 프로필' },
+                { icon: 'package' as const, label: '주문 내역' },
+                { icon: 'heart' as const, label: '찜 목록' },
+                { icon: 'settings' as const, label: '설정' },
+              ]).map((item, i) => (
                 <ListRow key={item.label} divider={i < 3} style={{ paddingLeft: space.md, paddingRight: space.md }}>
-                  <div className="flex items-center" style={{ gap: space.sm }}>
-                    <Text role="bodySm">{item.icon}</Text>
+                  <div className="flex items-center" style={{ gap: space.sm, color: t.textMain }}>
+                    <Icon name={item.icon} size={18} />
                     <Text role="bodySm" weight={t.weightMedium}>{item.label}</Text>
                   </div>
-                  <Text role="caption" color={t.textSub}>›</Text>
+                  <span style={{ color: t.textSub, display: 'inline-flex' }}><Icon name="chevronRight" size={16} /></span>
                 </ListRow>
               ))}
             </div>
@@ -444,9 +445,11 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
               ))}
             </div>
             <div className="flex items-center justify-center" style={{ gap: space.xs }}>
-              {['‹', '1', '2', '3', '…', '12', '›'].map((p, i) => (
-                <div key={i} className="ds-press flex items-center justify-center cursor-pointer" style={{ width: 32, height: 32, borderRadius: t.radius.badge, background: p === '2' ? t.primary : 'transparent', border: p === '2' ? 'none' : `1px solid ${t.border}` }}>
-                  <Text role="caption" color={p === '2' ? t.onPrimary : t.textSub} weight={p === '2' ? t.weightBold : t.weightRegular}>{p}</Text>
+              {['prev', '1', '2', '3', '…', '12', 'next'].map((p, i) => (
+                <div key={i} className="ds-press flex items-center justify-center cursor-pointer" style={{ width: 32, height: 32, borderRadius: t.radius.badge, background: p === '2' ? t.primary : 'transparent', border: p === '2' ? 'none' : `1px solid ${t.border}`, color: p === '2' ? t.onPrimary : t.textSub }}>
+                  {p === 'prev' ? <Icon name="arrowLeft" size={14} />
+                    : p === 'next' ? <Icon name="chevronRight" size={14} />
+                    : <Text role="caption" color={p === '2' ? t.onPrimary : t.textSub} weight={p === '2' ? t.weightBold : t.weightRegular}>{p}</Text>}
                 </div>
               ))}
             </div>

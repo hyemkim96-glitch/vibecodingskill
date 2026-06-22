@@ -209,8 +209,8 @@ function PatternList({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' }) {
       {platform === 'mobile' ? (
         <div className="flex flex-col" style={{ gap: space.sm }}>
           {[
-            { name: '무선이어폰 XM5', price: '189,000', sub: '무료배송 · ★ 4.8 (1.2k)', badge: '인기' },
-            { name: '갤럭시 버즈2 프로', price: '89,000', sub: '오늘출발 · ★ 4.6 (890)', badge: '' },
+            { name: '무선이어폰 XM5', price: '189,000', ship: '무료배송', rating: '4.8', reviews: '1.2k', badge: '인기' },
+            { name: '갤럭시 버즈2 프로', price: '89,000', ship: '오늘출발', rating: '4.6', reviews: '890', badge: '' },
           ].map((item, i) => (
             <ListRow key={item.name} divider={i === 0}>
               <div className="flex" style={{ gap: space.md, width: '100%' }}>
@@ -220,7 +220,11 @@ function PatternList({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' }) {
                     <Text role="bodySm" weight={t.weightMedium}>{item.name}</Text>
                     {item.badge && <Badge tone="solid">{item.badge}</Badge>}
                   </div>
-                  <Text role="caption" color={t.textSub}>{item.sub}</Text>
+                  <div className="flex items-center" style={{ gap: 4 }}>
+                    <Text role="caption" color={t.textSub}>{item.ship} · </Text>
+                    <span style={{ color: t.accent, display: 'inline-flex' }}><Icon name="star" size={12} /></span>
+                    <Text role="caption" color={t.textSub}>{item.rating} ({item.reviews})</Text>
+                  </div>
                   <Text role="bodySm" weight={t.weightBold} color={t.primary}>{item.price}원</Text>
                 </div>
               </div>
