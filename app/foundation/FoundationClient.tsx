@@ -59,9 +59,22 @@ export default function FoundationClient() {
 }
 
 /* ── 공통 헬퍼 ── */
+// DS 타입 스케일 shorthand — 모든 레이블은 반드시 이 토큰을 통해 크기를 결정
+const cap = (t: Theme) => ({
+  fontSize: t.type.caption.size,
+  lineHeight: t.type.caption.lineHeight,
+  letterSpacing: t.type.caption.letterSpacing,
+} as const);
+
+const bodySm = (t: Theme) => ({
+  fontSize: t.type.bodySm.size,
+  lineHeight: t.type.bodySm.lineHeight,
+  letterSpacing: t.type.bodySm.letterSpacing,
+} as const);
+
 function SectionTitle({ t, children }: { t: Theme; children: React.ReactNode }) {
   return (
-    <p style={{ fontSize: 11, letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 600, color: t.textMuted, marginBottom: t.space.md, fontFamily: 'var(--font-ui)' }}>
+    <p style={{ ...cap(t), letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: t.weightBold, color: t.textMuted, marginBottom: t.space.md }}>
       {children}
     </p>
   );
@@ -78,10 +91,10 @@ function Section({ t, title, children }: { t: Theme; title: string; children: Re
 
 function TokenLabel({ t, name, value, sub }: { t: Theme; name: string; value: string; sub?: string }) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.xxs, fontFamily: 'var(--font-ui)' }}>
-      <span style={{ fontSize: 12, fontWeight: t.weightBold, color: t.textMain, lineHeight: 1.4 }}>{name}</span>
-      <span style={{ fontSize: 11, fontFamily: 'var(--font-ui)', color: t.textMuted, lineHeight: 1.4 }}>{value}</span>
-      {sub && <span style={{ fontSize: 11, color: t.textMuted, lineHeight: 1.4 }}>{sub}</span>}
+    <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.xxs }}>
+      <span style={{ ...cap(t), fontWeight: t.weightBold, color: t.textMain }}>{name}</span>
+      <span style={{ ...cap(t), color: t.textMuted }}>{value}</span>
+      {sub && <span style={{ ...cap(t), color: t.textMuted }}>{sub}</span>}
     </div>
   );
 }
@@ -139,8 +152,8 @@ function ColorPanel({ t }: { t: Theme }) {
           <div style={{ display: 'flex', gap: 0 }}>
             {neutralSteps.map((step) => (
               <div key={step} style={{ flex: 1, textAlign: 'center' }}>
-                <div style={{ fontSize: 11, fontFamily: 'var(--font-ui)', color: t.textMuted, lineHeight: 1.4 }}>{step}</div>
-                <div style={{ fontSize: 10, fontFamily: 'var(--font-ui)', color: t.textMuted, opacity: 0.6, lineHeight: 1.4 }}>{neutral[step].hex}</div>
+                <div style={{ ...cap(t), color: t.textMuted }}>{step}</div>
+                <div style={{ ...cap(t), color: t.textMuted, opacity: 0.6 }}>{neutral[step].hex}</div>
               </div>
             ))}
           </div>
@@ -168,10 +181,10 @@ function ColorPanel({ t }: { t: Theme }) {
                   background: n.hex,
                   border: `1px solid ${t.border}`,
                 }}>
-                  <span style={{ fontSize: 12, fontFamily: 'var(--font-ui)', color: isLight ? '#18181b' : '#ffffff', fontWeight: 600 }}>
+                  <span style={{ ...cap(t), color: isLight ? '#18181b' : '#ffffff', fontWeight: 600 }}>
                     {step}
                   </span>
-                  <span style={{ fontSize: 11, fontFamily: 'var(--font-ui)', color: isLight ? '#52525b' : '#a0a0ab' }}>
+                  <span style={{ ...cap(t), color: isLight ? '#52525b' : '#a0a0ab' }}>
                     {n.oklch}
                   </span>
                 </div>
@@ -188,7 +201,7 @@ function ColorPanel({ t }: { t: Theme }) {
             <div key={name} style={{ display: 'flex', alignItems: 'stretch', gap: t.space.md }}>
               {/* 레이블 */}
               <div style={{ width: 48, display: 'flex', alignItems: 'center', flexShrink: 0 }}>
-                <span style={{ fontSize: 11, color: t.textSub, fontWeight: t.weightMedium }}>{label}</span>
+                <span style={{ ...cap(t), color: t.textSub, fontWeight: t.weightMedium }}>{label}</span>
               </div>
               {/* fill / text / bg 칩 3종 */}
               {[
@@ -203,11 +216,11 @@ function ColorPanel({ t }: { t: Theme }) {
                   border: `1px solid ${t.border}`,
                 }}>
                   <div style={{ height: 40, background: hex, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <span style={{ fontSize: 12, fontFamily: 'var(--font-ui)', color: textColor, opacity: 0.9 }}>{roleLabel}</span>
+                    <span style={{ ...cap(t), color: textColor, opacity: 0.9 }}>{roleLabel}</span>
                   </div>
                   <div style={{ padding: `${t.space.xs}px ${t.space.sm}px ${t.space.sm}px`, background: t.surface }}>
-                    <div style={{ fontSize: 12, fontFamily: 'var(--font-ui)', color: t.textMain }}>{hex}</div>
-                    <div style={{ fontSize: 11, fontFamily: 'var(--font-ui)', color: t.textMuted, marginTop: 2 }}>{oklch}</div>
+                    <div style={{ ...cap(t), color: t.textMain }}>{hex}</div>
+                    <div style={{ ...cap(t), color: t.textMuted, marginTop: 2 }}>{oklch}</div>
                   </div>
                 </div>
               ))}
@@ -221,7 +234,7 @@ function ColorPanel({ t }: { t: Theme }) {
         <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.xl }}>
           {semanticGroups.map(({ title, prefix, roles }) => (
             <div key={title}>
-              <div style={{ fontSize: 11, fontWeight: t.weightBold, color: t.textSub, marginBottom: t.space.sm }}>{title}</div>
+              <div style={{ ...cap(t), fontWeight: t.weightBold, color: t.textSub, marginBottom: t.space.sm }}>{title}</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.sm }}>
                 {roles.map((role) => {
                   const key = `${prefix}${role}`;
@@ -232,7 +245,7 @@ function ColorPanel({ t }: { t: Theme }) {
                     <div key={role} style={{ display: 'flex', alignItems: 'center', gap: t.space.md }}>
                       {/* 토큰 이름 */}
                       <div style={{ width: 160, flexShrink: 0 }}>
-                        <span style={{ fontSize: 12, fontFamily: 'var(--font-ui)', color: t.textSub }}>{role}</span>
+                        <span style={{ ...cap(t), color: t.textSub }}>{role}</span>
                       </div>
                       {/* 라이트 */}
                       <div style={{ display: 'flex', alignItems: 'center', gap: t.space.sm, flex: 1 }}>
@@ -250,7 +263,7 @@ function ColorPanel({ t }: { t: Theme }) {
                             </div>
                           )}
                         </div>
-                        <span style={{ fontSize: 11, fontFamily: 'var(--font-ui)', color: t.textMuted }}>{light}</span>
+                        <span style={{ ...cap(t), color: t.textMuted }}>{light}</span>
                       </div>
                       {/* 다크 */}
                       <div style={{ display: 'flex', alignItems: 'center', gap: t.space.sm, flex: 1 }}>
@@ -268,7 +281,7 @@ function ColorPanel({ t }: { t: Theme }) {
                             </div>
                           )}
                         </div>
-                        <span style={{ fontSize: 11, fontFamily: 'var(--font-ui)', color: t.textMuted }}>{dark}</span>
+                        <span style={{ ...cap(t), color: t.textMuted }}>{dark}</span>
                       </div>
                       {/* 라이트/다크 레이블 (첫 row에만) */}
                     </div>
@@ -280,8 +293,8 @@ function ColorPanel({ t }: { t: Theme }) {
           ))}
           {/* 라이트 / 다크 모드 컬럼 헤더 */}
           <div style={{ display: 'flex', gap: t.space.md, paddingLeft: 160 + t.space.md }}>
-            <div style={{ flex: 1, fontSize: 11, color: t.textMuted, fontFamily: 'var(--font-ui)' }}>☀ light</div>
-            <div style={{ flex: 1, fontSize: 11, color: t.textMuted, fontFamily: 'var(--font-ui)' }}>◑ dark</div>
+            <div style={{ flex: 1, ...cap(t), color: t.textMuted }}>☀ light</div>
+            <div style={{ flex: 1, ...cap(t), color: t.textMuted }}>◑ dark</div>
           </div>
         </div>
       </Section>
@@ -330,8 +343,8 @@ function TypePanel({ t }: { t: Theme }) {
               { label: '최적화', value: 'Dynamic Subset' },
             ].map(({ label, value }) => (
               <div key={label}>
-                <div style={{ fontSize: 12, color: t.textMuted, marginBottom: 2 }}>{label}</div>
-                <div style={{ fontSize: 12, fontWeight: t.weightMedium, color: t.textMain, fontFamily: 'var(--font-ui)' }}>{value}</div>
+                <div style={{ ...cap(t), color: t.textMuted, marginBottom: 2 }}>{label}</div>
+                <div style={{ ...cap(t), fontWeight: t.weightMedium, color: t.textMain }}>{value}</div>
               </div>
             ))}
           </div>
@@ -354,11 +367,11 @@ function TypePanel({ t }: { t: Theme }) {
               }}>
                 {/* 메타 */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.xs, paddingTop: 4 }}>
-                  <span style={{ fontSize: 11, fontWeight: t.weightBold, color: t.textSub, fontFamily: 'var(--font-ui)' }}>{name}</span>
-                  <span style={{ fontSize: 11, fontFamily: 'var(--font-ui)', color: t.textMuted }}>{ts.size}px</span>
-                  <span style={{ fontSize: 11, fontFamily: 'var(--font-ui)', color: t.textMuted }}>lh {ts.lineHeight}</span>
-                  <span style={{ fontSize: 11, fontFamily: 'var(--font-ui)', color: t.textMuted }}>ls {ts.letterSpacing}</span>
-                  <span style={{ fontSize: 11, fontFamily: 'var(--font-ui)', color: t.textMuted }}>w{ts.weight}</span>
+                  <span style={{ ...cap(t), fontWeight: t.weightBold, color: t.textSub }}>{name}</span>
+                  <span style={{ ...cap(t), color: t.textMuted }}>{ts.size}px</span>
+                  <span style={{ ...cap(t), color: t.textMuted }}>lh {ts.lineHeight}</span>
+                  <span style={{ ...cap(t), color: t.textMuted }}>ls {ts.letterSpacing}</span>
+                  <span style={{ ...cap(t), color: t.textMuted }}>w{ts.weight}</span>
                 </div>
                 {/* 샘플 텍스트 */}
                 <span style={{ ...typeStyle(ts), color: t.textMain, fontFamily: t.font }}>
@@ -378,11 +391,11 @@ function TypePanel({ t }: { t: Theme }) {
             { label: '1.65 (권장)', lh: 1.65, note: 'body 기준 최적 행간' },
           ].map(({ label, lh, note }) => (
             <div key={label} style={{ borderRadius: t.radius.card, padding: t.space.md, background: t.surface, border: `1px solid ${t.border}` }}>
-              <div style={{ fontSize: 12, fontFamily: 'var(--font-ui)', color: t.textMuted, marginBottom: t.space.sm }}>{label}</div>
-              <p style={{ fontSize: 14, lineHeight: lh, color: t.textMain, fontFamily: t.font, margin: 0 }}>
+              <div style={{ ...cap(t), color: t.textMuted, marginBottom: t.space.sm }}>{label}</div>
+              <p style={{ ...bodySm(t), lineHeight: lh, color: t.textMain, fontFamily: t.font, margin: 0 }}>
                 사용자가 직접 확인할 수 있는 디자인 토큰 기반의 일관된 UI 시스템입니다. 컴포넌트 라이브러리와 파운데이션은 항상 동기화됩니다.
               </p>
-              <div style={{ marginTop: t.space.sm, fontSize: 11, color: t.textMuted }}>{note}</div>
+              <div style={{ marginTop: t.space.sm, ...cap(t), color: t.textMuted }}>{note}</div>
             </div>
           ))}
         </div>
@@ -405,7 +418,7 @@ function TypePanel({ t }: { t: Theme }) {
               borderBottom: `1px solid ${t.border}`,
             }}>
               <span style={{ fontSize: size, letterSpacing: ls, color: t.textMain, fontFamily: t.font, fontWeight: 400 }}>{text}</span>
-              <span style={{ fontSize: 11, fontFamily: 'var(--font-ui)', color: t.textMuted, flexShrink: 0 }}>{label}</span>
+              <span style={{ ...cap(t), color: t.textMuted, flexShrink: 0 }}>{label}</span>
             </div>
           ))}
         </div>
@@ -425,7 +438,7 @@ function TypePanel({ t }: { t: Theme }) {
                 borderBottom: `1px solid ${t.border}`,
                 opacity: isUsed ? 1 : 0.45,
               }}>
-                <span style={{ fontSize: 11, fontFamily: 'var(--font-ui)', color: t.textMuted, width: 40, flexShrink: 0 }}>
+                <span style={{ ...cap(t), color: t.textMuted, width: 40, flexShrink: 0 }}>
                   {w}{isUsed ? ' ★' : ''}
                 </span>
                 <span style={{ fontSize: 18, fontWeight: w, color: t.textMain, fontFamily: t.font, letterSpacing: '-0.01em' }}>
@@ -434,7 +447,7 @@ function TypePanel({ t }: { t: Theme }) {
               </div>
             );
           })}
-          <div style={{ fontSize: 11, color: t.textMuted, marginTop: t.space.xs }}>★ = 디자인 시스템 사용 웨이트 (regular·medium·bold)</div>
+          <div style={{ ...cap(t), color: t.textMuted, marginTop: t.space.xs }}>★ = 디자인 시스템 사용 웨이트 (regular·medium·bold)</div>
         </div>
       </Section>
     </div>
@@ -466,9 +479,9 @@ function SpacePanel({ t }: { t: Theme }) {
         <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.md }}>
           {scale.map(({ name, value }) => (
             <div key={name} style={{ display: 'flex', alignItems: 'center', gap: t.space.md }}>
-              <span style={{ fontSize: 12, fontFamily: 'var(--font-ui)', color: t.textMuted, width: 32, flexShrink: 0 }}>{name}</span>
+              <span style={{ ...cap(t), color: t.textMuted, width: 32, flexShrink: 0 }}>{name}</span>
               <div style={{ height: 14, width: Math.max(value, 2), background: t.primary, borderRadius: 2 }} />
-              <span style={{ fontSize: 12, fontFamily: 'var(--font-ui)', color: t.textMuted }}>{value}px</span>
+              <span style={{ ...cap(t), color: t.textMuted }}>{value}px</span>
             </div>
           ))}
         </div>
@@ -478,9 +491,9 @@ function SpacePanel({ t }: { t: Theme }) {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: t.space.md }}>
           {semantic.map(({ name, value, desc }) => (
             <div key={name} style={{ borderRadius: t.radius.card, padding: t.space.md, border: `1px solid ${t.border}`, background: t.surface }}>
-              <div style={{ fontSize: 11, fontWeight: t.weightBold, color: t.textMain, marginBottom: t.space.xs }}>{name}</div>
-              <div style={{ fontSize: 12, fontFamily: 'var(--font-ui)', color: t.primary, marginBottom: t.space.xs }}>{value}px</div>
-              <div style={{ fontSize: 12, color: t.textMuted }}>{desc}</div>
+              <div style={{ ...cap(t), fontWeight: t.weightBold, color: t.textMain, marginBottom: t.space.xs }}>{name}</div>
+              <div style={{ ...cap(t), color: t.primary, marginBottom: t.space.xs }}>{value}px</div>
+              <div style={{ ...cap(t), color: t.textMuted }}>{desc}</div>
             </div>
           ))}
         </div>
@@ -509,9 +522,9 @@ function RadiusPanel({ t }: { t: Theme }) {
           <div key={name} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: t.space.sm }}>
             <div style={{ width: '100%', height: 64, background: t.surface, border: `1px solid ${t.border}`, borderRadius: value }} />
             <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: 11, fontWeight: t.weightBold, color: t.textMain, marginBottom: t.space.xxs }}>{name}</div>
-              <div style={{ fontSize: 12, fontFamily: 'var(--font-ui)', color: t.primary }}>{value}</div>
-              <div style={{ fontSize: 12, color: t.textMuted }}>{desc}</div>
+              <div style={{ ...cap(t), fontWeight: t.weightBold, color: t.textMain, marginBottom: t.space.xxs }}>{name}</div>
+              <div style={{ ...cap(t), color: t.primary }}>{value}</div>
+              <div style={{ ...cap(t), color: t.textMuted }}>{desc}</div>
             </div>
           </div>
         ))}
@@ -538,9 +551,9 @@ function MotionPanel({ t }: { t: Theme }) {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: t.space.md }}>
         {items.map(({ name, value, desc }) => (
           <div key={name} style={{ borderRadius: t.radius.card, padding: t.space.md, border: `1px solid ${t.border}`, background: t.surface }}>
-            <div style={{ fontSize: 11, fontWeight: t.weightBold, color: t.textMain, marginBottom: t.space.xs }}>{name}</div>
-            <div style={{ fontSize: 12, fontFamily: 'var(--font-ui)', color: t.primary, marginBottom: t.space.xs }}>{value}</div>
-            <div style={{ fontSize: 12, color: t.textMuted }}>{desc}</div>
+            <div style={{ ...cap(t), fontWeight: t.weightBold, color: t.textMain, marginBottom: t.space.xs }}>{name}</div>
+            <div style={{ ...cap(t), color: t.primary, marginBottom: t.space.xs }}>{value}</div>
+            <div style={{ ...cap(t), color: t.textMuted }}>{desc}</div>
           </div>
         ))}
       </div>
