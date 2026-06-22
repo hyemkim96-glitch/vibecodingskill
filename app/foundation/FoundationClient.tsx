@@ -116,7 +116,7 @@ function ColorPanel({ t }: { t: Theme }) {
       {groups.map((g) => (
         <div key={g.title}>
           <GroupTitle t={t}>{g.title}</GroupTitle>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: t.space.md }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: t.space.md, maxWidth: 480 }}>
             {g.tokens.map((tok) => (
               <div key={tok.name} style={{ borderRadius: t.radius.card, overflow: 'hidden', border: `1px solid ${t.border}` }}>
                 <div style={{ height: 64, background: tok.value }} />
