@@ -5,6 +5,7 @@ import { allTokens } from '@/lib/tokens';
 import { resolveTheme } from '@/lib/tokens/resolveTheme';
 import { typeStyle } from '@/components/ds';
 import PillTabs from '@/components/PillTabs';
+import { serviceDS } from '@/lib/tokens/serviceTheme';
 
 /**
  * Foundation — the design tokens that every component is built from.
@@ -30,6 +31,7 @@ const CATEGORIES: { key: FoundationCategory; label: string }[] = [
 ];
 
 const representative = allTokens[0];
+const { Text: ServiceText, t: st } = serviceDS;
 
 export default function FoundationClient() {
   const [active, setActive] = useState<FoundationCategory>('color');
@@ -37,13 +39,13 @@ export default function FoundationClient() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-1">
-        <h1 className="text-sm font-medium tracking-widest uppercase" style={{ color: 'var(--color-ash)' }}>
+      <div className="flex flex-col" style={{ gap: st.space.xs }}>
+        <ServiceText role="caption" weight={st.weightMedium} style={{ letterSpacing: '0.1em', textTransform: 'uppercase', color: st.textSub }}>
           Foundation
-        </h1>
-        <p className="text-xs" style={{ color: 'var(--color-ash)' }}>
+        </ServiceText>
+        <ServiceText role="caption" color={st.textMuted}>
           토큰 = 파운데이션 — 컴포넌트보다 작은 구성 요소. 모든 컴포넌트의 컬러·타이포·여백은 이 토큰을 따릅니다.
-        </p>
+        </ServiceText>
       </div>
 
       {/* Tab bar — shared PillTabs */}

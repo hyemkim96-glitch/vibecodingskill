@@ -19,28 +19,19 @@ export default function PatternsClient() {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-start justify-between gap-4">
-        <div className="flex flex-col gap-1">
-          <h1 className="text-sm font-medium tracking-widest uppercase" style={{ color: 'var(--color-ash)' }}>
+        <div className="flex flex-col" style={{ gap: theme.space.xs }}>
+          <ds.Text role="caption" weight={theme.weightMedium} style={{ letterSpacing: '0.1em', textTransform: 'uppercase', color: theme.textSub }}>
             UI Patterns
-          </h1>
-          <p className="text-xs" style={{ color: 'var(--color-ash)' }}>
+          </ds.Text>
+          <ds.Text role="caption" color={theme.textMuted}>
             {PATTERN_TYPES.find((p) => p.key === activePattern)?.desc}
-          </p>
+          </ds.Text>
         </div>
         {/* 플랫폼 토글 */}
-        <div className="flex gap-1 shrink-0">
+        <div className="flex shrink-0" style={{ gap: theme.space.xs }}>
           {(['mobile', 'web'] as const).map((p) => (
-            <button
-              key={p}
-              onClick={() => setPlatform(p)}
-              className="text-xs px-3 py-1.5 rounded-md transition-all cursor-pointer"
-              style={{
-                background: platform === p ? 'var(--color-bone)' : 'transparent',
-                color: platform === p ? 'var(--color-void)' : 'var(--color-ash)',
-                border: '1px solid var(--color-graphite)',
-              }}
-            >
-              {p === 'mobile' ? '모바일' : '웹'}
+            <button key={p} onClick={() => setPlatform(p)} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
+              <ds.Chip active={platform === p}>{p === 'mobile' ? '모바일' : '웹'}</ds.Chip>
             </button>
           ))}
         </div>
@@ -53,7 +44,7 @@ export default function PatternsClient() {
       <div
         className="rounded-lg overflow-hidden"
         style={{
-          border: '1px solid var(--color-graphite)',
+          border: `1px solid ${theme.border}`,
           maxWidth: platform === 'mobile' ? 390 : '100%',
         }}
       >

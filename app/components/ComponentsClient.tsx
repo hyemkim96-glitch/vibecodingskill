@@ -4,21 +4,23 @@ import { useState } from 'react';
 import ComponentSheet, { COMPONENT_CATEGORIES, ComponentCategory } from '@/components/ComponentSheet';
 import PillTabs from '@/components/PillTabs';
 import { allTokens } from '@/lib/tokens';
+import { serviceDS } from '@/lib/tokens/serviceTheme';
 
 const representative = allTokens[0];
+const { Text, t } = serviceDS;
 
 export default function ComponentsClient() {
   const [active, setActive] = useState<ComponentCategory>('buttons');
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-1">
-        <h1 className="text-sm font-medium tracking-widest uppercase" style={{ color: 'var(--color-ash)' }}>
+      <div className="flex flex-col" style={{ gap: t.space.xs }}>
+        <Text role="caption" weight={t.weightMedium} style={{ letterSpacing: '0.1em', textTransform: 'uppercase', color: t.textSub }}>
           Components
-        </h1>
-        <p className="text-xs" style={{ color: 'var(--color-ash)' }}>
+        </Text>
+        <Text role="caption" color={t.textMuted}>
           컴포넌트 유형별 와이어프레임 — 버튼·입력·카드·피드백·내비게이션을 한 시트에 나열
-        </p>
+        </Text>
       </div>
 
       {/* Tab bar — shared PillTabs */}
