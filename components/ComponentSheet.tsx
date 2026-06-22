@@ -395,15 +395,15 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
 
           <Tile t={t} ds={ds} title="토스트 & 알림">
             {([
-              { bg: t.textMain, fg: contrastOnHex(t.textMain), icon: 'checkCircle' as const, label: '저장되었습니다' },
-              { bg: t.danger, fg: t.textOnImage, icon: 'alertCircle' as const, label: '오류가 발생했습니다' },
-              { bg: t.success, fg: t.textOnImage, icon: 'checkCircle' as const, label: '결제가 완료되었습니다' },
-              { bg: t.warning, fg: '#1a1a1a', icon: 'alertCircle' as const, label: '재고가 부족합니다' },
-              { bg: t.info, fg: t.textOnImage, icon: 'checkCircle' as const, label: '새로운 업데이트가 있어요' },
-            ]).map(({ bg, fg, icon, label }) => (
-              <div key={label} style={{ display: 'flex', alignItems: 'center', gap: space.sm, padding: `${space.sm}px ${space.md}px`, borderRadius: t.radius.card, background: bg, color: fg }}>
-                <Icon name={icon} size={16} />
-                <Text role="bodySm" color={fg} weight={t.weightMedium}>{label}</Text>
+              { color: t.onPrimary, icon: 'checkCircle' as const, label: '저장되었습니다' },
+              { color: t.danger,    icon: 'alertCircle' as const,  label: '오류가 발생했습니다' },
+              { color: t.success,   icon: 'checkCircle' as const, label: '결제가 완료되었습니다' },
+              { color: t.warning,   icon: 'alertCircle' as const,  label: '재고가 부족합니다' },
+              { color: t.info,      icon: 'checkCircle' as const, label: '새로운 업데이트가 있어요' },
+            ]).map(({ color, icon, label }) => (
+              <div key={label} style={{ display: 'flex', alignItems: 'center', gap: space.sm, padding: `${space.sm}px ${space.md}px`, borderRadius: t.radius.card, background: t.textMain }}>
+                <Icon name={icon} size={16} color={color} />
+                <Text role="bodySm" color={color} weight={t.weightMedium}>{label}</Text>
               </div>
             ))}
           </Tile>
