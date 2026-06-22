@@ -1,4 +1,5 @@
 import { BrandToken } from '@/types/token';
+import { lightTokens, darkTokens } from './semanticTokens';
 
 /**
  * Design System Engine — Theme Resolver v2
@@ -241,37 +242,40 @@ function resolveType(
 
 /* ── wireframe palettes ── */
 
+const wl = lightTokens;
+const wd = darkTokens;
+
 const WIREFRAME_LIGHT = {
-  primary: '#18181b',      // shadcn-style: black primary
-  onPrimary: '#ffffff',
-  primaryTint: '#f4f4f5',
-  bg: '#ffffff',
-  surface: '#f4f4f5',
-  surfaceAlt: '#e4e4e7',
-  textMain: '#18181b',
-  textSub: '#71717a',
-  textMuted: '#a1a1aa',
-  border: '#e4e4e7',
-  accent: '#6366f1',       // indigo for accent/info
-  success: '#16a34a',      // green-600
-  danger: '#dc2626',       // red-600
+  primary:     wl['--color-fill-normal'],
+  onPrimary:   wl['--color-text-on-fill'],
+  primaryTint: wl['--color-fill-brand-weak'],
+  bg:          wl['--color-bg-normal'],
+  surface:     wl['--color-fill-neutral'],
+  surfaceAlt:  wl['--color-fill-neutral-alt'],
+  textMain:    wl['--color-text-normal'],
+  textSub:     wl['--color-text-alternative'],
+  textMuted:   wl['--color-text-assistive'],
+  border:      wl['--color-border-normal'],
+  accent:      wl['--color-fill-accent'],
+  success:     wl['--color-fill-success'],
+  danger:      wl['--color-fill-danger'],
 };
 
 // Dark-background wireframe variant
 const WIREFRAME_DARK = {
-  primary: '#f4f4f5',      // near-white primary on dark
-  onPrimary: '#18181b',
-  primaryTint: '#27272a',
-  bg: '#18181b',
-  surface: '#27272a',
-  surfaceAlt: '#3f3f46',
-  textMain: '#f4f4f5',
-  textSub: '#a1a1aa',
-  textMuted: '#71717a',
-  border: '#3f3f46',
-  accent: '#818cf8',       // indigo-400 for dark bg
-  success: '#4ade80',      // green-400
-  danger: '#f87171',       // red-400
+  primary:     wd['--color-fill-normal'],
+  onPrimary:   wd['--color-text-on-fill'],
+  primaryTint: wd['--color-fill-brand-weak'],
+  bg:          wd['--color-bg-normal'],
+  surface:     wd['--color-bg-elevated'],
+  surfaceAlt:  wd['--color-fill-neutral-alt'],
+  textMain:    wd['--color-text-normal'],
+  textSub:     wd['--color-text-alternative'],
+  textMuted:   wd['--color-text-assistive'],
+  border:      wd['--color-border-normal'],
+  accent:      wd['--color-fill-accent'],
+  success:     wd['--color-fill-success'],
+  danger:      wd['--color-fill-danger'],
 };
 
 /* ── main resolver ── */
