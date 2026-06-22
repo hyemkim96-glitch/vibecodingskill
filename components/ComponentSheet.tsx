@@ -224,41 +224,7 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
             </div>
           </Tile>
 
-          <Tile t={t} ds={ds} title="가격 표시">
-            {/* 기본 가격 */}
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: space.xs }}>
-              <Text role="h2" weight={t.weightBold}>12,900원</Text>
-            </div>
-            {/* 할인가 */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: space.xxs }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: space.sm }}>
-                <Text role="bodySm" color={t.danger} weight={t.weightBold}>35%</Text>
-                <Text role="h2" weight={t.weightBold}>25,900원</Text>
-              </div>
-              <Text role="caption" color={t.textMuted} style={{ textDecoration: 'line-through' }}>39,800원</Text>
-            </div>
-            {/* 쿠팡/배민 스타일: 배달비 + 최소주문 */}
-            <div style={{ background: t.surfaceAlt, borderRadius: t.radius.card, padding: space.md, display: 'flex', flexDirection: 'column', gap: space.xs }}>
-              {[
-                { label: '배달비', value: '무료', accent: t.success },
-                { label: '최소주문', value: '12,000원', accent: t.textMain },
-                { label: '예상도착', value: '20~30분', accent: t.warning },
-              ].map(({ label, value, accent }) => (
-                <div key={label} style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <Text role="caption" color={t.textSub}>{label}</Text>
-                  <Text role="caption" weight={t.weightBold} color={accent}>{value}</Text>
-                </div>
-              ))}
-            </div>
-            {/* 수량 조절 + 장바구니 */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: space.sm }}>
-              <Stepper value={2} />
-              <div style={{ flex: 1 }}><Button variant="primary" full>장바구니 담기</Button></div>
-            </div>
-          </Tile>
-
-          <Tile t={t} ds={ds} title="리스트 & 프로필">
-            {/* 리스트 항목 */}
+          <Tile t={t} ds={ds} title="리스트 로우">
             <div style={{ background: t.surface, borderRadius: t.radius.card, overflow: 'hidden', border: `1px solid ${t.border}` }}>
               {['첫 번째 항목', '두 번째 항목', '세 번째 항목'].map((item, i) => (
                 <ListRow key={item} divider={i < 2} style={{ paddingLeft: space.md, paddingRight: space.md }}>
@@ -273,15 +239,11 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
                 </ListRow>
               ))}
             </div>
-            {/* 프로필 카드 */}
-            <Card style={{ display: 'flex', alignItems: 'center', gap: space.md, flexDirection: 'row' }}>
-              <Avatar size={48} />
-              <div style={{ flex: 1 }}>
-                <Text role="bodySm" weight={t.weightBold} style={{ display: 'block' }}>홍길동</Text>
-                <Text role="caption" color={t.textSub}>서초구 · 매너온도 38.2°</Text>
-              </div>
-              <Button variant="outline" size="sm">팔로우</Button>
-            </Card>
+            <ListRow style={{ paddingLeft: space.md, paddingRight: space.md, background: t.surface, borderRadius: t.radius.card, border: `1px solid ${t.border}` }}>
+              <Avatar size={36} />
+              <Text role="bodySm" weight={t.weightMedium}>아바타 + 텍스트</Text>
+              <Badge tone="soft">NEW</Badge>
+            </ListRow>
           </Tile>
 
         </div>
