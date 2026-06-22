@@ -161,7 +161,7 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
                 border: '1px solid var(--color-border-normal)',
                 background: 'var(--color-bg-alt)',
               }}>
-                <div style={{ fontSize: 11, color: 'var(--color-text-assistive)', marginBottom: 12, display: 'flex', gap: 12 }}>
+                <div style={{ fontSize: 'var(--type-caption-size, 12px)', color: 'var(--color-text-assistive)', marginBottom: 12, display: 'flex', gap: 12 }}>
                   <span>{s.role}</span>
                   <span>·</span>
                   <span>{fontSize}</span>

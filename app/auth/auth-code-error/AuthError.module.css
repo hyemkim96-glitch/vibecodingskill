@@ -21,7 +21,7 @@
 }
 
 .errorBox h1 {
-    font-size: 24px;
+    font-size: var(--font-size-xl, 24px);
     font-weight: 700;
     margin-bottom: var(--spacing-3);
     letter-spacing: -0.02em;
@@ -30,7 +30,7 @@
 .errorBox p {
     color: var(--color-text-secondary);
     line-height: 1.6;
-    font-size: 15px;
+    font-size: var(--font-size-base);
     margin-bottom: var(--spacing-10);
 }
 
@@ -49,7 +49,7 @@
     color: var(--color-bg-primary);
     padding: var(--spacing-4);
     font-weight: 700;
-    font-size: 14px;
+    font-size: var(--font-size-base);
     text-decoration: none;
 }
 
@@ -63,6 +63,6 @@
     color: var(--color-text-primary);
     padding: var(--spacing-4);
     font-weight: 600;
-    font-size: 14px;
+    font-size: var(--font-size-base);
     text-decoration: none;
 }

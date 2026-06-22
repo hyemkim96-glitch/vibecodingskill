@@ -141,7 +141,7 @@
 
 .platformBtn {
   font-family: var(--font-ui);
-  font-size: 11px;
+  font-size: var(--font-size-caption);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   padding: var(--spacing-2) var(--spacing-4);
