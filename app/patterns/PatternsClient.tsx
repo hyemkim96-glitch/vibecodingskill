@@ -46,21 +46,18 @@ export default function PatternsClient() {
       </div>
 
       {/* 패턴 탭 바 */}
-      <div className="flex overflow-x-auto" style={{ borderBottom: '1px solid var(--color-graphite)' }}>
+      <div className="flex gap-1 overflow-x-auto flex-wrap">
         {PATTERN_TYPES.map(({ key, label }) => (
           <button
             key={key}
             onClick={() => setActivePattern(key)}
-            className="shrink-0 text-xs px-4 py-2.5 cursor-pointer transition-colors"
+            className="shrink-0 text-xs px-4 py-2 rounded-full cursor-pointer transition-all"
             style={{
-              color: activePattern === key ? 'var(--color-bone)' : 'var(--color-ash)',
+              color: activePattern === key ? 'var(--color-void)' : 'var(--color-ash)',
               fontWeight: activePattern === key ? 600 : 400,
-              background: 'transparent',
-              border: 'none',
-              borderBottom: activePattern === key
-                ? '2px solid var(--color-bone)'
-                : '2px solid transparent',
-              marginBottom: -1,
+              background: activePattern === key ? 'var(--color-bone)' : 'transparent',
+              border: '1px solid',
+              borderColor: activePattern === key ? 'var(--color-bone)' : 'var(--color-graphite)',
             } as React.CSSProperties}
           >
             {label}

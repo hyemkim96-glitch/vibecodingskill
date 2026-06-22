@@ -3,6 +3,7 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { ResolvedTheme, ResolvedType } from '@/lib/tokens/resolveTheme';
+import { Icon as IconBase, IconName } from '@/components/icons';
 
 /**
  * Design System — Component layer (the atoms).
@@ -74,6 +75,7 @@ export interface DS {
   }>;
   Thumb: React.FC<{ h: number; w?: number; style?: React.CSSProperties }>;
   Avatar: React.FC<{ size?: number }>;
+  Icon: React.FC<{ name: IconName; size?: number; color?: string }>;
 }
 
 export function createDS(t: ResolvedTheme, wireframe = false): DS {
@@ -174,9 +176,9 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
         className="inline-flex items-center"
         style={{
           fontSize: Math.max(10, t.type.caption.size - 1),
-          lineHeight: 1.2,
+          lineHeight: 1,
           fontWeight: t.weightBold,
-          padding: `2px ${space.xs + 3}px`,
+          padding: `3px ${space.xs + 3}px`,
           borderRadius: t.radius.badge,
           background: s.bg,
           color: s.fg,
@@ -193,8 +195,9 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
       className="ds-press inline-flex items-center cursor-pointer whitespace-nowrap"
       style={{
         ...typeStyle(t.type.caption),
+        lineHeight: 1,
         fontWeight: t.weightMedium,
-        padding: `${space.xs}px ${space.md}px`,
+        padding: `${space.xs + 1}px ${space.md}px`,
         borderRadius: t.radius.chip,
         background: active ? t.primary : t.surface,
         color: active ? t.onPrimary : t.textSub,
@@ -236,5 +239,10 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
     <div className="shrink-0" style={{ width: size, height: size, borderRadius: '9999px', background: t.surfaceAlt }} />
   );
 
-  return { t, Text, Button, Card, Input, Badge, Chip, ListRow, Thumb, Avatar };
+  const iconStyle = t.iconStyle;
+  const Icon: DS['Icon'] = ({ name, size = 16, color = 'currentColor' }) => (
+    <IconBase name={name} size={size} color={color} style={iconStyle} />
+  );
+
+  return { t, Text, Button, Card, Input, Badge, Chip, ListRow, Thumb, Avatar, Icon };
 }

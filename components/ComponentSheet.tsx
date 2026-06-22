@@ -4,6 +4,7 @@ import React from 'react';
 import { BrandToken } from '@/types/token';
 import { resolveTheme } from '@/lib/tokens/resolveTheme';
 import { createDS, motionVars, typeStyle } from '@/components/ds';
+import { Icon } from '@/components/icons';
 
 /**
  * ComponentSheet — general component library gallery (wireframe theme).
@@ -370,9 +371,9 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
             <div style={{ background: t.bg, borderBottom: `1px solid ${t.border}`, padding: `${space.sm}px ${space.md}px` }}>
               <div className="flex items-center justify-between">
                 <Text role="h2" weight={t.weightBold}>홈</Text>
-                <div className="flex" style={{ gap: space.sm }}>
-                  <Text role="bodySm" color={t.textSub}>🔍</Text>
-                  <Text role="bodySm" color={t.textSub}>🔔</Text>
+                <div className="flex" style={{ gap: space.sm, color: t.textSub }}>
+                  <Icon name="search" size={18} />
+                  <Icon name="bell" size={18} />
                 </div>
               </div>
             </div>
@@ -382,14 +383,14 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
             <div style={{ background: t.bg, borderTop: `1px solid ${t.border}`, padding: `${space.sm}px ${space.md}px` }}>
               <div className="grid grid-cols-5">
                 {[
-                  { icon: '🏠', label: '홈', active: true },
-                  { icon: '🔍', label: '검색', active: false },
-                  { icon: '📦', label: '주문', active: false },
-                  { icon: '❤', label: '찜', active: false },
-                  { icon: '👤', label: '마이', active: false },
+                  { icon: 'home' as const, label: '홈', active: true },
+                  { icon: 'search' as const, label: '검색', active: false },
+                  { icon: 'package' as const, label: '주문', active: false },
+                  { icon: 'heart' as const, label: '찜', active: false },
+                  { icon: 'user' as const, label: '마이', active: false },
                 ].map(({ icon, label, active }) => (
                   <div key={label} className="flex flex-col items-center ds-press cursor-pointer" style={{ gap: 2, paddingTop: space.xs, paddingBottom: space.xs }}>
-                    <Text role="body" color={active ? t.primary : t.textMuted}>{icon}</Text>
+                    <Icon name={icon} size={18} color={active ? t.primary : t.textMuted} />
                     <Text role="caption" weight={active ? t.weightBold : t.weightRegular} color={active ? t.primary : t.textMuted}>{label}</Text>
                   </div>
                 ))}
