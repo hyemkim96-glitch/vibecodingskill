@@ -240,26 +240,26 @@ function resolveType(
 /* ── wireframe palettes ── */
 
 const WIREFRAME_LIGHT = {
-  primary: '#52525b',
+  primary: '#18181b',      // shadcn-style: black primary
   onPrimary: '#ffffff',
-  primaryTint: '#e4e4e7',
+  primaryTint: '#f4f4f5',
   bg: '#ffffff',
   surface: '#f4f4f5',
-  surfaceAlt: '#e8e8ea',
-  textMain: '#3f3f46',
+  surfaceAlt: '#e4e4e7',
+  textMain: '#18181b',
   textSub: '#71717a',
   textMuted: '#a1a1aa',
   border: '#e4e4e7',
-  accent: '#a1a1aa',
-  success: '#71717a',
-  danger: '#71717a',
+  accent: '#6366f1',       // indigo for accent/info
+  success: '#16a34a',      // green-600
+  danger: '#dc2626',       // red-600
 };
 
-// Slightly darker for dark-background brands in wireframe mode
+// Dark-background wireframe variant
 const WIREFRAME_DARK = {
-  primary: '#a1a1aa',
+  primary: '#f4f4f5',      // near-white primary on dark
   onPrimary: '#18181b',
-  primaryTint: '#3f3f46',
+  primaryTint: '#27272a',
   bg: '#18181b',
   surface: '#27272a',
   surfaceAlt: '#3f3f46',
@@ -267,9 +267,9 @@ const WIREFRAME_DARK = {
   textSub: '#a1a1aa',
   textMuted: '#71717a',
   border: '#3f3f46',
-  accent: '#71717a',
-  success: '#71717a',
-  danger: '#71717a',
+  accent: '#818cf8',       // indigo-400 for dark bg
+  success: '#4ade80',      // green-400
+  danger: '#f87171',       // red-400
 };
 
 /* ── main resolver ── */
