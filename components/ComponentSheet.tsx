@@ -294,6 +294,18 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
             </div>
           </Tile>
 
+          <Tile t={t} ds={ds} title="구분선">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: space.md }}>
+              <Divider />
+              <Divider label="또는" />
+              <div style={{ display: 'flex', alignItems: 'stretch', gap: space.md, height: 60 }}>
+                <Text role="bodySm" color={t.textSub}>좌측</Text>
+                <Divider vertical />
+                <Text role="bodySm" color={t.textSub}>우측</Text>
+              </div>
+            </div>
+          </Tile>
+
         </div>
         </section>
       )}
@@ -429,17 +441,6 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
             </div>
           </Tile>
 
-          <Tile t={t} ds={ds} title="구분선">
-            <div style={{ display: 'flex', flexDirection: 'column', gap: space.md }}>
-              <Divider />
-              <Divider label="또는" />
-              <div style={{ display: 'flex', alignItems: 'stretch', gap: space.md, height: 60 }}>
-                <Text role="bodySm" color={t.textSub}>좌측</Text>
-                <Divider vertical />
-                <Text role="bodySm" color={t.textSub}>우측</Text>
-              </div>
-            </div>
-          </Tile>
 
         </div>
         </section>
