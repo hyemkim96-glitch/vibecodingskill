@@ -69,6 +69,8 @@ export interface DS {
   }>;
   Chip: React.FC<{ children: React.ReactNode; active?: boolean }>;
   NavTab: React.FC<{ children: React.ReactNode; active?: boolean }>;
+  Stepper: React.FC<{ value?: number; min?: number; max?: number }>;
+  Rating: React.FC<{ value?: number; max?: number; size?: number }>;
   ListRow: React.FC<{
     children: React.ReactNode;
     divider?: boolean;
@@ -89,6 +91,7 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
         ...typeStyle(t.type[role]),
         ...(weight ? { fontWeight: weight } : {}),
         color: color ?? t.textMain,
+        wordBreak: 'keep-all',
         ...style,
       }}
     >
@@ -239,6 +242,44 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
     </span>
   );
 
+  const Stepper: DS['Stepper'] = ({ value = 1, min = 0, max = 99 }) => (
+    <div style={{ display: 'inline-flex', alignItems: 'center', border: `1px solid ${t.border}`, borderRadius: t.radius.button, overflow: 'hidden' }}>
+      <button
+        className="ds-press"
+        disabled={value <= min}
+        style={{ width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'transparent', border: 'none', cursor: value <= min ? 'not-allowed' : 'pointer', color: value <= min ? t.textDisabled : t.textMain, fontSize: 18, fontWeight: t.weightBold }}
+      >−</button>
+      <span style={{ minWidth: 36, textAlign: 'center', ...typeStyle(t.type.bodySm), fontWeight: t.weightBold, color: t.textMain, borderLeft: `1px solid ${t.border}`, borderRight: `1px solid ${t.border}`, padding: `0 ${space.xs}px`, lineHeight: '36px' }}>{value}</span>
+      <button
+        className="ds-press"
+        disabled={value >= max}
+        style={{ width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'transparent', border: 'none', cursor: value >= max ? 'not-allowed' : 'pointer', color: value >= max ? t.textDisabled : t.primary, fontSize: 18, fontWeight: t.weightBold }}
+      >+</button>
+    </div>
+  );
+
+  const Rating: DS['Rating'] = ({ value = 4, max = 5, size = 16 }) => (
+    <div style={{ display: 'inline-flex', alignItems: 'center', gap: 2 }}>
+      {Array.from({ length: max }, (_, i) => {
+        const filled = i < Math.floor(value);
+        const half = !filled && i < value;
+        return (
+          <svg key={i} width={size} height={size} viewBox="0 0 16 16" fill={filled ? '#F5A623' : half ? 'url(#half)' : 'none'} stroke={filled || half ? '#F5A623' : t.border} strokeWidth="1.5">
+            {half && (
+              <defs>
+                <linearGradient id="half" x1="0" x2="1" y1="0" y2="0">
+                  <stop offset="50%" stopColor="#F5A623" />
+                  <stop offset="50%" stopColor="transparent" />
+                </linearGradient>
+              </defs>
+            )}
+            <polygon points="8,1.5 10.1,5.8 14.9,6.5 11.4,9.9 12.2,14.7 8,12.5 3.8,14.7 4.6,9.9 1.1,6.5 5.9,5.8" />
+          </svg>
+        );
+      })}
+    </div>
+  );
+
   const ListRow: DS['ListRow'] = ({ children, divider = false, style = {} }) => (
     <div
       className="ds-press flex items-center justify-between rounded-md cursor-pointer hover:bg-black/[0.03]"
@@ -275,5 +316,5 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
     <IconBase name={name} size={size} color={color} style={iconStyle} />
   );
 
-  return { t, Text, Button, Card, Input, Badge, Chip, NavTab, ListRow, Thumb, Avatar, Icon };
+  return { t, Text, Button, Card, Input, Badge, Chip, NavTab, Stepper, Rating, ListRow, Thumb, Avatar, Icon };
 }

@@ -57,7 +57,7 @@ function Tile({ t, ds, title, children }: {
 export default function ComponentSheet({ token, category }: { token: BrandToken; category: ComponentCategory }) {
   const t = resolveTheme(token, 'mobile', 'wireframe');
   const ds = createDS(t, true);
-  const { Button, Input, Badge, Chip, Card, Text, Thumb, Avatar, ListRow } = ds;
+  const { Button, Input, Badge, Chip, Card, Text, Thumb, Avatar, ListRow, Stepper, Rating } = ds;
   const { space } = t;
   const all = category === 'all';
 
@@ -236,6 +236,39 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
             </div>
           </Tile>
 
+          <Tile t={t} ds={ds} title="가격 표시">
+            {/* 기본 가격 */}
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: space.xs }}>
+              <Text role="h2" weight={t.weightBold}>12,900원</Text>
+            </div>
+            {/* 할인가 */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: space.xxs }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: space.sm }}>
+                <Text role="bodySm" color={t.danger} weight={t.weightBold}>35%</Text>
+                <Text role="h2" weight={t.weightBold}>25,900원</Text>
+              </div>
+              <Text role="caption" color={t.textMuted} style={{ textDecoration: 'line-through' }}>39,800원</Text>
+            </div>
+            {/* 쿠팡/배민 스타일: 배달비 + 최소주문 */}
+            <div style={{ background: t.surfaceAlt, borderRadius: t.radius.card, padding: space.md, display: 'flex', flexDirection: 'column', gap: space.xs }}>
+              {[
+                { label: '배달비', value: '무료', accent: t.success },
+                { label: '최소주문', value: '12,000원', accent: t.textMain },
+                { label: '예상도착', value: '20~30분', accent: t.warning },
+              ].map(({ label, value, accent }) => (
+                <div key={label} style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Text role="caption" color={t.textSub}>{label}</Text>
+                  <Text role="caption" weight={t.weightBold} color={accent}>{value}</Text>
+                </div>
+              ))}
+            </div>
+            {/* 수량 조절 + 장바구니 */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: space.sm }}>
+              <Stepper value={2} />
+              <div style={{ flex: 1 }}><Button variant="primary" full>장바구니 담기</Button></div>
+            </div>
+          </Tile>
+
           <Tile t={t} ds={ds} title="리스트 & 프로필">
             {/* 리스트 항목 */}
             <div style={{ background: t.surface, borderRadius: t.radius.card, overflow: 'hidden', border: `1px solid ${t.border}` }}>
@@ -300,6 +333,50 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
             </div>
           </Tile>
 
+          <Tile t={t} ds={ds} title="별점 & 리뷰">
+            {/* 별점 입력 */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: space.xs }}>
+              <Text role="caption" color={t.textSub} weight={t.weightMedium}>평점 선택</Text>
+              <div style={{ display: 'flex', alignItems: 'center', gap: space.sm }}>
+                <Rating value={4} size={24} />
+                <Text role="bodySm" weight={t.weightBold}>4.0</Text>
+              </div>
+            </div>
+            {/* 리뷰 요약 */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: space.lg }}>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <Text role="h1" weight={t.weightBold} color={t.primary}>4.3</Text>
+                <Rating value={4.3} />
+                <Text role="caption" color={t.textMuted}>리뷰 1,284개</Text>
+              </div>
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: space.xxs }}>
+                {[5, 4, 3, 2, 1].map((star) => {
+                  const ratios: Record<number, number> = { 5: 0.62, 4: 0.21, 3: 0.10, 2: 0.04, 1: 0.03 };
+                  return (
+                    <div key={star} style={{ display: 'flex', alignItems: 'center', gap: space.xs }}>
+                      <Text role="caption" color={t.textMuted} style={{ width: 8, textAlign: 'right' }}>{star}</Text>
+                      <div style={{ flex: 1, height: 6, borderRadius: 9999, background: t.surfaceAlt }}>
+                        <div style={{ height: '100%', width: `${ratios[star] * 100}%`, borderRadius: 9999, background: '#F5A623' }} />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+            {/* 리뷰 카드 */}
+            <Card interactive={false}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: space.sm, marginBottom: space.xs }}>
+                <Avatar size={32} />
+                <div>
+                  <Text role="caption" weight={t.weightBold} style={{ display: 'block' }}>홍**</Text>
+                  <Rating value={5} size={12} />
+                </div>
+                <Text role="caption" color={t.textMuted} style={{ marginLeft: 'auto' }}>3일 전</Text>
+              </div>
+              <Text role="caption" color={t.textSub}>배송이 빠르고 품질이 너무 좋아요. 재구매 의사 있습니다!</Text>
+            </Card>
+          </Tile>
+
           <Tile t={t} ds={ds} title="상태 인디케이터">
             <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
               {[
@@ -321,6 +398,8 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
               { bg: t.textMain, fg: contrastOnHex(t.textMain), icon: 'checkCircle' as const, label: '저장되었습니다' },
               { bg: t.danger, fg: t.textOnImage, icon: 'alertCircle' as const, label: '오류가 발생했습니다' },
               { bg: t.success, fg: t.textOnImage, icon: 'checkCircle' as const, label: '결제가 완료되었습니다' },
+              { bg: t.warning, fg: '#1a1a1a', icon: 'alertCircle' as const, label: '재고가 부족합니다' },
+              { bg: t.info, fg: t.textOnImage, icon: 'checkCircle' as const, label: '새로운 업데이트가 있어요' },
             ]).map(({ bg, fg, icon, label }) => (
               <div key={label} style={{ display: 'flex', alignItems: 'center', gap: space.sm, padding: `${space.sm}px ${space.md}px`, borderRadius: t.radius.card, background: bg, color: fg }}>
                 <Icon name={icon} size={16} />

@@ -49,6 +49,10 @@ export interface ResolvedTheme {
   accent: string;
   success: string;
   danger: string;
+  warning: string;
+  info: string;
+  disabled: string;      // fill for disabled interactive elements
+  textDisabled: string;  // text color for disabled state
   textOnImage: string;   // text placed over imagery (inverse)
   scrim: string;         // gradient overlay for image legibility
 
@@ -248,36 +252,44 @@ const wl = lightTokens;
 const wd = darkTokens;
 
 const WIREFRAME_LIGHT = {
-  primary:     wl['--color-fill-normal'],        // #18181b — primary action
-  onPrimary:   wl['--color-text-on-fill'],       // #ffffff — text on dark fill
-  primaryTint: wl['--color-fill-brand-weak'],    // #f4f4f5 — brand tint
-  bg:          wl['--color-bg-normal'],          // #ffffff — page background
-  surface:     wl['--color-bg-elevated'],        // #ffffff — card / elevated surface
-  surfaceAlt:  wl['--color-fill-neutral'],       // #f4f4f5 — recessed / alt surface
-  textMain:    wl['--color-text-normal'],        // #09090b
-  textSub:     wl['--color-text-alternative'],   // #52525b
-  textMuted:   wl['--color-text-assistive'],     // #a0a0ab
-  border:      wl['--color-border-normal'],      // #e4e4e7
-  accent:      wl['--color-fill-accent'],        // #7c3aed
-  success:     wl['--color-fill-success'],       // #16a34a
-  danger:      wl['--color-fill-danger'],        // #dc2626
+  primary:      wl['--color-fill-normal'],
+  onPrimary:    wl['--color-text-on-fill'],
+  primaryTint:  wl['--color-fill-brand-weak'],
+  bg:           wl['--color-bg-normal'],
+  surface:      wl['--color-bg-elevated'],
+  surfaceAlt:   wl['--color-fill-neutral'],
+  textMain:     wl['--color-text-normal'],
+  textSub:      wl['--color-text-alternative'],
+  textMuted:    wl['--color-text-assistive'],
+  border:       wl['--color-border-normal'],
+  accent:       wl['--color-fill-accent'],
+  success:      wl['--color-fill-success'],
+  danger:       wl['--color-fill-danger'],
+  warning:      wl['--color-fill-warning'],
+  info:         wl['--color-fill-info'],
+  disabled:     wl['--color-fill-neutral-alt'],
+  textDisabled: wl['--color-text-disabled'],
 };
 
 // Dark-background wireframe variant
 const WIREFRAME_DARK = {
-  primary:     wd['--color-fill-normal'],
-  onPrimary:   wd['--color-text-on-fill'],
-  primaryTint: wd['--color-fill-brand-weak'],
-  bg:          wd['--color-bg-normal'],
-  surface:     wd['--color-bg-elevated'],
-  surfaceAlt:  wd['--color-fill-neutral-alt'],
-  textMain:    wd['--color-text-normal'],
-  textSub:     wd['--color-text-alternative'],
-  textMuted:   wd['--color-text-assistive'],
-  border:      wd['--color-border-normal'],
-  accent:      wd['--color-fill-accent'],
-  success:     wd['--color-fill-success'],
-  danger:      wd['--color-fill-danger'],
+  primary:      wd['--color-fill-normal'],
+  onPrimary:    wd['--color-text-on-fill'],
+  primaryTint:  wd['--color-fill-brand-weak'],
+  bg:           wd['--color-bg-normal'],
+  surface:      wd['--color-bg-elevated'],
+  surfaceAlt:   wd['--color-fill-neutral-alt'],
+  textMain:     wd['--color-text-normal'],
+  textSub:      wd['--color-text-alternative'],
+  textMuted:    wd['--color-text-assistive'],
+  border:       wd['--color-border-normal'],
+  accent:       wd['--color-fill-accent'],
+  success:      wd['--color-fill-success'],
+  danger:       wd['--color-fill-danger'],
+  warning:      wd['--color-fill-warning'],
+  info:         wd['--color-fill-info'],
+  disabled:     wd['--color-fill-neutral-alt'],
+  textDisabled: wd['--color-text-disabled'],
 };
 
 /* ── main resolver ── */
@@ -364,8 +376,12 @@ export function resolveTheme(
     textMuted: findColor(c, /비활성 텍스트|플레이스홀더|힌트/, isDark ? '#606060' : '#9aa0a6'),
     border: findColor(c, /구분선|보더|^선$/, isDark ? '#333333' : '#e5e7eb'),
     accent,
-    success: findColor(c, /성공|증가|긍정/, '#27B853'),
-    danger: findColor(c, /에러|위험|감소|부정/, '#F04452'),
+    success:      findColor(c, /성공|증가|긍정/, '#27B853'),
+    danger:       findColor(c, /에러|위험|감소|부정/, '#F04452'),
+    warning:      '#F5A623',
+    info:         '#3182F6',
+    disabled:     isDark ? '#2a2a2a' : '#f0f0f2',
+    textDisabled: isDark ? '#505050' : '#b0b0b8',
   };
 
   const wireframePalette = isDark ? WIREFRAME_DARK : WIREFRAME_LIGHT;
