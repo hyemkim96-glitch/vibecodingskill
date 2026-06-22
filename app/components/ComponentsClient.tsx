@@ -13,8 +13,8 @@ export default function ComponentsClient() {
   const [active, setActive] = useState<ComponentCategory>('buttons');
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex flex-col" style={{ gap: t.space.xs }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.xl }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.sm }}>
         <Text role="caption" weight={t.weightMedium} style={{ letterSpacing: '0.1em', textTransform: 'uppercase', color: t.textSub }}>
           Components
         </Text>
@@ -26,7 +26,7 @@ export default function ComponentsClient() {
       {/* Tab bar — shared PillTabs */}
       <PillTabs tabs={COMPONENT_CATEGORIES} active={active} onChange={setActive} />
 
-      <div className="rounded-lg overflow-hidden" style={{ border: '1px solid var(--color-graphite)' }}>
+      <div style={{ borderRadius: t.radius.card, overflow: 'hidden', border: `1px solid ${t.border}` }}>
         <ComponentSheet token={representative} category={active} />
       </div>
     </div>

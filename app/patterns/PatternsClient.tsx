@@ -17,9 +17,10 @@ export default function PatternsClient() {
   const ds = createDS(theme, true);
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex flex-col" style={{ gap: theme.space.xs }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: theme.space.xl }}>
+      {/* 헤더 */}
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: theme.space.lg }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: theme.space.sm }}>
           <ds.Text role="caption" weight={theme.weightMedium} style={{ letterSpacing: '0.1em', textTransform: 'uppercase', color: theme.textSub }}>
             UI Patterns
           </ds.Text>
@@ -28,7 +29,7 @@ export default function PatternsClient() {
           </ds.Text>
         </div>
         {/* 플랫폼 토글 */}
-        <div className="flex shrink-0" style={{ gap: theme.space.xs }}>
+        <div style={{ display: 'flex', flexShrink: 0, gap: theme.space.sm }}>
           {(['mobile', 'web'] as const).map((p) => (
             <button key={p} onClick={() => setPlatform(p)} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
               <ds.Chip active={platform === p}>{p === 'mobile' ? '모바일' : '웹'}</ds.Chip>
@@ -37,17 +38,15 @@ export default function PatternsClient() {
         </div>
       </div>
 
-      {/* 패턴 탭 바 — shared PillTabs */}
       <PillTabs tabs={PATTERN_TYPES} active={activePattern} onChange={setActivePattern} />
 
       {/* 패턴 렌더 */}
-      <div
-        className="rounded-lg overflow-hidden"
-        style={{
-          border: `1px solid ${theme.border}`,
-          maxWidth: platform === 'mobile' ? 390 : '100%',
-        }}
-      >
+      <div style={{
+        borderRadius: theme.radius.card,
+        overflow: 'hidden',
+        border: `1px solid ${theme.border}`,
+        maxWidth: platform === 'mobile' ? 390 : '100%',
+      }}>
         <div className="ds-root" style={motionVars(theme)}>
           {renderPattern(activePattern, ds, platform)}
         </div>
