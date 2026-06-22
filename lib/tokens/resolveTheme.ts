@@ -230,12 +230,14 @@ function resolveType(
   role: RegExp,
   weight: number,
   fallbackSize: number,
+  fallbackLineHeight = 1.6,
+  fallbackLetterSpacing = '-0.01em',
 ): ResolvedType {
   const found = sizes.find((s) => role.test(s.role));
   return {
     size: px(found?.size, fallbackSize),
-    lineHeight: found ? (parseFloat(found.lineHeight) || 1.4) : 1.4,
-    letterSpacing: found?.letterSpacing ?? '0',
+    lineHeight: found ? (parseFloat(found.lineHeight) || fallbackLineHeight) : fallbackLineHeight,
+    letterSpacing: found?.letterSpacing ?? fallbackLetterSpacing,
     weight,
   };
 }
@@ -384,12 +386,13 @@ export function resolveTheme(
     weightMedium,
     weightBold,
     type: {
-      display: resolveType(sizes, /display/i,                    weightBold,   28),
-      h1:      resolveType(sizes, /heading\s*1|h1|제목\s*1/i,   weightBold,   22),
-      h2:      resolveType(sizes, /heading\s*2|h2|제목\s*2/i,   weightBold,   18),
-      body:    resolveType(sizes, /body\s*1|본문\s*1|^body$/i,  weightRegular, 16),
-      bodySm:  resolveType(sizes, /body\s*2|본문\s*2/i,         weightRegular, 14),
-      caption: resolveType(sizes, /caption|캡션/i,              weightRegular, 12),
+      //                 role pattern                             weight          size  lh     ls
+      display: resolveType(sizes, /display/i,                    weightBold,     36,   1.25, '-0.04em'),
+      h1:      resolveType(sizes, /heading\s*1|h1|제목\s*1/i,   weightBold,     26,   1.35, '-0.025em'),
+      h2:      resolveType(sizes, /heading\s*2|h2|제목\s*2/i,   weightBold,     20,   1.40, '-0.015em'),
+      body:    resolveType(sizes, /body\s*1|본문\s*1|^body$/i,  weightRegular,  16,   1.65, '-0.01em'),
+      bodySm:  resolveType(sizes, /body\s*2|본문\s*2/i,         weightRegular,  14,   1.60, '-0.005em'),
+      caption: resolveType(sizes, /caption|캡션/i,              weightRegular,  12,   1.50,  '0em'),
     },
 
     space,
