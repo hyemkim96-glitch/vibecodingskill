@@ -15,15 +15,26 @@ import { Icon } from '@/components/icons';
  * All tiles are built from DS primitives — the same atoms the patterns use.
  */
 
-export type ComponentCategory = 'buttons' | 'inputs' | 'cards' | 'feedback' | 'navigation';
+export type ComponentCategory = 'all' | 'buttons' | 'inputs' | 'cards' | 'feedback' | 'navigation';
 
 export const COMPONENT_CATEGORIES: { key: ComponentCategory; label: string }[] = [
+  { key: 'all',        label: '전체' },
   { key: 'buttons',    label: '버튼 & 액션' },
   { key: 'inputs',     label: '입력 & 폼' },
   { key: 'cards',      label: '카드 & 리스트' },
   { key: 'feedback',   label: '피드백' },
   { key: 'navigation', label: '내비게이션' },
 ];
+
+/** Section label shown only in "전체" view to separate category groups. */
+function SectionHeading({ t, show, children }: { t: ReturnType<typeof resolveTheme>; show: boolean; children: React.ReactNode }) {
+  if (!show) return null;
+  return (
+    <div style={{ marginBottom: t.space.md, marginTop: t.space.sm }}>
+      <span style={{ ...typeStyle(t.type.bodySm), color: t.textMain, fontWeight: t.weightBold }}>{children}</span>
+    </div>
+  );
+}
 
 function Tile({ t, ds, title, children }: {
   t: ReturnType<typeof resolveTheme>;
@@ -48,10 +59,13 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
   const ds = createDS(t, true);
   const { Button, Input, Badge, Chip, Card, Text, Thumb, Avatar, ListRow } = ds;
   const { space } = t;
+  const all = category === 'all';
 
   return (
-    <div className="ds-root" style={{ ...motionVars(t), background: t.surfaceAlt, padding: t.containerPad, fontFamily: t.font }}>
-      {category === 'buttons' && (
+    <div className="ds-root flex flex-col" style={{ ...motionVars(t), background: t.surfaceAlt, padding: t.containerPad, fontFamily: t.font, gap: all ? space.lg : 0 }}>
+      {(all || category === 'buttons') && (
+        <section>
+        <SectionHeading t={t} show={all}>버튼 & 액션</SectionHeading>
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 items-start" style={{ gap: space.md }}>
 
           <Tile t={t} ds={ds} title="기본 버튼">
@@ -86,9 +100,12 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
           </Tile>
 
         </div>
+        </section>
       )}
 
-      {category === 'inputs' && (
+      {(all || category === 'inputs') && (
+        <section>
+        <SectionHeading t={t} show={all}>입력 & 폼</SectionHeading>
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 items-start" style={{ gap: space.md }}>
 
           <Tile t={t} ds={ds} title="텍스트 입력">
@@ -175,9 +192,12 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
           </Tile>
 
         </div>
+        </section>
       )}
 
-      {category === 'cards' && (
+      {(all || category === 'cards') && (
+        <section>
+        <SectionHeading t={t} show={all}>카드 & 리스트</SectionHeading>
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 items-start" style={{ gap: space.md }}>
 
           <Tile t={t} ds={ds} title="기본 카드">
@@ -255,9 +275,12 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
           </Tile>
 
         </div>
+        </section>
       )}
 
-      {category === 'feedback' && (
+      {(all || category === 'feedback') && (
+        <section>
+        <SectionHeading t={t} show={all}>피드백</SectionHeading>
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 items-start" style={{ gap: space.md }}>
 
           <Tile t={t} ds={ds} title="배지">
@@ -356,9 +379,12 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
           </Tile>
 
         </div>
+        </section>
       )}
 
-      {category === 'navigation' && (
+      {(all || category === 'navigation') && (
+        <section>
+        <SectionHeading t={t} show={all}>내비게이션</SectionHeading>
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 items-start" style={{ gap: space.md }}>
 
           <Tile t={t} ds={ds} title="탑 내비게이션 바">
@@ -456,6 +482,7 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
           </Tile>
 
         </div>
+        </section>
       )}
     </div>
   );

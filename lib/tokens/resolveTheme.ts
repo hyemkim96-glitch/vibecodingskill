@@ -367,7 +367,9 @@ export function resolveTheme(
   return {
     ...palette,
 
-    font: p.typography.family,
+    font: mode === 'wireframe'
+      ? "'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, sans-serif"
+      : p.typography.family,
     weightRegular,
     weightMedium,
     weightBold,

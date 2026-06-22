@@ -178,7 +178,7 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
           fontSize: Math.max(10, t.type.caption.size - 1),
           lineHeight: 1,
           fontWeight: t.weightBold,
-          // optical centering: SUIT glyphs sit high in the line box, so add
+          // optical centering: Korean glyphs sit high in the line box, so add
           // extra top padding to push text down to the visual center
           padding: `5px ${space.xs + 3}px 3px`,
           borderRadius: t.radius.badge,

@@ -51,11 +51,13 @@ export default function PatternsClient() {
           <button
             key={key}
             onClick={() => setActivePattern(key)}
-            className="shrink-0 inline-flex items-center justify-center text-xs px-5 rounded-full cursor-pointer transition-all"
+            className="shrink-0 inline-flex items-center justify-center text-xs rounded-full cursor-pointer transition-all"
             style={{
               lineHeight: 1,
               paddingTop: 11,
               paddingBottom: 9,
+              paddingLeft: 22,
+              paddingRight: 22,
               color: activePattern === key ? 'var(--color-void)' : 'var(--color-ash)',
               fontWeight: activePattern === key ? 600 : 400,
               background: activePattern === key ? 'var(--color-bone)' : 'transparent',
