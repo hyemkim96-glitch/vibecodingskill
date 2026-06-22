@@ -49,7 +49,8 @@ export default function FoundationClient() {
       {/* Tab bar — shared PillTabs */}
       <PillTabs tabs={CATEGORIES} active={active} onChange={setActive} />
 
-      <div className="rounded-lg overflow-hidden p-5" style={{ border: '1px solid var(--color-graphite)', background: 'var(--color-carbon)' }}>
+      {/* 패널 배경은 off-white(void) — 흰색 스와치 카드가 거터로 또렷이 분리되도록 */}
+      <div className="rounded-lg overflow-hidden p-5" style={{ border: '1px solid var(--color-graphite)', background: 'var(--color-void)' }}>
         {active === 'color' && <ColorPanel t={t} />}
         {active === 'type' && <TypePanel t={t} />}
         {active === 'space' && <SpacePanel t={t} />}

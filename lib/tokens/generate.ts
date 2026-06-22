@@ -260,6 +260,72 @@ color: #ffffff
 \`\`\``;
 }
 
+/**
+ * 검증된 디자인 시스템 원칙 — 이 서비스를 구축하며 겪은 시행착오에서
+ * 도출한 규칙을 각 브랜드 MD에 맞춤 적용한다. (품질 검사 엔진과 1:1 대응)
+ */
+function verifiedPrinciples(token: BrandToken, p: PlatformToken): string {
+  // 브랜드 성격에 따른 아이콘 라이브러리 추천 (resolveIconStyleFromToken과 동일 로직)
+  const s = (token.serviceTypes ?? []).join(' ');
+  const hint = (token.deep?.iconStyle ?? '').toLowerCase();
+  let iconLib: string;
+  let iconWhy: string;
+  if (/fill|bold|두꺼|굵/.test(hint) || /메신저|소셜|채팅|배달|푸드|지역|중고|커뮤니티|동네/.test(s)) {
+    iconLib = 'Phosphor';
+    iconWhy = '따뜻하고 둥근 표정 — 메신저·배달·지역 서비스의 친근함에 적합';
+  } else if (/tabler|editorial|각진/.test(hint) || token.category === '커머스') {
+    iconLib = 'Tabler';
+    iconWhy = '에디토리얼하고 또렷한 선 — 커머스의 상품 중심 위계에 적합';
+  } else {
+    iconLib = 'Lucide';
+    iconWhy = '깔끔하고 전문적인 스트로크 — 금융·검색·도구 서비스에 적합';
+  }
+
+  const primary = token.colors.find(c => /primary/i.test(c.role))?.value ?? '#111';
+  const family = p.typography.family;
+
+  return `## 디자인 시스템 원칙 (검증된 시행착오)
+
+> 이 서비스를 구축하며 반복해서 부딪힌 문제와 해결책. 신규 UI 제작 시 반드시 따른다.
+> 품질 검사 엔진(서비스 DS / 와이어프레임 컴포넌트 DS 2-검사기)이 자동 검증한다.
+
+### 1. 의존성 체인 — 단일 소스
+\`파운데이션(토큰) → 컴포넌트 → 패턴 → 브랜드 디자인\` 순으로만 의존한다.
+컴포넌트의 **컬러·타이포·여백은 반드시 파운데이션 토큰**을 따른다. 토큰 = 파운데이션.
+
+### 2. 아이콘은 라이브러리, 이모지 금지
+이모지(🔍❤👤 등)를 UI에 직접 쓰지 않는다. 모든 아이콘은 \`currentColor\`를 상속하는 아이콘 컴포넌트로 렌더.
+- **추천 라이브러리: ${iconLib}** — ${iconWhy}
+- 크기 기준 24×24px, 터치 영역 ${p.layout.touchTarget ?? '48px'} 확보.
+
+### 3. 폰트 — 한글 메트릭 안정화
+본문 typeface는 \`${family}\`, **폴백은 Pretendard**로 고정한다(한글 베이스라인 안정).
+배지·칩·탭 등 pill 안의 한글은 라인박스 상단에 붙어 떠 보이므로,
+\`line-height: 1\` + **위쪽 패딩을 아래보다 크게** 주어 광학적 중앙 정렬을 맞춘다.
+
+### 4. 상태는 색으로 표현
+Primary가 무채(예: \`${primary}\`) 기반이어도 **성공·경고·오류 상태는 유채색**(녹/황/적)으로 명확히 구분한다.
+색이 전혀 없으면 에러·유효성 표현이 불가능하다(shadcn 기본 컨벤션).
+
+### 5. 여백은 토큰만
+모든 \`gap / padding / margin\`은 스페이싱 스케일(\`xxs · xs · sm · md · lg · xl\`)을 사용한다.
+하드코딩 픽셀 여백 금지(레이아웃 래퍼 포함). 마이크로 간격은 \`xxs\`(2–3px).
+
+### 6. 컴포넌트 우선 · 비표준 금지
+신규 UI는 **디자인 시스템이 제공하는 표준 컴포넌트를 우선** 사용한다.
+없으면 임의로 만들지 말고 **승인 후 표준 컴포넌트로 추가**한 뒤 사용한다.
+
+### 7. 같은 레벨 UI = 같은 컴포넌트
+동일한 역할의 UI(예: 필터/카테고리 탭)는 페이지마다 다르게 구현하지 않고 **단일 공유 컴포넌트**를 쓴다.
+
+### 8. 이미지 위 텍스트는 오버레이 토큰
+이미지·썸네일 위 텍스트는 \`textOnImage\` / \`scrim\` 토큰을 쓴다. 하드코딩 \`#fff\`·\`rgba()\` 금지.
+
+### 9. 대비·접근성
+배지/칩은 brand 색의 낮은 투명도 위에 옅은 텍스트를 올리지 않는다(불투명 틴트 + 풀컬러 텍스트로 대비 확보).
+본문 대비 ≥ 4.5:1(WCAG AA), 포커스 링 2px.`;
+}
+
 /* ─────────────── main generator ─────────────── */
 
 function platformDesignMd(token: BrandToken, platform: 'mobile' | 'web'): string {
@@ -425,6 +491,10 @@ ${token.guidelines.dos.map(d => `- ${d}`).join('\n')}
 
 ### Don't
 ${token.guidelines.donts.map(d => `- ${d}`).join('\n')}
+
+---
+
+${verifiedPrinciples(token, p)}
 ${deepInteraction}${deepVoice}${deepBreakpoints}${deepStyle}${deepA11y}
 ---
 
