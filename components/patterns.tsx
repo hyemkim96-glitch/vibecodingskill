@@ -44,9 +44,9 @@ function PatternMain({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' }) {
       <Screen ds={ds}>
         <div className="relative" style={{ borderRadius: t.radius.card, overflow: 'hidden' }}>
           <Thumb h={120} />
-          <div style={{ position: 'absolute', inset: 0, padding: t.cardPad, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', background: 'linear-gradient(to top,rgba(0,0,0,0.4) 0%,transparent 60%)' }}>
-            <Text role="h2" weight={t.weightBold} color="#fff">오늘의 특가</Text>
-            <Text role="caption" color="rgba(255,255,255,0.8)">최대 70% 할인</Text>
+          <div style={{ position: 'absolute', inset: 0, padding: t.cardPad, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', background: t.scrim }}>
+            <Text role="h2" weight={t.weightBold} color={t.textOnImage}>오늘의 특가</Text>
+            <Text role="caption" color={t.textOnImage} style={{ opacity: 0.85 }}>최대 70% 할인</Text>
           </div>
         </div>
         <div className="flex overflow-hidden" style={{ gap: space.sm }}>
@@ -75,9 +75,9 @@ function PatternMain({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' }) {
       <div className="grid grid-cols-3" style={{ gap: space.md }}>
         <div className="col-span-2 relative" style={{ borderRadius: t.radius.card, overflow: 'hidden' }}>
           <Thumb h={160} />
-          <div style={{ position: 'absolute', inset: 0, padding: t.cardPad, display: 'flex', alignItems: 'flex-end', background: 'linear-gradient(to top,rgba(0,0,0,0.35) 0%,transparent 60%)' }}>
+          <div style={{ position: 'absolute', inset: 0, padding: t.cardPad, display: 'flex', alignItems: 'flex-end', background: t.scrim }}>
             <div>
-              <Text role="h1" weight={t.weightBold} color="#fff">오늘의 특가</Text>
+              <Text role="h1" weight={t.weightBold} color={t.textOnImage}>오늘의 특가</Text>
               <div style={{ marginTop: space.xs }}><Button variant="primary" size="sm">자세히 보기</Button></div>
             </div>
           </div>

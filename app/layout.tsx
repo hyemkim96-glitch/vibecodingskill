@@ -23,7 +23,7 @@ export default async function RootLayout({
 
   return (
     <html lang="ko">
-      {/* ⚠️ 수동 <head> 태그를 제거하고 Script를 <body> 안으로 이동합니다. */}
+      {/* NOTE: 수동 <head> 태그를 제거하고 Script를 <body> 안으로 이동합니다. */}
       <body>
         <Script
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1232237340609183"

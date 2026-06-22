@@ -22,6 +22,9 @@ export default function Navigation({ user }: { user: SupabaseUser | null }) {
                 <Link href="/tokens" className={`${styles.filterChip} ${pathname.startsWith('/tokens') ? styles.active : ''}`}>
                     템플릿
                 </Link>
+                <Link href="/foundation" className={`${styles.filterChip} ${pathname.startsWith('/foundation') ? styles.active : ''}`}>
+                    파운데이션
+                </Link>
                 <Link href="/components" className={`${styles.filterChip} ${pathname.startsWith('/components') ? styles.active : ''}`}>
                     컴포넌트
                 </Link>

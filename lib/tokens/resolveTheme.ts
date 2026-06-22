@@ -48,6 +48,8 @@ export interface ResolvedTheme {
   accent: string;
   success: string;
   danger: string;
+  textOnImage: string;   // text placed over imagery (inverse)
+  scrim: string;         // gradient overlay for image legibility
 
   // ── typography ──
   font: string;
@@ -366,6 +368,9 @@ export function resolveTheme(
 
   return {
     ...palette,
+
+    textOnImage: '#ffffff',
+    scrim: 'linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 60%)',
 
     font: mode === 'wireframe'
       ? "'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, sans-serif"

@@ -157,11 +157,11 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
             </div>
             <div className="flex items-center" style={{ gap: space.md }}>
               <div style={{ width: 44, height: 24, borderRadius: 9999, background: t.primary, position: 'relative' }}>
-                <span style={{ position: 'absolute', top: 2, right: 2, width: 20, height: 20, borderRadius: '9999px', background: '#fff' }} />
+                <span style={{ position: 'absolute', top: 2, right: 2, width: 20, height: 20, borderRadius: '9999px', background: t.textOnImage }} />
               </div>
               <Text role="bodySm">ON</Text>
               <div style={{ width: 44, height: 24, borderRadius: 9999, background: t.border, position: 'relative' }}>
-                <span style={{ position: 'absolute', top: 2, left: 2, width: 20, height: 20, borderRadius: '9999px', background: '#fff' }} />
+                <span style={{ position: 'absolute', top: 2, left: 2, width: 20, height: 20, borderRadius: '9999px', background: t.textOnImage }} />
               </div>
               <Text role="bodySm" color={t.textSub}>OFF</Text>
             </div>
@@ -331,8 +331,8 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
           <Tile t={t} ds={ds} title="토스트 & 알림">
             {([
               { bg: t.textMain, fg: contrastOnHex(t.textMain), icon: 'checkCircle' as const, label: '저장되었습니다' },
-              { bg: t.danger, fg: '#fff', icon: 'alertCircle' as const, label: '오류가 발생했습니다' },
-              { bg: t.success, fg: '#fff', icon: 'checkCircle' as const, label: '결제가 완료되었습니다' },
+              { bg: t.danger, fg: t.textOnImage, icon: 'alertCircle' as const, label: '오류가 발생했습니다' },
+              { bg: t.success, fg: t.textOnImage, icon: 'checkCircle' as const, label: '결제가 완료되었습니다' },
             ]).map(({ bg, fg, icon, label }) => (
               <div key={label} className="flex items-center" style={{ gap: space.sm, padding: `${space.sm}px ${space.md}px`, borderRadius: t.radius.card, background: bg, color: fg }}>
                 <Icon name={icon} size={16} />
