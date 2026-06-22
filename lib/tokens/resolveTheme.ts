@@ -88,6 +88,7 @@ export interface ResolvedTheme {
   isDark: boolean;
   category: string;
   isLocal: boolean;
+  iconStyle: 'lucide' | 'phosphor' | 'tabler';
 }
 
 /* ── helpers ── */
@@ -400,5 +401,18 @@ export function resolveTheme(
     isDark,
     category: token.category,
     isLocal,
+    iconStyle: resolveIconStyleFromToken(token),
   };
+}
+
+function resolveIconStyleFromToken(token: BrandToken): 'lucide' | 'phosphor' | 'tabler' {
+  const hint = token.deep?.iconStyle?.toLowerCase() ?? '';
+  if (/fill|bold|두꺼|굵/.test(hint)) return 'phosphor';
+  if (/tabler|editorial|각진/.test(hint)) return 'tabler';
+  if (/lucide|stroke|라인|선형/.test(hint)) return 'lucide';
+  // service type fallback
+  const s = (token.serviceTypes ?? []).join(' ');
+  if (/메신저|소셜|채팅|배달|푸드|지역|중고|커뮤니티|동네/.test(s)) return 'phosphor';
+  if (token.category === '커머스') return 'tabler';
+  return 'lucide';
 }
