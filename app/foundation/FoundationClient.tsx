@@ -74,15 +74,18 @@ const bodySm = (t: Theme) => ({
 
 function SectionTitle({ t, children }: { t: Theme; children: React.ReactNode }) {
   return (
-    <p style={{ ...cap(t), letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: t.weightBold, color: t.textMuted, marginBottom: t.space.md }}>
+    <p style={{ ...bodySm(t), fontWeight: t.weightBold, color: t.textMain, marginBottom: t.space.xl }}>
       {children}
     </p>
   );
 }
 
-function Section({ t, title, children }: { t: Theme; title: string; children: React.ReactNode }) {
+function Section({ t, title, children, first = false }: { t: Theme; title: string; children: React.ReactNode; first?: boolean }) {
   return (
-    <div>
+    <div style={{
+      paddingTop: first ? 0 : t.space.xl * 2,
+      borderTop: first ? 'none' : `1px solid ${t.border}`,
+    }}>
       <SectionTitle t={t}>{title}</SectionTitle>
       {children}
     </div>
@@ -137,10 +140,10 @@ function ColorPanel({ t }: { t: Theme }) {
   ];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.xl * 2 }}>
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
 
       {/* 1. 뉴트럴 팔레트 */}
-      <Section t={t} title="뉴트럴 팔레트 — OKLCH 기준 지각 균등 13단계">
+      <Section t={t} title="뉴트럴 팔레트 — OKLCH 기준 지각 균등 13단계" first>
         <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.xs }}>
           {/* 팔레트 바 */}
           <div style={{ display: 'flex', borderRadius: t.radius.card, overflow: 'hidden', height: 48, border: `1px solid ${t.border}` }}>
@@ -196,7 +199,7 @@ function ColorPanel({ t }: { t: Theme }) {
 
       {/* 2. 상태 컬러 */}
       <Section t={t} title="상태 컬러 — OKLCH chroma 0.14~0.20, WCAG AA 대비">
-        <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.md }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.lg }}>
           {statusGroups.map(({ name, label, s }) => (
             <div key={name} style={{ display: 'flex', alignItems: 'stretch', gap: t.space.md }}>
               {/* 레이블 */}
@@ -319,10 +322,10 @@ function TypePanel({ t }: { t: Theme }) {
   const pretendardWeights = [100, 200, 300, 400, 500, 600, 700, 800, 900];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.xl * 2 }}>
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
 
       {/* 1. 폰트 정보 */}
-      <Section t={t} title="서체 — Pretendard Variable">
+      <Section t={t} title="서체 — Pretendard Variable" first>
         <div style={{
           padding: t.space.lg,
           borderRadius: t.radius.card,
@@ -362,7 +365,7 @@ function TypePanel({ t }: { t: Theme }) {
                 gridTemplateColumns: '120px 1fr',
                 gap: t.space.lg,
                 alignItems: 'start',
-                padding: `${t.space.lg}px 0`,
+                padding: `${t.space.xl}px 0`,
                 borderBottom: `1px solid ${t.border}`,
               }}>
                 {/* 메타 */}
@@ -434,7 +437,7 @@ function TypePanel({ t }: { t: Theme }) {
                 display: 'flex',
                 alignItems: 'baseline',
                 gap: t.space.md,
-                padding: `${t.space.xs}px 0`,
+                padding: `${t.space.sm}px 0`,
                 borderBottom: `1px solid ${t.border}`,
                 opacity: isUsed ? 1 : 0.45,
               }}>
@@ -474,8 +477,8 @@ function SpacePanel({ t }: { t: Theme }) {
   ];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.xl * 2 }}>
-      <Section t={t} title="스페이싱 스케일">
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
+      <Section t={t} title="스페이싱 스케일" first>
         <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.md }}>
           {scale.map(({ name, value }) => (
             <div key={name} style={{ display: 'flex', alignItems: 'center', gap: t.space.md }}>
@@ -515,9 +518,9 @@ function RadiusPanel({ t }: { t: Theme }) {
   ];
 
   return (
-    <div>
-      <SectionTitle t={t}>라운드(반경)</SectionTitle>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: t.space.md }}>
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
+      <Section t={t} title="라운드(반경)" first>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: t.space.lg }}>
         {radii.map(({ name, value, desc }) => (
           <div key={name} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: t.space.sm }}>
             <div style={{ width: '100%', height: 64, background: t.surface, border: `1px solid ${t.border}`, borderRadius: value }} />
@@ -529,6 +532,7 @@ function RadiusPanel({ t }: { t: Theme }) {
           </div>
         ))}
       </div>
+      </Section>
     </div>
   );
 }
@@ -546,9 +550,9 @@ function MotionPanel({ t }: { t: Theme }) {
   ];
 
   return (
-    <div>
-      <SectionTitle t={t}>모션 토큰</SectionTitle>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: t.space.md }}>
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
+      <Section t={t} title="모션 토큰" first>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: t.space.lg }}>
         {items.map(({ name, value, desc }) => (
           <div key={name} style={{ borderRadius: t.radius.card, padding: t.space.md, border: `1px solid ${t.border}`, background: t.surface }}>
             <div style={{ ...cap(t), fontWeight: t.weightBold, color: t.textMain, marginBottom: t.space.xs }}>{name}</div>
@@ -557,6 +561,7 @@ function MotionPanel({ t }: { t: Theme }) {
           </div>
         ))}
       </div>
+      </Section>
     </div>
   );
 }
