@@ -87,6 +87,13 @@ export interface DS {
   Divider: React.FC<{ label?: string; vertical?: boolean; style?: React.CSSProperties }>;
   Skeleton: React.FC<{ w?: number | string; h?: number; radius?: number | string; style?: React.CSSProperties }>;
   Progress: React.FC<{ value?: number; max?: number; tone?: 'primary' | 'success' | 'danger'; label?: string }>;
+  TopBar: React.FC<{
+    title?: string;
+    back?: boolean;
+    actions?: Array<{ icon: IconName; label?: string }>;
+    transparent?: boolean;
+    style?: React.CSSProperties;
+  }>;
 }
 
 export function createDS(t: ResolvedTheme, wireframe = false): DS {
@@ -457,5 +464,42 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
     );
   };
 
-  return { t, Text, Button, Card, Input, Badge, Chip, NavTab, Stepper, Rating, ListRow, Thumb, Avatar, Icon, Checkbox, Switch, Radio, Textarea, Select, Divider, Skeleton, Progress };
+  const TopBar: DS['TopBar'] = ({ title, back = true, actions = [], transparent = false, style: extStyle = {} }) => (
+    <div
+      style={{
+        display: 'flex', alignItems: 'center',
+        padding: `${space.sm}px ${space.md}px`,
+        background: transparent ? 'transparent' : t.bg,
+        borderBottom: transparent ? 'none' : `1px solid ${t.border}`,
+        gap: space.sm,
+        ...extStyle,
+      }}
+    >
+      {back && (
+        <div className="ds-press" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 36, height: 36, cursor: 'pointer', borderRadius: t.radius.button, flexShrink: 0 }}>
+          <Icon name="arrowLeft" size={20} color={t.textMain} />
+        </div>
+      )}
+      <div style={{ flex: 1, overflow: 'hidden' }}>
+        {title && (
+          <span style={{ ...typeStyle(t.type.bodySm), fontWeight: t.weightBold, color: t.textMain, display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            {title}
+          </span>
+        )}
+      </div>
+      {actions.length > 0 && (
+        <div style={{ display: 'flex', alignItems: 'center', gap: space.xs, flexShrink: 0 }}>
+          {actions.map(({ icon, label }) => (
+            <div key={icon} className="ds-press" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 36, height: 36, cursor: 'pointer', borderRadius: t.radius.button }}>
+              {label
+                ? <span style={{ ...typeStyle(t.type.bodySm), color: t.primary, fontWeight: t.weightBold }}>{label}</span>
+                : <Icon name={icon} size={20} color={t.textMain} />}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+
+  return { t, Text, Button, Card, Input, Badge, Chip, NavTab, Stepper, Rating, ListRow, Thumb, Avatar, Icon, Checkbox, Switch, Radio, Textarea, Select, Divider, Skeleton, Progress, TopBar };
 }

@@ -24,11 +24,14 @@ export const PATTERN_TYPES: { key: PatternType; label: string; desc: string }[] 
   { key: 'payment', label: '결제',         desc: '결제 수단·금액 확인·완료' },
 ];
 
-function Screen({ ds, children }: { ds: DS; children: React.ReactNode }) {
+function Screen({ ds, topBar, children }: { ds: DS; topBar?: React.ReactNode; children: React.ReactNode }) {
   const { t } = ds;
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', background: t.bg, padding: t.containerPad, gap: t.stackGap, minHeight: t.isMobile ? 320 : 280, fontFamily: t.font }}>
-      {children}
+    <div style={{ display: 'flex', flexDirection: 'column', background: t.bg, minHeight: t.isMobile ? 320 : 280, fontFamily: t.font, overflow: 'hidden' }}>
+      {topBar}
+      <div style={{ display: 'flex', flexDirection: 'column', padding: t.containerPad, gap: t.stackGap, flex: 1 }}>
+        {children}
+      </div>
     </div>
   );
 }
@@ -282,9 +285,11 @@ function PatternDetail({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' })
     </div>
   );
 
+  const { TopBar } = ds;
+
   if (platform === 'mobile') {
     return (
-      <Screen ds={ds}>
+      <Screen ds={ds} topBar={<TopBar title="상품 상세" actions={[{ icon: 'send' }, { icon: 'more' }]} />}>
         <Thumb h={180} style={{ borderRadius: t.radius.card }} />
         {info}
         <div style={{ display: 'flex', gap: space.sm }}>
@@ -303,7 +308,7 @@ function PatternDetail({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' })
   }
 
   return (
-    <Screen ds={ds}>
+    <Screen ds={ds} topBar={<TopBar title="상품 상세" actions={[{ icon: 'send' }, { icon: 'more' }]} />}>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: space.lg }}>
         <Thumb h={220} style={{ borderRadius: t.radius.card }} />
         <div style={{ display: 'flex', flexDirection: 'column', gap: space.md }}>
@@ -320,7 +325,7 @@ function PatternDetail({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' })
 
 /* ── 내역 ── */
 function PatternHistory({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' }) {
-  const { t, Badge, Text, Thumb, ListRow, Icon } = ds;
+  const { t, Badge, Text, Thumb, ListRow, Icon, TopBar } = ds;
   const { space } = t;
 
   const items = [
@@ -330,11 +335,7 @@ function PatternHistory({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' }
   ];
 
   return (
-    <Screen ds={ds}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <Text role="bodySm" weight={t.weightBold}>주문 내역</Text>
-        <Text role="caption" color={t.primary} weight={t.weightBold}>전체 보기</Text>
-      </div>
+    <Screen ds={ds} topBar={<TopBar title="주문 내역" actions={[{ icon: 'filter', label: '필터' }]} />}>
       <div style={{ display: 'grid', gridTemplateColumns: platform === 'web' ? 'repeat(3, 1fr)' : 'repeat(2, 1fr)', gap: space.sm }}>
         {[{ label: '전체', count: 12, icon: 'package' as const }, { label: '진행중', count: 2, icon: 'truck' as const }, ...(platform === 'web' ? [{ label: '완료', count: 8, icon: 'checkCircle' as const }] : [])].map(({ label, count, icon }) => (
           <div key={label} style={{ background: t.surface, borderRadius: t.radius.card, border: `1px solid ${t.border}`, padding: t.cardPad, textAlign: 'center' as const }}>
@@ -368,7 +369,7 @@ function PatternHistory({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' }
 
 /* ── 마이페이지 ── */
 function PatternMyPage({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' }) {
-  const { t, Button, Badge, Text, Avatar, ListRow, Icon } = ds;
+  const { t, Button, Badge, Text, Avatar, ListRow, Icon, TopBar } = ds;
   const { space } = t;
 
   const menuItems: { label: string; icon: Parameters<typeof Icon>[0]['name']; danger?: boolean }[] = [
@@ -381,7 +382,7 @@ function PatternMyPage({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' })
   ];
 
   return (
-    <Screen ds={ds}>
+    <Screen ds={ds} topBar={<TopBar title="마이페이지" back={false} actions={[{ icon: 'settings' }]} />}>
       <div style={{ display: 'flex', alignItems: 'center', gap: space.md, padding: t.cardPad, background: t.surface, borderRadius: t.radius.card, border: `1px solid ${t.border}` }}>
         <Avatar size={52} />
         <div style={{ flex: 1 }}>
@@ -427,7 +428,7 @@ function PatternMyPage({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' })
 
 /* ── 결제 ── */
 function PatternPayment({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' }) {
-  const { t, Button, Chip, Text, Thumb, Icon } = ds;
+  const { t, Button, Chip, Text, Thumb, Icon, TopBar } = ds;
   const { space } = t;
 
   const summary = (
@@ -477,7 +478,7 @@ function PatternPayment({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' }
 
   if (platform === 'mobile') {
     return (
-      <Screen ds={ds}>
+      <Screen ds={ds} topBar={<TopBar title="결제하기" />}>
         {summary}
         {payMethods}
         <Button variant="primary" full>189,000원 결제하기</Button>
@@ -486,7 +487,7 @@ function PatternPayment({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' }
   }
 
   return (
-    <Screen ds={ds}>
+    <Screen ds={ds} topBar={<TopBar title="결제하기" />}>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: space.lg }}>
         <div>{summary}</div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: space.md }}>

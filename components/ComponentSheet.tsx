@@ -58,7 +58,7 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
   const t = resolveTheme(token, 'mobile', 'wireframe');
   const ds = createDS(t, true);
   const { Button, Input, Badge, Chip, Card, Text, Thumb, Avatar, ListRow, Stepper, Rating,
-          Checkbox, Switch, Radio, Textarea, Select, Divider, Skeleton, Progress } = ds;
+          Checkbox, Switch, Radio, Textarea, Select, Divider, Skeleton, Progress, TopBar } = ds;
   const { space } = t;
   const all = category === 'all';
 
@@ -461,22 +461,14 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', alignItems: 'start', gap: space.xl }}>
 
           <Tile t={t} ds={ds} title="탑 내비게이션 바">
-            <div style={{ background: t.bg, borderBottom: `1px solid ${t.border}`, padding: `${space.sm}px ${space.md}px` }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <span style={{ color: t.textSub, display: 'inline-flex' }}><Icon name="arrowLeft" size={18} /></span>
-                <Text role="bodySm" weight={t.weightBold}>페이지 제목</Text>
-                <Text role="bodySm" color={t.primary}>완료</Text>
-              </div>
-            </div>
-            <div style={{ background: t.bg, borderBottom: `1px solid ${t.border}`, padding: `${space.sm}px ${space.md}px` }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <Text role="h2" weight={t.weightBold}>홈</Text>
-                <div style={{ display: 'flex', gap: space.sm, color: t.textSub }}>
-                  <Icon name="search" size={18} />
-                  <Icon name="bell" size={18} />
-                </div>
-              </div>
-            </div>
+            {/* 상세 페이지: ← + 제목 + 우측 액션 */}
+            <TopBar title="상품 상세" actions={[{ icon: 'send' }, { icon: 'more' }]} />
+            {/* 텍스트 액션: ← + 제목 + 텍스트 버튼 */}
+            <TopBar title="배송지 입력" actions={[{ icon: 'close', label: '완료' }]} />
+            {/* 홈: 타이틀만 + 아이콘 */}
+            <TopBar title="홈" back={false} actions={[{ icon: 'search' }, { icon: 'bell' }]} />
+            {/* 뒤로만 (제목 없음) */}
+            <TopBar back />
           </Tile>
 
           <Tile t={t} ds={ds} title="탭 내비게이션">
