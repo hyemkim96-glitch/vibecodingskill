@@ -427,7 +427,45 @@ function TypePanel({ t }: { t: Theme }) {
         </div>
       </Section>
 
-      {/* 5. 웨이트 스케일 */}
+      {/* 5. 타이틀 계층 */}
+      <Section t={t} title="타이틀 계층 — 페이지·섹션·레이블 3단계">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+          {[
+            {
+              level: '페이지 타이틀',
+              desc: 'h1 · bold · 가장 강한 시각 강조',
+              node: <span style={{ ...typeStyle(t.type.h1), fontWeight: t.weightBold, color: t.textMain, fontFamily: t.font }}>페이지 타이틀</span>,
+            },
+            {
+              level: '섹션 타이틀',
+              desc: 'bodySm · bold · 콘텐츠 그룹 진입점',
+              node: <span style={{ ...typeStyle(t.type.bodySm), fontWeight: t.weightBold, color: t.textMain, fontFamily: t.font }}>섹션 타이틀</span>,
+            },
+            {
+              level: '인라인 레이블',
+              desc: 'caption · medium · 보조 정보',
+              node: <span style={{ ...typeStyle(t.type.caption), fontWeight: t.weightMedium, color: t.textSub, fontFamily: t.font }}>인라인 레이블 · 메타 정보</span>,
+            },
+          ].map(({ level, desc, node }) => (
+            <div key={level} style={{
+              display: 'grid',
+              gridTemplateColumns: '140px 1fr',
+              gap: t.space.lg,
+              alignItems: 'center',
+              padding: `${t.space.lg}px 0`,
+              borderBottom: `1px solid ${t.border}`,
+            }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.xxs }}>
+                <span style={{ ...cap(t), fontWeight: t.weightBold, color: t.textSub }}>{level}</span>
+                <span style={{ ...cap(t), color: t.textMuted }}>{desc}</span>
+              </div>
+              {node}
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      {/* 6. 웨이트 스케일 */}
       <Section t={t} title="웨이트 스케일 — Pretendard 100–900">
         <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.sm }}>
           {pretendardWeights.map((w) => {

@@ -15,7 +15,7 @@ import { Icon } from '@/components/icons';
  * All tiles are built from DS primitives — the same atoms the patterns use.
  */
 
-export type ComponentCategory = 'all' | 'buttons' | 'inputs' | 'cards' | 'feedback' | 'navigation' | 'layout';
+export type ComponentCategory = 'all' | 'buttons' | 'inputs' | 'cards' | 'feedback' | 'navigation';
 
 export const COMPONENT_CATEGORIES: { key: ComponentCategory; label: string }[] = [
   { key: 'all',        label: '전체' },
@@ -24,7 +24,6 @@ export const COMPONENT_CATEGORIES: { key: ComponentCategory; label: string }[] =
   { key: 'cards',      label: '카드 & 리스트' },
   { key: 'feedback',   label: '피드백' },
   { key: 'navigation', label: '내비게이션' },
-  { key: 'layout',     label: '레이아웃' },
 ];
 
 /** Section label shown only in "전체" view to separate category groups. */
@@ -553,87 +552,6 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
         </section>
       )}
 
-      {(all || category === 'layout') && (
-        <section>
-        <SectionHeading t={t} show={all}>레이아웃</SectionHeading>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', alignItems: 'start', gap: space.xl }}>
-
-          <Tile t={t} ds={ds} title="타이틀 계층">
-            {/* 페이지 타이틀 */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: space.xs }}>
-              <Text role="caption" weight={t.weightMedium} color={t.textMuted} style={{ letterSpacing: '0.1em', textTransform: 'uppercase' }}>카테고리 레이블</Text>
-              <Text role="h1" weight={t.weightBold}>페이지 타이틀</Text>
-              <Text role="bodySm" color={t.textSub}>페이지를 설명하는 한 줄 부제목이 여기에 위치합니다.</Text>
-            </div>
-            {/* 섹션 타이틀 */}
-            <div style={{ paddingTop: space.md, borderTop: `1px solid ${t.border}`, display: 'flex', flexDirection: 'column', gap: space.xs }}>
-              <Text role="bodySm" weight={t.weightBold}>섹션 타이틀</Text>
-              <Text role="caption" color={t.textSub}>섹션 내용을 설명하는 보조 텍스트입니다.</Text>
-            </div>
-            {/* 인라인 레이블 */}
-            <div style={{ paddingTop: space.md, borderTop: `1px solid ${t.border}`, display: 'flex', flexDirection: 'column', gap: space.xxs }}>
-              <Text role="caption" weight={t.weightMedium} color={t.textSub}>인라인 레이블</Text>
-              <Text role="caption" color={t.textMuted}>보조 설명 · 메타 정보</Text>
-            </div>
-          </Tile>
-
-          <Tile t={t} ds={ds} title="타일 (카드 컨테이너)">
-            {/* 타일 구조 예시 */}
-            <div style={{ border: `1px solid ${t.border}`, borderRadius: t.radius.card, padding: space.xl, background: t.surfaceAlt }}>
-              <Text role="bodySm" weight={t.weightBold} style={{ display: 'block', marginBottom: space.lg }}>타일 제목</Text>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: space.md }}>
-                <div style={{ height: 36, borderRadius: t.radius.input, background: t.border }} />
-                <div style={{ height: 36, borderRadius: t.radius.input, background: t.border }} />
-                <div style={{ height: 36, borderRadius: t.radius.input, background: t.border }} />
-              </div>
-            </div>
-            <Text role="caption" color={t.textMuted}>padding: xl(24px) · 제목 하단 gap: lg(16px) · 항목 간 gap: md(12px)</Text>
-          </Tile>
-
-          <Tile t={t} ds={ds} title="그리드 레이아웃">
-            {/* 2열 그리드 */}
-            <div>
-              <Text role="caption" weight={t.weightMedium} color={t.textSub} style={{ display: 'block', marginBottom: space.sm }}>2열</Text>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: space.md }}>
-                {[0,1,2,3].map(i => <div key={i} style={{ height: 48, borderRadius: t.radius.card, background: t.surfaceAlt, border: `1px solid ${t.border}` }} />)}
-              </div>
-            </div>
-            {/* 3열 그리드 */}
-            <div>
-              <Text role="caption" weight={t.weightMedium} color={t.textSub} style={{ display: 'block', marginBottom: space.sm }}>3열</Text>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: space.md }}>
-                {[0,1,2,3,4,5].map(i => <div key={i} style={{ height: 40, borderRadius: t.radius.card, background: t.surfaceAlt, border: `1px solid ${t.border}` }} />)}
-              </div>
-            </div>
-            {/* auto-fill */}
-            <div>
-              <Text role="caption" weight={t.weightMedium} color={t.textSub} style={{ display: 'block', marginBottom: space.sm }}>auto-fill (minmax 80px)</Text>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(80px, 1fr))', gap: space.sm }}>
-                {[0,1,2,3,4].map(i => <div key={i} style={{ height: 32, borderRadius: t.radius.badge, background: t.primaryTint, border: `1px solid ${t.border}` }} />)}
-              </div>
-            </div>
-          </Tile>
-
-          <Tile t={t} ds={ds} title="여백 스케일">
-            {[
-              { name: 'xxs', value: space.xxs },
-              { name: 'xs',  value: space.xs  },
-              { name: 'sm',  value: space.sm  },
-              { name: 'md',  value: space.md  },
-              { name: 'lg',  value: space.lg  },
-              { name: 'xl',  value: space.xl  },
-            ].map(({ name, value }) => (
-              <div key={name} style={{ display: 'flex', alignItems: 'center', gap: space.md }}>
-                <Text role="caption" color={t.textMuted} style={{ width: 28, flexShrink: 0 }}>{name}</Text>
-                <div style={{ height: 10, width: Math.max(value, 2), background: t.primary, borderRadius: 2 }} />
-                <Text role="caption" color={t.textMuted}>{value}px</Text>
-              </div>
-            ))}
-          </Tile>
-
-        </div>
-        </section>
-      )}
     </div>
   );
 }
