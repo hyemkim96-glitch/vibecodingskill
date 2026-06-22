@@ -105,6 +105,13 @@ export interface DS {
     action?: string;
     style?: React.CSSProperties;
   }>;
+  TokenCard: React.FC<{
+    name: string;
+    value: string;
+    desc?: string;
+    swatch?: string;
+    style?: React.CSSProperties;
+  }>;
 }
 
 export function createDS(t: ResolvedTheme, wireframe = false): DS {
@@ -545,5 +552,14 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
     );
   };
 
-  return { t, Text, Button, Card, Input, Badge, Chip, NavTab, Stepper, Rating, ListRow, Thumb, Avatar, Icon, Checkbox, Switch, Radio, Textarea, Select, Divider, Skeleton, Progress, TopBar, Table, Toast };
+  const TokenCard: DS['TokenCard'] = ({ name, value, desc, swatch, style }) => (
+    <div style={{ borderRadius: t.radius.card, padding: space.md, border: `1px solid ${t.border}`, background: t.surface, display: 'flex', flexDirection: 'column', gap: space.xs, ...style }}>
+      {swatch && <div style={{ width: '100%', height: 36, borderRadius: t.radius.badge, background: swatch, marginBottom: space.xs }} />}
+      <span style={{ ...typeStyle(t.type.caption), fontWeight: t.weightBold, color: t.textMain, fontFamily: 'monospace' }}>{name}</span>
+      <span style={{ ...typeStyle(t.type.caption), color: t.primary }}>{value}</span>
+      {desc && <span style={{ ...typeStyle(t.type.caption), color: t.textMuted }}>{desc}</span>}
+    </div>
+  );
+
+  return { t, Text, Button, Card, Input, Badge, Chip, NavTab, Stepper, Rating, ListRow, Thumb, Avatar, Icon, Checkbox, Switch, Radio, Textarea, Select, Divider, Skeleton, Progress, TopBar, Table, Toast, TokenCard };
 }
