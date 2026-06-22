@@ -6,7 +6,7 @@ import { User as SupabaseUser } from '@supabase/supabase-js';
 import { createClient } from '@/lib/supabase/client';
 import { serviceDS } from '@/lib/tokens/serviceTheme';
 
-const { Chip, Text, t } = serviceDS;
+const { NavTab, Text, t } = serviceDS;
 
 const NAV_LINKS = [
   { href: '/tokens',     label: '템플릿' },
@@ -30,9 +30,8 @@ export default function Navigation({ user }: { user: SupabaseUser | null }) {
     <header style={{
       height: 'var(--nav-height)',
       borderBottom: `1px solid ${t.border}`,
-      display: 'grid',
-      gridTemplateColumns: '1fr auto 1fr',
-      alignItems: 'center',
+      display: 'flex',
+      alignItems: 'stretch',
       padding: `0 ${t.containerPad}px`,
       background: t.bg,
       position: 'fixed',
@@ -41,40 +40,40 @@ export default function Navigation({ user }: { user: SupabaseUser | null }) {
       right: 0,
       zIndex: 100,
     }}>
-      {/* Left — nav links */}
-      <nav style={{ display: 'flex', alignItems: 'center', gap: t.space.sm }}>
-        {NAV_LINKS.map(({ href, label }) => (
-          <Link key={href} href={href} style={{ textDecoration: 'none' }}>
-            <Chip active={pathname.startsWith(href)}>{label}</Chip>
-          </Link>
-        ))}
-      </nav>
-
-      {/* Center — logo */}
-      <Link href="/" style={{ textDecoration: 'none' }}>
-        <Text role="bodySm" weight={t.weightRegular} style={{ letterSpacing: '0.08em', whiteSpace: 'nowrap', color: t.textMain }}>
+      {/* Logo */}
+      <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', paddingRight: t.space.xl }}>
+        <Text role="bodySm" weight={t.weightBold} style={{ letterSpacing: '0.12em', whiteSpace: 'nowrap', color: t.textMain }}>
           DESIGN MD
         </Text>
       </Link>
 
-      {/* Right — auth */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: t.space.md, justifyContent: 'flex-end' }}>
+      {/* Nav links — underline-style NavTab components */}
+      <nav style={{ display: 'flex', alignItems: 'stretch', flex: 1 }}>
+        {NAV_LINKS.map(({ href, label }) => (
+          <Link key={href} href={href} style={{ textDecoration: 'none', display: 'flex', alignItems: 'stretch' }}>
+            <NavTab active={pathname.startsWith(href)}>{label}</NavTab>
+          </Link>
+        ))}
+      </nav>
+
+      {/* Auth */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: t.space.md }}>
         {user ? (
           <>
             <Link href="/profile" style={{ textDecoration: 'none' }}>
-              <Text role="caption" color={t.textSub} style={{ cursor: 'pointer', whiteSpace: 'nowrap' }}>
+              <Text role="caption" color={t.textMuted} style={{ cursor: 'pointer', whiteSpace: 'nowrap' }}>
                 프로필
               </Text>
             </Link>
             <button onClick={handleLogout} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
-              <Text role="caption" color={t.textSub} style={{ whiteSpace: 'nowrap' }}>
+              <Text role="caption" color={t.textMuted} style={{ whiteSpace: 'nowrap' }}>
                 로그아웃
               </Text>
             </button>
           </>
         ) : (
           <Link href="/auth/login" style={{ textDecoration: 'none' }}>
-            <Text role="caption" color={t.textSub} style={{ cursor: 'pointer', whiteSpace: 'nowrap' }}>
+            <Text role="caption" color={t.textMuted} style={{ cursor: 'pointer', whiteSpace: 'nowrap' }}>
               로그인
             </Text>
           </Link>

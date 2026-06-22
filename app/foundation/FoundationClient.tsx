@@ -52,7 +52,7 @@ export default function FoundationClient() {
       <PillTabs tabs={CATEGORIES} active={active} onChange={setActive} />
 
       {/* 패널 배경은 off-white(void) — 흰색 스와치 카드가 거터로 또렷이 분리되도록 */}
-      <div className="rounded-lg overflow-hidden p-5" style={{ border: '1px solid var(--color-graphite)', background: 'var(--color-void)' }}>
+      <div style={{ borderRadius: t.radius.card, overflow: 'hidden', padding: t.containerPad, border: `1px solid ${t.border}`, background: t.surfaceAlt }}>
         {active === 'color' && <ColorPanel t={t} />}
         {active === 'type' && <TypePanel t={t} />}
         {active === 'space' && <SpacePanel t={t} />}
@@ -116,13 +116,13 @@ function ColorPanel({ t }: { t: Theme }) {
       {groups.map((g) => (
         <div key={g.title}>
           <GroupTitle>{g.title}</GroupTitle>
-          <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: t.space.sm }}>
             {g.tokens.map((tok) => (
-              <div key={tok.name} className="rounded-lg overflow-hidden" style={{ border: '1px solid var(--color-graphite)' }}>
+              <div key={tok.name} style={{ borderRadius: t.radius.card, overflow: 'hidden', border: `1px solid ${t.border}` }}>
                 <div style={{ height: 56, background: tok.value }} />
-                <div className="px-3 py-2" style={{ background: 'var(--color-carbon)' }}>
-                  <div className="text-xs" style={{ color: 'var(--color-bone)', fontWeight: 600 }}>{tok.name}</div>
-                  <div className="text-xs font-mono" style={{ color: 'var(--color-ash)' }}>{tok.value}</div>
+                <div style={{ padding: `${t.space.sm}px ${t.space.md}px`, background: t.surface, display: 'flex', flexDirection: 'column', gap: t.space.xxs }}>
+                  <span style={{ fontSize: 11, fontWeight: t.weightBold, color: t.textMain, lineHeight: 1.4 }}>{tok.name}</span>
+                  <span style={{ fontSize: 10, fontFamily: 'monospace', color: t.textMuted, lineHeight: 1.4 }}>{tok.value}</span>
                 </div>
               </div>
             ))}

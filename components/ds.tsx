@@ -68,6 +68,7 @@ export interface DS {
     tone?: 'solid' | 'soft' | 'accent' | 'muted';
   }>;
   Chip: React.FC<{ children: React.ReactNode; active?: boolean }>;
+  NavTab: React.FC<{ children: React.ReactNode; active?: boolean }>;
   ListRow: React.FC<{
     children: React.ReactNode;
     divider?: boolean;
@@ -214,6 +215,30 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
     </span>
   );
 
+  const NavTab: DS['NavTab'] = ({ children, active = false }) => (
+    <span
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        fontSize: 12,
+        lineHeight: 1,
+        fontWeight: active ? t.weightBold : t.weightRegular,
+        letterSpacing: '0.04em',
+        color: active ? t.textMain : t.textMuted,
+        paddingTop: space.sm + 1,
+        paddingBottom: space.sm - 1,
+        paddingLeft: space.md,
+        paddingRight: space.md,
+        borderBottom: active ? `2px solid ${t.primary}` : '2px solid transparent',
+        whiteSpace: 'nowrap' as const,
+        cursor: 'pointer',
+        transition: 'color 0.15s, border-color 0.15s',
+      }}
+    >
+      {children}
+    </span>
+  );
+
   const ListRow: DS['ListRow'] = ({ children, divider = false, style = {} }) => (
     <div
       className="ds-press flex items-center justify-between rounded-md cursor-pointer hover:bg-black/[0.03]"
@@ -250,5 +275,5 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
     <IconBase name={name} size={size} color={color} style={iconStyle} />
   );
 
-  return { t, Text, Button, Card, Input, Badge, Chip, ListRow, Thumb, Avatar, Icon };
+  return { t, Text, Button, Card, Input, Badge, Chip, NavTab, ListRow, Thumb, Avatar, Icon };
 }
