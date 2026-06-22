@@ -68,24 +68,19 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
         <SectionHeading t={t} show={all}>버튼 & 액션</SectionHeading>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', alignItems: 'start', gap: space.md }}>
 
-          <Tile t={t} ds={ds} title="기본 버튼">
+          <Tile t={t} ds={ds} title="버튼 & 액션">
+            {/* 변형 */}
             <Button variant="primary" full>Primary</Button>
             <Button variant="secondary" full>Secondary</Button>
             <Button variant="outline" full>Outline</Button>
             <Button variant="ghost" full>Ghost</Button>
             <Button variant="primary" full disabled>Disabled</Button>
-          </Tile>
-
-          <Tile t={t} ds={ds} title="버튼 크기">
-            <Button variant="primary" full>Large (기본)</Button>
-            <Button variant="primary" size="sm" full>Small</Button>
+            {/* 크기 */}
             <div style={{ display: 'flex', gap: space.sm }}>
-              <div style={{ flex: 1 }}><Button variant="primary" full>확인</Button></div>
-              <div style={{ flex: 1 }}><Button variant="secondary" full>취소</Button></div>
+              <div style={{ flex: 1 }}><Button variant="primary" size="sm" full>Small</Button></div>
+              <div style={{ flex: 1 }}><Button variant="secondary" size="sm" full>취소</Button></div>
             </div>
-          </Tile>
-
-          <Tile t={t} ds={ds} title="아이콘 버튼 & FAB">
+            {/* 아이콘 버튼 */}
             <div style={{ display: 'flex', alignItems: 'center', gap: space.sm }}>
               {(['arrowLeft', 'close', 'more', 'settings'] as const).map((ic) => (
                 <div key={ic} className="ds-press" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', width: 40, height: 40, borderRadius: t.radius.button, background: t.surface, border: `1px solid ${t.border}`, color: t.textMain }}>
@@ -93,6 +88,7 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
                 </div>
               ))}
             </div>
+            {/* FAB */}
             <div style={{ display: 'flex', gap: space.sm }}>
               <div className="ds-press" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', width: 56, height: 56, borderRadius: '9999px', background: t.primary, color: t.onPrimary }}><Icon name="plus" size={24} /></div>
               <div className="ds-press" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', width: 48, height: 48, borderRadius: '9999px', background: t.primary, color: t.onPrimary }}><Icon name="edit" size={18} /></div>
@@ -117,6 +113,26 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
                 <span style={{ ...typeStyle(t.type.bodySm), color: t.textMain }}>잘못된 입력값</span>
               </div>
               <span style={{ ...typeStyle(t.type.caption), color: t.danger }}>올바른 형식으로 입력해주세요</span>
+            </div>
+            {/* 검색 입력 */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: space.sm, background: t.surface, borderRadius: t.radius.chip, border: `1px solid ${t.border}`, padding: `${space.sm}px ${space.md}px`, color: t.textMuted }}>
+              <Icon name="search" size={16} />
+              <Text role="bodySm" color={t.textMuted}>검색어를 입력하세요</Text>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: space.sm, background: t.bg, borderRadius: t.radius.chip, border: `2px solid ${t.primary}`, padding: `${space.sm}px ${space.md}px` }}>
+              <Icon name="search" size={16} color={t.primary} />
+              <Text role="bodySm">검색 포커스 상태</Text>
+            </div>
+            {/* 텍스트에어리어 */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: space.xs }}>
+              <span style={{ ...typeStyle(t.type.caption), color: t.textMain, fontWeight: t.weightMedium }}>후기 작성</span>
+              <div style={{ border: `1px solid ${t.border}`, borderRadius: t.radius.input, padding: space.md, background: t.bg, minHeight: 80, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                <Text role="bodySm" color={t.textMuted}>내용을 입력해주세요…</Text>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Text role="caption" color={t.textMuted}>0 / 500</Text>
+                  <span style={{ color: t.textMuted, display: 'inline-flex' }}><Icon name="camera" size={14} /></span>
+                </div>
+              </div>
             </div>
           </Tile>
 
@@ -167,30 +183,6 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
             </div>
           </Tile>
 
-          <Tile t={t} ds={ds} title="검색 입력">
-            <div style={{ display: 'flex', alignItems: 'center', gap: space.sm, background: t.surface, borderRadius: t.radius.chip, border: `1px solid ${t.border}`, padding: `${space.sm}px ${space.md}px`, color: t.textMuted }}>
-              <Icon name="search" size={16} />
-              <Text role="bodySm" color={t.textMuted}>검색어를 입력하세요</Text>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: space.sm, background: t.bg, borderRadius: t.radius.chip, border: `2px solid ${t.primary}`, padding: `${space.sm}px ${space.md}px`, color: t.primary }}>
-              <Icon name="search" size={16} />
-              <Text role="bodySm">검색 포커스 상태</Text>
-            </div>
-          </Tile>
-
-          <Tile t={t} ds={ds} title="텍스트에어리어">
-            <div style={{ display: 'flex', flexDirection: 'column', gap: space.xs }}>
-              <span style={{ ...typeStyle(t.type.caption), color: t.textMain, fontWeight: t.weightMedium }}>후기 작성</span>
-              <div style={{ border: `1px solid ${t.border}`, borderRadius: t.radius.input, padding: space.md, background: t.bg, minHeight: 80, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                <Text role="bodySm" color={t.textMuted}>내용을 입력해주세요…</Text>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <Text role="caption" color={t.textMuted}>0 / 500</Text>
-                  <span style={{ color: t.textMuted, display: 'inline-flex' }}><Icon name="camera" size={14} /></span>
-                </div>
-              </div>
-            </div>
-          </Tile>
-
         </div>
         </section>
       )}
@@ -200,7 +192,8 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
         <SectionHeading t={t} show={all}>카드 & 리스트</SectionHeading>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', alignItems: 'start', gap: space.md }}>
 
-          <Tile t={t} ds={ds} title="기본 카드">
+          <Tile t={t} ds={ds} title="카드 변형">
+            {/* 기본 카드 */}
             <Card>
               <Text role="bodySm" weight={t.weightBold} style={{ display: 'block', marginBottom: space.xs }}>카드 제목</Text>
               <Text role="caption" color={t.textSub}>카드 본문 텍스트가 여기에 들어갑니다. 두 줄 이상이 될 수 있어요.</Text>
@@ -209,9 +202,7 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
               <Text role="bodySm" weight={t.weightBold} color={t.onPrimary} style={{ display: 'block', marginBottom: space.xs }}>강조 카드</Text>
               <Text role="caption" color={t.onPrimary} style={{ opacity: 0.8 }}>Primary 배경 위 카드</Text>
             </Card>
-          </Tile>
-
-          <Tile t={t} ds={ds} title="미디어 카드">
+            {/* 미디어 카드 */}
             <Card pad={false}>
               <Thumb h={80} />
               <div style={{ padding: space.md }}>
@@ -219,6 +210,7 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
                 <Text role="caption" color={t.textSub}>서브 텍스트 · 날짜</Text>
               </div>
             </Card>
+            {/* 그리드 카드 */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: space.sm }}>
               {[0, 1].map((i) => (
                 <Card key={i} pad={false}>
@@ -230,9 +222,22 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
                 </Card>
               ))}
             </div>
+            {/* 수평 스크롤 */}
+            <div style={{ display: 'flex', overflow: 'hidden', gap: space.sm }}>
+              {[0, 1, 2].map((i) => (
+                <div key={i} style={{ flexShrink: 0, width: 100, background: t.surface, borderRadius: t.radius.card, border: `1px solid ${t.border}`, overflow: 'hidden' }}>
+                  <Thumb h={60} />
+                  <div style={{ padding: space.sm }}>
+                    <Text role="caption" weight={t.weightMedium} style={{ display: 'block', marginBottom: space.xxs }}>카드 {i + 1}</Text>
+                    <Text role="caption" color={t.textSub}>12,000원</Text>
+                  </div>
+                </div>
+              ))}
+            </div>
           </Tile>
 
-          <Tile t={t} ds={ds} title="리스트 항목">
+          <Tile t={t} ds={ds} title="리스트 & 프로필">
+            {/* 리스트 항목 */}
             <div style={{ background: t.surface, borderRadius: t.radius.card, overflow: 'hidden', border: `1px solid ${t.border}` }}>
               {['첫 번째 항목', '두 번째 항목', '세 번째 항목'].map((item, i) => (
                 <ListRow key={item} divider={i < 2} style={{ paddingLeft: space.md, paddingRight: space.md }}>
@@ -247,9 +252,7 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
                 </ListRow>
               ))}
             </div>
-          </Tile>
-
-          <Tile t={t} ds={ds} title="프로필 / 유저 카드">
+            {/* 프로필 카드 */}
             <Card style={{ display: 'flex', alignItems: 'center', gap: space.md, flexDirection: 'row' }}>
               <Avatar size={48} />
               <div style={{ flex: 1 }}>
@@ -258,20 +261,6 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
               </div>
               <Button variant="outline" size="sm">팔로우</Button>
             </Card>
-          </Tile>
-
-          <Tile t={t} ds={ds} title="수평 스크롤 카드">
-            <div style={{ display: 'flex', overflow: 'hidden', gap: space.sm }}>
-              {[0, 1, 2].map((i) => (
-                <div key={i} style={{ flexShrink: 0, width: 100, background: t.surface, borderRadius: t.radius.card, border: `1px solid ${t.border}`, overflow: 'hidden' }}>
-                  <Thumb h={60} />
-                  <div style={{ padding: space.sm }}>
-                    <Text role="caption" weight={t.weightMedium} style={{ display: 'block', marginBottom: space.xxs }}>카드 {i + 1}</Text>
-                    <Text role="caption" color={t.textSub}>12,000원</Text>
-                  </div>
-                </div>
-              ))}
-            </div>
           </Tile>
 
         </div>
@@ -283,7 +272,8 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
         <SectionHeading t={t} show={all}>피드백</SectionHeading>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', alignItems: 'start', gap: space.md }}>
 
-          <Tile t={t} ds={ds} title="배지">
+          <Tile t={t} ds={ds} title="배지 & 칩">
+            {/* 배지 변형 */}
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: space.sm }}>
               <Badge tone="solid">Solid</Badge>
               <Badge tone="soft">Soft</Badge>
@@ -296,9 +286,7 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
               <Badge tone="muted">품절</Badge>
               <Badge tone="soft">35%</Badge>
             </div>
-          </Tile>
-
-          <Tile t={t} ds={ds} title="칩 & 필터">
+            {/* 칩 & 필터 */}
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: space.xs }}>
               <Chip active>전체</Chip>
               <Chip>인기순</Chip>
@@ -341,7 +329,8 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
             ))}
           </Tile>
 
-          <Tile t={t} ds={ds} title="프로그레스 & 로딩">
+          <Tile t={t} ds={ds} title="로딩 상태">
+            {/* 프로그레스 바 */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
               {[0.3, 0.65, 1].map((ratio) => (
                 <div key={ratio}>
@@ -355,15 +344,14 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
                 </div>
               ))}
             </div>
+            {/* 스피너 */}
             <div style={{ display: 'flex', alignItems: 'center', gap: space.md }}>
               {[20, 28, 36].map((sz) => (
                 <div key={sz} style={{ width: sz, height: sz, borderRadius: '9999px', border: `2.5px solid ${t.border}`, borderTopColor: t.primary }} />
               ))}
               <div style={{ flex: 1, height: 16, borderRadius: 8, background: `repeating-linear-gradient(90deg, ${t.surfaceAlt} 0, ${t.surface} 50%, ${t.surfaceAlt} 100%)` }} />
             </div>
-          </Tile>
-
-          <Tile t={t} ds={ds} title="스켈레톤">
+            {/* 스켈레톤 */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: space.sm }}>
                 <div style={{ width: 40, height: 40, borderRadius: '9999px', background: t.surfaceAlt }} />
@@ -406,7 +394,8 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
             </div>
           </Tile>
 
-          <Tile t={t} ds={ds} title="탭 바 (하단)">
+          <Tile t={t} ds={ds} title="탭 내비게이션">
+            {/* 하단 탭 바 */}
             <div style={{ background: t.bg, borderTop: `1px solid ${t.border}`, padding: `${space.sm}px ${space.md}px` }}>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)' }}>
                 {[
@@ -423,9 +412,7 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
                 ))}
               </div>
             </div>
-          </Tile>
-
-          <Tile t={t} ds={ds} title="세그먼트 탭">
+            {/* 세그먼트 컨트롤 */}
             <div style={{ background: t.surface, borderRadius: t.radius.button, padding: space.xxs, display: 'flex' }}>
               {['전체', '판매중', '거래완료'].map((label, i) => (
                 <div key={label} className="ds-press" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', padding: `${space.xs + 2}px ${space.sm}px`, borderRadius: t.radius.button, background: i === 0 ? t.bg : 'transparent', boxShadow: i === 0 ? '0 1px 3px rgba(0,0,0,0.08)' : 'none' }}>
@@ -433,6 +420,7 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
                 </div>
               ))}
             </div>
+            {/* 언더라인 탭 */}
             <div style={{ borderBottom: `1px solid ${t.border}`, display: 'flex' }}>
               {['홈', '카테고리', '라이브', '마이'].map((label, i) => (
                 <div key={label} className="ds-press" style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: 'pointer', paddingBottom: space.sm, paddingTop: space.sm, borderBottom: i === 0 ? `2px solid ${t.primary}` : '2px solid transparent', marginBottom: -1 }}>
