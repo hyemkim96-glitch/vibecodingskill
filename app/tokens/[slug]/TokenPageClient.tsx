@@ -30,10 +30,14 @@ interface Props {
   webCodes: Record<TabKey, string>;
 }
 
+const KOREAN_SAMPLE = '한글은 아름다운 언어입니다. 디자인 시스템이 이를 담아냅니다.';
+const LATIN_SAMPLE = 'The quick brown fox jumps over the lazy dog';
+
 export default function TokenPageClient({ token, mobileCodes, webCodes }: Props) {
   const [activeTab, setActiveTab] = useState<TabKey>('designMd');
   const [platform, setPlatform] = useState<Platform>('mobile');
   const [copied, setCopied] = useState(false);
+  const [selectedTypeRole, setSelectedTypeRole] = useState<string | null>(null);
 
   const codes = platform === 'mobile' ? mobileCodes : webCodes;
   const p = token.platforms[platform];
@@ -125,21 +129,56 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
               <span>행간</span>
               <span>자간</span>
             </div>
-            {p.typography.sizes.map((s) => (
-              <div key={s.role} className={styles.tableRow}>
-                <span className={styles.typeRole}>{s.role}</span>
-                <span>{s.size}</span>
-                <span>{s.lineHeight}</span>
-                <span>{s.letterSpacing}</span>
+            {p.typography.sizes.map((s) => {
+              const isSelected = selectedTypeRole === s.role;
+              return (
+                <div
+                  key={s.role}
+                  className={styles.tableRow}
+                  onClick={() => setSelectedTypeRole(isSelected ? null : s.role)}
+                  style={{ cursor: 'pointer', background: isSelected ? 'var(--color-fill-neutral)' : undefined }}
+                >
+                  <span className={styles.typeRole}>{s.role}</span>
+                  <span>{s.size}</span>
+                  <span>{s.lineHeight}</span>
+                  <span>{s.letterSpacing}</span>
+                </div>
+              );
+            })}
+          </div>
+          {/* Interactive type preview */}
+          {selectedTypeRole && (() => {
+            const s = p.typography.sizes.find((x) => x.role === selectedTypeRole)!;
+            const fontSize = s.size;
+            const lineHeight = parseFloat(s.lineHeight) || 1.5;
+            const letterSpacing = s.letterSpacing || '0em';
+            const isDisplay = /display|h1|heading/i.test(s.role);
+            return (
+              <div style={{
+                marginTop: 12,
+                padding: '20px 24px',
+                borderRadius: 8,
+                border: '1px solid var(--color-border-normal)',
+                background: 'var(--color-bg-alt)',
+              }}>
+                <div style={{ fontSize: 11, color: 'var(--color-text-assistive)', marginBottom: 12, display: 'flex', gap: 12 }}>
+                  <span>{s.role}</span>
+                  <span>·</span>
+                  <span>{fontSize}</span>
+                  <span>·</span>
+                  <span>lh {s.lineHeight}</span>
+                  <span>·</span>
+                  <span>ls {letterSpacing}</span>
+                </div>
+                <p style={{ fontSize, lineHeight, letterSpacing, fontFamily: p.typography.family, margin: 0, color: 'var(--color-text-normal)' }}>
+                  {isDisplay ? 'Aa — ' : ''}{KOREAN_SAMPLE}
+                </p>
+                <p style={{ fontSize, lineHeight, letterSpacing, fontFamily: p.typography.family, margin: '8px 0 0', color: 'var(--color-text-alternative)' }}>
+                  {LATIN_SAMPLE}
+                </p>
               </div>
-            ))}
-          </div>
-          <div className={styles.typePreview}>
-            <p style={{ fontSize: '32px', lineHeight: 1.2 }}>Aa</p>
-            <p style={{ fontSize: '16px', lineHeight: 1.6, color: 'var(--color-ash)' }}>
-              The quick brown fox jumps over the lazy dog
-            </p>
-          </div>
+            );
+          })()}
         </section>
 
         <div className={styles.divider} />

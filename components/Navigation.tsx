@@ -30,7 +30,8 @@ export default function Navigation({ user }: { user: SupabaseUser | null }) {
     <header style={{
       height: 'var(--nav-height)',
       borderBottom: `1px solid ${t.border}`,
-      display: 'flex',
+      display: 'grid',
+      gridTemplateColumns: '1fr auto 1fr',
       alignItems: 'stretch',
       padding: `0 ${t.containerPad}px`,
       background: t.bg,
@@ -40,15 +41,17 @@ export default function Navigation({ user }: { user: SupabaseUser | null }) {
       right: 0,
       zIndex: 100,
     }}>
-      {/* Logo */}
-      <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', paddingRight: t.space.xl }}>
-        <Text role="bodySm" weight={t.weightBold} style={{ letterSpacing: '0.12em', whiteSpace: 'nowrap', color: t.textMain }}>
-          DESIGN MD
-        </Text>
-      </Link>
+      {/* Logo — left zone */}
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <Link href="/" style={{ textDecoration: 'none' }}>
+          <Text role="bodySm" weight={t.weightBold} style={{ letterSpacing: '0.12em', whiteSpace: 'nowrap', color: t.textMain }}>
+            DESIGN MD
+          </Text>
+        </Link>
+      </div>
 
-      {/* Nav links — underline-style NavTab components */}
-      <nav style={{ display: 'flex', alignItems: 'stretch', flex: 1 }}>
+      {/* Nav links — center zone, underline-style NavTab */}
+      <nav style={{ display: 'flex', alignItems: 'stretch' }}>
         {NAV_LINKS.map(({ href, label }) => (
           <Link key={href} href={href} style={{ textDecoration: 'none', display: 'flex', alignItems: 'stretch' }}>
             <NavTab active={pathname.startsWith(href)}>{label}</NavTab>
@@ -56,8 +59,8 @@ export default function Navigation({ user }: { user: SupabaseUser | null }) {
         ))}
       </nav>
 
-      {/* Auth */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: t.space.md }}>
+      {/* Auth — right zone */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: t.space.md }}>
         {user ? (
           <>
             <Link href="/profile" style={{ textDecoration: 'none' }}>
