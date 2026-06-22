@@ -8,7 +8,7 @@
 }
 
 .header h1 {
-    font-size: 28px;
+    font-size: var(--font-size-2xl);
     font-weight: 700;
     margin-bottom: var(--spacing-2);
 }
@@ -37,18 +37,18 @@
 
 .skillHeader h3 {
     font-weight: 700;
-    font-size: 18px;
+    font-size: var(--font-size-lg);
 }
 
 .tag {
-    font-size: 11px;
+    font-size: var(--font-size-caption);
     padding: 2px 8px;
     background: var(--color-bg-secondary);
     border: var(--border-style);
 }
 
 .desc {
-    font-size: 14px;
+    font-size: var(--font-size-base);
     color: var(--color-text-secondary);
     margin-bottom: var(--spacing-6);
 }
@@ -97,7 +97,7 @@
 
 .errorContainer h1 {
     margin: var(--spacing-6) 0 var(--spacing-2);
-    font-size: 24px;
+    font-size: var(--font-size-xl);
 }
 
 .errorContainer p {
