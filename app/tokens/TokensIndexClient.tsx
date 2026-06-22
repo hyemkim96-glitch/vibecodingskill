@@ -5,6 +5,9 @@ import Link from 'next/link';
 import { BrandToken } from '@/types/token';
 import PillTabs from '@/components/PillTabs';
 import styles from './TokensIndex.module.css';
+import { serviceDS } from '@/lib/tokens/serviceTheme';
+
+const { Text, t: st } = serviceDS;
 
 const CATEGORIES = ['전체', '핀테크/금융', '플랫폼', '커머스', '개발자 도구', '디자인 강자'];
 
@@ -57,7 +60,8 @@ function BrandMiniUI({ token }: { token: BrandToken }) {
                 color: onPrimary,
                 borderRadius: btnRadius,
                 padding: '8px 18px',
-                fontSize: '11px',
+                fontSize: '13px',
+                fontFamily: 'var(--font-ui)',
                 fontWeight: 700,
                 letterSpacing: '0.02em',
                 whiteSpace: 'nowrap',
@@ -95,6 +99,16 @@ export default function TokensIndexClient({ tokens }: { tokens: BrandToken[] }) 
 
     return (
         <div className={styles.page}>
+            {/* 페이지 헤더 */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: st.space.sm }}>
+                <Text role="caption" weight={st.weightMedium} style={{ letterSpacing: '0.1em', textTransform: 'uppercase', color: st.textSub }}>
+                    Templates
+                </Text>
+                <Text role="caption" color={st.textMuted}>
+                    브랜드 디자인 시스템 템플릿 — 컬러·타이포·여백·모양을 한번에 정의합니다.
+                </Text>
+            </div>
+
             {/* 필터 바 — shared PillTabs */}
             <div className={styles.filterBar}>
                 <PillTabs
