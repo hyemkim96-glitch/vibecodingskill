@@ -30,7 +30,7 @@ export const COMPONENT_CATEGORIES: { key: ComponentCategory; label: string }[] =
 function SectionHeading({ t, show, children }: { t: ReturnType<typeof resolveTheme>; show: boolean; children: React.ReactNode }) {
   if (!show) return null;
   return (
-    <div style={{ marginBottom: t.space.md, marginTop: t.space.sm }}>
+    <div style={{ marginBottom: t.space.lg, marginTop: t.space.xl }}>
       <span style={{ ...typeStyle(t.type.bodySm), color: t.textMain, fontWeight: t.weightBold }}>{children}</span>
     </div>
   );
@@ -43,11 +43,11 @@ function Tile({ t, ds, title, children }: {
   children: React.ReactNode;
 }) {
   return (
-    <div style={{ background: t.bg, border: `1px solid ${t.border}`, borderRadius: t.radius.card, padding: t.cardPad }}>
-      <p style={{ ...typeStyle(t.type.caption), color: t.textSub, fontWeight: t.weightBold, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: t.space.md }}>
+    <div style={{ background: t.bg, border: `1px solid ${t.border}`, borderRadius: t.radius.card, padding: t.space.xl }}>
+      <p style={{ ...typeStyle(t.type.bodySm), color: t.textMain, fontWeight: t.weightBold, marginBottom: t.space.lg }}>
         {title}
       </p>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.sm }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.md }}>
         {children}
       </div>
     </div>
@@ -62,11 +62,11 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
   const all = category === 'all';
 
   return (
-    <div className="ds-root" style={{ ...motionVars(t), display: 'flex', flexDirection: 'column', background: t.surfaceAlt, padding: t.containerPad, fontFamily: t.font, gap: all ? space.lg : 0 }}>
+    <div className="ds-root" style={{ ...motionVars(t), display: 'flex', flexDirection: 'column', background: t.surfaceAlt, padding: t.space.xl, fontFamily: t.font, gap: all ? space.xl * 2 : 0 }}>
       {(all || category === 'buttons') && (
         <section>
         <SectionHeading t={t} show={all}>버튼 & 액션</SectionHeading>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', alignItems: 'start', gap: space.md }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', alignItems: 'start', gap: space.xl }}>
 
           <Tile t={t} ds={ds} title="버튼 & 액션">
             {/* 변형 */}
@@ -102,7 +102,7 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
       {(all || category === 'inputs') && (
         <section>
         <SectionHeading t={t} show={all}>입력 & 폼</SectionHeading>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', alignItems: 'start', gap: space.md }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', alignItems: 'start', gap: space.xl }}>
 
           <Tile t={t} ds={ds} title="텍스트 입력">
             <Input label="레이블" placeholder="플레이스홀더" />
@@ -190,7 +190,7 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
       {(all || category === 'cards') && (
         <section>
         <SectionHeading t={t} show={all}>카드 & 리스트</SectionHeading>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', alignItems: 'start', gap: space.md }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', alignItems: 'start', gap: space.xl }}>
 
           <Tile t={t} ds={ds} title="카드 변형">
             {/* 기본 카드 */}
@@ -303,7 +303,7 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
       {(all || category === 'feedback') && (
         <section>
         <SectionHeading t={t} show={all}>피드백</SectionHeading>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', alignItems: 'start', gap: space.md }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', alignItems: 'start', gap: space.xl }}>
 
           <Tile t={t} ds={ds} title="배지 & 칩">
             {/* 배지 변형 */}
@@ -452,7 +452,7 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
       {(all || category === 'navigation') && (
         <section>
         <SectionHeading t={t} show={all}>내비게이션</SectionHeading>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', alignItems: 'start', gap: space.md }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', alignItems: 'start', gap: space.xl }}>
 
           <Tile t={t} ds={ds} title="탑 내비게이션 바">
             <div style={{ background: t.bg, borderBottom: `1px solid ${t.border}`, padding: `${space.sm}px ${space.md}px` }}>
