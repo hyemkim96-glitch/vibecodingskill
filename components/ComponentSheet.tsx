@@ -69,8 +69,7 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
         <SectionHeading t={t} show={all}>버튼 & 액션</SectionHeading>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', alignItems: 'start', gap: space.xl }}>
 
-          <Tile t={t} ds={ds} title="버튼 & 액션">
-            {/* 변형 */}
+          <Tile t={t} ds={ds} title="텍스트 버튼">
             <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
               <Button variant="primary" full>Primary</Button>
               <Button variant="secondary" full>Secondary</Button>
@@ -78,23 +77,64 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
               <Button variant="ghost" full>Ghost</Button>
               <Button variant="primary" full disabled>Disabled</Button>
             </div>
-            {/* 크기 */}
             <div style={{ display: 'flex', gap: space.sm }}>
               <div style={{ flex: 1 }}><Button variant="primary" size="sm" full>Small</Button></div>
               <div style={{ flex: 1 }}><Button variant="secondary" size="sm" full>취소</Button></div>
             </div>
-            {/* 아이콘 버튼 */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: space.sm }}>
-              {(['arrowLeft', 'close', 'more', 'settings'] as const).map((ic) => (
-                <div key={ic} className="ds-press" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', width: 40, height: 40, borderRadius: t.radius.button, background: t.surface, border: `1px solid ${t.border}`, color: t.textMain }}>
-                  <Icon name={ic} size={18} />
-                </div>
-              ))}
+          </Tile>
+
+          <Tile t={t} ds={ds} title="아이콘 버튼">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: space.md }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: space.sm }}>
+                {(['arrowLeft', 'close', 'more', 'settings'] as const).map((ic) => (
+                  <div key={ic} className="ds-press" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', width: 40, height: 40, borderRadius: t.radius.button, background: t.surface, border: `1px solid ${t.border}`, color: t.textMain }}>
+                    <Icon name={ic} size={18} />
+                  </div>
+                ))}
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: space.sm }}>
+                {(['search', 'heart', 'filter', 'bell'] as const).map((ic) => (
+                  <div key={ic} className="ds-press" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', width: 40, height: 40, borderRadius: t.radius.button, color: t.textSub }}>
+                    <Icon name={ic} size={20} />
+                  </div>
+                ))}
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: space.sm }}>
+                {(['plus', 'edit', 'send', 'checkCircle'] as const).map((ic) => (
+                  <div key={ic} className="ds-press" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', width: 40, height: 40, borderRadius: t.radius.button, background: t.primary, color: t.onPrimary }}>
+                    <Icon name={ic} size={18} />
+                  </div>
+                ))}
+              </div>
             </div>
-            {/* FAB */}
-            <div style={{ display: 'flex', gap: space.sm }}>
-              <div className="ds-press" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', width: 56, height: 56, borderRadius: '9999px', background: t.primary, color: t.onPrimary }}><Icon name="plus" size={24} /></div>
-              <div className="ds-press" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', width: 48, height: 48, borderRadius: '9999px', background: t.primary, color: t.onPrimary }}><Icon name="edit" size={18} /></div>
+          </Tile>
+
+          <Tile t={t} ds={ds} title="플로팅 버튼 (FAB)">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: space.md }}>
+              <div style={{ display: 'flex', alignItems: 'flex-end', gap: space.md }}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: space.xs }}>
+                  <div className="ds-press" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', width: 56, height: 56, borderRadius: '9999px', background: t.primary, color: t.onPrimary }}>
+                    <Icon name="plus" size={24} />
+                  </div>
+                  <Text role="caption" color={t.textMuted}>Large</Text>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: space.xs }}>
+                  <div className="ds-press" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', width: 44, height: 44, borderRadius: '9999px', background: t.primary, color: t.onPrimary }}>
+                    <Icon name="edit" size={18} />
+                  </div>
+                  <Text role="caption" color={t.textMuted}>Medium</Text>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: space.xs }}>
+                  <div className="ds-press" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', width: 36, height: 36, borderRadius: '9999px', background: t.primary, color: t.onPrimary }}>
+                    <Icon name="plus" size={14} />
+                  </div>
+                  <Text role="caption" color={t.textMuted}>Small</Text>
+                </div>
+              </div>
+              <div className="ds-press" style={{ display: 'inline-flex', alignItems: 'center', gap: space.sm, cursor: 'pointer', padding: `${space.sm}px ${space.lg}px`, borderRadius: '9999px', background: t.primary, color: t.onPrimary, alignSelf: 'flex-start' }}>
+                <Icon name="plus" size={18} color={t.onPrimary} />
+                <span style={{ fontSize: t.type.bodySm.size, lineHeight: t.type.bodySm.lineHeight, color: t.onPrimary, fontWeight: t.weightBold }}>새 글 작성</span>
+              </div>
             </div>
           </Tile>
 
