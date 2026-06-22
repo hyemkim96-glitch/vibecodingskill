@@ -4,6 +4,9 @@ import { useState } from 'react';
 import { ExternalLink } from 'lucide-react';
 import { IWikiTerm } from '@/types/wiki';
 import styles from './Wiki.module.css';
+import { serviceDS } from '@/lib/tokens/serviceTheme';
+
+const { Text, t } = serviceDS;
 
 type SortOrder = 'default' | 'abc' | 'korean';
 
@@ -37,7 +40,17 @@ export default function WikiClient({ terms }: { terms: IWikiTerm[] }) {
     ];
 
     return (
-        <div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.xl }}>
+            {/* 페이지 헤더 */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.sm }}>
+                <Text role="caption" weight={t.weightMedium} style={{ letterSpacing: '0.1em', textTransform: 'uppercase', color: t.textSub }}>
+                    Wiki
+                </Text>
+                <Text role="caption" color={t.textMuted}>
+                    디자인 시스템 용어 사전 — 공통 언어로 협업의 속도를 높입니다.
+                </Text>
+            </div>
+
             <div className={styles.toolbar}>
                 <input
                     type="text"

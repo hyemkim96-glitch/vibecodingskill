@@ -30,10 +30,6 @@ export default function Navigation({ user }: { user: SupabaseUser | null }) {
     <header style={{
       height: 'var(--nav-height)',
       borderBottom: `1px solid ${t.border}`,
-      display: 'grid',
-      gridTemplateColumns: '1fr auto 1fr',
-      alignItems: 'stretch',
-      padding: `0 ${t.containerPad}px`,
       background: t.bg,
       position: 'fixed',
       top: 0,
@@ -41,6 +37,16 @@ export default function Navigation({ user }: { user: SupabaseUser | null }) {
       right: 0,
       zIndex: 100,
     }}>
+      {/* Inner container — matches content area width */}
+      <div style={{
+        maxWidth: 'var(--page-max-width)',
+        margin: '0 auto',
+        height: '100%',
+        padding: `0 ${t.containerPad}px`,
+        display: 'grid',
+        gridTemplateColumns: '1fr auto 1fr',
+        alignItems: 'stretch',
+      }}>
       {/* Logo — left zone */}
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <Link href="/" style={{ textDecoration: 'none' }}>
@@ -82,6 +88,7 @@ export default function Navigation({ user }: { user: SupabaseUser | null }) {
           </Link>
         )}
       </div>
+      </div>{/* /inner container */}
     </header>
   );
 }

@@ -123,6 +123,10 @@
   --color-carbon:  var(--color-bg-elevated);
   --color-graphite: var(--color-border-normal);
 
+  /* Legacy font/spacing aliases */
+  --font-mono: var(--font-code);
+  --letter-spacing: var(--letter-spacing-ui);
+
   /* Legacy semantic aliases */
   --color-bg-primary:    var(--color-bg-normal);
   --color-bg-secondary:  var(--color-bg-elevated);
