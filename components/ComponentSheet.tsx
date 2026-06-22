@@ -246,6 +246,54 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
             </ListRow>
           </Tile>
 
+          <Tile t={t} ds={ds} title="아바타">
+            <div style={{ display: 'flex', alignItems: 'flex-end', gap: space.md }}>
+              {[56, 44, 36, 28, 20].map((sz) => (
+                <div key={sz} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: space.xs }}>
+                  <Avatar size={sz} />
+                  <Text role="caption" color={t.textMuted}>{sz}</Text>
+                </div>
+              ))}
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: space.sm }}>
+              <div style={{ position: 'relative', display: 'inline-flex' }}>
+                <Avatar size={40} />
+                <span style={{ position: 'absolute', bottom: 0, right: 0, width: 10, height: 10, borderRadius: '9999px', background: t.success, border: `2px solid ${t.bg}` }} />
+              </div>
+              <div style={{ position: 'relative', display: 'inline-flex' }}>
+                <Avatar size={40} />
+                <span style={{ position: 'absolute', bottom: 0, right: 0, width: 10, height: 10, borderRadius: '9999px', background: t.textMuted, border: `2px solid ${t.bg}` }} />
+              </div>
+              <div style={{ display: 'flex' }}>
+                {[0, 1, 2].map((i) => (
+                  <div key={i} style={{ marginLeft: i === 0 ? 0 : -10 }}>
+                    <Avatar size={32} />
+                  </div>
+                ))}
+                <div style={{ marginLeft: -10, width: 32, height: 32, borderRadius: '9999px', background: t.surfaceAlt, border: `2px solid ${t.bg}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Text role="caption" color={t.textSub} weight={t.weightBold}>+5</Text>
+                </div>
+              </div>
+            </div>
+          </Tile>
+
+          <Tile t={t} ds={ds} title="스테퍼">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Text role="caption" color={t.textSub}>기본</Text>
+                <Stepper value={1} />
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Text role="caption" color={t.textSub}>최솟값</Text>
+                <Stepper value={0} min={0} />
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Text role="caption" color={t.textSub}>최댓값</Text>
+                <Stepper value={99} max={99} />
+              </div>
+            </div>
+          </Tile>
+
         </div>
         </section>
       )}
@@ -283,48 +331,28 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
             </div>
           </Tile>
 
-          <Tile t={t} ds={ds} title="별점 & 리뷰">
-            {/* 별점 입력 */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: space.xs }}>
-              <Text role="caption" color={t.textSub} weight={t.weightMedium}>평점 선택</Text>
-              <div style={{ display: 'flex', alignItems: 'center', gap: space.sm }}>
-                <Rating value={4} size={24} />
-                <Text role="bodySm" weight={t.weightBold}>4.0</Text>
-              </div>
-            </div>
-            {/* 리뷰 요약 */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: space.lg }}>
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <Text role="h1" weight={t.weightBold} color={t.primary}>4.3</Text>
-                <Rating value={4.3} />
-                <Text role="caption" color={t.textMuted}>리뷰 1,284개</Text>
-              </div>
-              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: space.xxs }}>
-                {[5, 4, 3, 2, 1].map((star) => {
-                  const ratios: Record<number, number> = { 5: 0.62, 4: 0.21, 3: 0.10, 2: 0.04, 1: 0.03 };
-                  return (
-                    <div key={star} style={{ display: 'flex', alignItems: 'center', gap: space.xs }}>
-                      <Text role="caption" color={t.textMuted} style={{ width: 8, textAlign: 'right' }}>{star}</Text>
-                      <div style={{ flex: 1, height: 6, borderRadius: 9999, background: t.surfaceAlt }}>
-                        <div style={{ height: '100%', width: `${ratios[star] * 100}%`, borderRadius: 9999, background: '#F5A623' }} />
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-            {/* 리뷰 카드 */}
-            <Card interactive={false}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: space.sm, marginBottom: space.xs }}>
-                <Avatar size={32} />
-                <div>
-                  <Text role="caption" weight={t.weightBold} style={{ display: 'block' }}>홍**</Text>
-                  <Rating value={5} size={12} />
+          <Tile t={t} ds={ds} title="레이팅">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
+              {([5, 4.3, 3.5, 1] as const).map((v) => (
+                <div key={v} style={{ display: 'flex', alignItems: 'center', gap: space.sm }}>
+                  <Rating value={v} size={16} />
+                  <Text role="caption" color={t.textSub} weight={t.weightMedium}>{v}</Text>
                 </div>
-                <Text role="caption" color={t.textMuted} style={{ marginLeft: 'auto' }}>3일 전</Text>
-              </div>
-              <Text role="caption" color={t.textSub}>배송이 빠르고 품질이 너무 좋아요. 재구매 의사 있습니다!</Text>
-            </Card>
+              ))}
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: space.sm }}>
+              <Rating value={4} size={20} />
+              <Text role="bodySm" weight={t.weightBold}>4.0</Text>
+              <Text role="caption" color={t.textMuted}>(1,284)</Text>
+            </div>
+            <div style={{ display: 'flex', gap: space.md }}>
+              {([12, 16, 20, 24] as const).map((sz) => (
+                <div key={sz} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: space.xs }}>
+                  <Rating value={4} max={5} size={sz} />
+                  <Text role="caption" color={t.textMuted}>{sz}px</Text>
+                </div>
+              ))}
+            </div>
           </Tile>
 
           <Tile t={t} ds={ds} title="상태 인디케이터">
