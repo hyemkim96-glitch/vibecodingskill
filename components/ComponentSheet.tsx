@@ -47,7 +47,7 @@ function Tile({ t, ds, title, children }: {
       <p style={{ ...typeStyle(t.type.bodySm), color: t.textMain, fontWeight: t.weightBold, marginBottom: t.space.lg }}>
         {title}
       </p>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.md }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.xl }}>
         {children}
       </div>
     </div>
@@ -70,11 +70,13 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
 
           <Tile t={t} ds={ds} title="버튼 & 액션">
             {/* 변형 */}
-            <Button variant="primary" full>Primary</Button>
-            <Button variant="secondary" full>Secondary</Button>
-            <Button variant="outline" full>Outline</Button>
-            <Button variant="ghost" full>Ghost</Button>
-            <Button variant="primary" full disabled>Disabled</Button>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
+              <Button variant="primary" full>Primary</Button>
+              <Button variant="secondary" full>Secondary</Button>
+              <Button variant="outline" full>Outline</Button>
+              <Button variant="ghost" full>Ghost</Button>
+              <Button variant="primary" full disabled>Disabled</Button>
+            </div>
             {/* 크기 */}
             <div style={{ display: 'flex', gap: space.sm }}>
               <div style={{ flex: 1 }}><Button variant="primary" size="sm" full>Small</Button></div>
@@ -105,8 +107,10 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', alignItems: 'start', gap: space.xl }}>
 
           <Tile t={t} ds={ds} title="텍스트 입력">
-            <Input label="레이블" placeholder="플레이스홀더" />
-            <Input label="포커스 상태" placeholder="입력 중…" focus />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
+              <Input label="레이블" placeholder="플레이스홀더" />
+              <Input label="포커스 상태" placeholder="입력 중…" focus />
+            </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: space.xs }}>
               <span style={{ ...typeStyle(t.type.caption), color: t.textMain, fontWeight: t.weightMedium }}>에러 상태</span>
               <div style={{ border: `1.5px solid ${t.danger}`, borderRadius: t.radius.input, padding: `${space.sm}px ${space.md}px`, background: t.bg }}>
@@ -115,13 +119,15 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
               <span style={{ ...typeStyle(t.type.caption), color: t.danger }}>올바른 형식으로 입력해주세요</span>
             </div>
             {/* 검색 입력 */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: space.sm, background: t.surface, borderRadius: t.radius.chip, border: `1px solid ${t.border}`, padding: `${space.sm}px ${space.md}px`, color: t.textMuted }}>
-              <Icon name="search" size={16} />
-              <Text role="bodySm" color={t.textMuted}>검색어를 입력하세요</Text>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: space.sm, background: t.bg, borderRadius: t.radius.chip, border: `2px solid ${t.primary}`, padding: `${space.sm}px ${space.md}px` }}>
-              <Icon name="search" size={16} color={t.primary} />
-              <Text role="bodySm">검색 포커스 상태</Text>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: space.sm, background: t.surface, borderRadius: t.radius.chip, border: `1px solid ${t.border}`, padding: `${space.sm}px ${space.md}px`, color: t.textMuted }}>
+                <Icon name="search" size={16} />
+                <Text role="bodySm" color={t.textMuted}>검색어를 입력하세요</Text>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: space.sm, background: t.bg, borderRadius: t.radius.chip, border: `2px solid ${t.primary}`, padding: `${space.sm}px ${space.md}px` }}>
+                <Icon name="search" size={16} color={t.primary} />
+                <Text role="bodySm">검색 포커스 상태</Text>
+              </div>
             </div>
             {/* 텍스트에어리어 */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: space.xs }}>
@@ -193,15 +199,17 @@ export default function ComponentSheet({ token, category }: { token: BrandToken;
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', alignItems: 'start', gap: space.xl }}>
 
           <Tile t={t} ds={ds} title="카드 변형">
-            {/* 기본 카드 */}
-            <Card>
-              <Text role="bodySm" weight={t.weightBold} style={{ display: 'block', marginBottom: space.xs }}>카드 제목</Text>
-              <Text role="caption" color={t.textSub}>카드 본문 텍스트가 여기에 들어갑니다. 두 줄 이상이 될 수 있어요.</Text>
-            </Card>
-            <Card interactive={false} style={{ background: t.primary }}>
-              <Text role="bodySm" weight={t.weightBold} color={t.onPrimary} style={{ display: 'block', marginBottom: space.xs }}>강조 카드</Text>
-              <Text role="caption" color={t.onPrimary} style={{ opacity: 0.8 }}>Primary 배경 위 카드</Text>
-            </Card>
+            {/* 기본/강조 카드 */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
+              <Card>
+                <Text role="bodySm" weight={t.weightBold} style={{ display: 'block', marginBottom: space.xs }}>카드 제목</Text>
+                <Text role="caption" color={t.textSub}>카드 본문 텍스트가 여기에 들어갑니다. 두 줄 이상이 될 수 있어요.</Text>
+              </Card>
+              <Card interactive={false} style={{ background: t.primary }}>
+                <Text role="bodySm" weight={t.weightBold} color={t.onPrimary} style={{ display: 'block', marginBottom: space.xs }}>강조 카드</Text>
+                <Text role="caption" color={t.onPrimary} style={{ opacity: 0.8 }}>Primary 배경 위 카드</Text>
+              </Card>
+            </div>
             {/* 미디어 카드 */}
             <Card pad={false}>
               <Thumb h={80} />
