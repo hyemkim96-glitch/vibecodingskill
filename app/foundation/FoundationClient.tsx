@@ -332,7 +332,7 @@ function TypePanel({ t }: { t: Theme }) {
           flexDirection: 'column',
           gap: t.space.md,
         }}>
-          <div style={{ fontSize: 32, fontFamily: t.font, fontWeight: 700, color: t.textMain, letterSpacing: '-0.02em', lineHeight: 1.2 }}>
+          <div style={{ fontSize: t.type.display.size, fontFamily: t.font, fontWeight: t.weightBold, color: t.textMain, letterSpacing: t.type.display.letterSpacing, lineHeight: t.type.display.lineHeight }}>
             가나다라마바사 Aa Bb
           </div>
           <div style={{ display: 'flex', gap: t.space.xl, flexWrap: 'wrap' }}>
@@ -441,7 +441,7 @@ function TypePanel({ t }: { t: Theme }) {
                 <span style={{ ...cap(t), color: t.textMuted, width: 40, flexShrink: 0 }}>
                   {w}{isUsed ? ' ★' : ''}
                 </span>
-                <span style={{ fontSize: 18, fontWeight: w, color: t.textMain, fontFamily: t.font, letterSpacing: '-0.01em' }}>
+                <span style={{ fontSize: t.type.h2.size, fontWeight: w, color: t.textMain, fontFamily: t.font, letterSpacing: t.type.h2.letterSpacing }}>
                   가나다라 Aa 0123
                 </span>
               </div>
