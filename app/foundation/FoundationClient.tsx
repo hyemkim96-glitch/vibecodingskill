@@ -155,7 +155,7 @@ function ColorPanel({ t }: { t: Theme; ds: ReturnType<typeof createDS> }) {
       borderTop: first ? 'none' : `1px solid ${t.border}`,
     }}>
       <span style={{
-        fontSize: 10,
+        ...cap(t),
         fontFamily: 'monospace',
         fontWeight: t.weightBold,
         color: t.textMuted,
@@ -163,7 +163,6 @@ function ColorPanel({ t }: { t: Theme; ds: ReturnType<typeof createDS> }) {
         border: `1px solid ${t.border}`,
         borderRadius: 4,
         padding: '2px 5px',
-        lineHeight: 1.4,
         flexShrink: 0,
       }}>{num}</span>
       <span style={{ ...bodySm(t), fontWeight: t.weightBold, color: t.textMain }}>{label}</span>
@@ -188,10 +187,10 @@ function ColorPanel({ t }: { t: Theme; ds: ReturnType<typeof createDS> }) {
 
   // 컬럼 헤더 (☀ light / ◑ dark)
   const ColHeader = () => (
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 96px 96px', gap: t.space.xs, padding: `${t.space.xs}px 0`, marginBottom: 1 }}>
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr 110px 110px', gap: t.space.xs, padding: `${t.space.xs}px 0`, marginBottom: 1 }}>
       <span />
-      <span style={{ fontSize: 10, color: t.textMuted }}>☀ light</span>
-      <span style={{ fontSize: 10, color: t.textMuted }}>◑ dark</span>
+      <span style={{ ...cap(t), color: t.textMuted }}>☀ light</span>
+      <span style={{ ...cap(t), color: t.textMuted }}>◑ dark</span>
     </div>
   );
 
@@ -199,20 +198,20 @@ function ColorPanel({ t }: { t: Theme; ds: ReturnType<typeof createDS> }) {
   const TRow = ({ name, light, dark }: { name: string; light: string; dark: string }) => (
     <div style={{
       display: 'grid',
-      gridTemplateColumns: '1fr 96px 96px',
+      gridTemplateColumns: '1fr 110px 110px',
       gap: t.space.xs,
       alignItems: 'center',
-      padding: `5px 0`,
+      padding: `6px 0`,
       borderBottom: `1px solid ${t.border}`,
     }}>
-      <span style={{ fontSize: 10, fontFamily: 'monospace', color: t.textSub, lineHeight: 1.4 }}>{name}</span>
+      <span style={{ ...cap(t), fontFamily: 'monospace', color: t.textSub }}>{name}</span>
       <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
         <div style={{ width: 12, height: 12, borderRadius: 3, background: light, border: `1px solid ${t.border}`, flexShrink: 0 }} />
-        <span style={{ fontSize: 9, fontFamily: 'monospace', color: t.textMuted, lineHeight: 1 }}>{light}</span>
+        <span style={{ ...cap(t), fontFamily: 'monospace', color: t.textMuted }}>{light}</span>
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
         <div style={{ width: 12, height: 12, borderRadius: 3, background: dark, border: `1px solid ${t.border}`, flexShrink: 0 }} />
-        <span style={{ fontSize: 9, fontFamily: 'monospace', color: t.textMuted, lineHeight: 1 }}>{dark}</span>
+        <span style={{ ...cap(t), fontFamily: 'monospace', color: t.textMuted }}>{dark}</span>
       </div>
     </div>
   );
@@ -232,7 +231,7 @@ function ColorPanel({ t }: { t: Theme; ds: ReturnType<typeof createDS> }) {
       </div>
       <div style={{ display: 'flex', marginTop: 3 }}>
         {neutralSteps.map((step) => (
-          <div key={step} style={{ flex: 1, textAlign: 'center', fontSize: 9, color: t.textMuted, lineHeight: 1.4 }}>{step}</div>
+          <div key={step} style={{ flex: 1, textAlign: 'center', fontSize: 11, color: t.textMuted, lineHeight: 1.4 }}>{step}</div>
         ))}
       </div>
       {/* OKLCH 대표값 4개 */}
@@ -246,8 +245,8 @@ function ColorPanel({ t }: { t: Theme; ds: ReturnType<typeof createDS> }) {
               padding: '3px 7px', borderRadius: t.radius.badge,
               background: n.hex, border: `1px solid ${t.border}`,
             }}>
-              <span style={{ fontSize: 9, fontFamily: 'monospace', color: isLight ? '#52525b' : '#a0a0ab' }}>{step}</span>
-              <span style={{ fontSize: 9, fontFamily: 'monospace', color: isLight ? '#71717a' : '#71717a' }}>{n.oklch}</span>
+              <span style={{ ...cap(t), fontFamily: 'monospace', color: t.textSub }}>{step}</span>
+              <span style={{ ...cap(t), fontFamily: 'monospace', color: t.textMuted }}>{n.oklch}</span>
             </div>
           );
         })}
@@ -260,12 +259,12 @@ function ColorPanel({ t }: { t: Theme; ds: ReturnType<typeof createDS> }) {
         <div style={{ display: 'grid', gridTemplateColumns: '36px 1fr 1fr 1fr', gap: t.space.xs }}>
           <span />
           {['fill','text','bg'].map((r) => (
-            <span key={r} style={{ fontSize: 9, color: t.textMuted, textAlign: 'center' }}>{r}</span>
+            <span key={r} style={{ ...cap(t), color: t.textMuted, textAlign: 'center' }}>{r}</span>
           ))}
         </div>
         {statusGroups.map(({ name, label, s }) => (
           <div key={name} style={{ display: 'grid', gridTemplateColumns: '36px 1fr 1fr 1fr', gap: t.space.xs, alignItems: 'stretch' }}>
-            <span style={{ fontSize: 10, color: t.textSub, alignSelf: 'center' }}>{label}</span>
+            <span style={{ ...cap(t), color: t.textSub, alignSelf: 'center' }}>{label}</span>
             {[
               { hex: s.fill.hex, oklch: s.fill.oklch },
               { hex: s.text.hex, oklch: s.text.oklch },
@@ -274,8 +273,8 @@ function ColorPanel({ t }: { t: Theme; ds: ReturnType<typeof createDS> }) {
               <div key={ci} style={{ borderRadius: t.radius.badge, overflow: 'hidden', border: `1px solid ${t.border}` }}>
                 <div style={{ height: 28, background: hex }} />
                 <div style={{ padding: '3px 5px', background: t.surface }}>
-                  <div style={{ fontSize: 9, fontFamily: 'monospace', color: t.textMain, lineHeight: 1.3 }}>{hex}</div>
-                  <div style={{ fontSize: 8, fontFamily: 'monospace', color: t.textMuted, lineHeight: 1.3, marginTop: 1 }}>{oklch}</div>
+                  <div style={{ ...cap(t), fontFamily: 'monospace', color: t.textMain }}>{hex}</div>
+                  <div style={{ fontSize: 10, fontFamily: 'monospace', color: t.textMuted, lineHeight: 1.3, marginTop: 2 }}>{oklch}</div>
                 </div>
               </div>
             ))}
@@ -731,7 +730,7 @@ function MotionPanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
                 justifyContent: 'center',
                 animation: `fd-slide ${dur * 3}ms ${m.easing} infinite`,
               }}>
-                <span style={{ fontSize: 10, color: t.onPrimary, fontWeight: 600 }}>토스트</span>
+                <span style={{ ...cap(t), color: t.onPrimary, fontWeight: t.weightBold }}>토스트</span>
               </div>
             </div>
             <div style={{ ...cap(t), color: t.textMuted }}>표시 전환 · 드로어 · 토스트</div>
@@ -749,8 +748,8 @@ function MotionPanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
                 borderRadius: t.radius.button,
                 background: t.primary,
                 color: t.onPrimary,
-                fontSize: 13,
-                fontWeight: 600,
+                fontSize: t.type.bodySm.size,
+                fontWeight: t.weightBold,
                 animation: `fd-press ${dur * 4}ms ${m.easing} infinite`,
                 cursor: 'pointer',
                 userSelect: 'none' as const,
@@ -777,8 +776,8 @@ function MotionPanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
                 textAlign: 'center',
                 animation: `fd-hover ${dur * 4}ms ${m.easing} infinite`,
               }}>
-                <div style={{ fontSize: 11, fontWeight: 600, color: t.primary }}>카드</div>
-                <div style={{ fontSize: 9, color: t.textMuted, marginTop: 2 }}>콘텐츠</div>
+                <div style={{ ...cap(t), fontWeight: t.weightBold, color: t.primary }}>카드</div>
+                <div style={{ ...cap(t), color: t.textMuted, marginTop: 2 }}>콘텐츠</div>
               </div>
             </div>
             <div style={{ ...cap(t), color: t.textMuted }}>카드 · 썸네일 · 인터랙티브 셀</div>
