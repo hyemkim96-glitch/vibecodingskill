@@ -108,9 +108,12 @@ export interface ResolvedTheme {
 
 export function contrastOn(hex: string): string {
   const L = relativeLuminance(hex);
+  // For dark-to-medium colors (L < 0.24), white text is always safer visually —
+  // pure math picks black on e.g. dark blue (#1A74E9, L≈0.208) because the ratio
+  // is marginally higher, but the result fails the eye test at that luminance range.
+  if (L < 0.24) return lightTokens['--color-text-on-fill'];
   const onWhite = 1.05 / (L + 0.05);
   const onBlack = (L + 0.05) / 0.05;
-  // Return Foundation semantic text tokens: text-on-fill (white) or text-normal (near-black)
   return onBlack > onWhite ? lightTokens['--color-text-normal'] : lightTokens['--color-text-on-fill'];
 }
 
