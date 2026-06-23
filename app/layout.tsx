@@ -16,10 +16,10 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const supabase = await createClient();
-  const [{ data: { user } }, { data: wikiTerms }] = await Promise.all([
-    supabase.auth.getUser(),
-    supabase.from('wiki_terms').select('*').eq('published', true),
-  ]);
+  const { data: wikiTerms } = await supabase
+    .from('wiki_terms')
+    .select('*')
+    .eq('published', true);
 
   return (
     <html lang="ko">
@@ -36,7 +36,7 @@ export default async function RootLayout({
           strategy="afterInteractive"
         />
         <WikiProvider terms={wikiTerms ?? []}>
-          <Navigation user={user} />
+          <Navigation />
           <main className="main-container">
             {children}
           </main>

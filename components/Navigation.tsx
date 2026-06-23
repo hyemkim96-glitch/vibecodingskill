@@ -1,9 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
-import { User as SupabaseUser } from '@supabase/supabase-js';
-import { createClient } from '@/lib/supabase/client';
+import { usePathname } from 'next/navigation';
 import { serviceDS } from '@/lib/tokens/serviceTheme';
 
 const { NavTab, Text, t } = serviceDS;
@@ -16,15 +14,8 @@ const NAV_LINKS = [
   { href: '/wiki',       label: '위키' },
 ];
 
-export default function Navigation({ user }: { user: SupabaseUser | null }) {
+export default function Navigation() {
   const pathname = usePathname();
-  const router = useRouter();
-  const supabase = createClient();
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    router.refresh();
-  };
 
   return (
     <header style={{
@@ -65,29 +56,8 @@ export default function Navigation({ user }: { user: SupabaseUser | null }) {
         ))}
       </nav>
 
-      {/* Auth — right zone */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: t.space.md }}>
-        {user ? (
-          <>
-            <Link href="/profile" style={{ textDecoration: 'none' }}>
-              <Text role="caption" color={t.textMuted} style={{ cursor: 'pointer', whiteSpace: 'nowrap' }}>
-                프로필
-              </Text>
-            </Link>
-            <button onClick={handleLogout} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
-              <Text role="caption" color={t.textMuted} style={{ whiteSpace: 'nowrap' }}>
-                로그아웃
-              </Text>
-            </button>
-          </>
-        ) : (
-          <Link href="/auth/login" style={{ textDecoration: 'none' }}>
-            <Text role="caption" color={t.textMuted} style={{ cursor: 'pointer', whiteSpace: 'nowrap' }}>
-              로그인
-            </Text>
-          </Link>
-        )}
-      </div>
+      {/* right zone — reserved */}
+      <div />
       </div>{/* /inner container */}
     </header>
   );
