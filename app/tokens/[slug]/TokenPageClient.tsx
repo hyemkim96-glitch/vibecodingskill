@@ -192,13 +192,6 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
         {/* ── Foundation ── */}
         {section === 'foundation' && (
           <>
-            <div
-              className={styles.uiPreviewWrapper}
-              style={{ maxWidth: platform === 'mobile' ? 390 : '100%' }}
-            >
-              <BrandUIPreview token={token} platform={platform} mode="brand" />
-            </div>
-
             {/* Color Palette */}
             <section className={styles.section}>
               <h2 className={styles.sectionTitle}>컬러 팔레트</h2>
