@@ -301,7 +301,7 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
   // Review stars read as gold/amber regardless of brand — a stable Foundation
   // semantic, so the colour comes from t.warning (amber), never a hardcoded hex.
   const Rating: DS['Rating'] = ({ value = 4, max = 5, size = 16 }) => {
-    const star = t.warning;
+    const star = t.starFill;
     const gid = React.useId();
     return (
     <div style={{ display: 'inline-flex', alignItems: 'center', gap: 2 }}>
