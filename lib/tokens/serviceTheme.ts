@@ -10,10 +10,10 @@
  * UI wireframes (Components, Patterns mobile toggle).
  */
 
-import { allTokens } from '@/lib/tokens';
+import { designMDToken } from '@/lib/tokens/designMD';
 import { resolveTheme } from '@/lib/tokens/resolveTheme';
 import { createDS } from '@/components/ds';
 
-export const serviceTheme       = resolveTheme(allTokens[0], 'web',    'wireframe');
-export const serviceMobileTheme = resolveTheme(allTokens[0], 'mobile', 'wireframe');
+export const serviceTheme       = resolveTheme(designMDToken, 'web',    'brand');
+export const serviceMobileTheme = resolveTheme(designMDToken, 'mobile', 'brand');
 export const serviceDS = createDS(serviceTheme);

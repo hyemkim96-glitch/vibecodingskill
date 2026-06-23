@@ -403,7 +403,9 @@ export function resolveTheme(
     c.find((col) => /primary|주요 액션|CTA/i.test(col.role))?.value ??
     c.find((col) => !isNeutral(col.name))?.value ??
     '#3182F6';
-  const onPrimary = contrastOn(primary);
+  // Prefer an explicit brand override (e.g. Kakao brown on yellow, Daangn white on orange)
+  const onPrimaryExplicit = c.find((col) => /CTA 텍스트|버튼 텍스트/i.test(col.role))?.value;
+  const onPrimary = onPrimaryExplicit ?? contrastOn(primary);
 
   // accent: first non-neutral colour that isn't primary
   const accent =

@@ -2,6 +2,7 @@ import { BrandToken } from '@/types/token';
 
 const colors = [
   { name: '시그니처 오렌지', value: '#FF6F0F', variable: '--color-brand-orange', role: '브랜드 Primary, CTA 버튼, 활성 상태' },
+  { name: 'CTA 텍스트',    value: '#FFFFFF', variable: '--color-on-primary',   role: 'CTA 버튼 텍스트' },
   { name: '오렌지 라이트', value: '#FFF0E6', variable: '--color-orange-light', role: '오렌지 배경, 강조 영역 배경' },
   { name: 'Gray 900', value: '#1D2533', variable: '--color-gray-900', role: '본문 텍스트, 제목' },
   { name: 'Gray 700', value: '#4D5664', variable: '--color-gray-700', role: '보조 텍스트' },
