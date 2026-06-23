@@ -126,4 +126,23 @@ export const daangnToken: BrandToken = {
     ],
   },
   updatedAt: '2026.06',
+  deep: {
+    interaction: {
+      duration: '150ms (탭/버튼 피드백), 200ms (화면 전환)',
+      easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+      pressScale: 'scale(0.97)',
+      notes: '지역 커뮤니티 특성상 빠른 응답감. 피드 스크롤은 네이티브 momentum. 가격 흥정 버튼은 짧은 bounce. 상품 이미지 탭은 즉각 fullscreen.',
+    },
+    voice: {
+      tone: '동네 이웃처럼 따뜻하고 편하게 — 친구같지만 반말은 아닌 자연스러운 어투.',
+      examples: [
+        '"근처 매물이에요!" (위치 기반 추천)',
+        '"매너온도가 올랐어요 🌡️" (신뢰 지표 상승)',
+        '"아직 거래 가능해요" (상태 안내)',
+        '"OOO님과 거래하셨군요!" (거래 완료)',
+      ],
+      avoid: ['딱딱한 공지문 — "게시물이 삭제되었습니다" 대신 "이 글은 삭제됐어요"'],
+    },
+    iconStyle: 'Phosphor Fill 계열, 24×24px. 따뜻한 커뮤니티 느낌. 집/위치/사람 아이콘 중심. 두꺼운 stroke보다 fill 스타일 선호.',
+  },
 };

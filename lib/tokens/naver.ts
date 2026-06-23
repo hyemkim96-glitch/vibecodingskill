@@ -122,4 +122,23 @@ export const naverToken: BrandToken = {
     ],
   },
   updatedAt: '2026.06',
+  deep: {
+    interaction: {
+      duration: '100ms (탭 반응), 150ms (패널/드롭다운 열기)',
+      easing: 'ease-out',
+      pressScale: 'scale(0.98)',
+      notes: '정보 포털 특성상 빠른 응답이 신뢰감. 검색 결과는 즉시 표시. 뉴스 탭 전환은 slide-in. 실시간 랭킹 업데이트는 fade. 광고 배너는 cross-fade 전환.',
+    },
+    voice: {
+      tone: '신뢰할 수 있는 정보 제공자 — 중립적이고 명확하게. 정확한 정보, 빠른 전달.',
+      examples: [
+        '"검색 결과 1,234개" (결과 수)',
+        '"3분 전 업데이트" (시간 포맷)',
+        '"실시간 검색어 1위" (랭킹 정보)',
+        '"자동 저장되었습니다" (상태 안내)',
+      ],
+      avoid: ['과도한 친근함 — 포털은 중립적 정보 기관으로 인식', '긴 문장 — 정보 스캔에 최적화된 짧은 레이블'],
+    },
+    iconStyle: 'Lucide 계열, 2px stroke. 검색, 알림, 홈, 메뉴 아이콘 중심. 서비스별 컬러 아이콘 허용(초록 기반). 24×24px 기준.',
+  },
 };

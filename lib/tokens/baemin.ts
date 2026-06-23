@@ -2,15 +2,16 @@ import { BrandToken } from '@/types/token';
 
 const colors = [
   { name: 'Mint', value: '#2AC1BC', variable: '--color-mint', role: '브랜드 Primary, CTA 버튼, 활성 상태' },
-  { name: 'Mint Light', value: '#E6F9F8', variable: '--color-mint-light', role: '민트 배경, 강조 영역' },
+  { name: 'Mint Light', value: '#E6F9F8', variable: '--color-mint-light', role: '민트 배경, 강조 영역 배경' },
   { name: '포인트 옐로우', value: '#FFCE00', variable: '--color-point-yellow', role: '배달 상태 강조, 포인트 액센트' },
+  { name: 'Success Teal', value: '#00B89C', variable: '--color-success-teal', role: '성공, 배달 완료, 안전 결제, 긍정 지표' },
   { name: 'Gray 900', value: '#333333', variable: '--color-gray-900', role: '본문 텍스트, 제목' },
   { name: 'Gray 700', value: '#666666', variable: '--color-gray-700', role: '보조 텍스트' },
   { name: 'Gray 400', value: '#AAAAAA', variable: '--color-gray-400', role: '비활성 텍스트, 플레이스홀더' },
   { name: 'Gray 200', value: '#E5E5E5', variable: '--color-gray-200', role: '구분선, 보더' },
   { name: 'Gray 100', value: '#F6F6F6', variable: '--color-gray-100', role: '배경, 카드 배경' },
   { name: 'White', value: '#FFFFFF', variable: '--color-white', role: '기본 배경' },
-  { name: 'Red', value: '#FF4444', variable: '--color-red', role: '에러, 취소, 마감 임박' },
+  { name: 'Red', value: '#FF4444', variable: '--color-red', role: '에러, 위험, 취소, 마감 임박' },
 ];
 
 const typography = {
@@ -125,4 +126,23 @@ export const baeminToken: BrandToken = {
     ],
   },
   updatedAt: '2026.06',
+  deep: {
+    interaction: {
+      duration: '150ms (탭 피드백), 200ms (화면 전환), 250ms (배달 상태 업데이트)',
+      easing: 'cubic-bezier(0.34, 1.3, 0.64, 1)',
+      pressScale: 'scale(0.96)',
+      notes: '배달 완료 시 celebration 애니메이션(배달원 캐릭터 이동). 메뉴 이미지 swipe는 부드러운 momentum. 별점 입력 시 각 별이 bounce. 유머러스한 빈 상태 일러스트.',
+    },
+    voice: {
+      tone: '유머러스하고 친근하게 — 배달의민족 특유의 위트 있는 언어. 음식에 대한 진심과 즐거움을 담아.',
+      examples: [
+        '"치킨이 오고 있어요 🍗" (배달 중)',
+        '"배달완료! 맛있게 드세요 😋" (완료)',
+        '"어떠셨나요? 리뷰 남겨주세요" (리뷰 유도)',
+        '"여기도 맛집이에요!" (근처 추천)',
+      ],
+      avoid: ['지루한 상태 메시지 — "배달 중입니다" 대신 "치킨이 달려오는 중!"', '딱딱한 오류 메시지 — "연결 오류" 대신 "어라, 잠깐 문제가 생겼어요 😅"'],
+    },
+    iconStyle: 'Phosphor Fill 스타일, 24×24px. 음식/배달 테마: 음식 접시, 오토바이, 별점. 유머러스한 캐릭터 요소 병행. 둥글고 따뜻한 느낌.',
+  },
 };

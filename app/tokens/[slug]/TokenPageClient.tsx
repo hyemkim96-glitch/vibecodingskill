@@ -116,14 +116,43 @@ function SubTabStrip({ items, active, onChange }: {
   );
 }
 
+const BRAND_PATTERNS: Record<string, PatternType[]> = {
+  daangn:    ['main', 'list', 'search', 'mypage'],
+  kakao:     ['main', 'auth', 'search', 'mypage'],
+  kakaobank: ['main', 'history', 'payment', 'mypage'],
+  naver:     ['main', 'search', 'list', 'detail'],
+  baemin:    ['main', 'list', 'detail', 'payment'],
+  coupang:   ['main', 'list', 'detail', 'payment'],
+  '29cm':    ['main', 'list', 'detail', 'mypage'],
+  musinsa:   ['main', 'search', 'list', 'detail'],
+  ohouse:    ['main', 'list', 'detail', 'mypage'],
+  toss:      ['main', 'history', 'payment', 'mypage'],
+};
+
+const BRAND_COMP_CATS: Record<string, ComponentCategory[]> = {
+  daangn:    ['cards', 'navigation', 'feedback'],
+  kakao:     ['cards', 'navigation', 'feedback'],
+  kakaobank: ['cards', 'feedback', 'buttons'],
+  naver:     ['navigation', 'cards', 'inputs'],
+  baemin:    ['cards', 'navigation', 'feedback'],
+  coupang:   ['cards', 'buttons', 'inputs'],
+  '29cm':    ['cards', 'navigation'],
+  musinsa:   ['cards', 'buttons', 'inputs'],
+  ohouse:    ['cards', 'feedback', 'navigation'],
+  toss:      ['cards', 'feedback', 'buttons'],
+};
+
 export default function TokenPageClient({ token, mobileCodes, webCodes }: Props) {
+  const brandPatterns = BRAND_PATTERNS[token.slug] ?? (PATTERN_TYPES.map(p => p.key) as PatternType[]);
+  const brandCompCats = BRAND_COMP_CATS[token.slug] ?? (COMPONENT_CATEGORIES.map(c => c.key) as ComponentCategory[]);
+
   const [activeTab,       setActiveTab]       = useState<TabKey>('designMd');
   const [platform,        setPlatform]        = useState<Platform>('mobile');
   const [copied,          setCopied]          = useState(false);
   const [selectedType,    setSelectedType]    = useState<string | null>(null);
   const [section,         setSection]         = useState<Section>('foundation');
-  const [compCategory,    setCompCategory]    = useState<ComponentCategory>('all');
-  const [activePattern,   setActivePattern]   = useState<PatternType>('list');
+  const [compCategory,    setCompCategory]    = useState<ComponentCategory>(brandCompCats[0] ?? 'cards');
+  const [activePattern,   setActivePattern]   = useState<PatternType>(brandPatterns[0] ?? 'main');
 
   const codes = platform === 'mobile' ? mobileCodes : webCodes;
   const p = token.platforms[platform];
@@ -192,21 +221,70 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
         {/* ── Foundation ── */}
         {section === 'foundation' && (
           <>
-            {/* Color Palette */}
+            {/* Color Palette — semantic groups from resolved theme */}
             <section className={styles.section}>
               <h2 className={styles.sectionTitle}>컬러 팔레트</h2>
-              <div className={styles.colorGrid}>
-                {token.colors.map((color) => (
-                  <div key={color.variable} className={styles.colorItem}>
-                    <div className={styles.colorSwatch} style={{ background: color.value }} />
-                    <div className={styles.colorInfo}>
-                      <span className={styles.colorName}>{color.name}</span>
-                      <span className={styles.colorValue}>{color.value}</span>
-                      <span className={styles.colorRole}>{color.role}</span>
-                    </div>
+              {[
+                {
+                  label: '브랜드',
+                  items: [
+                    { name: '프라이머리', value: brandTheme.primary, role: 'CTA 버튼, 활성 탭, 핵심 링크' },
+                    { name: '온 프라이머리', value: brandTheme.onPrimary, role: '프라이머리 위 텍스트 · 아이콘' },
+                    { name: '프라이머리 틴트', value: brandTheme.primaryTint, role: '배지 배경, 약한 강조 영역' },
+                  ],
+                },
+                {
+                  label: '배경 & 표면',
+                  items: [
+                    { name: '배경 기본', value: brandTheme.bg, role: '페이지 배경' },
+                    { name: '서피스', value: brandTheme.surface, role: '카드, 모달, 바텀 시트' },
+                    { name: '서피스 보조', value: brandTheme.surfaceAlt, role: '비활성 채움, 스켈레톤 배경' },
+                  ],
+                },
+                {
+                  label: '텍스트',
+                  items: [
+                    { name: '기본 텍스트', value: brandTheme.textMain, role: '본문, 제목, 강조 레이블' },
+                    { name: '보조 텍스트', value: brandTheme.textSub, role: '메타 정보, 보조 레이블' },
+                    { name: '힌트 텍스트', value: brandTheme.textMuted, role: '플레이스홀더, 힌트, 비활성 설명' },
+                    { name: '비활성 텍스트', value: brandTheme.textDisabled, role: '비활성 버튼, 선택 불가 항목' },
+                  ],
+                },
+                {
+                  label: '시멘틱 상태',
+                  items: [
+                    { name: '성공', value: brandTheme.success, role: '완료, 증가 지표, 안전 거래' },
+                    { name: '위험', value: brandTheme.danger, role: '에러, 삭제, 감소 지표' },
+                    { name: '경고', value: brandTheme.warning, role: '주의 안내, 임박 마감' },
+                    { name: '정보', value: brandTheme.info, role: '공지, 도움말, 중립 안내' },
+                  ],
+                },
+                {
+                  label: '경계 & 비활성',
+                  items: [
+                    { name: '테두리', value: brandTheme.border, role: '카드 보더, 구분선, 입력 테두리' },
+                    { name: '비활성 채움', value: brandTheme.disabled, role: '비활성 버튼, 비활성 입력 배경' },
+                  ],
+                },
+              ].map(group => (
+                <div key={group.label} style={{ marginBottom: 20 }}>
+                  <div style={{ fontSize: 'var(--font-size-caption)', fontFamily: 'var(--font-ui)', letterSpacing: '0.06em', fontWeight: 600, color: 'var(--color-text-assistive)', marginBottom: 8, textTransform: 'uppercase' }}>
+                    {group.label}
                   </div>
-                ))}
-              </div>
+                  <div className={styles.colorGrid}>
+                    {group.items.map((color) => (
+                      <div key={color.name} className={styles.colorItem}>
+                        <div className={styles.colorSwatch} style={{ background: color.value }} />
+                        <div className={styles.colorInfo}>
+                          <span className={styles.colorName}>{color.name}</span>
+                          <span className={styles.colorValue}>{color.value}</span>
+                          <span className={styles.colorRole}>{color.role}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
             </section>
 
             <div className={styles.divider} />
@@ -340,7 +418,7 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
         {section === 'components' && (
           <div>
             <SubTabStrip
-              items={COMPONENT_CATEGORIES}
+              items={COMPONENT_CATEGORIES.filter(c => brandCompCats.includes(c.key as ComponentCategory))}
               active={compCategory}
               onChange={(k) => setCompCategory(k as ComponentCategory)}
             />
@@ -352,7 +430,7 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
         {section === 'patterns' && (
           <div>
             <SubTabStrip
-              items={PATTERN_TYPES}
+              items={PATTERN_TYPES.filter(p => brandPatterns.includes(p.key as PatternType))}
               active={activePattern}
               onChange={(k) => setActivePattern(k as PatternType)}
             />
