@@ -3,10 +3,8 @@
 import { useState } from 'react';
 import ComponentSheet, { COMPONENT_CATEGORIES, ComponentCategory } from '@/components/ComponentSheet';
 import PillTabs from '@/components/PillTabs';
-import { allTokens } from '@/lib/tokens';
-import { serviceDS } from '@/lib/tokens/serviceTheme';
+import { serviceDS, serviceMobileTheme } from '@/lib/tokens/serviceTheme';
 
-const representative = allTokens[0];
 const { Text, t } = serviceDS;
 
 export default function ComponentsClient() {
@@ -27,7 +25,7 @@ export default function ComponentsClient() {
       <PillTabs tabs={COMPONENT_CATEGORIES} active={active} onChange={setActive} />
 
       <div style={{ borderRadius: t.radius.card, overflow: 'hidden', border: `1px solid ${t.border}` }}>
-        <ComponentSheet token={representative} category={active} />
+        <ComponentSheet theme={serviceMobileTheme} category={active} />
       </div>
     </div>
   );

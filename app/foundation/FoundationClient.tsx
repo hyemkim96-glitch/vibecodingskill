@@ -1,11 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { allTokens } from '@/lib/tokens';
-import { resolveTheme } from '@/lib/tokens/resolveTheme';
+import { ResolvedTheme } from '@/lib/tokens/resolveTheme';
 import { typeStyle, createDS } from '@/components/ds';
 import PillTabs from '@/components/PillTabs';
-import { serviceDS } from '@/lib/tokens/serviceTheme';
+import { serviceDS, serviceMobileTheme } from '@/lib/tokens/serviceTheme';
 import { neutral, status } from '@/lib/tokens/palette';
 import { lightTokens, darkTokens } from '@/lib/tokens/semanticTokens';
 
@@ -20,14 +19,13 @@ const CATEGORIES: { key: FoundationCategory; label: string }[] = [
   { key: 'motion', label: '모션' },
 ];
 
-const representative = allTokens[0];
 const { Text: ServiceText, t: st } = serviceDS;
 
-type Theme = ReturnType<typeof resolveTheme>;
+type Theme = ResolvedTheme;
 
 export default function FoundationClient() {
   const [active, setActive] = useState<FoundationCategory>('color');
-  const t = resolveTheme(representative, 'mobile', 'wireframe');
+  const t = serviceMobileTheme;
   const ds = createDS(t, true);
 
   return (
