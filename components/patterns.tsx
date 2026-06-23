@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { DS } from '@/components/ds';
+import { ensureContrast } from '@/lib/tokens/resolveTheme';
 
 export type PatternType =
   | 'main'
@@ -63,7 +64,7 @@ function PatternMain({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' }) {
               </div>
               <div style={{ padding: space.sm }}>
                 <Text role="caption" weight={t.weightMedium} style={{ display: 'block', marginBottom: space.xxs }}>{item.name}</Text>
-                <Text role="caption" weight={t.weightBold} color={t.primary}>{item.price}원</Text>
+                <Text role="caption" weight={t.weightBold} color={t.textMain}>{item.price}원</Text>
               </div>
             </Card>
           ))}
@@ -131,7 +132,7 @@ function PatternAuth({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' }) {
       </div>
       <div style={{ display: 'flex', justifyContent: 'center', gap: space.sm }}>
         <Text role="caption" color={t.textSub}>계정이 없으신가요?</Text>
-        <Text role="caption" color={t.primary} weight={t.weightBold}>회원가입</Text>
+        <Text role="caption" color={ensureContrast(t.primary, t.bg)} weight={t.weightBold}>회원가입</Text>
       </div>
     </div>
   );
@@ -151,7 +152,7 @@ function PatternSearch({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' })
   return (
     <Screen ds={ds}>
       <div style={{ display: 'flex', alignItems: 'center', gap: space.sm, background: t.bg, borderRadius: t.radius.chip, border: `2px solid ${t.primary}`, padding: `${space.sm}px ${space.md}px` }}>
-        <Icon name="search" size={14} color={t.primary} />
+        <Icon name="search" size={14} color={ensureContrast(t.primary, t.bg)} />
         <Text role="bodySm">무선이어폰</Text>
         <span style={{ marginLeft: 'auto', color: t.textMuted, display: 'flex' }}><Icon name="close" size={14} color={t.textMuted} /></span>
       </div>
@@ -182,7 +183,7 @@ function PatternSearch({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' })
             </div>
             <div style={{ padding: space.sm }}>
               <Text role="caption" weight={t.weightMedium} style={{ display: 'block', marginBottom: space.xxs }}>{item.name}</Text>
-              <Text role="caption" weight={t.weightBold} color={t.primary}>{item.price}원</Text>
+              <Text role="caption" weight={t.weightBold} color={t.textMain}>{item.price}원</Text>
             </div>
           </Card>
         ))}
@@ -227,7 +228,7 @@ function PatternList({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' }) {
                     <span style={{ color: t.accent, display: 'inline-flex' }}><Icon name="star" size={12} /></span>
                     <Text role="caption" color={t.textSub}>{item.rating} ({item.reviews})</Text>
                   </div>
-                  <Text role="bodySm" weight={t.weightBold} color={t.primary}>{item.price}원</Text>
+                  <Text role="bodySm" weight={t.weightBold} color={t.textMain}>{item.price}원</Text>
                 </div>
               </div>
             </ListRow>
@@ -243,7 +244,7 @@ function PatternList({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' }) {
               </div>
               <div style={{ padding: space.sm }}>
                 <Text role="caption" weight={t.weightMedium} style={{ display: 'block', marginBottom: space.xxs, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{name}</Text>
-                <Text role="caption" weight={t.weightBold} color={t.primary}>{['189,000', '89,000', '279,000', '119,000'][i]}원</Text>
+                <Text role="caption" weight={t.weightBold} color={t.textMain}>{['189,000', '89,000', '279,000', '119,000'][i]}원</Text>
               </div>
             </Card>
           ))}
@@ -268,7 +269,7 @@ function PatternDetail({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' })
         <Badge tone="soft">인기</Badge>
       </div>
       <div style={{ display: 'flex', alignItems: 'baseline', gap: space.sm }}>
-        <Text role="h1" weight={t.weightBold} color={t.primary}>189,000원</Text>
+        <Text role="h1" weight={t.weightBold} color={t.textMain}>189,000원</Text>
         <Text role="bodySm" color={t.textMuted} style={{ textDecoration: 'line-through' }}>229,000원</Text>
         <Badge tone="solid">17%</Badge>
       </div>
@@ -299,7 +300,7 @@ function PatternDetail({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' })
         <div style={{ display: 'flex', borderBottom: `1px solid ${t.border}` }}>
           {['상품정보', '리뷰 128', 'Q&A'].map((tab, i) => (
             <div key={tab} className="ds-press cursor-pointer" style={{ flex: 1, display: 'flex', justifyContent: 'center', paddingBottom: space.sm, borderBottom: i === 0 ? `2px solid ${t.primary}` : '2px solid transparent', marginBottom: -1 }}>
-              <Text role="caption" weight={i === 0 ? t.weightBold : t.weightRegular} color={i === 0 ? t.primary : t.textSub}>{tab}</Text>
+              <Text role="caption" weight={i === 0 ? t.weightBold : t.weightRegular} color={i === 0 ? ensureContrast(t.primary, t.bg) : t.textSub}>{tab}</Text>
             </div>
           ))}
         </div>
@@ -339,8 +340,8 @@ function PatternHistory({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' }
       <div style={{ display: 'grid', gridTemplateColumns: platform === 'web' ? 'repeat(3, 1fr)' : 'repeat(2, 1fr)', gap: space.sm }}>
         {[{ label: '전체', count: 12, icon: 'package' as const }, { label: '진행중', count: 2, icon: 'truck' as const }, ...(platform === 'web' ? [{ label: '완료', count: 8, icon: 'checkCircle' as const }] : [])].map(({ label, count, icon }) => (
           <div key={label} style={{ background: t.surface, borderRadius: t.radius.card, border: `1px solid ${t.border}`, padding: t.cardPad, textAlign: 'center' as const }}>
-            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: space.xs }}><Icon name={icon} size={16} color={t.primary} /></div>
-            <Text role="h2" weight={t.weightBold} color={t.primary} style={{ display: 'block' }}>{count}</Text>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: space.xs }}><Icon name={icon} size={16} color={ensureContrast(t.primary, t.surface)} /></div>
+            <Text role="h2" weight={t.weightBold} color={ensureContrast(t.primary, t.surface)} style={{ display: 'block' }}>{count}</Text>
             <Text role="caption" color={t.textSub}>{label}</Text>
           </div>
         ))}
@@ -389,7 +390,7 @@ function PatternMyPage({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' })
           <Text role="bodySm" weight={t.weightBold} style={{ display: 'block' }}>홍길동</Text>
           <Text role="caption" color={t.textSub}>gildong@email.com</Text>
         </div>
-        <Button variant="outline" size="sm"><span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><Icon name="edit" size={12} color={t.primary} />편집</span></Button>
+        <Button variant="outline" size="sm"><span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><Icon name="edit" size={12} color={ensureContrast(t.primary, t.surface)} />편집</span></Button>
       </div>
       <div style={{ background: t.primary, borderRadius: t.radius.card, padding: t.cardPad, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
@@ -405,8 +406,8 @@ function PatternMyPage({ ds, platform }: { ds: DS; platform: 'mobile' | 'web' })
           { label: '리뷰', count: 7, icon: 'star' as const },
         ].map(({ label, count, icon }) => (
           <div key={label} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: space.xs, padding: space.sm, background: t.surface, borderRadius: t.radius.card, border: `1px solid ${t.border}` }}>
-            <Icon name={icon} size={16} color={t.primary} />
-            <Text role="h2" weight={t.weightBold} color={t.primary}>{count}</Text>
+            <Icon name={icon} size={16} color={ensureContrast(t.primary, t.surface)} />
+            <Text role="h2" weight={t.weightBold} color={ensureContrast(t.primary, t.surface)}>{count}</Text>
             <Text role="caption" color={t.textSub}>{label}</Text>
           </div>
         ))}

@@ -2,6 +2,7 @@ import { BrandToken } from '@/types/token';
 
 const colors = [
   { name: '시그니처 블루', value: '#1A74E9', variable: '--color-brand-blue', role: '브랜드 Primary, CTA 버튼, 활성 상태' },
+  { name: 'CTA 버튼 텍스트', value: '#FFFFFF', variable: '--color-cta-text', role: 'CTA 버튼 텍스트' },
   { name: 'Blue Light', value: '#E8F1FD', variable: '--color-blue-light', role: '블루 배경 강조 영역' },
   { name: 'Teal', value: '#00C4B4', variable: '--color-teal', role: '성공, 완료, 보조 액센트, 추천 태그' },
   { name: 'Gray 900', value: '#222222', variable: '--color-gray-900', role: '본문 텍스트, 제목' },

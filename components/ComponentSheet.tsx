@@ -179,8 +179,8 @@ export default function ComponentSheet({ theme: t, category }: { theme: Resolved
             <div style={{ border: `1px solid ${t.border}`, borderRadius: t.radius.card, background: t.surface, overflow: 'hidden' }}>
               {['옵션 1', '옵션 2', '옵션 3'].map((opt, i) => (
                 <div key={opt} className="ds-press" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer', padding: `${space.sm}px ${space.md}px`, borderBottom: i < 2 ? `1px solid ${t.border}` : 'none', background: i === 0 ? t.primaryTint : 'transparent' }}>
-                  <Text role="bodySm" weight={i === 0 ? t.weightBold : t.weightRegular} color={i === 0 ? t.primary : t.textMain}>{opt}</Text>
-                  {i === 0 && <span style={{ color: t.primary, display: 'inline-flex' }}><Icon name="check" size={14} /></span>}
+                  <Text role="bodySm" weight={i === 0 ? t.weightBold : t.weightRegular} color={i === 0 ? ensureContrast(t.primary, t.primaryTint) : t.textMain}>{opt}</Text>
+                  {i === 0 && <span style={{ color: ensureContrast(t.primary, t.primaryTint), display: 'inline-flex' }}><Icon name="check" size={14} /></span>}
                 </div>
               ))}
             </div>
@@ -243,7 +243,7 @@ export default function ComponentSheet({ theme: t, category }: { theme: Resolved
                   <Thumb h={56} />
                   <div style={{ padding: space.sm }}>
                     <Text role="caption" weight={t.weightBold} style={{ display: 'block', marginBottom: space.xxs }}>항목 {i + 1}</Text>
-                    <Text role="caption" color={t.primary} weight={t.weightBold}>9,900원</Text>
+                    <Text role="caption" color={t.textMain} weight={t.weightBold}>9,900원</Text>
                   </div>
                 </Card>
               ))}
@@ -525,8 +525,8 @@ export default function ComponentSheet({ theme: t, category }: { theme: Resolved
                   { icon: 'user' as const, label: '마이', active: false },
                 ].map(({ icon, label, active }) => (
                   <div key={label} className="ds-press" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: 'pointer', gap: space.xxs, paddingTop: space.xs, paddingBottom: space.xs }}>
-                    <Icon name={icon} size={18} color={active ? t.primary : t.textMuted} />
-                    <Text role="caption" weight={active ? t.weightBold : t.weightRegular} color={active ? t.primary : t.textMuted}>{label}</Text>
+                    <Icon name={icon} size={18} color={active ? ensureContrast(t.primary, t.bg) : t.textMuted} />
+                    <Text role="caption" weight={active ? t.weightBold : t.weightRegular} color={active ? ensureContrast(t.primary, t.bg) : t.textMuted}>{label}</Text>
                   </div>
                 ))}
               </div>
@@ -543,7 +543,7 @@ export default function ComponentSheet({ theme: t, category }: { theme: Resolved
             <div style={{ borderBottom: `1px solid ${t.border}`, display: 'flex' }}>
               {['홈', '카테고리', '라이브', '마이'].map((label, i) => (
                 <div key={label} className="ds-press" style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: 'pointer', paddingBottom: space.sm, paddingTop: space.sm, borderBottom: i === 0 ? `2px solid ${t.primary}` : '2px solid transparent', marginBottom: -1 }}>
-                  <Text role="caption" weight={i === 0 ? t.weightBold : t.weightRegular} color={i === 0 ? t.primary : t.textSub}>{label}</Text>
+                  <Text role="caption" weight={i === 0 ? t.weightBold : t.weightRegular} color={i === 0 ? ensureContrast(t.primary, t.bg) : t.textSub}>{label}</Text>
                 </div>
               ))}
             </div>
@@ -572,7 +572,7 @@ export default function ComponentSheet({ theme: t, category }: { theme: Resolved
             <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: space.xs }}>
               {['홈', '카테고리', '상의', '티셔츠'].map((crumb, i, arr) => (
                 <React.Fragment key={crumb}>
-                  <Text role="caption" color={i === arr.length - 1 ? t.textMain : t.primary} weight={i === arr.length - 1 ? t.weightBold : t.weightRegular}>{crumb}</Text>
+                  <Text role="caption" color={i === arr.length - 1 ? t.textMain : ensureContrast(t.primary, t.bg)} weight={i === arr.length - 1 ? t.weightBold : t.weightRegular}>{crumb}</Text>
                   {i < arr.length - 1 && <Text role="caption" color={t.textMuted}>/</Text>}
                 </React.Fragment>
               ))}

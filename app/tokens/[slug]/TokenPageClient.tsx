@@ -130,16 +130,16 @@ const BRAND_PATTERNS: Record<string, PatternType[]> = {
 };
 
 const BRAND_COMP_CATS: Record<string, ComponentCategory[]> = {
-  daangn:    ['cards', 'navigation', 'feedback'],
-  kakao:     ['cards', 'navigation', 'feedback'],
-  kakaobank: ['cards', 'feedback', 'buttons'],
-  naver:     ['navigation', 'cards', 'inputs'],
-  baemin:    ['cards', 'navigation', 'feedback'],
-  coupang:   ['cards', 'buttons', 'inputs'],
-  '29cm':    ['cards', 'navigation'],
-  musinsa:   ['cards', 'buttons', 'inputs'],
-  ohouse:    ['cards', 'feedback', 'navigation'],
-  toss:      ['cards', 'feedback', 'buttons'],
+  daangn:    ['buttons', 'cards', 'navigation', 'feedback'],
+  kakao:     ['buttons', 'cards', 'navigation', 'feedback'],
+  kakaobank: ['buttons', 'cards', 'feedback'],
+  naver:     ['buttons', 'navigation', 'cards', 'inputs'],
+  baemin:    ['buttons', 'cards', 'navigation', 'feedback'],
+  coupang:   ['buttons', 'cards', 'inputs'],
+  '29cm':    ['buttons', 'cards', 'navigation'],
+  musinsa:   ['buttons', 'cards', 'inputs'],
+  ohouse:    ['buttons', 'cards', 'feedback', 'navigation'],
+  toss:      ['buttons', 'cards', 'feedback'],
 };
 
 export default function TokenPageClient({ token, mobileCodes, webCodes }: Props) {
