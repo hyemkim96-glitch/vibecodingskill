@@ -112,6 +112,84 @@
   --color-border-warning:   var(--palette-warning-fill);
   --color-border-info:      var(--palette-info-fill);
 
+  /* === ROLE TOKENS (component-level) === */
+
+  /* Button */
+  --comp-button-primary-bg:        var(--color-fill-normal);
+  --comp-button-primary-fg:        var(--color-text-on-fill);
+  --comp-button-secondary-bg:      var(--color-fill-neutral);
+  --comp-button-secondary-fg:      var(--color-text-normal);
+  --comp-button-secondary-bd:      var(--color-border-normal);
+  --comp-button-outline-bd:        var(--color-border-brand);
+  --comp-button-outline-fg:        var(--color-text-brand);
+  --comp-button-ghost-fg:          var(--color-text-normal);
+  --comp-button-disabled-bg:       var(--color-fill-neutral);
+  --comp-button-disabled-fg:       var(--color-text-disabled);
+
+  /* Badge */
+  --comp-badge-solid-bg:           var(--color-fill-normal);
+  --comp-badge-solid-fg:           var(--color-text-on-fill);
+  --comp-badge-soft-bg:            var(--color-fill-brand-weak);
+  --comp-badge-soft-fg:            var(--color-text-brand);
+  --comp-badge-accent-bg:          var(--color-fill-accent-weak);
+  --comp-badge-accent-fg:          var(--color-text-accent);
+  --comp-badge-muted-bg:           var(--color-bg-elevated);
+  --comp-badge-muted-fg:           var(--color-text-alternative);
+  --comp-badge-muted-bd:           var(--color-border-normal);
+
+  /* Chip */
+  --comp-chip-bg:                  var(--color-bg-elevated);
+  --comp-chip-fg:                  var(--color-text-alternative);
+  --comp-chip-bd:                  var(--color-border-normal);
+  --comp-chip-active-bg:           var(--color-fill-normal);
+  --comp-chip-active-fg:           var(--color-text-on-fill);
+
+  /* Input */
+  --comp-input-bg:                 var(--color-bg-normal);
+  --comp-input-bd:                 var(--color-border-normal);
+  --comp-input-fg:                 var(--color-text-normal);
+  --comp-input-placeholder:        var(--color-text-assistive);
+  --comp-input-label:              var(--color-text-normal);
+
+  /* Card */
+  --comp-card-bg:                  var(--color-bg-elevated);
+  --comp-card-bd:                  var(--color-border-normal);
+
+  /* NavTab */
+  --comp-navtab-fg:                var(--color-text-assistive);
+  --comp-navtab-fg-active:         var(--color-text-normal);
+  --comp-navtab-indicator:         var(--color-fill-normal);
+
+  /* === VARIANT TOKENS (interaction states) === */
+
+  /* Button states */
+  --comp-button-primary-bg-hover:    var(--color-fill-strong);
+  --comp-button-primary-bg-pressed:  var(--color-fill-alternative);
+  --comp-button-secondary-bg-hover:  var(--color-fill-neutral-alt);
+  --comp-button-outline-bd-hover:    var(--color-border-strong);
+  --comp-button-ghost-fg-hover:      var(--color-text-normal);
+  --comp-button-ghost-bg-hover:      var(--color-fill-neutral);
+
+  /* Chip states */
+  --comp-chip-bg-hover:              var(--color-fill-neutral);
+  --comp-chip-bd-hover:              var(--color-border-strong);
+
+  /* Card states */
+  --comp-card-bg-hover:              var(--color-fill-neutral);
+
+  /* Input states */
+  --comp-input-bd-focus:             var(--color-border-focus);
+  --comp-input-shadow-focus:         var(--color-fill-brand-weak);
+  --comp-input-bd-error:             var(--color-border-danger);
+  --comp-input-fg-error:             var(--color-text-danger);
+  --comp-input-bg-disabled:          var(--color-fill-neutral);
+  --comp-input-bd-disabled:          var(--color-border-weak);
+  --comp-input-fg-disabled:          var(--color-text-disabled);
+  --comp-input-placeholder-disabled: var(--color-text-disabled);
+
+  /* NavTab states */
+  --comp-navtab-fg-hover:            var(--color-text-alternative);
+
   /* === LEGACY ALIASES — will be removed in v2 === */
   --color-void:    var(--color-bg-alt);
   --color-bone:    var(--color-text-normal);
