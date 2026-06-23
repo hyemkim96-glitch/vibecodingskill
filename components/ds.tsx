@@ -540,14 +540,37 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
   );
 
   const Toast: DS['Toast'] = ({ message, tone = 'default', action, style }) => {
-    const bg = tone === 'success' ? t.success : tone === 'danger' ? t.danger : tone === 'warning' ? t.warning : tone === 'info' ? t.info : t.textMain;
-    const fg = ensureContrast(t.bg, bg);
-    const iconName: Record<string, IconName> = { success: 'checkCircle', danger: 'alertCircle', warning: 'alertCircle', info: 'info', default: 'info' };
+    const TONE = {
+      success: { accent: t.success,   icon: 'checkCircle'  as IconName },
+      danger:  { accent: t.danger,    icon: 'alertCircle'  as IconName },
+      warning: { accent: t.warning,   icon: 'alertCircle'  as IconName },
+      info:    { accent: t.info,      icon: 'info'         as IconName },
+      default: { accent: t.textMuted, icon: 'info'         as IconName },
+    };
+    const { accent, icon } = TONE[tone];
     return (
-      <div style={{ display: 'flex', alignItems: 'center', gap: space.sm, padding: `${space.sm}px ${space.md}px`, borderRadius: t.radius.card, background: bg, ...style }}>
-        <Icon name={iconName[tone]} size={16} color={fg} />
-        <span style={{ ...typeStyle(t.type.bodySm), color: fg, flex: 1 }}>{message}</span>
-        {action && <span className="ds-press" style={{ ...typeStyle(t.type.bodySm), color: fg, fontWeight: t.weightBold, cursor: 'pointer', opacity: 0.9, flexShrink: 0 }}>{action}</span>}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: space.sm,
+        padding: `${space.sm}px ${space.md}px`,
+        borderRadius: t.radius.card,
+        background: t.surface,
+        border: `1px solid ${t.border}`,
+        borderLeft: `3px solid ${accent}`,
+        boxShadow: '0 2px 8px rgba(0,0,0,0.07)',
+        ...style,
+      }}>
+        <Icon name={icon} size={16} color={accent} />
+        <span style={{ ...typeStyle(t.type.bodySm), color: t.textMain, flex: 1 }}>{message}</span>
+        {action && (
+          <span
+            className="ds-press"
+            style={{ ...typeStyle(t.type.bodySm), color: accent, fontWeight: t.weightBold, cursor: 'pointer', flexShrink: 0 }}
+          >
+            {action}
+          </span>
+        )}
       </div>
     );
   };
