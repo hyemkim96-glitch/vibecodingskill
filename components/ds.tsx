@@ -298,17 +298,22 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
     </div>
   );
 
-  const Rating: DS['Rating'] = ({ value = 4, max = 5, size = 16 }) => (
+  // Review stars read as gold/amber regardless of brand — a stable Foundation
+  // semantic, so the colour comes from t.warning (amber), never a hardcoded hex.
+  const Rating: DS['Rating'] = ({ value = 4, max = 5, size = 16 }) => {
+    const star = t.warning;
+    const gid = React.useId();
+    return (
     <div style={{ display: 'inline-flex', alignItems: 'center', gap: 2 }}>
       {Array.from({ length: max }, (_, i) => {
         const filled = i < Math.floor(value);
         const half = !filled && i < value;
         return (
-          <svg key={i} width={size} height={size} viewBox="0 0 16 16" fill={filled ? '#F5A623' : half ? 'url(#half)' : 'none'} stroke={filled || half ? '#F5A623' : t.border} strokeWidth="1.5">
+          <svg key={i} width={size} height={size} viewBox="0 0 16 16" fill={filled ? star : half ? `url(#${gid})` : 'none'} stroke={filled || half ? star : t.border} strokeWidth="1.5">
             {half && (
               <defs>
-                <linearGradient id="half" x1="0" x2="1" y1="0" y2="0">
-                  <stop offset="50%" stopColor="#F5A623" />
+                <linearGradient id={gid} x1="0" x2="1" y1="0" y2="0">
+                  <stop offset="50%" stopColor={star} />
                   <stop offset="50%" stopColor="transparent" />
                 </linearGradient>
               </defs>
@@ -318,7 +323,8 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
         );
       })}
     </div>
-  );
+    );
+  };
 
   const ListRow: DS['ListRow'] = ({ children, divider = false, style = {} }) => (
     <div
