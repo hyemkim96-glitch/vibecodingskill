@@ -1,5 +1,6 @@
 import { BrandToken } from '@/types/token';
 import { lightTokens, darkTokens } from './semanticTokens';
+import { neutral, status as sp } from './palette';
 
 /**
  * Design System Engine — Theme Resolver v2
@@ -127,11 +128,10 @@ function relativeLuminance(hex: string): number {
 
 export function contrastOn(hex: string): string {
   const L = relativeLuminance(hex);
-  // contrast ratio vs white = (L + 0.05) / (1 + 0.05)
-  // contrast ratio vs black = (0 + 0.05) / (L + 0.05) = 0.05 / (L + 0.05)
   const onWhite = (1.05) / (L + 0.05);
   const onBlack = (L + 0.05) / 0.05;
-  return onBlack > onWhite ? '#111111' : '#ffffff';
+  // Use palette neutrals: 950 (near-black) or 0 (white)
+  return onBlack > onWhite ? neutral[950].hex : neutral[0].hex;
 }
 
 function contrastRatio(a: string, b: string): number {
@@ -451,9 +451,10 @@ export function resolveTheme(
     p.shapes.find((s) => s.element === el)?.value ?? fb;
 
   // ── brand palette (separate regexes so surface ≠ surfaceAlt) ──
-  const bgFallback = isDark ? '#111111' : '#ffffff';
-  const surfFallback = isDark ? '#1e1e1e' : '#f5f6f8';
-  const surfAltFallback = isDark ? '#2a2a2a' : '#eef0f3';
+  // All fallbacks reference the canonical OKLCH neutral/status palette
+  const bgFallback      = isDark ? neutral[900].hex : neutral[0].hex;
+  const surfFallback    = isDark ? neutral[800].hex : neutral[50].hex;
+  const surfAltFallback = isDark ? neutral[700].hex : neutral[100].hex;
 
   const brandColors = {
     primary,
@@ -466,17 +467,17 @@ export function resolveTheme(
     surface: findColor(c, /카드 배경|카드 표면/, surfFallback),
     // surfaceAlt: secondary fill — "보조 배경" only, intentionally different regex
     surfaceAlt: findColor(c, /보조 배경|비활성 배경|입력 배경/, surfAltFallback),
-    textMain: findColor(c, /본문 텍스트|주요 컨텐츠|^텍스트 \(기본\)$/, isDark ? '#f0f0f0' : '#1a1a1a'),
-    textSub: findColor(c, /보조 텍스트|라벨|^텍스트 \(보조\)$/, isDark ? '#a0a0a0' : '#666666'),
-    textMuted: findColor(c, /비활성 텍스트|플레이스홀더|힌트/, isDark ? '#606060' : '#9aa0a6'),
-    border: findColor(c, /구분선|보더|^선$/, isDark ? '#333333' : '#e5e7eb'),
+    textMain:    findColor(c, /본문 텍스트|주요 컨텐츠|^텍스트 \(기본\)$/, isDark ? neutral[50].hex  : neutral[950].hex),
+    textSub:     findColor(c, /보조 텍스트|라벨|^텍스트 \(보조\)$/,        isDark ? neutral[300].hex : neutral[600].hex),
+    textMuted:   findColor(c, /비활성 텍스트|플레이스홀더|힌트/,            isDark ? neutral[500].hex : neutral[400].hex),
+    border:      findColor(c, /구분선|보더|^선$/,                           isDark ? neutral[700].hex : neutral[200].hex),
     accent,
-    success:      findColor(c, /성공|증가|긍정/, '#27B853'),
-    danger:       findColor(c, /에러|위험|감소|부정/, '#F04452'),
-    warning:      '#F5A623',
-    info:         '#3182F6',
-    disabled:     isDark ? '#2a2a2a' : '#f0f0f2',
-    textDisabled: isDark ? '#505050' : '#b0b0b8',
+    success:      findColor(c, /성공|증가|긍정/, sp.success.fill.hex),
+    danger:       findColor(c, /에러|위험|감소|부정/, sp.danger.fill.hex),
+    warning:      sp.warning.fill.hex,
+    info:         sp.info.fill.hex,
+    disabled:     isDark ? neutral[700].hex : neutral[100].hex,
+    textDisabled: isDark ? neutral[600].hex : neutral[300].hex,
     successText: '', dangerText: '', warningText: '', infoText: '',
   };
 
@@ -495,7 +496,7 @@ export function resolveTheme(
     warningText: ensureContrast(palette.warning, bgColor),
     infoText:    ensureContrast(palette.info,    bgColor),
 
-    textOnImage: '#ffffff',
+    textOnImage: neutral[0].hex,
     scrim: 'linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 60%)',
 
     font: mode === 'wireframe'
