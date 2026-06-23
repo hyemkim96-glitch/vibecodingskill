@@ -59,7 +59,7 @@ export interface ResolvedTheme {
   dangerText: string;
   warningText: string;
   infoText: string;
-  starFill: string;      // star rating gold — --color-star (amber[400]/[300])
+  starFill: string;      // warm highlight amber — --color-fill-highlight
   textOnImage: string;   // text placed over imagery (inverse)
   scrim: string;         // gradient overlay for image legibility
 
@@ -233,7 +233,7 @@ const WIREFRAME_LIGHT = {
   info:         wl['--color-fill-info'],
   disabled:     wl['--color-fill-neutral-alt'],
   textDisabled: wl['--color-text-disabled'],
-  starFill:     wl['--color-star'],
+  starFill:     wl['--color-fill-highlight'],
   successText: '', dangerText: '', warningText: '', infoText: '',
 };
 
@@ -256,7 +256,7 @@ const WIREFRAME_DARK = {
   info:         wd['--color-fill-info'],
   disabled:     wd['--color-fill-neutral-alt'],
   textDisabled: wd['--color-text-disabled'],
-  starFill:     wd['--color-star'],
+  starFill:     wd['--color-fill-highlight'],
   successText: '', dangerText: '', warningText: '', infoText: '',
 };
 
@@ -352,7 +352,7 @@ export function resolveTheme(
     info:         lt['--color-fill-info'],
     disabled:     isDark ? dt['--color-fill-neutral']     : lt['--color-fill-neutral'],
     textDisabled: isDark ? dt['--color-text-disabled']    : lt['--color-text-disabled'],
-    starFill:     isDark ? dt['--color-star']             : lt['--color-star'],
+    starFill:     isDark ? dt['--color-fill-highlight']    : lt['--color-fill-highlight'],
     successText: '', dangerText: '', warningText: '', infoText: '',
   };
 

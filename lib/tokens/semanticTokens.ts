@@ -57,8 +57,8 @@ export const lightTokens: TokenMap = {
   '--color-border-warning':    amber[600].hex,
   '--color-border-info':       blue[600].hex,
 
-  // Star rating
-  '--color-star':              amber[400].hex,   // L≈0.752 — vibrant gold on white
+  // Highlight — warm amber for positive emphasis (ratings, featured, callouts)
+  '--color-fill-highlight':    amber[400].hex,   // L≈0.752 — bright amber, no warning connotation
 };
 
 export const darkTokens: TokenMap = {
@@ -111,8 +111,8 @@ export const darkTokens: TokenMap = {
   '--color-border-warning':    amber[600].hex,
   '--color-border-info':       blue[600].hex,
 
-  // Star rating
-  '--color-star':              amber[300].hex,   // L≈0.832 — brighter gold on dark bg
+  // Highlight — warm amber for positive emphasis (ratings, featured, callouts)
+  '--color-fill-highlight':    amber[300].hex,   // L≈0.832 — brighter on dark bg
 };
 
 /**
