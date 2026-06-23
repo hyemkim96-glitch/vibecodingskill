@@ -9,7 +9,7 @@ import { neutral, hues, HueName } from '@/lib/tokens/palette';
 import { lightTokens, darkTokens } from '@/lib/tokens/semanticTokens';
 import { lightRoleTokens, darkRoleTokens, lightVariantTokens, darkVariantTokens } from '@/lib/tokens/roleTokens';
 
-type FoundationCategory = 'color' | 'type' | 'space' | 'radius' | 'stroke' | 'motion';
+type FoundationCategory = 'color' | 'type' | 'space' | 'radius' | 'stroke' | 'effect' | 'motion';
 
 const CATEGORIES: { key: FoundationCategory; label: string }[] = [
   { key: 'color',  label: '컬러' },
@@ -17,6 +17,7 @@ const CATEGORIES: { key: FoundationCategory; label: string }[] = [
   { key: 'space',  label: '여백' },
   { key: 'radius', label: '모서리' },
   { key: 'stroke', label: '스트로크' },
+  { key: 'effect', label: '이펙트' },
   { key: 'motion', label: '모션' },
 ];
 
@@ -54,6 +55,7 @@ export default function FoundationClient() {
         {active === 'space'  && <SpacePanel  t={t} ds={ds} />}
         {active === 'radius' && <RadiusPanel t={t} ds={ds} />}
         {active === 'stroke' && <StrokePanel t={t} ds={ds} />}
+        {active === 'effect' && <EffectPanel t={t} ds={ds} />}
         {active === 'motion' && <MotionPanel t={t} ds={ds} />}
       </div>
     </div>
@@ -643,6 +645,68 @@ function RadiusPanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
 /* ══════════════════════════════════════════
    모션 패널
 ══════════════════════════════════════════ */
+/* ══════════════════════════════════════════
+   이펙트 (그림자/엘리베이션) 패널
+══════════════════════════════════════════ */
+function EffectPanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
+  const { Table } = ds;
+  const levels: { key: keyof Theme['shadow']; label: string; usage: string }[] = [
+    { key: 'sm', label: 'Elevation 1 · sm', usage: '미묘한 분리 — 탭, 칩, 작은 토글' },
+    { key: 'md', label: 'Elevation 2 · md', usage: '떠 있는 표면 — 카드, 토스트, 스낵바' },
+    { key: 'lg', label: 'Elevation 3 · lg', usage: '오버레이 — 드롭다운, 팝오버, 메뉴' },
+    { key: 'xl', label: 'Elevation 4 · xl', usage: '모달 — 다이얼로그, 바텀시트' },
+  ];
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
+      {/* ── 원칙 ── */}
+      <Section t={t} title="원칙" first>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.sm }}>
+          {[
+            '엘리베이션은 4단계 스케일(sm→xl)만 사용 — 임의의 그림자 값을 컴포넌트에 직접 작성하지 않습니다.',
+            '높이가 올라갈수록 blur와 불투명도가 함께 커져 깊이가 일관되게 읽힙니다.',
+            '같은 평면(같은 레이어)의 요소는 같은 엘리베이션을 공유합니다.',
+            '다크 모드에서는 그림자 불투명도가 자동으로 강해져 어두운 표면에서도 깊이가 보입니다.',
+          ].map((line) => (
+            <div key={line} style={{ display: 'flex', gap: t.space.sm, alignItems: 'flex-start' }}>
+              <span style={{ color: t.textMuted }}>·</span>
+              <span style={{ ...bodySm(t), color: t.textMain }}>{line}</span>
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      {/* ── 토큰 ── */}
+      <Section t={t} title="토큰">
+        <Table
+          rows={levels.map((l) => ({ label: l.key, value: t.shadow[l.key], tone: 'default' as const }))}
+        />
+      </Section>
+
+      {/* ── 미리보기 ── */}
+      <Section t={t} title="엘리베이션 스케일">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: t.space.xl, padding: `${t.space.sm}px 0 ${t.space.xl}px` }}>
+          {levels.map((l) => (
+            <div key={l.key} style={{ display: 'flex', flexDirection: 'column', gap: t.space.md, alignItems: 'center' }}>
+              <div style={{
+                width: '100%', height: 72,
+                borderRadius: t.radius.card,
+                background: t.surface,
+                border: `1px solid ${t.border}`,
+                boxShadow: t.shadow[l.key],
+              }} />
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ ...cap(t), fontWeight: t.weightBold, color: t.textMain }}>{l.label}</div>
+                <div style={{ ...cap(t), color: t.textMuted, marginTop: t.space.xxs }}>{l.usage}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Section>
+    </div>
+  );
+}
+
 function MotionPanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
   const { Table, TokenCard } = ds;
   const m = t.motion;

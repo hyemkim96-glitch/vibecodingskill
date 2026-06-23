@@ -187,17 +187,19 @@ const BRAND_PATTERNS: Record<string, PatternType[]> = {
   toss:      ['main', 'history', 'payment', 'mypage'],
 };
 
+// Each brand's category list includes the category hosting its signature component
+// (feedback for status/gauge, cards for balance/collect/editorial/ranking/chat).
 const BRAND_COMP_CATS: Record<string, ComponentCategory[]> = {
-  daangn:    ['buttons', 'signature', 'cards', 'navigation', 'feedback'],
-  kakao:     ['buttons', 'signature', 'cards', 'navigation', 'feedback'],
-  kakaobank: ['buttons', 'signature', 'cards', 'feedback'],
-  naver:     ['buttons', 'signature', 'navigation', 'cards', 'inputs'],
-  baemin:    ['buttons', 'signature', 'cards', 'navigation', 'feedback'],
-  coupang:   ['buttons', 'signature', 'cards', 'inputs'],
-  '29cm':    ['buttons', 'signature', 'cards', 'navigation'],
-  musinsa:   ['buttons', 'signature', 'cards', 'inputs'],
-  ohouse:    ['buttons', 'signature', 'cards', 'feedback', 'navigation'],
-  toss:      ['buttons', 'signature', 'cards', 'feedback'],
+  daangn:    ['buttons', 'feedback', 'cards', 'navigation'],   // gauge → feedback
+  kakao:     ['buttons', 'cards', 'navigation', 'feedback'],   // chat → cards
+  kakaobank: ['buttons', 'cards', 'feedback'],                 // balance → cards
+  naver:     ['buttons', 'cards', 'navigation', 'inputs'],     // ranking → cards
+  baemin:    ['buttons', 'feedback', 'cards', 'navigation'],   // status → feedback
+  coupang:   ['buttons', 'feedback', 'cards', 'inputs'],       // status → feedback
+  '29cm':    ['buttons', 'cards', 'navigation'],               // editorial → cards
+  musinsa:   ['buttons', 'cards', 'inputs'],                   // editorial → cards
+  ohouse:    ['buttons', 'cards', 'feedback', 'navigation'],   // collect → cards
+  toss:      ['buttons', 'cards', 'feedback'],                 // balance → cards
 };
 
 export default function TokenPageClient({ token, mobileCodes, webCodes }: Props) {
@@ -524,7 +526,7 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
               active={compCategory}
               onChange={(k) => setCompCategory(k as ComponentCategory)}
             />
-            <ComponentSheet theme={brandTheme} category={compCategory} />
+            <ComponentSheet theme={brandTheme} category={compCategory} signature={contentPack.signature} />
           </div>
         )}
 

@@ -562,7 +562,7 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
         display: 'flex', alignItems: 'center', gap: space.sm,
         padding: `${space.sm}px ${space.md}px`, borderRadius: t.radius.card,
         background: t.surface, border: `1px solid ${t.border}`,
-        boxShadow: '0 2px 8px rgba(0,0,0,0.07)',
+        boxShadow: t.shadow.md,
         ...style,
       }}>
         <Icon name={icon} size={16} color={accent} />
@@ -617,12 +617,12 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
     <div style={{
       display: 'flex', flexDirection: 'column', gap: space.sm,
       padding: t.cardPad, borderRadius: t.radius.card,
-      background: t.primaryTint, border: `1px solid ${t.border}`, ...style,
+      background: t.surface, border: `1px solid ${t.border}`, ...style,
     }}>
       <span style={{ ...typeStyle(t.type.caption), color: t.textSub }}>{label}</span>
       <div style={{ display: 'flex', alignItems: 'baseline', gap: space.sm }}>
         <span style={{ ...typeStyle(t.type.h1), fontWeight: t.weightBold, color: t.textMain }}>{value}</span>
-        {delta && <span style={{ ...typeStyle(t.type.caption), fontWeight: t.weightBold, color: ensureContrast(t.success, t.primaryTint) }}>{delta}</span>}
+        {delta && <span style={{ ...typeStyle(t.type.caption), fontWeight: t.weightBold, color: ensureContrast(t.success, t.surface) }}>{delta}</span>}
       </div>
       {actions.length > 0 && (
         <div style={{ display: 'flex', gap: space.xs, marginTop: space.xs }}>
@@ -655,7 +655,7 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
   };
 
   const RankingList: DS['RankingList'] = ({ items, style }) => (
-    <div style={{ display: 'flex', flexDirection: 'column', borderRadius: t.radius.card, border: `1px solid ${t.border}`, overflow: 'hidden', ...style }}>
+    <div style={{ display: 'flex', flexDirection: 'column', borderRadius: t.radius.card, border: `1px solid ${t.border}`, background: t.surface, overflow: 'hidden', ...style }}>
       {items.map((it, i) => {
         const deltaColor = it.delta === 'up' ? t.danger : it.delta === 'down' ? ensureContrast(t.info, t.surface) : t.textMuted;
         const deltaSym = it.delta === 'up' ? '▲' : it.delta === 'down' ? '▼' : '▬';
@@ -676,7 +676,7 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
   const SaveCollect: DS['SaveCollect'] = ({ count = 0, saved = false, tag, h = 120, style }) => (
     <div style={{ position: 'relative', borderRadius: t.radius.card, overflow: 'hidden', ...style }}>
       <Thumb h={h} />
-      <div className="ds-press" style={{ position: 'absolute', top: space.sm, right: space.sm, width: 30, height: 30, borderRadius: 9999, background: t.surface, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 1px 4px rgba(0,0,0,0.18)', cursor: 'pointer' }}>
+      <div className="ds-press" style={{ position: 'absolute', top: space.sm, right: space.sm, width: 30, height: 30, borderRadius: 9999, background: t.surface, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: t.shadow.sm, cursor: 'pointer' }}>
         <Icon name="heart" size={16} color={saved ? t.danger : t.textMuted} />
       </div>
       {tag && (
@@ -709,7 +709,7 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
       {messages.map((m, i) => (
         <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: m.me ? 'flex-end' : 'flex-start', gap: 2 }}>
           <div style={{
-            maxWidth: '78%', padding: `${space.xs}px ${space.sm}px`, borderRadius: t.radius.card,
+            maxWidth: '78%', padding: `${space.xs}px ${space.lg}px`, borderRadius: t.radius.card,
             background: m.me ? t.primary : t.surface,
             color: m.me ? t.onPrimary : t.textMain,
             border: m.me ? 'none' : `1px solid ${t.border}`,

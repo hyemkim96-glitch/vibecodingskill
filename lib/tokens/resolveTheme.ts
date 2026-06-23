@@ -95,6 +95,9 @@ export interface ResolvedTheme {
   // ── motion ──
   motion: ResolvedMotion;
 
+  // ── elevation (shadow scale) ──
+  shadow: { sm: string; md: string; lg: string; xl: string };
+
   // ── meta ──
   density: string;
   isMobile: boolean;
@@ -399,6 +402,8 @@ export function resolveTheme(
 
     motion: resolveMotion(token.deep),
 
+    shadow: resolveShadows(isDark),
+
     density,
     isMobile: platform === 'mobile',
     isDark,
@@ -431,6 +436,28 @@ function resolveLayoutArchetype(token: BrandToken): LayoutArchetype {
   if (/커머스/.test(cat)) return 'grid';
   if (/플랫폼/.test(cat)) return 'list';
   return 'feed';
+}
+
+/**
+ * Elevation ramp — a single consistent shadow scale (sm→xl). Each level layers an
+ * ambient + key shadow whose blur and opacity grow with elevation, so depth reads
+ * uniformly across the system instead of ad-hoc per-component shadows.
+ *   sm  미묘한 분리 (탭, 칩, 작은 토글)
+ *   md  떠 있는 표면 (카드, 토스트, 스낵바)
+ *   lg  오버레이 (드롭다운, 팝오버, 메뉴)
+ *   xl  모달 (다이얼로그, 바텀시트)
+ * Dark surfaces need deeper shadows to register, so opacities scale up when isDark.
+ */
+function resolveShadows(isDark: boolean): ResolvedTheme['shadow'] {
+  const rgb = isDark ? '0,0,0' : '17,17,17';
+  const k = isDark ? 1.8 : 1;
+  const a = (n: number) => Math.min(0.5, n * k).toFixed(3);
+  return {
+    sm: `0 1px 2px rgba(${rgb},${a(0.06)})`,
+    md: `0 2px 4px rgba(${rgb},${a(0.05)}), 0 4px 12px rgba(${rgb},${a(0.08)})`,
+    lg: `0 4px 8px rgba(${rgb},${a(0.06)}), 0 12px 28px rgba(${rgb},${a(0.12)})`,
+    xl: `0 8px 16px rgba(${rgb},${a(0.08)}), 0 24px 56px rgba(${rgb},${a(0.16)})`,
+  };
 }
 
 function resolveIconStyleFromToken(token: BrandToken): 'lucide' | 'phosphor' | 'tabler' {
