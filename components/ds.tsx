@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { ResolvedTheme, ResolvedType, ensureContrast } from '@/lib/tokens/resolveTheme';
+import { ResolvedTheme, ResolvedType, ensureContrast, contrastOn } from '@/lib/tokens/resolveTheme';
 import { Icon as IconBase, IconName } from '@/components/icons';
 
 /**
