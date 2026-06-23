@@ -4,7 +4,7 @@
  * Pure functions — no React imports
  */
 
-import { neutral, status, PaletteColor } from './palette';
+import { neutral, hues, PaletteColor } from './palette';
 import { TokenMap, lightTokens } from './semanticTokens';
 
 /**
@@ -59,10 +59,10 @@ function getAllPaletteColors(): Array<{ color: PaletteColor; key: string }> {
     entries.push({ color: color as PaletteColor, key: `neutral-${step}` });
   }
 
-  // Status colors
-  for (const [category, variants] of Object.entries(status)) {
-    for (const [variant, color] of Object.entries(variants)) {
-      entries.push({ color: color as PaletteColor, key: `status-${category}-${variant}` });
+  // Hue families
+  for (const [hueName, steps] of Object.entries(hues)) {
+    for (const [step, c] of Object.entries(steps)) {
+      entries.push({ color: c as PaletteColor, key: `${hueName}-${step}` });
     }
   }
 

@@ -3,7 +3,7 @@
  * Light and dark mode token maps using the primitive palette
  */
 
-import { neutral, status } from './palette';
+import { neutral, green, red, amber, blue, violet } from './palette';
 
 export type TokenMap = Record<string, string>;
 
@@ -22,16 +22,16 @@ export const lightTokens: TokenMap = {
   '--color-fill-neutral-alt': neutral[200].hex,
   '--color-fill-brand':       neutral[900].hex,
   '--color-fill-brand-weak':  neutral[100].hex,
-  '--color-fill-success':     status.success.fill.hex,
-  '--color-fill-success-weak': status.success.bg.hex,
-  '--color-fill-danger':      status.danger.fill.hex,
-  '--color-fill-danger-weak': status.danger.bg.hex,
-  '--color-fill-warning':     status.warning.fill.hex,
-  '--color-fill-warning-weak': status.warning.bg.hex,
-  '--color-fill-info':        status.info.fill.hex,
-  '--color-fill-info-weak':   status.info.bg.hex,
-  '--color-fill-accent':      status.accent.fill.hex,
-  '--color-fill-accent-weak': status.accent.bg.hex,
+  '--color-fill-success':      green[600].hex,
+  '--color-fill-success-weak': green[50].hex,
+  '--color-fill-danger':       red[600].hex,
+  '--color-fill-danger-weak':  red[50].hex,
+  '--color-fill-warning':      amber[600].hex,
+  '--color-fill-warning-weak': amber[50].hex,
+  '--color-fill-info':         blue[600].hex,
+  '--color-fill-info-weak':    blue[50].hex,
+  '--color-fill-accent':       violet[600].hex,
+  '--color-fill-accent-weak':  violet[50].hex,
 
   // Text
   '--color-text-normal':      neutral[950].hex,
@@ -40,11 +40,11 @@ export const lightTokens: TokenMap = {
   '--color-text-disabled':    neutral[300].hex,
   '--color-text-on-fill':     neutral[0].hex,
   '--color-text-brand':       neutral[900].hex,
-  '--color-text-success':     status.success.text.hex,
-  '--color-text-danger':      status.danger.text.hex,
-  '--color-text-warning':     status.warning.text.hex,
-  '--color-text-info':        status.info.text.hex,
-  '--color-text-accent':      status.accent.text.hex,
+  '--color-text-success':      green[700].hex,
+  '--color-text-danger':       red[700].hex,
+  '--color-text-warning':      amber[700].hex,
+  '--color-text-info':         blue[700].hex,
+  '--color-text-accent':       violet[700].hex,
 
   // Border
   '--color-border-normal':    neutral[200].hex,
@@ -52,10 +52,10 @@ export const lightTokens: TokenMap = {
   '--color-border-weak':      neutral[100].hex,
   '--color-border-brand':     neutral[900].hex,
   '--color-border-focus':     neutral[900].hex,
-  '--color-border-success':   status.success.fill.hex,
-  '--color-border-danger':    status.danger.fill.hex,
-  '--color-border-warning':   status.warning.fill.hex,
-  '--color-border-info':      status.info.fill.hex,
+  '--color-border-success':    green[600].hex,
+  '--color-border-danger':     red[600].hex,
+  '--color-border-warning':    amber[600].hex,
+  '--color-border-info':       blue[600].hex,
 };
 
 export const darkTokens: TokenMap = {
@@ -73,16 +73,16 @@ export const darkTokens: TokenMap = {
   '--color-fill-neutral-alt': neutral[700].hex,
   '--color-fill-brand':       neutral[50].hex,
   '--color-fill-brand-weak':  neutral[800].hex,
-  '--color-fill-success':     status.success.fill.hex,
-  '--color-fill-success-weak': status.success.bg.hex,
-  '--color-fill-danger':      status.danger.fill.hex,
-  '--color-fill-danger-weak': status.danger.bg.hex,
-  '--color-fill-warning':     status.warning.fill.hex,
-  '--color-fill-warning-weak': status.warning.bg.hex,
-  '--color-fill-info':        status.info.fill.hex,
-  '--color-fill-info-weak':   status.info.bg.hex,
-  '--color-fill-accent':      status.accent.fill.hex,
-  '--color-fill-accent-weak': status.accent.bg.hex,
+  '--color-fill-success':      green[600].hex,
+  '--color-fill-success-weak': green[50].hex,
+  '--color-fill-danger':       red[600].hex,
+  '--color-fill-danger-weak':  red[50].hex,
+  '--color-fill-warning':      amber[600].hex,
+  '--color-fill-warning-weak': amber[50].hex,
+  '--color-fill-info':         blue[600].hex,
+  '--color-fill-info-weak':    blue[50].hex,
+  '--color-fill-accent':       violet[600].hex,
+  '--color-fill-accent-weak':  violet[50].hex,
 
   // Text
   '--color-text-normal':      neutral[50].hex,
@@ -91,11 +91,11 @@ export const darkTokens: TokenMap = {
   '--color-text-disabled':    neutral[700].hex,
   '--color-text-on-fill':     neutral[950].hex,
   '--color-text-brand':       neutral[50].hex,
-  '--color-text-success':     status.success.text.hex,
-  '--color-text-danger':      status.danger.text.hex,
-  '--color-text-warning':     status.warning.text.hex,
-  '--color-text-info':        status.info.text.hex,
-  '--color-text-accent':      status.accent.text.hex,
+  '--color-text-success':      green[700].hex,
+  '--color-text-danger':       red[700].hex,
+  '--color-text-warning':      amber[700].hex,
+  '--color-text-info':         blue[700].hex,
+  '--color-text-accent':       violet[700].hex,
 
   // Border
   '--color-border-normal':    neutral[700].hex,
@@ -103,10 +103,10 @@ export const darkTokens: TokenMap = {
   '--color-border-weak':      neutral[800].hex,
   '--color-border-brand':     neutral[50].hex,
   '--color-border-focus':     neutral[50].hex,
-  '--color-border-success':   status.success.fill.hex,
-  '--color-border-danger':    status.danger.fill.hex,
-  '--color-border-warning':   status.warning.fill.hex,
-  '--color-border-info':      status.info.fill.hex,
+  '--color-border-success':    green[600].hex,
+  '--color-border-danger':     red[600].hex,
+  '--color-border-warning':    amber[600].hex,
+  '--color-border-info':       blue[600].hex,
 };
 
 /**

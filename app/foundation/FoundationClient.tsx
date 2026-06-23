@@ -5,7 +5,7 @@ import { ResolvedTheme } from '@/lib/tokens/resolveTheme';
 import { typeStyle, createDS } from '@/components/ds';
 import PillTabs from '@/components/PillTabs';
 import { serviceDS, serviceMobileTheme } from '@/lib/tokens/serviceTheme';
-import { neutral, status } from '@/lib/tokens/palette';
+import { neutral, hues, HueName } from '@/lib/tokens/palette';
 import { lightTokens, darkTokens } from '@/lib/tokens/semanticTokens';
 import { lightRoleTokens, darkRoleTokens, lightVariantTokens, darkVariantTokens } from '@/lib/tokens/roleTokens';
 
@@ -110,13 +110,8 @@ function TokenLabel({ t, name, value, sub }: { t: Theme; name: string; value: st
 function ColorPanel({ t }: { t: Theme; ds: ReturnType<typeof createDS> }) {
   const neutralSteps = [0, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950, 1000] as const;
 
-  const statusGroups = [
-    { name: 'success', label: '성공', s: status.success },
-    { name: 'danger',  label: '위험', s: status.danger  },
-    { name: 'warning', label: '경고', s: status.warning },
-    { name: 'info',    label: '정보', s: status.info    },
-    { name: 'accent',  label: '강조', s: status.accent  },
-  ];
+  const HUE_STEPS = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950] as const;
+  const hueNames = Object.keys(hues) as HueName[];
 
   const semanticGroups = [
     { key: 'Fill',       prefix: '--color-fill-',   roles: ['normal','strong','alternative','neutral','neutral-alt','brand','brand-weak'] },
@@ -252,35 +247,35 @@ function ColorPanel({ t }: { t: Theme; ds: ReturnType<typeof createDS> }) {
         })}
       </div>
 
-      {/* 상태색 */}
-      <GroupLabel>Status</GroupLabel>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.xs, marginTop: t.space.xs }}>
-        {/* 컬럼 헤더 */}
-        <div style={{ display: 'grid', gridTemplateColumns: '36px 1fr 1fr 1fr', gap: t.space.xs }}>
-          <span />
-          {['fill','text','bg'].map((r) => (
-            <span key={r} style={{ ...cap(t), color: t.textMuted, textAlign: 'center' }}>{r}</span>
-          ))}
-        </div>
-        {statusGroups.map(({ name, label, s }) => (
-          <div key={name} style={{ display: 'grid', gridTemplateColumns: '36px 1fr 1fr 1fr', gap: t.space.xs, alignItems: 'stretch' }}>
-            <span style={{ ...cap(t), color: t.textSub, alignSelf: 'center' }}>{label}</span>
-            {[
-              { hex: s.fill.hex, oklch: s.fill.oklch },
-              { hex: s.text.hex, oklch: s.text.oklch },
-              { hex: s.bg.hex,   oklch: s.bg.oklch   },
-            ].map(({ hex, oklch }, ci) => (
-              <div key={ci} style={{ borderRadius: t.radius.badge, overflow: 'hidden', border: `1px solid ${t.border}` }}>
-                <div style={{ height: 28, background: hex }} />
-                <div style={{ padding: '3px 5px', background: t.surface }}>
-                  <div style={{ ...cap(t), fontFamily: 'monospace', color: t.textMain }}>{hex}</div>
-                  <div style={{ fontSize: 10, fontFamily: 'monospace', color: t.textMuted, lineHeight: 1.3, marginTop: 2 }}>{oklch}</div>
-                </div>
-              </div>
-            ))}
-          </div>
+      {/* 컬러 패밀리 */}
+      <GroupLabel>Hues</GroupLabel>
+      {/* 스텝 헤더 */}
+      <div style={{ display: 'grid', gridTemplateColumns: '52px repeat(11, 1fr)', gap: 2, marginTop: t.space.xs, marginBottom: 2 }}>
+        <span />
+        {HUE_STEPS.map((s) => (
+          <span key={s} style={{ fontSize: 10, color: t.textMuted, textAlign: 'center', lineHeight: 1.4 }}>{s}</span>
         ))}
       </div>
+      {hueNames.map((name) => (
+        <div key={name} style={{ display: 'grid', gridTemplateColumns: '52px repeat(11, 1fr)', gap: 2, marginBottom: 2 }}>
+          <span style={{ ...cap(t), color: t.textSub, alignSelf: 'center', paddingRight: t.space.xs }}>{name}</span>
+          {HUE_STEPS.map((step) => {
+            const entry = hues[name][step];
+            return (
+              <div
+                key={step}
+                title={`${name}-${step}: ${entry.hex}\n${entry.oklch}`}
+                style={{
+                  height: 28,
+                  borderRadius: t.radius.badge,
+                  background: entry.hex,
+                  border: `1px solid ${t.border}`,
+                }}
+              />
+            );
+          })}
+        </div>
+      ))}
 
       {/* ─── TIER 2: Semantic ────────────────────────── */}
       <TierHeader num="2" label="Semantic" desc="의미 기반 역할 맵핑 — --color-{category}-{role}" />
