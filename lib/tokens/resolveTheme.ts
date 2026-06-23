@@ -102,7 +102,11 @@ export interface ResolvedTheme {
   category: string;
   isLocal: boolean;
   iconStyle: 'lucide' | 'phosphor' | 'tabler';
+  // structural layout signature derived from layout.columns + category
+  archetype: LayoutArchetype;
 }
+
+export type LayoutArchetype = 'masonry' | 'grid' | 'list' | 'stack' | 'feed';
 
 /* ── helpers ── */
 
@@ -303,11 +307,13 @@ export function resolveTheme(
     xl: baseUnit * 6,      // 24–36px
   };
 
+  // Amplified rhythm — compact vs spacious gap widened so density reads as a
+  // real brand signal (Naver dense multi-section vs Toss airy single-focus).
   const rhythm = {
-    compact:     { container: 12, card: 12, stack: 8,  row: 6  },
-    regular:     { container: 16, card: 16, stack: 12, row: 8  },
-    comfortable: { container: 18, card: 16, stack: 14, row: 9  },
-    spacious:    { container: 24, card: 20, stack: 16, row: 10 },
+    compact:     { container: 10, card: 10, stack: 6,  row: 5  },
+    regular:     { container: 16, card: 14, stack: 12, row: 8  },
+    comfortable: { container: 20, card: 18, stack: 16, row: 10 },
+    spacious:    { container: 28, card: 24, stack: 20, row: 13 },
   } as const;
   const r = rhythm[(density as keyof typeof rhythm)] ?? rhythm.regular;
 
@@ -399,7 +405,32 @@ export function resolveTheme(
     category: token.category,
     isLocal,
     iconStyle: resolveIconStyleFromToken(token),
+    archetype: resolveLayoutArchetype(token),
   };
+}
+
+/**
+ * Derive the structural layout signature — a brand-level trait, so always read
+ * from the web layout.columns (mobile has no columns field) plus category.
+ *   "핀터레스트형 2열 Masonry"  → masonry   (Ohouse)
+ *   "음식점 4열 그리드"/"product grid" → grid (Baemin·Coupang·Musinsa)
+ *   "주 콘텐츠 + 사이드바"       → list      (Naver·Daangn·Kakao)
+ *   "매거진 레이아웃 비대칭"     → feed      (29CM)
+ *   핀테크 single column         → stack     (Toss·KakaoBank)
+ * A bare "12-column grid" is a generic CSS descriptor, not a product grid, so it
+ * is ignored in favour of the category default.
+ */
+function resolveLayoutArchetype(token: BrandToken): LayoutArchetype {
+  const c = (token.platforms.web.layout.columns ?? '').toLowerCase();
+  const cat = token.category;
+  if (/masonry|핀터레스트/.test(c)) return 'masonry';
+  if (/매거진|에디토리얼|비대칭|editorial|magazine/.test(c)) return 'feed';
+  if (/사이드바|sidebar/.test(c)) return 'list';
+  if (/\d+열|상품.*그리드|음식점.*그리드|product\s*grid/.test(c)) return 'grid';
+  if (/핀테크|금융|뱅킹/.test(cat)) return 'stack';
+  if (/커머스/.test(cat)) return 'grid';
+  if (/플랫폼/.test(cat)) return 'list';
+  return 'feed';
 }
 
 function resolveIconStyleFromToken(token: BrandToken): 'lucide' | 'phosphor' | 'tabler' {

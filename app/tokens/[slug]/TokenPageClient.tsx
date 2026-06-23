@@ -6,6 +6,7 @@ import { Copy, Check, Download } from 'lucide-react';
 import BrandUIPreview from '@/components/BrandUIPreview';
 import ComponentSheet, { COMPONENT_CATEGORIES, ComponentCategory } from '@/components/ComponentSheet';
 import { renderPattern, PATTERN_TYPES, PatternType } from '@/components/patterns';
+import { getContentPack } from '@/lib/content/packs';
 import { resolveTheme } from '@/lib/tokens/resolveTheme';
 import { hexToOklch, oklchToHex } from '@/lib/tokens/oklch';
 import { createDS, motionVars } from '@/components/ds';
@@ -187,16 +188,16 @@ const BRAND_PATTERNS: Record<string, PatternType[]> = {
 };
 
 const BRAND_COMP_CATS: Record<string, ComponentCategory[]> = {
-  daangn:    ['buttons', 'cards', 'navigation', 'feedback'],
-  kakao:     ['buttons', 'cards', 'navigation', 'feedback'],
-  kakaobank: ['buttons', 'cards', 'feedback'],
-  naver:     ['buttons', 'navigation', 'cards', 'inputs'],
-  baemin:    ['buttons', 'cards', 'navigation', 'feedback'],
-  coupang:   ['buttons', 'cards', 'inputs'],
-  '29cm':    ['buttons', 'cards', 'navigation'],
-  musinsa:   ['buttons', 'cards', 'inputs'],
-  ohouse:    ['buttons', 'cards', 'feedback', 'navigation'],
-  toss:      ['buttons', 'cards', 'feedback'],
+  daangn:    ['buttons', 'signature', 'cards', 'navigation', 'feedback'],
+  kakao:     ['buttons', 'signature', 'cards', 'navigation', 'feedback'],
+  kakaobank: ['buttons', 'signature', 'cards', 'feedback'],
+  naver:     ['buttons', 'signature', 'navigation', 'cards', 'inputs'],
+  baemin:    ['buttons', 'signature', 'cards', 'navigation', 'feedback'],
+  coupang:   ['buttons', 'signature', 'cards', 'inputs'],
+  '29cm':    ['buttons', 'signature', 'cards', 'navigation'],
+  musinsa:   ['buttons', 'signature', 'cards', 'inputs'],
+  ohouse:    ['buttons', 'signature', 'cards', 'feedback', 'navigation'],
+  toss:      ['buttons', 'signature', 'cards', 'feedback'],
 };
 
 export default function TokenPageClient({ token, mobileCodes, webCodes }: Props) {
@@ -229,6 +230,8 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
     () => generateBrandPalette(brandTheme.primary),
     [brandTheme.primary],
   );
+
+  const contentPack = useMemo(() => getContentPack(token), [token]);
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(codes[activeTab]);
@@ -542,7 +545,7 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
               }}
             >
               <div className="ds-root" style={motionVars(brandTheme)}>
-                {renderPattern(activePattern, brandDS, platform)}
+                {renderPattern(activePattern, brandDS, platform, contentPack)}
               </div>
             </div>
           </div>

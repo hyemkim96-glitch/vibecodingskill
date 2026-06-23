@@ -112,6 +112,15 @@ export interface DS {
     swatch?: string;
     style?: React.CSSProperties;
   }>;
+
+  // ── signature primitives (brand-distinctive, theme-driven) ──
+  StatusTracker: React.FC<{ steps: string[]; current?: number; style?: React.CSSProperties }>;
+  BalanceCard: React.FC<{ label: string; value: string; delta?: string; actions?: string[]; style?: React.CSSProperties }>;
+  GaugeMeter: React.FC<{ label: string; value: string; ratio?: number; caption?: string; style?: React.CSSProperties }>;
+  RankingList: React.FC<{ items: Array<{ title: string; sub?: string; delta?: 'up' | 'down' | 'same' }>; style?: React.CSSProperties }>;
+  SaveCollect: React.FC<{ count?: number; saved?: boolean; tag?: string; h?: number; style?: React.CSSProperties }>;
+  EditorialCard: React.FC<{ title: string; sub?: string; tag?: string; h?: number; style?: React.CSSProperties }>;
+  ChatList: React.FC<{ messages: Array<{ text: string; me?: boolean; time?: string }>; style?: React.CSSProperties }>;
 }
 
 export function createDS(t: ResolvedTheme, wireframe = false): DS {
@@ -572,5 +581,146 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
     </div>
   );
 
-  return { t, Text, Button, Card, Input, Badge, Chip, NavTab, Stepper, Rating, ListRow, Thumb, Avatar, Icon, Checkbox, Switch, Radio, Textarea, Select, Divider, Skeleton, Progress, TopBar, Table, Toast, TokenCard };
+  /* ── signature primitives ── */
+
+  const StatusTracker: DS['StatusTracker'] = ({ steps, current = 0, style }) => (
+    <div style={{ display: 'flex', alignItems: 'flex-start', ...style }}>
+      {steps.map((label, i) => {
+        const done = i < current;
+        const active = i === current;
+        const reached = i <= current;
+        const dotColor = reached ? t.primary : t.surfaceAlt;
+        return (
+          <div key={label} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: space.xs, position: 'relative' }}>
+            {i > 0 && (
+              <div style={{ position: 'absolute', top: 11, right: '50%', width: '100%', height: 2, background: i <= current ? t.primary : t.border }} />
+            )}
+            <div style={{
+              width: 24, height: 24, borderRadius: 9999, zIndex: 1,
+              background: dotColor, color: t.onPrimary,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              border: active ? `2px solid ${t.primary}` : 'none',
+              boxShadow: active ? `0 0 0 3px ${t.primaryTint}` : 'none',
+            }}>
+              {done
+                ? <Icon name="check" size={13} color={t.onPrimary} />
+                : <span style={{ ...typeStyle(t.type.caption), fontWeight: t.weightBold, color: reached ? t.onPrimary : t.textMuted }}>{i + 1}</span>}
+            </div>
+            <span style={{ ...typeStyle(t.type.caption), color: reached ? t.textMain : t.textMuted, fontWeight: active ? t.weightBold : t.weightRegular, textAlign: 'center' }}>{label}</span>
+          </div>
+        );
+      })}
+    </div>
+  );
+
+  const BalanceCard: DS['BalanceCard'] = ({ label, value, delta, actions = [], style }) => (
+    <div style={{
+      display: 'flex', flexDirection: 'column', gap: space.sm,
+      padding: t.cardPad, borderRadius: t.radius.card,
+      background: t.primaryTint, border: `1px solid ${t.border}`, ...style,
+    }}>
+      <span style={{ ...typeStyle(t.type.caption), color: t.textSub }}>{label}</span>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: space.sm }}>
+        <span style={{ ...typeStyle(t.type.h1), fontWeight: t.weightBold, color: t.textMain }}>{value}</span>
+        {delta && <span style={{ ...typeStyle(t.type.caption), fontWeight: t.weightBold, color: ensureContrast(t.success, t.primaryTint) }}>{delta}</span>}
+      </div>
+      {actions.length > 0 && (
+        <div style={{ display: 'flex', gap: space.xs, marginTop: space.xs }}>
+          {actions.map((a) => (
+            <span key={a} className="ds-press" style={{
+              ...typeStyle(t.type.caption), fontWeight: t.weightBold,
+              color: t.onPrimary, background: t.primary,
+              padding: `${space.xs}px ${space.sm}px`, borderRadius: t.radius.button, cursor: 'pointer',
+            }}>{a}</span>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+
+  const GaugeMeter: DS['GaugeMeter'] = ({ label, value, ratio = 0.6, caption, style }) => {
+    const r = Math.min(1, Math.max(0, ratio));
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: space.xs, padding: t.cardPad, borderRadius: t.radius.card, background: t.surface, border: `1px solid ${t.border}`, ...style }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+          <span style={{ ...typeStyle(t.type.caption), color: t.textSub }}>{label}</span>
+          <span style={{ ...typeStyle(t.type.body), fontWeight: t.weightBold, color: ensureContrast(t.primary, t.surface) }}>{value}</span>
+        </div>
+        <div style={{ position: 'relative', height: 8, borderRadius: 9999, background: t.surfaceAlt, overflow: 'hidden' }}>
+          <div style={{ position: 'absolute', inset: 0, width: `${r * 100}%`, borderRadius: 9999, background: `linear-gradient(90deg, ${t.primaryTint}, ${t.primary})` }} />
+        </div>
+        {caption && <span style={{ ...typeStyle(t.type.caption), color: t.textMuted }}>{caption}</span>}
+      </div>
+    );
+  };
+
+  const RankingList: DS['RankingList'] = ({ items, style }) => (
+    <div style={{ display: 'flex', flexDirection: 'column', borderRadius: t.radius.card, border: `1px solid ${t.border}`, overflow: 'hidden', ...style }}>
+      {items.map((it, i) => {
+        const deltaColor = it.delta === 'up' ? t.danger : it.delta === 'down' ? ensureContrast(t.info, t.surface) : t.textMuted;
+        const deltaSym = it.delta === 'up' ? '▲' : it.delta === 'down' ? '▼' : '▬';
+        return (
+          <div key={it.title} className="ds-press" style={{ display: 'flex', alignItems: 'center', gap: space.sm, padding: `${space.sm}px ${space.md}px`, borderBottom: i < items.length - 1 ? `1px solid ${t.border}` : 'none', background: t.surface, cursor: 'pointer' }}>
+            <span style={{ ...typeStyle(t.type.bodySm), fontWeight: t.weightBold, color: ensureContrast(t.primary, t.surface), width: 18, flexShrink: 0 }}>{i + 1}</span>
+            <div style={{ flex: 1, overflow: 'hidden' }}>
+              <span style={{ ...typeStyle(t.type.bodySm), color: t.textMain, display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{it.title}</span>
+              {it.sub && <span style={{ ...typeStyle(t.type.caption), color: t.textMuted }}>{it.sub}</span>}
+            </div>
+            <span style={{ ...typeStyle(t.type.caption), color: deltaColor, flexShrink: 0 }}>{deltaSym}</span>
+          </div>
+        );
+      })}
+    </div>
+  );
+
+  const SaveCollect: DS['SaveCollect'] = ({ count = 0, saved = false, tag, h = 120, style }) => (
+    <div style={{ position: 'relative', borderRadius: t.radius.card, overflow: 'hidden', ...style }}>
+      <Thumb h={h} />
+      <div className="ds-press" style={{ position: 'absolute', top: space.sm, right: space.sm, width: 30, height: 30, borderRadius: 9999, background: t.surface, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 1px 4px rgba(0,0,0,0.18)', cursor: 'pointer' }}>
+        <Icon name="heart" size={16} color={saved ? t.danger : t.textMuted} />
+      </div>
+      {tag && (
+        <div style={{ position: 'absolute', left: space.sm, bottom: space.sm, display: 'flex', alignItems: 'center', gap: space.xs, padding: `${space.xxs}px ${space.sm}px`, borderRadius: 9999, background: 'rgba(0,0,0,0.6)' }}>
+          <Icon name="bookmark" size={11} color={t.textOnImage} />
+          <span style={{ ...typeStyle(t.type.caption), color: t.textOnImage }}>{tag}</span>
+        </div>
+      )}
+      <div style={{ position: 'absolute', right: space.sm, bottom: space.sm, display: 'flex', alignItems: 'center', gap: space.xxs, padding: `${space.xxs}px ${space.sm}px`, borderRadius: 9999, background: 'rgba(0,0,0,0.6)' }}>
+        <Icon name="heart" size={11} color={t.textOnImage} />
+        <span style={{ ...typeStyle(t.type.caption), color: t.textOnImage }}>{count.toLocaleString()}</span>
+      </div>
+    </div>
+  );
+
+  const EditorialCard: DS['EditorialCard'] = ({ title, sub, tag, h = 180, style }) => (
+    <div style={{ position: 'relative', borderRadius: t.radius.card, overflow: 'hidden', ...style }}>
+      <Thumb h={h} />
+      <div style={{ position: 'absolute', inset: 0, background: t.scrim }} />
+      <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, padding: t.cardPad, display: 'flex', flexDirection: 'column', gap: space.xxs }}>
+        {tag && <span style={{ ...typeStyle(t.type.caption), fontWeight: t.weightBold, letterSpacing: '0.1em', textTransform: 'uppercase', color: t.textOnImage, opacity: 0.85 }}>{tag}</span>}
+        <span style={{ ...typeStyle(t.type.h2), fontWeight: t.weightBold, color: t.textOnImage }}>{title}</span>
+        {sub && <span style={{ ...typeStyle(t.type.caption), color: t.textOnImage, opacity: 0.85 }}>{sub}</span>}
+      </div>
+    </div>
+  );
+
+  const ChatList: DS['ChatList'] = ({ messages, style }) => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm, padding: t.cardPad, borderRadius: t.radius.card, background: t.surfaceAlt, ...style }}>
+      {messages.map((m, i) => (
+        <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: m.me ? 'flex-end' : 'flex-start', gap: 2 }}>
+          <div style={{
+            maxWidth: '78%', padding: `${space.xs}px ${space.sm}px`, borderRadius: t.radius.card,
+            background: m.me ? t.primary : t.surface,
+            color: m.me ? t.onPrimary : t.textMain,
+            border: m.me ? 'none' : `1px solid ${t.border}`,
+          }}>
+            <span style={{ ...typeStyle(t.type.bodySm), color: 'inherit' }}>{m.text}</span>
+          </div>
+          {m.time && <span style={{ ...typeStyle(t.type.caption), color: t.textMuted }}>{m.time}</span>}
+        </div>
+      ))}
+    </div>
+  );
+
+  return { t, Text, Button, Card, Input, Badge, Chip, NavTab, Stepper, Rating, ListRow, Thumb, Avatar, Icon, Checkbox, Switch, Radio, Textarea, Select, Divider, Skeleton, Progress, TopBar, Table, Toast, TokenCard, StatusTracker, BalanceCard, GaugeMeter, RankingList, SaveCollect, EditorialCard, ChatList };
 }

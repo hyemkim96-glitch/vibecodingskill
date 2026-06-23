@@ -14,7 +14,7 @@ import { Icon } from '@/components/icons';
  * All tiles are built from DS primitives — the same atoms the patterns use.
  */
 
-export type ComponentCategory = 'all' | 'buttons' | 'inputs' | 'cards' | 'feedback' | 'navigation';
+export type ComponentCategory = 'all' | 'buttons' | 'inputs' | 'cards' | 'feedback' | 'navigation' | 'signature';
 
 export const COMPONENT_CATEGORIES: { key: ComponentCategory; label: string }[] = [
   { key: 'all',        label: '전체' },
@@ -23,6 +23,7 @@ export const COMPONENT_CATEGORIES: { key: ComponentCategory; label: string }[] =
   { key: 'cards',      label: '카드 & 리스트' },
   { key: 'feedback',   label: '피드백' },
   { key: 'navigation', label: '내비게이션' },
+  { key: 'signature',  label: '시그니처' },
 ];
 
 /** Section label shown only in "전체" view to separate category groups. */
@@ -56,7 +57,8 @@ function Tile({ t, ds, title, children }: {
 export default function ComponentSheet({ theme: t, category }: { theme: ResolvedTheme; category: ComponentCategory }) {
   const ds = createDS(t, true);
   const { Button, Input, Badge, Chip, Card, Text, Thumb, Avatar, ListRow, Stepper, Rating,
-          Checkbox, Switch, Radio, Textarea, Select, Divider, Skeleton, Progress, TopBar, Table, Toast } = ds;
+          Checkbox, Switch, Radio, Textarea, Select, Divider, Skeleton, Progress, TopBar, Table, Toast,
+          StatusTracker, BalanceCard, GaugeMeter, RankingList, SaveCollect, EditorialCard, ChatList } = ds;
   const { space } = t;
   const all = category === 'all';
 
@@ -586,6 +588,52 @@ export default function ComponentSheet({ theme: t, category }: { theme: Resolved
                 </div>
               ))}
             </div>
+          </Tile>
+
+        </div>
+        </section>
+      )}
+
+      {(all || category === 'signature') && (
+        <section>
+        <SectionHeading t={t} show={all}>시그니처</SectionHeading>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', alignItems: 'start', gap: space.xl }}>
+
+          <Tile t={t} ds={ds} title="상태 트래커 (배달·배송·송금)">
+            <StatusTracker steps={['주문접수', '조리중', '배달중', '완료']} current={2} />
+          </Tile>
+
+          <Tile t={t} ds={ds} title="잔액 카드 (금융)">
+            <BalanceCard label="총 자산" value="12,480,200원" delta="+2.4%" actions={['보내기', '충전']} />
+          </Tile>
+
+          <Tile t={t} ds={ds} title="게이지 (점수·온도)">
+            <GaugeMeter label="매너온도" value="36.5°C" ratio={0.66} caption="따뜻한 이웃이에요" />
+          </Tile>
+
+          <Tile t={t} ds={ds} title="실시간 랭킹">
+            <RankingList items={[
+              { title: '금리 동결 결정', sub: '실시간 1위', delta: 'up' },
+              { title: 'AI 반도체 수출', sub: '실시간 2위', delta: 'up' },
+              { title: '주말 날씨',     sub: '실시간 3위', delta: 'same' },
+              { title: '프로야구 개막',  sub: '실시간 4위', delta: 'down' },
+            ]} />
+          </Tile>
+
+          <Tile t={t} ds={ds} title="스크랩 컬렉트 (UGC)">
+            <SaveCollect count={1204} saved tag="상품 8개" h={140} />
+          </Tile>
+
+          <Tile t={t} ds={ds} title="에디토리얼 카드 (패션)">
+            <EditorialCard tag="EDITOR'S PICK" title="이번 주 신상 룩" sub="에디터가 고른 코디 제안" h={160} />
+          </Tile>
+
+          <Tile t={t} ds={ds} title="채팅 리스트 (메신저)">
+            <ChatList messages={[
+              { text: '저녁 뭐 먹을래?', time: '오후 6:20' },
+              { text: '치킨 어때요 🍗', me: true, time: '오후 6:21' },
+              { text: '좋아요!', time: '오후 6:22' },
+            ]} />
           </Tile>
 
         </div>

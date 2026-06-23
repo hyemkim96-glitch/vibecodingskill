@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { createDS, motionVars } from '@/components/ds';
 import { renderPattern, PATTERN_TYPES, PatternType } from '@/components/patterns';
+import { defaultPack } from '@/lib/content/packs';
 import PillTabs from '@/components/PillTabs';
 import { serviceDS, serviceTheme, serviceMobileTheme } from '@/lib/tokens/serviceTheme';
 
@@ -47,7 +48,7 @@ export default function PatternsClient() {
         maxWidth: platform === 'mobile' ? 390 : '100%',
       }}>
         <div className="ds-root" style={motionVars(theme)}>
-          {renderPattern(activePattern, ds, platform)}
+          {renderPattern(activePattern, ds, platform, defaultPack)}
         </div>
       </div>
     </div>
