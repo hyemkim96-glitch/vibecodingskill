@@ -245,8 +245,34 @@
   --nav-height: 56px;
 }
 
+/* Dark mode — triggered by JS toggle (data-theme="dark") or system preference.
+   The inline head script sets data-theme before first paint to avoid flash.
+   Media query acts as a no-JS fallback only for system-dark users. */
+[data-theme="dark"] {
+  --color-bg-normal:        var(--palette-neutral-950);
+  --color-bg-alt:           var(--palette-neutral-900);
+  --color-bg-elevated:      var(--palette-neutral-800);
+  --color-fill-normal:      var(--palette-neutral-50);
+  --color-fill-strong:      var(--palette-neutral-0);
+  --color-fill-alternative: var(--palette-neutral-200);
+  --color-fill-neutral:     var(--palette-neutral-800);
+  --color-fill-neutral-alt: var(--palette-neutral-700);
+  --color-fill-brand:       var(--palette-neutral-50);
+  --color-fill-brand-weak:  var(--palette-neutral-800);
+  --color-text-normal:      var(--palette-neutral-50);
+  --color-text-alternative: var(--palette-neutral-400);
+  --color-text-assistive:   var(--palette-neutral-600);
+  --color-text-disabled:    var(--palette-neutral-700);
+  --color-text-on-fill:     var(--palette-neutral-950);
+  --color-text-brand:       var(--palette-neutral-50);
+  --color-border-normal:    var(--palette-neutral-700);
+  --color-border-strong:    var(--palette-neutral-500);
+  --color-border-weak:      var(--palette-neutral-800);
+  --color-border-brand:     var(--palette-neutral-50);
+  --color-border-focus:     var(--palette-neutral-50);
+}
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --color-bg-normal:        var(--palette-neutral-950);
     --color-bg-alt:           var(--palette-neutral-900);
     --color-bg-elevated:      var(--palette-neutral-800);

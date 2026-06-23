@@ -3,6 +3,7 @@ import Script from "next/script";
 import "./globals.css";
 import Navigation from "@/components/Navigation";
 import WikiProvider from "@/components/WikiProvider";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
@@ -22,8 +23,10 @@ export default async function RootLayout({
     .eq('published', true);
 
   return (
-    <html lang="ko">
+    <html lang="ko" suppressHydrationWarning>
       <head>
+        {/* Runs synchronously before first paint — sets data-theme to prevent flash */}
+        <script dangerouslySetInnerHTML={{ __html: `try{var s=localStorage.getItem('ds-theme'),d=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.dataset.theme=s||d;}catch(e){}` }} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
@@ -35,12 +38,14 @@ export default async function RootLayout({
           crossOrigin="anonymous"
           strategy="afterInteractive"
         />
-        <WikiProvider terms={wikiTerms ?? []}>
-          <Navigation />
-          <main className="main-container">
-            {children}
-          </main>
-        </WikiProvider>
+        <ThemeProvider>
+          <WikiProvider terms={wikiTerms ?? []}>
+            <Navigation />
+            <main className="main-container">
+              {children}
+            </main>
+          </WikiProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

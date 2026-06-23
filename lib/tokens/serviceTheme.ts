@@ -17,3 +17,11 @@ import { createDS } from '@/components/ds';
 export const serviceTheme       = resolveTheme(designMDToken, 'web',    'brand');
 export const serviceMobileTheme = resolveTheme(designMDToken, 'mobile', 'brand');
 export const serviceDS = createDS(serviceTheme);
+
+// Dark-mode variants: wireframe mode uses WIREFRAME_DARK palette from semanticTokens
+// so correct dark bg/surface/text values are applied without needing explicit
+// dark hex values in the designMDToken colors array.
+const designMDDarkToken = { ...designMDToken, theme: 'dark' as const };
+export const serviceDarkTheme       = resolveTheme(designMDDarkToken, 'web',    'wireframe');
+export const serviceDarkMobileTheme = resolveTheme(designMDDarkToken, 'mobile', 'wireframe');
+export const serviceDarkDS = createDS(serviceDarkTheme);

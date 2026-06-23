@@ -2,9 +2,9 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { serviceDS } from '@/lib/tokens/serviceTheme';
-
-const { NavTab, Text, t } = serviceDS;
+import { serviceDS, serviceDarkDS } from '@/lib/tokens/serviceTheme';
+import { useTheme } from './ThemeProvider';
+import { DarkModeToggle } from './DarkModeToggle';
 
 const NAV_LINKS = [
   { href: '/tokens',     label: '템플릿' },
@@ -16,6 +16,8 @@ const NAV_LINKS = [
 
 export default function Navigation() {
   const pathname = usePathname();
+  const { theme } = useTheme();
+  const { NavTab, Text, t } = theme === 'dark' ? serviceDarkDS : serviceDS;
 
   return (
     <header style={{
@@ -28,7 +30,6 @@ export default function Navigation() {
       right: 0,
       zIndex: 100,
     }}>
-      {/* Inner container — matches content area width */}
       <div style={{
         maxWidth: 'var(--page-max-width)',
         margin: '0 auto',
@@ -38,7 +39,7 @@ export default function Navigation() {
         gridTemplateColumns: '1fr auto 1fr',
         alignItems: 'stretch',
       }}>
-      {/* Logo — left zone */}
+      {/* Logo */}
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <Link href="/" style={{ textDecoration: 'none' }}>
           <Text role="bodySm" weight={t.weightBold} style={{ letterSpacing: '0.12em', whiteSpace: 'nowrap', color: t.textMain }}>
@@ -47,7 +48,7 @@ export default function Navigation() {
         </Link>
       </div>
 
-      {/* Nav links — center zone, underline-style NavTab */}
+      {/* Nav links */}
       <nav style={{ display: 'flex', alignItems: 'stretch' }}>
         {NAV_LINKS.map(({ href, label }) => (
           <Link key={href} href={href} style={{ textDecoration: 'none', display: 'flex', alignItems: 'stretch' }}>
@@ -56,9 +57,11 @@ export default function Navigation() {
         ))}
       </nav>
 
-      {/* right zone — reserved */}
-      <div />
-      </div>{/* /inner container */}
+      {/* Right zone */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+        <DarkModeToggle />
+      </div>
+      </div>
     </header>
   );
 }
