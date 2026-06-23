@@ -229,24 +229,6 @@ function ColorPanel({ t }: { t: Theme; ds: ReturnType<typeof createDS> }) {
           <div key={step} style={{ flex: 1, textAlign: 'center', fontSize: 11, color: t.textMuted, lineHeight: 1.4 }}>{step}</div>
         ))}
       </div>
-      {/* OKLCH 대표값 4개 */}
-      <div style={{ display: 'flex', gap: t.space.xs, marginTop: t.space.sm, flexWrap: 'wrap' as const }}>
-        {([0, 300, 700, 1000] as const).map((step) => {
-          const n = neutral[step];
-          const isLight = step < 500;
-          return (
-            <div key={step} style={{
-              display: 'inline-flex', alignItems: 'center', gap: 5,
-              padding: '3px 7px', borderRadius: t.radius.badge,
-              background: n.hex, border: `1px solid ${t.border}`,
-            }}>
-              <span style={{ ...cap(t), fontFamily: 'monospace', color: t.textSub }}>{step}</span>
-              <span style={{ ...cap(t), fontFamily: 'monospace', color: t.textMuted }}>{n.oklch}</span>
-            </div>
-          );
-        })}
-      </div>
-
       {/* 컬러 패밀리 */}
       <GroupLabel>Hues</GroupLabel>
       {/* 스텝 헤더 */}
