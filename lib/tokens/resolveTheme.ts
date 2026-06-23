@@ -1,6 +1,6 @@
 import { BrandToken } from '@/types/token';
 import { lightTokens, darkTokens } from './semanticTokens';
-import { neutral, status as sp } from './palette';
+import { deriveTintOklch, ensureContrastOklch, relativeLuminance } from './oklch';
 
 /**
  * Design System Engine — Theme Resolver v2
@@ -106,158 +106,20 @@ export interface ResolvedTheme {
 
 /* ── helpers ── */
 
-/**
- * WCAG-correct relative luminance.
- * Uses sRGB linearisation (gamma 2.2 approximation) rather than the
- * simple 0.299/0.587/0.114 weighted sum — the latter over-estimates
- * luminance for saturated greens/cyans, causing contrastOn to return
- * the wrong colour for mid-range hues.
- */
-function relativeLuminance(hex: string): number {
-  const h = hex.replace('#', '');
-  if (h.length < 6) return 0.5;
-  const linearize = (v: number) => {
-    const s = v / 255;
-    return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4);
-  };
-  const r = linearize(parseInt(h.slice(0, 2), 16));
-  const g = linearize(parseInt(h.slice(2, 4), 16));
-  const b = linearize(parseInt(h.slice(4, 6), 16));
-  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
-}
-
 export function contrastOn(hex: string): string {
   const L = relativeLuminance(hex);
-  const onWhite = (1.05) / (L + 0.05);
+  const onWhite = 1.05 / (L + 0.05);
   const onBlack = (L + 0.05) / 0.05;
-  // Use palette neutrals: 950 (near-black) or 0 (white)
-  return onBlack > onWhite ? neutral[950].hex : neutral[0].hex;
+  // Return Foundation semantic text tokens: text-on-fill (white) or text-normal (near-black)
+  return onBlack > onWhite ? lightTokens['--color-text-normal'] : lightTokens['--color-text-on-fill'];
 }
 
-function contrastRatio(a: string, b: string): number {
-  const la = relativeLuminance(a);
-  const lb = relativeLuminance(b);
-  const lighter = Math.max(la, lb);
-  const darker  = Math.min(la, lb);
-  return (lighter + 0.05) / (darker + 0.05);
-}
-
-/** Hex → HSL (h: 0–360, s: 0–100, l: 0–100) */
-function hexToHSL(hex: string): { h: number; s: number; l: number } {
-  const h = hex.replace('#', '');
-  const r = parseInt(h.slice(0, 2), 16) / 255;
-  const g = parseInt(h.slice(2, 4), 16) / 255;
-  const b = parseInt(h.slice(4, 6), 16) / 255;
-  const max = Math.max(r, g, b), min = Math.min(r, g, b);
-  const l = (max + min) / 2;
-  if (max === min) return { h: 0, s: 0, l: l * 100 };
-  const d = max - min;
-  const s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-  let hue = 0;
-  if (max === r) hue = ((g - b) / d + (g < b ? 6 : 0)) / 6;
-  else if (max === g) hue = ((b - r) / d + 2) / 6;
-  else hue = ((r - g) / d + 4) / 6;
-  return { h: hue * 360, s: s * 100, l: l * 100 };
-}
-
-/** HSL → hex */
-function hslToHex(h: number, s: number, l: number): string {
-  const hn = h / 360, sn = s / 100, ln = l / 100;
-  const hue2rgb = (p: number, q: number, t: number) => {
-    if (t < 0) t += 1; if (t > 1) t -= 1;
-    if (t < 1/6) return p + (q - p) * 6 * t;
-    if (t < 1/2) return q;
-    if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
-    return p;
-  };
-  let r, g, b;
-  if (sn === 0) { r = g = b = ln; }
-  else {
-    const q = ln < 0.5 ? ln * (1 + sn) : ln + sn - ln * sn;
-    const p = 2 * ln - q;
-    r = hue2rgb(p, q, hn + 1/3);
-    g = hue2rgb(p, q, hn);
-    b = hue2rgb(p, q, hn - 1/3);
-  }
-  return '#' + [r, g, b].map((v) => Math.round(v * 255).toString(16).padStart(2, '0')).join('');
-}
-
-/**
- * Given any foreground color and a background, binary-search the HSL
- * lightness until WCAG contrast ratio ≥ minRatio (default 4.5 = AA).
- * Hue and saturation are preserved — only lightness changes.
- */
-/**
- * Given any foreground color and a background, binary-search the HSL
- * lightness until WCAG contrast ratio ≥ minRatio (default 4.5 = AA).
- * Hue is preserved. Saturation is clamped proportionally to the lightness
- * shift so the color stays in sRGB gamut and doesn't wash out at extremes.
- */
 export function ensureContrast(fg: string, bg: string, minRatio = 4.5): string {
-  if (contrastRatio(fg, bg) >= minRatio) return fg;
-  const bgLum = relativeLuminance(bg);
-  const lighten = bgLum < 0.18; // dark bg → push fg lighter; light bg → push darker
-  const { h, s: sOrig, l: lOrig } = hexToHSL(fg);
-  let lo = lighten ? lOrig : 0;
-  let hi = lighten ? 100 : lOrig;
-  let result = fg;
-  for (let i = 0; i < 24; i++) {
-    const mid = (lo + hi) / 2;
-    // Chroma clamp: reduce saturation proportionally to how far we push lightness.
-    // At extremes (l→100 or l→0) full saturation clips out of gamut and looks washed.
-    // Scale factor: 1.0 at original l, shrinks as l moves toward 0 or 100.
-    const deltaL = Math.abs(mid - lOrig);
-    const sScale = Math.max(0, 1 - (deltaL / 80));
-    const s = sOrig * sScale;
-    const candidate = hslToHex(h, s, mid);
-    if (contrastRatio(candidate, bg) >= minRatio) {
-      result = candidate;
-      if (lighten) hi = mid; else lo = mid;
-    } else {
-      if (lighten) lo = mid; else hi = mid;
-    }
-  }
-  return result;
+  return ensureContrastOklch(fg, bg, minRatio);
 }
 
-/** Mix a hex colour toward white by ratio (0 → original, 1 → white). */
-function tintToward(hex: string, ratio: number): string {
-  const h = hex.replace('#', '');
-  if (h.length < 6) return hex;
-  const mix = (c: number) => Math.round(c + (255 - c) * ratio);
-  const r = mix(parseInt(h.slice(0, 2), 16));
-  const g = mix(parseInt(h.slice(2, 4), 16));
-  const b = mix(parseInt(h.slice(4, 6), 16));
-  return '#' + [r, g, b].map((v) => v.toString(16).padStart(2, '0')).join('');
-}
-
-/** Mix a hex colour toward black by ratio (0 → original, 1 → black). */
-function shadeToward(hex: string, ratio: number): string {
-  const h = hex.replace('#', '');
-  if (h.length < 6) return hex;
-  const mix = (c: number) => Math.round(c * (1 - ratio));
-  const r = mix(parseInt(h.slice(0, 2), 16));
-  const g = mix(parseInt(h.slice(2, 4), 16));
-  const b = mix(parseInt(h.slice(4, 6), 16));
-  return '#' + [r, g, b].map((v) => v.toString(16).padStart(2, '0')).join('');
-}
-
-/**
- * Derive an opaque soft-tint background that reads well on both light and dark
- * surfaces without alpha. Adapts the ratio to the primary's own luminance so
- * very pale colours (e.g. Kakao yellow) don't wash out completely.
- */
 function deriveTint(primary: string, isDark: boolean): string {
-  const L = relativeLuminance(primary);
-  if (isDark) {
-    // On dark surfaces, shade primary slightly for the tint slot
-    return shadeToward(primary, Math.min(0.6, 0.2 + L * 0.5));
-  }
-  // On light surfaces: the more luminous the primary, the less we tint it
-  // (a pale yellow at L=0.8 only needs ~0.6 extra whitening; a dark navy at
-  // L=0.05 can go all the way to 0.90 toward white)
-  const ratio = Math.max(0.60, Math.min(0.90, 1 - L * 0.4));
-  return tintToward(primary, ratio);
+  return deriveTintOklch(primary, isDark);
 }
 
 function findColor(colors: BrandToken['colors'], role: RegExp, fallback: string): string {
@@ -451,10 +313,9 @@ export function resolveTheme(
     p.shapes.find((s) => s.element === el)?.value ?? fb;
 
   // ── brand palette (separate regexes so surface ≠ surfaceAlt) ──
-  // All fallbacks reference the canonical OKLCH neutral/status palette
-  const bgFallback      = isDark ? neutral[900].hex : neutral[0].hex;
-  const surfFallback    = isDark ? neutral[800].hex : neutral[50].hex;
-  const surfAltFallback = isDark ? neutral[700].hex : neutral[100].hex;
+  // Fallbacks use Foundation semantic token names, not raw palette refs.
+  const lt = lightTokens;
+  const dt = darkTokens;
 
   const brandColors = {
     primary,
@@ -462,22 +323,20 @@ export function resolveTheme(
     primaryTint:
       c.find((col) => /강조 영역 배경|강조 배경|tint/.test(col.role))?.value ??
       deriveTint(primary, isDark),
-    bg: findColor(c, /^기본 배경$|^배경$|배경 \(기본\)/, bgFallback),
-    // surface: card/elevated — "카드 배경" or "카드 표면" only
-    surface: findColor(c, /카드 배경|카드 표면/, surfFallback),
-    // surfaceAlt: secondary fill — "보조 배경" only, intentionally different regex
-    surfaceAlt: findColor(c, /보조 배경|비활성 배경|입력 배경/, surfAltFallback),
-    textMain:    findColor(c, /본문 텍스트|주요 컨텐츠|^텍스트 \(기본\)$/, isDark ? neutral[50].hex  : neutral[950].hex),
-    textSub:     findColor(c, /보조 텍스트|라벨|^텍스트 \(보조\)$/,        isDark ? neutral[300].hex : neutral[600].hex),
-    textMuted:   findColor(c, /비활성 텍스트|플레이스홀더|힌트/,            isDark ? neutral[500].hex : neutral[400].hex),
-    border:      findColor(c, /구분선|보더|^선$/,                           isDark ? neutral[700].hex : neutral[200].hex),
+    bg:         findColor(c, /^기본 배경$|^배경$|배경 \(기본\)/,  isDark ? dt['--color-bg-normal']         : lt['--color-bg-normal']),
+    surface:    findColor(c, /카드 배경|카드 표면/,                isDark ? dt['--color-bg-elevated']       : lt['--color-bg-elevated']),
+    surfaceAlt: findColor(c, /보조 배경|비활성 배경|입력 배경/,    isDark ? dt['--color-fill-neutral-alt']  : lt['--color-fill-neutral']),
+    textMain:   findColor(c, /본문 텍스트|주요 컨텐츠|^텍스트 \(기본\)$/,  isDark ? dt['--color-text-normal']      : lt['--color-text-normal']),
+    textSub:    findColor(c, /보조 텍스트|라벨|^텍스트 \(보조\)$/,         isDark ? dt['--color-text-alternative'] : lt['--color-text-alternative']),
+    textMuted:  findColor(c, /비활성 텍스트|플레이스홀더|힌트/,             isDark ? dt['--color-text-assistive']   : lt['--color-text-assistive']),
+    border:     findColor(c, /구분선|보더|^선$/,                            isDark ? dt['--color-border-normal']    : lt['--color-border-normal']),
     accent,
-    success:      findColor(c, /성공|증가|긍정/, sp.success.fill.hex),
-    danger:       findColor(c, /에러|위험|감소|부정/, sp.danger.fill.hex),
-    warning:      sp.warning.fill.hex,
-    info:         sp.info.fill.hex,
-    disabled:     isDark ? neutral[700].hex : neutral[100].hex,
-    textDisabled: isDark ? neutral[600].hex : neutral[300].hex,
+    success:      findColor(c, /성공|증가|긍정/, lt['--color-fill-success']),
+    danger:       findColor(c, /에러|위험|감소|부정/, lt['--color-fill-danger']),
+    warning:      lt['--color-fill-warning'],
+    info:         lt['--color-fill-info'],
+    disabled:     isDark ? dt['--color-fill-neutral']     : lt['--color-fill-neutral'],
+    textDisabled: isDark ? dt['--color-text-disabled']    : lt['--color-text-disabled'],
     successText: '', dangerText: '', warningText: '', infoText: '',
   };
 
@@ -496,7 +355,7 @@ export function resolveTheme(
     warningText: ensureContrast(palette.warning, bgColor),
     infoText:    ensureContrast(palette.info,    bgColor),
 
-    textOnImage: neutral[0].hex,
+    textOnImage: lightTokens['--color-text-on-fill'],
     scrim: 'linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 60%)',
 
     font: mode === 'wireframe'
