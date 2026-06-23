@@ -1,21 +1,18 @@
 'use client';
 
 import { useState } from 'react';
-import { allTokens } from '@/lib/tokens';
-import { resolveTheme } from '@/lib/tokens/resolveTheme';
 import { createDS, motionVars } from '@/components/ds';
 import { renderPattern, PATTERN_TYPES, PatternType } from '@/components/patterns';
 import PillTabs from '@/components/PillTabs';
-import { serviceDS } from '@/lib/tokens/serviceTheme';
+import { serviceDS, serviceTheme, serviceMobileTheme } from '@/lib/tokens/serviceTheme';
 
-const representative = allTokens[0];
 const { Text, t: st } = serviceDS;
 
 export default function PatternsClient() {
   const [activePattern, setActivePattern] = useState<PatternType>('main');
   const [platform, setPlatform] = useState<'mobile' | 'web'>('mobile');
 
-  const theme = resolveTheme(representative, platform, 'wireframe');
+  const theme = platform === 'mobile' ? serviceMobileTheme : serviceTheme;
   const ds = createDS(theme, true);
 
   return (

@@ -1,13 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { allTokens } from '@/lib/tokens';
-import { resolveTheme } from '@/lib/tokens/resolveTheme';
+import { ResolvedTheme } from '@/lib/tokens/resolveTheme';
 import { typeStyle, createDS } from '@/components/ds';
 import PillTabs from '@/components/PillTabs';
-import { serviceDS } from '@/lib/tokens/serviceTheme';
+import { serviceDS, serviceMobileTheme } from '@/lib/tokens/serviceTheme';
 import { neutral, status } from '@/lib/tokens/palette';
 import { lightTokens, darkTokens } from '@/lib/tokens/semanticTokens';
+import { lightRoleTokens, darkRoleTokens, lightVariantTokens, darkVariantTokens } from '@/lib/tokens/roleTokens';
 
 type FoundationCategory = 'color' | 'type' | 'space' | 'radius' | 'stroke' | 'motion';
 
@@ -20,14 +20,13 @@ const CATEGORIES: { key: FoundationCategory; label: string }[] = [
   { key: 'motion', label: '모션' },
 ];
 
-const representative = allTokens[0];
 const { Text: ServiceText, t: st } = serviceDS;
 
-type Theme = ReturnType<typeof resolveTheme>;
+type Theme = ResolvedTheme;
 
 export default function FoundationClient() {
   const [active, setActive] = useState<FoundationCategory>('color');
-  const t = resolveTheme(representative, 'mobile', 'wireframe');
+  const t = serviceMobileTheme;
   const ds = createDS(t, true);
 
   return (
@@ -273,6 +272,87 @@ function ColorPanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
                           }}>
                             {isTextOnFill && <div style={{ width: 10, height: 1.5, background: dark, borderRadius: 1 }} />}
                           </div>
+                          <span style={{ ...cap(t), color: t.textMuted, fontFamily: 'monospace' }}>◑ {dark}</span>
+                        </div>
+                      </div>
+                    ),
+                  };
+                })}
+              />
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      {/* 4. Role 토큰 */}
+      <Section t={t} title="Role 토큰 — 컴포넌트 슬롯 바인딩 (--comp-{component}-{slot})">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.xl }}>
+          {[
+            { comp: 'button',  label: 'Button',  keys: Object.keys(lightRoleTokens).filter(k => k.startsWith('--comp-button-')) },
+            { comp: 'badge',   label: 'Badge',   keys: Object.keys(lightRoleTokens).filter(k => k.startsWith('--comp-badge-')) },
+            { comp: 'chip',    label: 'Chip',    keys: Object.keys(lightRoleTokens).filter(k => k.startsWith('--comp-chip-')) },
+            { comp: 'input',   label: 'Input',   keys: Object.keys(lightRoleTokens).filter(k => k.startsWith('--comp-input-')) },
+            { comp: 'card',    label: 'Card',    keys: Object.keys(lightRoleTokens).filter(k => k.startsWith('--comp-card-')) },
+            { comp: 'navtab',  label: 'NavTab',  keys: Object.keys(lightRoleTokens).filter(k => k.startsWith('--comp-navtab-')) },
+          ].map(({ comp, label, keys }, gi) => (
+            <div key={comp}>
+              {gi > 0 && <Divider style={{ marginBottom: t.space.lg }} />}
+              <div style={{ ...cap(t), fontWeight: t.weightBold, color: t.textSub, marginBottom: t.space.md }}>{label}</div>
+              <Table
+                rows={keys.map((key) => {
+                  const light = lightRoleTokens[key] ?? '—';
+                  const dark  = darkRoleTokens[key]  ?? '—';
+                  const slot  = key.replace(`--comp-${comp}-`, '');
+                  return {
+                    label: slot,
+                    value: (
+                      <div style={{ display: 'flex', gap: t.space.xl }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: t.space.sm, minWidth: 120 }}>
+                          <div style={{ width: 16, height: 16, borderRadius: t.radius.badge, background: light, border: `1px solid ${t.border}`, flexShrink: 0 }} />
+                          <span style={{ ...cap(t), color: t.textMuted, fontFamily: 'monospace' }}>☀ {light}</span>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: t.space.sm, minWidth: 120 }}>
+                          <div style={{ width: 16, height: 16, borderRadius: t.radius.badge, background: dark, border: `1px solid ${t.border}`, flexShrink: 0 }} />
+                          <span style={{ ...cap(t), color: t.textMuted, fontFamily: 'monospace' }}>◑ {dark}</span>
+                        </div>
+                      </div>
+                    ),
+                  };
+                })}
+              />
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      {/* 5. Variant 토큰 */}
+      <Section t={t} title="Variant 토큰 — 인터랙션 상태 오버라이드 (--comp-{component}-{slot}-{state})">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.xl }}>
+          {[
+            { group: 'button',  label: 'Button 상태', keys: Object.keys(lightVariantTokens).filter(k => k.startsWith('--comp-button-')) },
+            { group: 'chip',    label: 'Chip 상태',   keys: Object.keys(lightVariantTokens).filter(k => k.startsWith('--comp-chip-'))   },
+            { group: 'card',    label: 'Card 상태',   keys: Object.keys(lightVariantTokens).filter(k => k.startsWith('--comp-card-'))   },
+            { group: 'input',   label: 'Input 상태',  keys: Object.keys(lightVariantTokens).filter(k => k.startsWith('--comp-input-'))  },
+            { group: 'navtab',  label: 'NavTab 상태', keys: Object.keys(lightVariantTokens).filter(k => k.startsWith('--comp-navtab-')) },
+          ].map(({ group, label, keys }, gi) => (
+            <div key={group}>
+              {gi > 0 && <Divider style={{ marginBottom: t.space.lg }} />}
+              <div style={{ ...cap(t), fontWeight: t.weightBold, color: t.textSub, marginBottom: t.space.md }}>{label}</div>
+              <Table
+                rows={keys.map((key) => {
+                  const light = lightVariantTokens[key] ?? '—';
+                  const dark  = darkVariantTokens[key]  ?? '—';
+                  const slot  = key.replace(`--comp-${group}-`, '');
+                  return {
+                    label: slot,
+                    value: (
+                      <div style={{ display: 'flex', gap: t.space.xl }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: t.space.sm, minWidth: 120 }}>
+                          <div style={{ width: 16, height: 16, borderRadius: t.radius.badge, background: light, border: `1px solid ${t.border}`, flexShrink: 0 }} />
+                          <span style={{ ...cap(t), color: t.textMuted, fontFamily: 'monospace' }}>☀ {light}</span>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: t.space.sm, minWidth: 120 }}>
+                          <div style={{ width: 16, height: 16, borderRadius: t.radius.badge, background: dark, border: `1px solid ${t.border}`, flexShrink: 0 }} />
                           <span style={{ ...cap(t), color: t.textMuted, fontFamily: 'monospace' }}>◑ {dark}</span>
                         </div>
                       </div>

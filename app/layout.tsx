@@ -3,6 +3,7 @@ import Script from "next/script";
 import "./globals.css";
 import Navigation from "@/components/Navigation";
 import WikiProvider from "@/components/WikiProvider";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
@@ -16,14 +17,16 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const supabase = await createClient();
-  const [{ data: { user } }, { data: wikiTerms }] = await Promise.all([
-    supabase.auth.getUser(),
-    supabase.from('wiki_terms').select('*').eq('published', true),
-  ]);
+  const { data: wikiTerms } = await supabase
+    .from('wiki_terms')
+    .select('*')
+    .eq('published', true);
 
   return (
-    <html lang="ko">
+    <html lang="ko" suppressHydrationWarning>
       <head>
+        {/* Runs synchronously before first paint — sets data-theme to prevent flash */}
+        <script dangerouslySetInnerHTML={{ __html: `try{var s=localStorage.getItem('ds-theme'),d=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.dataset.theme=s||d;}catch(e){}` }} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
@@ -35,12 +38,14 @@ export default async function RootLayout({
           crossOrigin="anonymous"
           strategy="afterInteractive"
         />
-        <WikiProvider terms={wikiTerms ?? []}>
-          <Navigation user={user} />
-          <main className="main-container">
-            {children}
-          </main>
-        </WikiProvider>
+        <ThemeProvider>
+          <WikiProvider terms={wikiTerms ?? []}>
+            <Navigation />
+            <main className="main-container">
+              {children}
+            </main>
+          </WikiProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

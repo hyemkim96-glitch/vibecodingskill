@@ -1,8 +1,7 @@
 'use client';
 
 import React from 'react';
-import { BrandToken } from '@/types/token';
-import { resolveTheme, ensureContrast } from '@/lib/tokens/resolveTheme';
+import { ResolvedTheme, ensureContrast } from '@/lib/tokens/resolveTheme';
 import { createDS, motionVars, typeStyle } from '@/components/ds';
 import { Icon } from '@/components/icons';
 
@@ -27,7 +26,7 @@ export const COMPONENT_CATEGORIES: { key: ComponentCategory; label: string }[] =
 ];
 
 /** Section label shown only in "전체" view to separate category groups. */
-function SectionHeading({ t, show, children }: { t: ReturnType<typeof resolveTheme>; show: boolean; children: React.ReactNode }) {
+function SectionHeading({ t, show, children }: { t: ResolvedTheme; show: boolean; children: React.ReactNode }) {
   if (!show) return null;
   return (
     <div style={{ marginBottom: t.space.lg, marginTop: t.space.xl }}>
@@ -37,7 +36,7 @@ function SectionHeading({ t, show, children }: { t: ReturnType<typeof resolveThe
 }
 
 function Tile({ t, ds, title, children }: {
-  t: ReturnType<typeof resolveTheme>;
+  t: ResolvedTheme;
   ds: ReturnType<typeof createDS>;
   title: string;
   children: React.ReactNode;
@@ -54,8 +53,7 @@ function Tile({ t, ds, title, children }: {
   );
 }
 
-export default function ComponentSheet({ token, category }: { token: BrandToken; category: ComponentCategory }) {
-  const t = resolveTheme(token, 'mobile', 'wireframe');
+export default function ComponentSheet({ theme: t, category }: { theme: ResolvedTheme; category: ComponentCategory }) {
   const ds = createDS(t, true);
   const { Button, Input, Badge, Chip, Card, Text, Thumb, Avatar, ListRow, Stepper, Rating,
           Checkbox, Switch, Radio, Textarea, Select, Divider, Skeleton, Progress, TopBar, Table, Toast } = ds;

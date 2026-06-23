@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { ResolvedTheme, ResolvedType, ensureContrast } from '@/lib/tokens/resolveTheme';
+import { ResolvedTheme, ResolvedType, ensureContrast, contrastOn } from '@/lib/tokens/resolveTheme';
 import { Icon as IconBase, IconName } from '@/components/icons';
 
 /**
@@ -203,8 +203,8 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
   const Badge: DS['Badge'] = ({ children, tone = 'solid' }) => {
     const byTone: Record<string, { bg: string; fg: string; bd: string }> = {
       solid: { bg: t.primary, fg: t.onPrimary, bd: 'none' },
-      soft: { bg: t.primaryTint, fg: t.primary, bd: 'none' },
-      accent: { bg: t.accent, fg: t.onPrimary, bd: 'none' },
+      soft: { bg: t.primaryTint, fg: ensureContrast(t.primary, t.primaryTint), bd: 'none' },
+      accent: { bg: t.accent, fg: contrastOn(t.accent), bd: 'none' },
       muted: { bg: t.surface, fg: t.textSub, bd: `1px solid ${t.border}` },
     };
     const s = byTone[tone];
