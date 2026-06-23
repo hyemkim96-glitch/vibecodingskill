@@ -631,14 +631,20 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
         {delta && <span style={{ ...typeStyle(t.type.caption), fontWeight: t.weightBold, color: ensureContrast(t.success, t.surface) }}>{delta}</span>}
       </div>
       {actions.length > 0 && (
-        <div style={{ display: 'flex', gap: space.xs, marginTop: space.xs }}>
-          {actions.map((a) => (
-            <span key={a} className="ds-press" style={{
-              ...typeStyle(t.type.caption), fontWeight: t.weightBold,
-              color: t.onPrimary, background: t.primary,
-              padding: `${space.xs}px ${space.sm}px`, borderRadius: t.radius.button, cursor: 'pointer',
-            }}>{a}</span>
-          ))}
+        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: space.sm, marginTop: space.xs }}>
+          {actions.map((a, i) => {
+            const isPrimary = i === actions.length - 1;
+            return (
+              <span key={a} className="ds-press" style={{
+                ...typeStyle(t.type.bodySm), fontWeight: t.weightBold,
+                color: isPrimary ? t.onPrimary : t.primary,
+                background: isPrimary ? t.primary : 'transparent',
+                border: isPrimary ? 'none' : `1.5px solid ${t.primary}`,
+                padding: `${space.xs}px ${space.md}px`,
+                borderRadius: t.radius.button, cursor: 'pointer',
+              }}>{a}</span>
+            );
+          })}
         </div>
       )}
     </div>
