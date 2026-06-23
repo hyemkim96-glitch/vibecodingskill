@@ -416,9 +416,9 @@ export default function ComponentSheet({ theme: t, category }: { theme: Resolved
               <Text role="bodySm" weight={t.weightBold}>4.0</Text>
               <Text role="caption" color={t.textMuted}>(1,284)</Text>
             </div>
-            <div style={{ display: 'flex', gap: space.md }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: space.md }}>
               {([12, 16, 20, 24] as const).map((sz) => (
-                <div key={sz} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: space.xs }}>
+                <div key={sz} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: space.xs, flexShrink: 0 }}>
                   <Rating value={4} max={5} size={sz} />
                   <Text role="caption" color={t.textMuted}>{sz}px</Text>
                 </div>

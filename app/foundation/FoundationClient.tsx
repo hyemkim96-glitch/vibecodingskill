@@ -662,8 +662,8 @@ function MotionPanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
           35%, 55% { transform: scale(${m.pressScale}); }
         }
         @keyframes fd-hover {
-          0%, 100% { transform: scale(1); }
-          35%, 55% { transform: scale(${m.hoverScale}); }
+          0%, 100% { transform: scale(1); box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+          35%, 55% { transform: scale(${m.hoverScale}); box-shadow: 0 6px 20px rgba(0,0,0,0.12); }
         }
         @keyframes fd-fade {
           0%, 100% { opacity: 1; }

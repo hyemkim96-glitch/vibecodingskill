@@ -66,11 +66,11 @@ export interface BrandDeep {
     examples: string[];
     avoid: string[];
   };
-  components: ComponentSpec[];
-  breakpoints: { name: string; value: string; behavior: string }[];
+  components?: ComponentSpec[];
+  breakpoints?: { name: string; value: string; behavior: string }[];
   iconStyle: string;
-  imageStyle: string;
-  accessibilityNotes: string;
+  imageStyle?: string;
+  accessibilityNotes?: string;
 }
 
 export interface BrandToken {
