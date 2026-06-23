@@ -107,263 +107,241 @@ function TokenLabel({ t, name, value, sub }: { t: Theme; name: string; value: st
 /* ══════════════════════════════════════════
    컬러 패널
 ══════════════════════════════════════════ */
-function ColorPanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
-  const { Table, Divider } = ds;
+function ColorPanel({ t }: { t: Theme; ds: ReturnType<typeof createDS> }) {
   const neutralSteps = [0, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950, 1000] as const;
 
   const statusGroups = [
     { name: 'success', label: '성공', s: status.success },
     { name: 'danger',  label: '위험', s: status.danger  },
-    { name: 'warning', label: '경고', s: status.warning  },
-    { name: 'info',    label: '정보', s: status.info     },
-    { name: 'accent',  label: '강조', s: status.accent   },
+    { name: 'warning', label: '경고', s: status.warning },
+    { name: 'info',    label: '정보', s: status.info    },
+    { name: 'accent',  label: '강조', s: status.accent  },
   ];
 
-  const semanticGroups: { title: string; prefix: string; roles: string[] }[] = [
-    {
-      title: 'Fill',
-      prefix: '--color-fill-',
-      roles: ['normal', 'strong', 'alternative', 'neutral', 'neutral-alt', 'brand', 'brand-weak'],
-    },
-    {
-      title: 'Text',
-      prefix: '--color-text-',
-      roles: ['normal', 'alternative', 'assistive', 'disabled', 'on-fill', 'brand'],
-    },
-    {
-      title: 'Border',
-      prefix: '--color-border-',
-      roles: ['normal', 'strong', 'weak', 'brand', 'focus'],
-    },
-    {
-      title: 'Background',
-      prefix: '--color-bg-',
-      roles: ['normal', 'alt', 'elevated'],
-    },
+  const semanticGroups = [
+    { key: 'Fill',       prefix: '--color-fill-',   roles: ['normal','strong','alternative','neutral','neutral-alt','brand','brand-weak'] },
+    { key: 'Text',       prefix: '--color-text-',   roles: ['normal','alternative','assistive','disabled','on-fill','brand'] },
+    { key: 'Border',     prefix: '--color-border-', roles: ['normal','strong','weak','brand','focus'] },
+    { key: 'Background', prefix: '--color-bg-',     roles: ['normal','alt','elevated'] },
   ];
+
+  const roleGroups = [
+    { comp: 'button', label: 'Button' },
+    { comp: 'badge',  label: 'Badge'  },
+    { comp: 'chip',   label: 'Chip'   },
+    { comp: 'input',  label: 'Input'  },
+    { comp: 'card',   label: 'Card'   },
+    { comp: 'navtab', label: 'NavTab' },
+  ];
+
+  const variantGroups = [
+    { comp: 'button', label: 'Button' },
+    { comp: 'chip',   label: 'Chip'   },
+    { comp: 'card',   label: 'Card'   },
+    { comp: 'input',  label: 'Input'  },
+    { comp: 'navtab', label: 'NavTab' },
+  ];
+
+  /* ── 로컬 서브 컴포넌트 ── */
+
+  // 티어 헤더: 번호 배지 + 이름 + 설명
+  const TierHeader = ({ num, label, desc, first }: { num: string; label: string; desc: string; first?: boolean }) => (
+    <div style={{
+      display: 'flex',
+      alignItems: 'center',
+      gap: t.space.sm,
+      paddingTop: first ? 0 : t.space.xl * 2,
+      paddingBottom: t.space.md,
+      borderTop: first ? 'none' : `1px solid ${t.border}`,
+    }}>
+      <span style={{
+        fontSize: 10,
+        fontFamily: 'monospace',
+        fontWeight: t.weightBold,
+        color: t.textMuted,
+        background: t.surface,
+        border: `1px solid ${t.border}`,
+        borderRadius: 4,
+        padding: '2px 5px',
+        lineHeight: 1.4,
+        flexShrink: 0,
+      }}>{num}</span>
+      <span style={{ ...bodySm(t), fontWeight: t.weightBold, color: t.textMain }}>{label}</span>
+      <span style={{ ...cap(t), color: t.textMuted }}>{desc}</span>
+    </div>
+  );
+
+  // 그룹 레이블 (FILL, BUTTON 등)
+  const GroupLabel = ({ children }: { children: React.ReactNode }) => (
+    <div style={{
+      ...cap(t),
+      fontWeight: t.weightMedium,
+      color: t.textSub,
+      letterSpacing: '0.06em',
+      textTransform: 'uppercase' as const,
+      marginTop: t.space.lg,
+      marginBottom: 2,
+      paddingBottom: t.space.xs,
+      borderBottom: `1px solid ${t.border}`,
+    }}>{children}</div>
+  );
+
+  // 컬럼 헤더 (☀ light / ◑ dark)
+  const ColHeader = () => (
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr 96px 96px', gap: t.space.xs, padding: `${t.space.xs}px 0`, marginBottom: 1 }}>
+      <span />
+      <span style={{ fontSize: 10, color: t.textMuted }}>☀ light</span>
+      <span style={{ fontSize: 10, color: t.textMuted }}>◑ dark</span>
+    </div>
+  );
+
+  // 통일 토큰 행
+  const TRow = ({ name, light, dark }: { name: string; light: string; dark: string }) => (
+    <div style={{
+      display: 'grid',
+      gridTemplateColumns: '1fr 96px 96px',
+      gap: t.space.xs,
+      alignItems: 'center',
+      padding: `5px 0`,
+      borderBottom: `1px solid ${t.border}`,
+    }}>
+      <span style={{ fontSize: 10, fontFamily: 'monospace', color: t.textSub, lineHeight: 1.4 }}>{name}</span>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+        <div style={{ width: 12, height: 12, borderRadius: 3, background: light, border: `1px solid ${t.border}`, flexShrink: 0 }} />
+        <span style={{ fontSize: 9, fontFamily: 'monospace', color: t.textMuted, lineHeight: 1 }}>{light}</span>
+      </div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+        <div style={{ width: 12, height: 12, borderRadius: 3, background: dark, border: `1px solid ${t.border}`, flexShrink: 0 }} />
+        <span style={{ fontSize: 9, fontFamily: 'monospace', color: t.textMuted, lineHeight: 1 }}>{dark}</span>
+      </div>
+    </div>
+  );
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
 
-      {/* 1. 뉴트럴 팔레트 */}
-      <Section t={t} title="뉴트럴 팔레트 — OKLCH 기준 지각 균등 13단계" first>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.xs }}>
-          {/* 팔레트 바 */}
-          <div style={{ display: 'flex', borderRadius: t.radius.card, overflow: 'hidden', height: 48, border: `1px solid ${t.border}` }}>
-            {neutralSteps.map((step) => (
-              <div key={step} style={{ flex: 1, background: neutral[step].hex }} />
-            ))}
-          </div>
-          {/* 스텝 레이블 */}
-          <div style={{ display: 'flex', gap: 0 }}>
-            {neutralSteps.map((step) => (
-              <div key={step} style={{ flex: 1, textAlign: 'center' }}>
-                <div style={{ ...cap(t), color: t.textMuted }}>{step}</div>
-                <div style={{ ...cap(t), color: t.textMuted, opacity: 0.6 }}>{neutral[step].hex}</div>
+      {/* ─── TIER 1: Palette ─────────────────────────── */}
+      <TierHeader num="1" label="Palette" desc="원시값 — OKLCH 기반 뉴트럴 13단계 + 상태색 5종" first />
+
+      {/* 뉴트럴 바 */}
+      <GroupLabel>Neutral</GroupLabel>
+      <div style={{ display: 'flex', borderRadius: t.radius.badge, overflow: 'hidden', height: 36, border: `1px solid ${t.border}`, marginTop: t.space.xs }}>
+        {neutralSteps.map((step) => (
+          <div key={step} style={{ flex: 1, background: neutral[step].hex }} />
+        ))}
+      </div>
+      <div style={{ display: 'flex', marginTop: 3 }}>
+        {neutralSteps.map((step) => (
+          <div key={step} style={{ flex: 1, textAlign: 'center', fontSize: 9, color: t.textMuted, lineHeight: 1.4 }}>{step}</div>
+        ))}
+      </div>
+      {/* OKLCH 대표값 4개 */}
+      <div style={{ display: 'flex', gap: t.space.xs, marginTop: t.space.sm, flexWrap: 'wrap' as const }}>
+        {([0, 300, 700, 1000] as const).map((step) => {
+          const n = neutral[step];
+          const isLight = step < 500;
+          return (
+            <div key={step} style={{
+              display: 'inline-flex', alignItems: 'center', gap: 5,
+              padding: '3px 7px', borderRadius: t.radius.badge,
+              background: n.hex, border: `1px solid ${t.border}`,
+            }}>
+              <span style={{ fontSize: 9, fontFamily: 'monospace', color: isLight ? '#52525b' : '#a0a0ab' }}>{step}</span>
+              <span style={{ fontSize: 9, fontFamily: 'monospace', color: isLight ? '#71717a' : '#71717a' }}>{n.oklch}</span>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* 상태색 */}
+      <GroupLabel>Status</GroupLabel>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.xs, marginTop: t.space.xs }}>
+        {/* 컬럼 헤더 */}
+        <div style={{ display: 'grid', gridTemplateColumns: '36px 1fr 1fr 1fr', gap: t.space.xs }}>
+          <span />
+          {['fill','text','bg'].map((r) => (
+            <span key={r} style={{ fontSize: 9, color: t.textMuted, textAlign: 'center' }}>{r}</span>
+          ))}
+        </div>
+        {statusGroups.map(({ name, label, s }) => (
+          <div key={name} style={{ display: 'grid', gridTemplateColumns: '36px 1fr 1fr 1fr', gap: t.space.xs, alignItems: 'stretch' }}>
+            <span style={{ fontSize: 10, color: t.textSub, alignSelf: 'center' }}>{label}</span>
+            {[
+              { hex: s.fill.hex, oklch: s.fill.oklch },
+              { hex: s.text.hex, oklch: s.text.oklch },
+              { hex: s.bg.hex,   oklch: s.bg.oklch   },
+            ].map(({ hex, oklch }, ci) => (
+              <div key={ci} style={{ borderRadius: t.radius.badge, overflow: 'hidden', border: `1px solid ${t.border}` }}>
+                <div style={{ height: 28, background: hex }} />
+                <div style={{ padding: '3px 5px', background: t.surface }}>
+                  <div style={{ fontSize: 9, fontFamily: 'monospace', color: t.textMain, lineHeight: 1.3 }}>{hex}</div>
+                  <div style={{ fontSize: 8, fontFamily: 'monospace', color: t.textMuted, lineHeight: 1.3, marginTop: 1 }}>{oklch}</div>
+                </div>
               </div>
             ))}
           </div>
-          {/* OKLCH 정보 */}
-          <div style={{
-            marginTop: t.space.sm,
-            padding: `${t.space.sm}px ${t.space.md}px`,
-            borderRadius: t.radius.card,
-            background: t.surface,
-            border: `1px solid ${t.border}`,
-            display: 'flex',
-            gap: t.space.md,
-            flexWrap: 'wrap',
-          }}>
-            {[0, 200, 500, 900, 1000].map((step) => {
-              const n = neutral[step as keyof typeof neutral];
-              const isLight = step <= 400;
-              return (
-                <div key={step} style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: t.space.sm,
-                  padding: `${t.space.xs}px ${t.space.sm}px`,
-                  borderRadius: t.radius.badge,
-                  background: n.hex,
-                  border: `1px solid ${t.border}`,
-                }}>
-                  <span style={{ ...cap(t), color: isLight ? '#18181b' : '#ffffff', fontWeight: 600 }}>
-                    {step}
-                  </span>
-                  <span style={{ ...cap(t), color: isLight ? '#52525b' : '#a0a0ab' }}>
-                    {n.oklch}
-                  </span>
-                </div>
-              );
-            })}
+        ))}
+      </div>
+
+      {/* ─── TIER 2: Semantic ────────────────────────── */}
+      <TierHeader num="2" label="Semantic" desc="의미 기반 역할 맵핑 — --color-{category}-{role}" />
+      <ColHeader />
+      {semanticGroups.map(({ key, prefix, roles }) => (
+        <div key={key}>
+          <GroupLabel>{key}</GroupLabel>
+          {roles.map((role) => {
+            const tokenKey = `${prefix}${role}`;
+            return (
+              <TRow
+                key={role}
+                name={tokenKey}
+                light={lightTokens[tokenKey] ?? '—'}
+                dark={darkTokens[tokenKey] ?? '—'}
+              />
+            );
+          })}
+        </div>
+      ))}
+
+      {/* ─── TIER 3: Role ────────────────────────────── */}
+      <TierHeader num="3" label="Role" desc="컴포넌트 슬롯 바인딩 — --comp-{component}-{slot}" />
+      <ColHeader />
+      {roleGroups.map(({ comp, label }) => {
+        const keys = Object.keys(lightRoleTokens).filter(k => k.startsWith(`--comp-${comp}-`));
+        return (
+          <div key={comp}>
+            <GroupLabel>{label}</GroupLabel>
+            {keys.map((key) => (
+              <TRow
+                key={key}
+                name={key.replace(`--comp-${comp}-`, '')}
+                light={lightRoleTokens[key] ?? '—'}
+                dark={darkRoleTokens[key] ?? '—'}
+              />
+            ))}
           </div>
-        </div>
-      </Section>
+        );
+      })}
 
-      {/* 2. 상태 컬러 */}
-      <Section t={t} title="상태 컬러 — OKLCH chroma 0.14~0.20, WCAG AA 대비">
-        <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.lg }}>
-          {statusGroups.map(({ name, label, s }) => (
-            <div key={name} style={{ display: 'flex', alignItems: 'stretch', gap: t.space.md }}>
-              {/* 레이블 */}
-              <div style={{ width: 48, display: 'flex', alignItems: 'center', flexShrink: 0 }}>
-                <span style={{ ...cap(t), color: t.textSub, fontWeight: t.weightMedium }}>{label}</span>
-              </div>
-              {/* fill / text / bg 칩 3종 */}
-              {[
-                { role: 'fill', hex: s.fill.hex, oklch: s.fill.oklch, textColor: '#ffffff', roleLabel: 'fill' },
-                { role: 'text', hex: s.text.hex, oklch: s.text.oklch, textColor: '#ffffff', roleLabel: 'text' },
-                { role: 'bg',   hex: s.bg.hex,   oklch: s.bg.oklch,   textColor: '#18181b', roleLabel: 'bg' },
-              ].map(({ role, hex, oklch, textColor, roleLabel }) => (
-                <div key={role} style={{
-                  flex: 1,
-                  borderRadius: t.radius.card,
-                  overflow: 'hidden',
-                  border: `1px solid ${t.border}`,
-                }}>
-                  <div style={{ height: 40, background: hex, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <span style={{ ...cap(t), color: textColor, opacity: 0.9 }}>{roleLabel}</span>
-                  </div>
-                  <div style={{ padding: `${t.space.xs}px ${t.space.sm}px ${t.space.sm}px`, background: t.surface }}>
-                    <div style={{ ...cap(t), color: t.textMain }}>{hex}</div>
-                    <div style={{ ...cap(t), color: t.textMuted, marginTop: 2 }}>{oklch}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ))}
-        </div>
-      </Section>
-
-      {/* 3. 시멘틱 토큰 */}
-      <Section t={t} title="시멘틱 토큰 — fill / text / border / bg × role × variant">
-        <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.xl }}>
-          {semanticGroups.map(({ title, prefix, roles }, gi) => (
-            <div key={title}>
-              {gi > 0 && <Divider style={{ marginBottom: t.space.lg }} />}
-              <div style={{ ...cap(t), fontWeight: t.weightBold, color: t.textSub, marginBottom: t.space.md }}>{title}</div>
-              <Table
-                rows={roles.map((role) => {
-                  const key = `${prefix}${role}`;
-                  const light = lightTokens[key] ?? '—';
-                  const dark = darkTokens[key] ?? '—';
-                  const isTextOnFill = role === 'on-fill';
-                  return {
-                    label: role,
-                    value: (
-                      <div style={{ display: 'flex', gap: t.space.xl }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: t.space.sm, minWidth: 100 }}>
-                          <div style={{
-                            width: 20, height: 20, borderRadius: t.radius.badge,
-                            background: isTextOnFill ? '#18181b' : light,
-                            border: `1px solid ${t.border}`, flexShrink: 0,
-                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                          }}>
-                            {isTextOnFill && <div style={{ width: 10, height: 1.5, background: light, borderRadius: 1 }} />}
-                          </div>
-                          <span style={{ ...cap(t), color: t.textMuted, fontFamily: 'monospace' }}>☀ {light}</span>
-                        </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: t.space.sm, minWidth: 100 }}>
-                          <div style={{
-                            width: 20, height: 20, borderRadius: t.radius.badge,
-                            background: isTextOnFill ? '#fafafa' : dark,
-                            border: `1px solid ${t.border}`, flexShrink: 0,
-                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                          }}>
-                            {isTextOnFill && <div style={{ width: 10, height: 1.5, background: dark, borderRadius: 1 }} />}
-                          </div>
-                          <span style={{ ...cap(t), color: t.textMuted, fontFamily: 'monospace' }}>◑ {dark}</span>
-                        </div>
-                      </div>
-                    ),
-                  };
-                })}
+      {/* ─── TIER 4: Variant ─────────────────────────── */}
+      <TierHeader num="4" label="Variant" desc="인터랙션 상태 오버라이드 — --comp-{component}-{slot}-{state}" />
+      <ColHeader />
+      {variantGroups.map(({ comp, label }) => {
+        const keys = Object.keys(lightVariantTokens).filter(k => k.startsWith(`--comp-${comp}-`));
+        return (
+          <div key={comp}>
+            <GroupLabel>{label}</GroupLabel>
+            {keys.map((key) => (
+              <TRow
+                key={key}
+                name={key.replace(`--comp-${comp}-`, '')}
+                light={lightVariantTokens[key] ?? '—'}
+                dark={darkVariantTokens[key] ?? '—'}
               />
-            </div>
-          ))}
-        </div>
-      </Section>
-
-      {/* 4. Role 토큰 */}
-      <Section t={t} title="Role 토큰 — 컴포넌트 슬롯 바인딩 (--comp-{component}-{slot})">
-        <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.xl }}>
-          {[
-            { comp: 'button',  label: 'Button',  keys: Object.keys(lightRoleTokens).filter(k => k.startsWith('--comp-button-')) },
-            { comp: 'badge',   label: 'Badge',   keys: Object.keys(lightRoleTokens).filter(k => k.startsWith('--comp-badge-')) },
-            { comp: 'chip',    label: 'Chip',    keys: Object.keys(lightRoleTokens).filter(k => k.startsWith('--comp-chip-')) },
-            { comp: 'input',   label: 'Input',   keys: Object.keys(lightRoleTokens).filter(k => k.startsWith('--comp-input-')) },
-            { comp: 'card',    label: 'Card',    keys: Object.keys(lightRoleTokens).filter(k => k.startsWith('--comp-card-')) },
-            { comp: 'navtab',  label: 'NavTab',  keys: Object.keys(lightRoleTokens).filter(k => k.startsWith('--comp-navtab-')) },
-          ].map(({ comp, label, keys }, gi) => (
-            <div key={comp}>
-              {gi > 0 && <Divider style={{ marginBottom: t.space.lg }} />}
-              <div style={{ ...cap(t), fontWeight: t.weightBold, color: t.textSub, marginBottom: t.space.md }}>{label}</div>
-              <Table
-                rows={keys.map((key) => {
-                  const light = lightRoleTokens[key] ?? '—';
-                  const dark  = darkRoleTokens[key]  ?? '—';
-                  const slot  = key.replace(`--comp-${comp}-`, '');
-                  return {
-                    label: slot,
-                    value: (
-                      <div style={{ display: 'flex', gap: t.space.xl }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: t.space.sm, minWidth: 120 }}>
-                          <div style={{ width: 16, height: 16, borderRadius: t.radius.badge, background: light, border: `1px solid ${t.border}`, flexShrink: 0 }} />
-                          <span style={{ ...cap(t), color: t.textMuted, fontFamily: 'monospace' }}>☀ {light}</span>
-                        </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: t.space.sm, minWidth: 120 }}>
-                          <div style={{ width: 16, height: 16, borderRadius: t.radius.badge, background: dark, border: `1px solid ${t.border}`, flexShrink: 0 }} />
-                          <span style={{ ...cap(t), color: t.textMuted, fontFamily: 'monospace' }}>◑ {dark}</span>
-                        </div>
-                      </div>
-                    ),
-                  };
-                })}
-              />
-            </div>
-          ))}
-        </div>
-      </Section>
-
-      {/* 5. Variant 토큰 */}
-      <Section t={t} title="Variant 토큰 — 인터랙션 상태 오버라이드 (--comp-{component}-{slot}-{state})">
-        <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.xl }}>
-          {[
-            { group: 'button',  label: 'Button 상태', keys: Object.keys(lightVariantTokens).filter(k => k.startsWith('--comp-button-')) },
-            { group: 'chip',    label: 'Chip 상태',   keys: Object.keys(lightVariantTokens).filter(k => k.startsWith('--comp-chip-'))   },
-            { group: 'card',    label: 'Card 상태',   keys: Object.keys(lightVariantTokens).filter(k => k.startsWith('--comp-card-'))   },
-            { group: 'input',   label: 'Input 상태',  keys: Object.keys(lightVariantTokens).filter(k => k.startsWith('--comp-input-'))  },
-            { group: 'navtab',  label: 'NavTab 상태', keys: Object.keys(lightVariantTokens).filter(k => k.startsWith('--comp-navtab-')) },
-          ].map(({ group, label, keys }, gi) => (
-            <div key={group}>
-              {gi > 0 && <Divider style={{ marginBottom: t.space.lg }} />}
-              <div style={{ ...cap(t), fontWeight: t.weightBold, color: t.textSub, marginBottom: t.space.md }}>{label}</div>
-              <Table
-                rows={keys.map((key) => {
-                  const light = lightVariantTokens[key] ?? '—';
-                  const dark  = darkVariantTokens[key]  ?? '—';
-                  const slot  = key.replace(`--comp-${group}-`, '');
-                  return {
-                    label: slot,
-                    value: (
-                      <div style={{ display: 'flex', gap: t.space.xl }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: t.space.sm, minWidth: 120 }}>
-                          <div style={{ width: 16, height: 16, borderRadius: t.radius.badge, background: light, border: `1px solid ${t.border}`, flexShrink: 0 }} />
-                          <span style={{ ...cap(t), color: t.textMuted, fontFamily: 'monospace' }}>☀ {light}</span>
-                        </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: t.space.sm, minWidth: 120 }}>
-                          <div style={{ width: 16, height: 16, borderRadius: t.radius.badge, background: dark, border: `1px solid ${t.border}`, flexShrink: 0 }} />
-                          <span style={{ ...cap(t), color: t.textMuted, fontFamily: 'monospace' }}>◑ {dark}</span>
-                        </div>
-                      </div>
-                    ),
-                  };
-                })}
-              />
-            </div>
-          ))}
-        </div>
-      </Section>
+            ))}
+          </div>
+        );
+      })}
 
     </div>
   );
@@ -692,102 +670,141 @@ function RadiusPanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
 function MotionPanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
   const { Table, TokenCard } = ds;
   const m = t.motion;
+  const dur = m.duration;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
       <style>{`
         @keyframes fd-slide {
           0%   { transform: translateX(0); }
-          50%  { transform: translateX(calc(100% - 24px)); }
+          45%  { transform: translateX(calc(100% - 88px)); }
+          55%  { transform: translateX(calc(100% - 88px)); }
           100% { transform: translateX(0); }
         }
         @keyframes fd-press {
           0%, 100% { transform: scale(1); }
-          40%       { transform: scale(${m.pressScale}); }
-          60%       { transform: scale(${m.pressScale}); }
+          35%, 55% { transform: scale(${m.pressScale}); }
         }
         @keyframes fd-hover {
           0%, 100% { transform: scale(1); }
-          40%       { transform: scale(${m.hoverScale}); }
-          60%       { transform: scale(${m.hoverScale}); }
+          35%, 55% { transform: scale(${m.hoverScale}); }
         }
         @keyframes fd-fade {
           0%, 100% { opacity: 1; }
-          40%       { opacity: 0.15; }
-          60%       { opacity: 0.15; }
+          35%, 55% { opacity: 0.08; }
         }
       `}</style>
 
+      {/* ── 토큰 ── */}
       <Section t={t} title="토큰" first>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: t.space.md, marginBottom: t.space.xl }}>
-          <TokenCard name="duration" value={`${m.duration}ms`} desc="전환 기본 지속 시간" />
-          <TokenCard name="easing" value={m.easing} desc="이징 곡선" />
-          <TokenCard name="pressScale" value={String(m.pressScale)} desc="누름 축소 비율" />
-          <TokenCard name="hoverScale" value={String(m.hoverScale)} desc="호버 확대 비율" />
-        </div>
+        <Table
+          rows={[
+            { label: 'duration',   value: `${dur}ms`,       tone: 'default' as const },
+            { label: 'easing',     value: m.easing,         tone: 'default' as const },
+            { label: 'pressScale', value: String(m.pressScale), tone: 'default' as const },
+            { label: 'hoverScale', value: String(m.hoverScale), tone: 'default' as const },
+          ]}
+        />
       </Section>
 
+      {/* ── 미리보기 ── */}
       <Section t={t} title="애니메이션 미리보기">
-        <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.lg }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: t.space.md }}>
 
-          {/* 슬라이드 — duration + easing */}
-          <div style={{ borderRadius: t.radius.card, border: `1px solid ${t.border}`, background: t.surface, padding: t.space.lg }}>
-            <div style={{ ...cap(t), color: t.textSub, fontWeight: t.weightBold, marginBottom: t.space.xs }}>Slide — duration + easing</div>
-            <div style={{ ...cap(t), color: t.textMuted, marginBottom: t.space.md }}>{m.duration}ms · {m.easing}</div>
-            <div style={{ position: 'relative', height: 24, background: t.surfaceAlt, borderRadius: t.radius.badge, overflow: 'hidden' }}>
+          {/* Slide */}
+          <div style={{ borderRadius: t.radius.card, border: `1px solid ${t.border}`, background: t.surface, padding: t.space.lg, display: 'flex', flexDirection: 'column', gap: t.space.sm }}>
+            <div>
+              <div style={{ ...bodySm(t), fontWeight: t.weightBold, color: t.textMain }}>Slide</div>
+              <div style={{ ...cap(t), color: t.textMuted }}>{dur}ms · {m.easing}</div>
+            </div>
+            <div style={{ position: 'relative', height: 44, background: t.surfaceAlt, borderRadius: t.radius.input, overflow: 'hidden', border: `1px solid ${t.border}` }}>
               <div style={{
                 position: 'absolute',
-                left: 0,
-                top: 0,
-                width: 24,
-                height: 24,
-                borderRadius: '9999px',
+                left: 6,
+                top: 6,
+                height: 32,
+                width: 80,
+                borderRadius: t.radius.chip,
                 background: t.primary,
-                animation: `fd-slide ${m.duration * 2}ms ${m.easing} infinite`,
-              }} />
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                animation: `fd-slide ${dur * 3}ms ${m.easing} infinite`,
+              }}>
+                <span style={{ fontSize: 10, color: t.onPrimary, fontWeight: 600 }}>토스트</span>
+              </div>
             </div>
+            <div style={{ ...cap(t), color: t.textMuted }}>표시 전환 · 드로어 · 토스트</div>
           </div>
 
-          {/* 프레스 스케일 */}
-          <div style={{ borderRadius: t.radius.card, border: `1px solid ${t.border}`, background: t.surface, padding: t.space.lg }}>
-            <div style={{ ...cap(t), color: t.textSub, fontWeight: t.weightBold, marginBottom: t.space.xs }}>Press Scale — {m.pressScale}</div>
-            <div style={{ ...cap(t), color: t.textMuted, marginBottom: t.space.md }}>탭/클릭 시 축소</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: t.space.xl }}>
-              {[0, 1, 2].map((i) => (
-                <div key={i} style={{
-                  width: 24, height: 24, borderRadius: '9999px', background: t.primary,
-                  animation: `fd-press ${m.duration * 3}ms ${m.easing} ${i * (m.duration * 3 / 3)}ms infinite`,
-                }} />
-              ))}
+          {/* Press Scale */}
+          <div style={{ borderRadius: t.radius.card, border: `1px solid ${t.border}`, background: t.surface, padding: t.space.lg, display: 'flex', flexDirection: 'column', gap: t.space.sm }}>
+            <div>
+              <div style={{ ...bodySm(t), fontWeight: t.weightBold, color: t.textMain }}>Press Scale</div>
+              <div style={{ ...cap(t), color: t.textMuted }}>scale({m.pressScale}) — 탭/클릭 시 축소</div>
             </div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 56 }}>
+              <div style={{
+                padding: '10px 24px',
+                borderRadius: t.radius.button,
+                background: t.primary,
+                color: t.onPrimary,
+                fontSize: 13,
+                fontWeight: 600,
+                animation: `fd-press ${dur * 4}ms ${m.easing} infinite`,
+                cursor: 'pointer',
+                userSelect: 'none' as const,
+                letterSpacing: '-0.01em',
+              }}>
+                버튼
+              </div>
+            </div>
+            <div style={{ ...cap(t), color: t.textMuted }}>버튼 · 아이콘 버튼 · 리스트 행</div>
           </div>
 
-          {/* 호버 스케일 */}
-          <div style={{ borderRadius: t.radius.card, border: `1px solid ${t.border}`, background: t.surface, padding: t.space.lg }}>
-            <div style={{ ...cap(t), color: t.textSub, fontWeight: t.weightBold, marginBottom: t.space.xs }}>Hover Scale — {m.hoverScale}</div>
-            <div style={{ ...cap(t), color: t.textMuted, marginBottom: t.space.md }}>호버 시 확대</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: t.space.xl }}>
-              {[0, 1, 2].map((i) => (
-                <div key={i} style={{
-                  width: 24, height: 24, borderRadius: '9999px', background: t.success,
-                  animation: `fd-hover ${m.duration * 3}ms ${m.easing} ${i * (m.duration * 3 / 3)}ms infinite`,
-                }} />
-              ))}
+          {/* Hover Scale */}
+          <div style={{ borderRadius: t.radius.card, border: `1px solid ${t.border}`, background: t.surface, padding: t.space.lg, display: 'flex', flexDirection: 'column', gap: t.space.sm }}>
+            <div>
+              <div style={{ ...bodySm(t), fontWeight: t.weightBold, color: t.textMain }}>Hover Scale</div>
+              <div style={{ ...cap(t), color: t.textMuted }}>scale({m.hoverScale}) — 호버 시 확대</div>
             </div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 56 }}>
+              <div style={{
+                padding: '10px 18px',
+                borderRadius: t.radius.card,
+                background: t.primaryTint,
+                border: `1px solid ${t.primary}`,
+                textAlign: 'center',
+                animation: `fd-hover ${dur * 4}ms ${m.easing} infinite`,
+              }}>
+                <div style={{ fontSize: 11, fontWeight: 600, color: t.primary }}>카드</div>
+                <div style={{ fontSize: 9, color: t.textMuted, marginTop: 2 }}>콘텐츠</div>
+              </div>
+            </div>
+            <div style={{ ...cap(t), color: t.textMuted }}>카드 · 썸네일 · 인터랙티브 셀</div>
           </div>
 
-          {/* 페이드 */}
-          <div style={{ borderRadius: t.radius.card, border: `1px solid ${t.border}`, background: t.surface, padding: t.space.lg }}>
-            <div style={{ ...cap(t), color: t.textSub, fontWeight: t.weightBold, marginBottom: t.space.xs }}>Fade — duration</div>
-            <div style={{ ...cap(t), color: t.textMuted, marginBottom: t.space.md }}>표시·숨김 전환</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: t.space.xl }}>
-              {[0, 1, 2].map((i) => (
-                <div key={i} style={{
-                  width: 24, height: 24, borderRadius: '9999px', background: t.info,
-                  animation: `fd-fade ${m.duration * 3}ms ${m.easing} ${i * (m.duration * 3 / 3)}ms infinite`,
-                }} />
-              ))}
+          {/* Fade */}
+          <div style={{ borderRadius: t.radius.card, border: `1px solid ${t.border}`, background: t.surface, padding: t.space.lg, display: 'flex', flexDirection: 'column', gap: t.space.sm }}>
+            <div>
+              <div style={{ ...bodySm(t), fontWeight: t.weightBold, color: t.textMain }}>Fade</div>
+              <div style={{ ...cap(t), color: t.textMuted }}>{dur}ms — 표시·숨김 전환</div>
             </div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 56 }}>
+              <div style={{
+                padding: '10px 16px',
+                borderRadius: t.radius.card,
+                background: t.surfaceAlt,
+                border: `1px solid ${t.border}`,
+                animation: `fd-fade ${dur * 4}ms ${m.easing} infinite`,
+                width: 110,
+              }}>
+                <div style={{ height: 7, background: t.textMuted, borderRadius: 4, opacity: 0.4 }} />
+                <div style={{ height: 7, background: t.textMuted, borderRadius: 4, width: '65%', opacity: 0.25, marginTop: 5 }} />
+                <div style={{ height: 7, background: t.textMuted, borderRadius: 4, width: '80%', opacity: 0.25, marginTop: 5 }} />
+              </div>
+            </div>
+            <div style={{ ...cap(t), color: t.textMuted }}>모달 · 오버레이 · 스켈레톤</div>
           </div>
 
         </div>
