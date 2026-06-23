@@ -61,6 +61,10 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
           StatusTracker, BalanceCard, GaugeMeter, RankingList, SaveCollect, EditorialCard, ChatList } = ds;
   const { space } = t;
   const all = category === 'all';
+  // Brand pages pass a single signature → show only that brand's component.
+  // The service master gallery passes none → show every signature component,
+  // so every element a pattern can use exists in the library.
+  const showSig = (k: SignatureKind) => !signature || signature === k;
 
   return (
     <div className="ds-root" style={{ ...motionVars(t), display: 'flex', flexDirection: 'column', background: t.surfaceAlt, padding: t.space.xl, fontFamily: t.font, gap: all ? space.xl * 2 : 0 }}>
@@ -367,23 +371,23 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
             </div>
           </Tile>
 
-          {/* brand-specific card components — shown only for the brand that uses them */}
-          {signature === 'balance' && (
+          {/* brand-distinctive card components — gated by brand (all shown in the master gallery) */}
+          {showSig('balance') && (
             <Tile t={t} ds={ds} title="잔액 카드">
               <BalanceCard label="총 자산" value="12,480,200원" delta="+2.4%" actions={['보내기', '충전']} />
             </Tile>
           )}
-          {signature === 'collect' && (
+          {showSig('collect') && (
             <Tile t={t} ds={ds} title="스크랩 카드">
               <SaveCollect count={1204} saved tag="상품 8개" h={140} />
             </Tile>
           )}
-          {signature === 'editorial' && (
+          {showSig('editorial') && (
             <Tile t={t} ds={ds} title="에디토리얼 카드">
               <EditorialCard tag="EDITOR'S PICK" title="이번 주 신상 룩" sub="에디터가 고른 코디 제안" h={160} />
             </Tile>
           )}
-          {signature === 'ranking' && (
+          {showSig('ranking') && (
             <Tile t={t} ds={ds} title="실시간 랭킹">
               <RankingList items={[
                 { title: '금리 동결 결정', sub: '실시간 1위', delta: 'up' },
@@ -393,7 +397,7 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
               ]} />
             </Tile>
           )}
-          {signature === 'chat' && (
+          {showSig('chat') && (
             <Tile t={t} ds={ds} title="채팅 말풍선">
               <ChatList messages={[
                 { text: '저녁 뭐 먹을래?', time: '오후 6:20' },
@@ -530,13 +534,13 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
             </div>
           </Tile>
 
-          {/* brand-specific feedback components — shown only for the brand that uses them */}
-          {signature === 'status' && (
+          {/* brand-distinctive feedback components — gated by brand (all shown in the master gallery) */}
+          {showSig('status') && (
             <Tile t={t} ds={ds} title="단계 인디케이터">
               <StatusTracker steps={['주문접수', '조리중', '배달중', '완료']} current={2} />
             </Tile>
           )}
-          {signature === 'gauge' && (
+          {showSig('gauge') && (
             <Tile t={t} ds={ds} title="게이지">
               <GaugeMeter label="매너온도" value="36.5°C" ratio={0.66} caption="따뜻한 이웃이에요" />
             </Tile>

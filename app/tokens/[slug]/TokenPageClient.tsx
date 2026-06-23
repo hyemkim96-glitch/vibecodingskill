@@ -9,6 +9,7 @@ import { renderPattern, PATTERN_TYPES, PatternType } from '@/components/patterns
 import { getContentPack } from '@/lib/content/packs';
 import { resolveTheme } from '@/lib/tokens/resolveTheme';
 import { hexToOklch, oklchToHex } from '@/lib/tokens/oklch';
+import { makeBrandHueScale } from '@/lib/tokens/palette';
 import { createDS, motionVars } from '@/components/ds';
 import styles from './TokenPage.module.css';
 
@@ -118,41 +119,31 @@ function SubTabStrip({ items, active, onChange }: {
   );
 }
 
-const HUE_STEPS = [
-  { name: '50',  l: 0.975, cf: 0.20 },
-  { name: '100', l: 0.940, cf: 0.30 },
-  { name: '200', l: 0.880, cf: 0.50 },
-  { name: '300', l: 0.800, cf: 0.70 },
-  { name: '400', l: 0.700, cf: 0.88 },
-  { name: '500', l: 0.588, cf: 1.00 },
-  { name: '600', l: 0.478, cf: 0.92 },
-  { name: '700', l: 0.370, cf: 0.78 },
-  { name: '800', l: 0.265, cf: 0.60 },
-  { name: '900', l: 0.175, cf: 0.45 },
-];
-
 function generateBrandPalette(primary: string) {
   const { l: baseL, c: baseC, h } = hexToOklch(primary);
 
-  // Find closest step to primary's actual lightness
+  // Hue scale — Foundation STEPS at the brand's hue (gamut-corrected chroma).
+  // Monotonic by construction; the primary sits naturally at its L-matched step.
+  const steps = makeBrandHueScale(h);
+
+  // Mark the step closest to the primary's lightness as the brand anchor.
   let baseIdx = 0;
   let minDiff = Infinity;
-  HUE_STEPS.forEach((s, i) => {
+  steps.forEach((s, i) => {
     const d = Math.abs(s.l - baseL);
     if (d < minDiff) { minDiff = d; baseIdx = i; }
   });
 
-  const hueScale = HUE_STEPS.map((s, i) => ({
-    name: s.name,
-    // slot closest to primary uses the exact primary hex for accuracy
-    value: i === baseIdx ? primary : oklchToHex(s.l, Math.min(baseC * s.cf, 0.32), h),
+  const hueScale = steps.map((s, i) => ({
+    name: String(s.step),
+    value: s.hex,
     isBase: i === baseIdx,
   }));
 
-  // Neutral: brand-hue tinted, near-zero chroma
-  const neutralScale = HUE_STEPS.map(s => ({
-    name: s.name,
-    value: oklchToHex(s.l, Math.min(baseC * 0.08, 0.008), h),
+  // Neutral: same Foundation lightness ramp, brand-hue tinted, near-achromatic.
+  const neutralScale = steps.map(s => ({
+    name: String(s.step),
+    value: oklchToHex(s.l, Math.min(baseC * 0.06, 0.008), h),
     isBase: false,
   }));
 

@@ -84,6 +84,51 @@ function makeHue(h: number, chromaScale: number): HuePalette {
   ) as HuePalette;
 }
 
+// ── Brand hue scale (Foundation rules at an arbitrary hue) ────────────────────
+//
+// Generates a full tonal scale for any hue using the SAME STEPS [L,C] table the
+// Foundation hue families use, so brand palettes follow Foundation rules and the
+// scale stays monotonic (no raw-primary injection that breaks ordering — the
+// classic "100 looks darker than 200" bug on bright yellows).
+//
+// chromaScale is derived from the hue's own sRGB gamut so tight hues (yellow)
+// are muted exactly like the hand-tuned Foundation families, without a lookup.
+
+/** Largest in-gamut chroma at (l, h), via binary search on round-trip fidelity. */
+export function maxChromaAt(l: number, h: number): number {
+  let lo = 0;
+  let hi = 0.4;
+  let best = 0;
+  for (let i = 0; i < 22; i++) {
+    const mid = (lo + hi) / 2;
+    const back = hexToOklch(oklchToHex(l, mid, h));
+    if (Math.abs(back.c - mid) < 0.004 && Math.abs(back.l - l) < 0.012) {
+      best = mid;
+      lo = mid;
+    } else {
+      hi = mid;
+    }
+  }
+  return best;
+}
+
+export interface BrandHueStep {
+  step: HueStep;
+  l: number;
+  hex: string;
+}
+
+/**
+ * Brand hue scale at hue `h`, following Foundation STEPS. Chroma is gamut-scaled
+ * so the fill step (≈L 0.545) sits at the hue's achievable max relative to the
+ * nominal 0.193, matching how Foundation tunes yellow ↓ and blue ↑.
+ */
+export function makeBrandHueScale(h: number): BrandHueStep[] {
+  const fillMax = maxChromaAt(0.545, h);
+  const chromaScale = Math.max(0.32, Math.min(1, fillMax / 0.193));
+  return STEPS.map(([step, l, c]) => ({ step, l, hex: oklchToHex(l, c * chromaScale, h) }));
+}
+
 // ── Hue families ──────────────────────────────────────────────────────────────
 
 export const red    = makeHue( 22, 1.00); // hue 22 — classic red
