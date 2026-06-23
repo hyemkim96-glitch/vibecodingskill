@@ -4,13 +4,14 @@ const colors = [
   { name: '시그니처 레드', value: '#E40C2B', variable: '--color-brand-red', role: '브랜드 Primary, CTA 버튼, 긴급 세일' },
   { name: '배송 오렌지', value: '#FF6700', variable: '--color-delivery-orange', role: '빠른 배송 뱃지, 배송 강조' },
   { name: 'Yellow', value: '#FFD700', variable: '--color-yellow', role: '베스트, 추천, 평점 별' },
+  { name: 'Green', value: '#00A854', variable: '--color-success-green', role: '성공, 완료, 정상 배송 확인' },
   { name: 'Gray 900', value: '#111111', variable: '--color-gray-900', role: '본문 텍스트, 상품명' },
   { name: 'Gray 700', value: '#444444', variable: '--color-gray-700', role: '보조 텍스트, 스펙' },
   { name: 'Gray 500', value: '#888888', variable: '--color-gray-500', role: '메타 정보, 날짜' },
   { name: 'Gray 200', value: '#E4E4E4', variable: '--color-gray-200', role: '구분선, 보더' },
   { name: 'Gray 100', value: '#F6F6F6', variable: '--color-gray-100', role: '배경, 카드 배경' },
   { name: 'White', value: '#FFFFFF', variable: '--color-white', role: '기본 배경' },
-  { name: 'Point Red', value: '#FF0000', variable: '--color-point-red', role: '할인율, 마감 임박, 품절 경고' },
+  { name: 'Danger Red', value: '#E40C2B', variable: '--color-danger-red', role: '에러, 위험, 취소 상태' },
 ];
 
 const typography = {
@@ -122,4 +123,24 @@ export const coupangToken: BrandToken = {
     ],
   },
   updatedAt: '2026.06',
+  deep: {
+    interaction: {
+      duration: '100ms (탭/CTA 즉각 반응), 150ms (카드 hover), 200ms (모달/바텀시트)',
+      easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+      pressScale: 'scale(0.96)',
+      hoverScale: '1.01',
+      notes: '구매 전환 최적화. 버튼 즉각 반응으로 클릭 불안 제거. 로켓 아이콘은 로딩 중 회전 애니메이션. 가격 변경 시 cross-fade(숫자 교체) 없이 즉시 전환.',
+    },
+    voice: {
+      tone: '직접적이고 자신감 있게 — 할인·배송 이점을 직관적으로. 긴장감과 기회를 함께 전달.',
+      examples: [
+        '"오늘 주문하면 내일 도착! 🚀" (로켓배송 강조)',
+        '"3명이 보고 있어요" (FOMO 유도)',
+        '"한정 수량 3개 남음" (재고 긴박감)',
+        '"쿠폰 적용 완료! -12,000원" (혜택 확인)',
+      ],
+      avoid: ['느긋한 표현 — "천천히 둘러보세요" 같은 여유 언어는 쿠팡 톤과 맞지 않음'],
+    },
+    iconStyle: 'Tabler/Fill 스타일, 24×24px. 로켓, 박스, 별점, 장바구니 아이콘이 핵심. 할인율 배지는 별도 그래픽 컴포넌트. 두꺼운 stroke 또는 fill 선호.',
+  },
 };

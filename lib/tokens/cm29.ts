@@ -8,7 +8,7 @@ const colors = [
   { name: 'Gray 500', value: '#888888', variable: '--color-gray-500', role: '보조 텍스트, 캡션' },
   { name: 'Gray 300', value: '#CCCCCC', variable: '--color-gray-300', role: '구분선, 보더' },
   { name: 'White', value: '#FFFFFF', variable: '--color-white', role: '카드 표면, 역전 텍스트 배경' },
-  { name: 'Point Red', value: '#C8473A', variable: '--color-point-red', role: '할인율, 세일, 포인트 강조' },
+  { name: 'Point Red', value: '#C8473A', variable: '--color-point-red', role: '에러, 위험, 할인율, 세일, 포인트 강조' },
   { name: 'Gold', value: '#B8962E', variable: '--color-gold', role: '프리미엄 뱃지, 큐레이션 강조' },
   { name: 'Sage Green', value: '#7B9E87', variable: '--color-sage-green', role: '라이프스타일 카테고리 액센트' },
 ];
@@ -124,4 +124,23 @@ export const cm29Token: BrandToken = {
     ],
   },
   updatedAt: '2026.06',
+  deep: {
+    interaction: {
+      duration: '250ms (기본 전환), 350ms (페이지 이동)',
+      easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+      pressScale: 'scale(1.0)',
+      notes: '프리미엄 에디토리얼 특성상 느리고 우아한 전환. 버튼 눌림 피드백 없음(stillness = 고급감). 이미지 갤러리는 cross-fade. 텍스트는 fade in. 가격은 즉시 표시.',
+    },
+    voice: {
+      tone: '에디토리얼 매거진 큐레이터 — 간결하고 감성적이며 약간의 시적 표현. 독자에게 말하듯.',
+      examples: [
+        '"이번 시즌의 선택" (컬렉션 제목)',
+        '"당신의 공간을 완성할 한 피스" (상품 소개)',
+        '"브랜드의 철학이 담긴 제품" (큐레이션 설명)',
+        '"천천히 탐색해보세요" (빈 상태 안내)',
+      ],
+      avoid: ['할인 강조 언어 — "% OFF" 같은 직접적 판매 언어 지양', '이모지 사용 — 감성적 톤과 불일치'],
+    },
+    iconStyle: 'Tabler icons — 1px thin stroke, 각진 코너. 24×24px. 미니멀리즘. 쇼핑백, 하트, 공유 아이콘 중심. 화살표는 → 형태 선호.',
+  },
 };

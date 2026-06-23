@@ -41,50 +41,53 @@ function getContrastColor(hex: string): string {
     return luminance > 0.62 ? '#111111' : '#ffffff';
 }
 
-/** 브랜드 카드 미니 UI 미리보기 */
+/** 브랜드 카드 — 컬러 팔레트 형식 썸네일 */
 function BrandMiniUI({ token }: { token: BrandToken }) {
     const primary = getPrimaryColor(token.colors);
     const onPrimary = getContrastColor(primary);
-    const bg = getBgColor(token.colors);
-    const mobileShapes = token.platforms.mobile.shapes;
-    const btnRadius = mobileShapes.find(s => s.element === 'button')?.value ?? '8px';
-    const subColors = getBrandColors(token.colors).slice(0, 6);
+    const allColors = getBrandColors(token.colors);
+    const secondaries = allColors.filter(c => c.value !== primary);
 
     return (
-        <div className={styles.miniUI} style={{ background: bg, flexDirection: 'column', gap: '10px' }}>
+        <div className={styles.miniUI} style={{
+            padding: 0,
+            gap: 0,
+            flexDirection: 'column',
+            alignItems: 'stretch',
+            justifyContent: 'flex-start',
+        }}>
+            {/* 프라이머리 블록 — 지배적 영역 */}
             <div style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
+                flex: '0 0 62%',
                 background: primary,
-                color: onPrimary,
-                borderRadius: btnRadius,
-                padding: '8px 18px',
-                fontSize: '13px',
-                fontFamily: 'var(--font-ui)',
-                fontWeight: 700,
-                letterSpacing: '0.02em',
-                whiteSpace: 'nowrap',
-                maxWidth: '90%',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'flex-end',
+                padding: '8px 10px 7px',
             }}>
-                {token.tagline}
+                <span style={{
+                    fontFamily: '"SF Mono", "Fira Mono", "Consolas", monospace',
+                    fontSize: 9,
+                    letterSpacing: '0.06em',
+                    fontWeight: 500,
+                    color: onPrimary,
+                    opacity: 0.55,
+                }}>
+                    {primary.toUpperCase()}
+                </span>
             </div>
-            <div style={{ display: 'flex', gap: '4px' }}>
-                {subColors.map((c) => (
-                    <div
-                        key={c.variable}
-                        title={`${c.name} ${c.value}`}
-                        style={{
-                            width: '14px',
-                            height: '14px',
-                            borderRadius: '3px',
-                            background: c.value,
-                            border: '1px solid rgba(0,0,0,0.08)',
-                        }}
-                    />
-                ))}
+            {/* 보조 컬러 스트라이프 */}
+            <div style={{ flex: 1, display: 'flex' }}>
+                {secondaries.length > 0
+                    ? secondaries.slice(0, 5).map((c) => (
+                        <div
+                            key={c.variable ?? c.value}
+                            title={`${c.name} · ${c.value}`}
+                            style={{ flex: 1, background: c.value }}
+                        />
+                    ))
+                    : <div style={{ flex: 1, background: '#f5f5f5' }} />
+                }
             </div>
         </div>
     );

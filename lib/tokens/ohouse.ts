@@ -2,8 +2,9 @@ import { BrandToken } from '@/types/token';
 
 const colors = [
   { name: '시그니처 블루', value: '#1A74E9', variable: '--color-brand-blue', role: '브랜드 Primary, CTA 버튼, 활성 상태' },
+  { name: 'CTA 버튼 텍스트', value: '#FFFFFF', variable: '--color-cta-text', role: 'CTA 버튼 텍스트' },
   { name: 'Blue Light', value: '#E8F1FD', variable: '--color-blue-light', role: '블루 배경 강조 영역' },
-  { name: 'Teal', value: '#00C4B4', variable: '--color-teal', role: '보조 액센트, 추천 태그' },
+  { name: 'Teal', value: '#00C4B4', variable: '--color-teal', role: '성공, 완료, 보조 액센트, 추천 태그' },
   { name: 'Gray 900', value: '#222222', variable: '--color-gray-900', role: '본문 텍스트, 제목' },
   { name: 'Gray 700', value: '#555555', variable: '--color-gray-700', role: '보조 텍스트' },
   { name: 'Gray 500', value: '#888888', variable: '--color-gray-500', role: '메타 텍스트, 날짜' },
@@ -111,7 +112,7 @@ export const ohouseToken: BrandToken = {
   guidelines: {
     dos: [
       'UGC 사진 최대화 — 사용자 인테리어 사진이 메인, 정방형 또는 세로형',
-      '그린 CTA로 자연스럽게 — "구매하기", "스크랩" 버튼에 브랜드 그린 사용',
+      '블루 CTA로 신뢰감 — "구매하기", "스크랩" 버튼에 브랜드 블루 사용',
       '사진 위 상품 태그 — 인테리어 사진에서 직접 상품 클릭으로 연결',
       '인테리어 스타일 카테고리 — 모던/북유럽/빈티지 등 스타일 필터 제공',
       '전후 비교 포맷 — Before/After 인테리어 사진으로 변화 임팩트 강조',
@@ -125,4 +126,23 @@ export const ohouseToken: BrandToken = {
     ],
   },
   updatedAt: '2026.06',
+  deep: {
+    interaction: {
+      duration: '200ms (탭), 300ms (이미지 확대/전환)',
+      easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+      pressScale: 'scale(0.97)',
+      notes: '인스피레이션 브라우징 특성상 편안하고 느긋한 인터랙션. 이미지 탭 시 full-screen 확대는 spring. 스크랩은 하트 bounce animation. 핀터레스트형 masonry 스크롤은 seamless.',
+    },
+    voice: {
+      tone: '인테리어 친구처럼 영감을 주되 강요하지 않게 — 공간에 대한 애정을 담아. 따뜻하고 상상력 자극.',
+      examples: [
+        '"이런 공간 어때요?" (추천)',
+        '"스크랩 완료!" (저장 확인)',
+        '"비슷한 스타일 더보기" (관련 콘텐츠)',
+        '"이 제품이 사용됐어요" (태그 상품 안내)',
+      ],
+      avoid: ['딱딱한 커머스 언어 — "구매" 대신 "내 공간에 추가"', '과도한 할인 강조 — 인스피레이션이 우선'],
+    },
+    iconStyle: 'Lucide 계열, 1.5~2px stroke. 집/가구/스크랩 아이콘. 북마크, 하트, 공유 중심. 인테리어 카테고리는 별도 스타일 일러스트 아이콘.',
+  },
 };

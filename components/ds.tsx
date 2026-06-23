@@ -147,7 +147,7 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
         background:
           variant === 'primary' ? t.primary : variant === 'secondary' ? t.surface : 'transparent',
         color:
-          variant === 'primary' ? t.onPrimary : variant === 'outline' ? t.primary : t.textMain,
+          variant === 'primary' ? t.onPrimary : variant === 'outline' ? ensureContrast(t.primary, t.bg) : t.textMain,
         border:
           variant === 'outline'
             ? `1px solid ${t.primary}`
@@ -284,7 +284,7 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
       <button
         className="ds-press"
         disabled={value >= max}
-        style={{ width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'transparent', border: 'none', cursor: value >= max ? 'not-allowed' : 'pointer', color: value >= max ? t.textDisabled : t.primary, fontSize: 18, fontWeight: t.weightBold }}
+        style={{ width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'transparent', border: 'none', cursor: value >= max ? 'not-allowed' : 'pointer', color: value >= max ? t.textDisabled : t.textMain, fontSize: 18, fontWeight: t.weightBold }}
       >+</button>
     </div>
   );
@@ -472,7 +472,7 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
         {label && (
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <span style={{ ...typeStyle(t.type.caption), color: t.textSub }}>{label}</span>
-            <span style={{ ...typeStyle(t.type.caption), color: barColor, fontWeight: t.weightBold }}>{Math.round(ratio * 100)}%</span>
+            <span style={{ ...typeStyle(t.type.caption), color: ensureContrast(barColor, t.surface), fontWeight: t.weightBold }}>{Math.round(ratio * 100)}%</span>
           </div>
         )}
         <div style={{ height: 6, borderRadius: 9999, background: t.surfaceAlt, overflow: 'hidden' }}>
@@ -510,7 +510,7 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
           {actions.map(({ icon, label }) => (
             <div key={icon} className="ds-press" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 36, height: 36, cursor: 'pointer', borderRadius: t.radius.button }}>
               {label
-                ? <span style={{ ...typeStyle(t.type.bodySm), color: t.primary, fontWeight: t.weightBold }}>{label}</span>
+                ? <span style={{ ...typeStyle(t.type.bodySm), color: ensureContrast(t.primary, t.bg), fontWeight: t.weightBold }}>{label}</span>
                 : <Icon name={icon} size={20} color={t.textMain} />}
             </div>
           ))}
@@ -533,7 +533,7 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
       {footer && (
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: `${space.sm}px ${space.md}px`, background: t.surfaceAlt }}>
           <span style={{ ...typeStyle(t.type.bodySm), fontWeight: t.weightBold, color: t.textMain }}>{footer.label}</span>
-          <span style={{ ...typeStyle(t.type.bodySm), fontWeight: t.weightBold, color: t.primary }}>{footer.value}</span>
+          <span style={{ ...typeStyle(t.type.bodySm), fontWeight: t.weightBold, color: t.textMain }}>{footer.value}</span>
         </div>
       )}
     </div>
@@ -541,36 +541,24 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
 
   const Toast: DS['Toast'] = ({ message, tone = 'default', action, style }) => {
     const TONE = {
-      success: { accent: t.success,   icon: 'checkCircle'  as IconName },
-      danger:  { accent: t.danger,    icon: 'alertCircle'  as IconName },
-      warning: { accent: t.warning,   icon: 'alertCircle'  as IconName },
-      info:    { accent: t.info,      icon: 'info'         as IconName },
-      default: { accent: t.textMuted, icon: 'info'         as IconName },
+      success: { accent: t.success,   textColor: t.successText, icon: 'checkCircle' as IconName },
+      danger:  { accent: t.danger,    textColor: t.dangerText,  icon: 'alertCircle' as IconName },
+      warning: { accent: t.warning,   textColor: t.warningText, icon: 'alertCircle' as IconName },
+      info:    { accent: t.info,      textColor: t.infoText,    icon: 'info'        as IconName },
+      default: { accent: t.textMuted, textColor: t.textSub,     icon: 'info'        as IconName },
     };
-    const { accent, icon } = TONE[tone];
+    const { accent, textColor, icon } = TONE[tone];
     return (
       <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: space.sm,
-        padding: `${space.sm}px ${space.md}px`,
-        borderRadius: t.radius.card,
-        background: t.surface,
-        border: `1px solid ${t.border}`,
-        borderLeft: `3px solid ${accent}`,
+        display: 'flex', alignItems: 'center', gap: space.sm,
+        padding: `${space.sm}px ${space.md}px`, borderRadius: t.radius.card,
+        background: t.surface, border: `1px solid ${t.border}`,
         boxShadow: '0 2px 8px rgba(0,0,0,0.07)',
         ...style,
       }}>
         <Icon name={icon} size={16} color={accent} />
-        <span style={{ ...typeStyle(t.type.bodySm), color: t.textMain, flex: 1 }}>{message}</span>
-        {action && (
-          <span
-            className="ds-press"
-            style={{ ...typeStyle(t.type.bodySm), color: accent, fontWeight: t.weightBold, cursor: 'pointer', flexShrink: 0 }}
-          >
-            {action}
-          </span>
-        )}
+        <span style={{ ...typeStyle(t.type.bodySm), color: textColor, flex: 1 }}>{message}</span>
+        {action && <span className="ds-press" style={{ ...typeStyle(t.type.bodySm), color: ensureContrast(accent, t.surface), fontWeight: t.weightBold, cursor: 'pointer', flexShrink: 0 }}>{action}</span>}
       </div>
     );
   };
@@ -579,7 +567,7 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
     <div style={{ borderRadius: t.radius.card, padding: space.md, border: `1px solid ${t.border}`, background: t.surface, display: 'flex', flexDirection: 'column', gap: space.xs, ...style }}>
       {swatch && <div style={{ width: '100%', height: 36, borderRadius: t.radius.badge, background: swatch, marginBottom: space.xs }} />}
       <span style={{ ...typeStyle(t.type.caption), fontWeight: t.weightBold, color: t.textMain, fontFamily: 'monospace' }}>{name}</span>
-      <span style={{ ...typeStyle(t.type.caption), color: t.primary }}>{value}</span>
+      <span style={{ ...typeStyle(t.type.caption), color: t.textSub }}>{value}</span>
       {desc && <span style={{ ...typeStyle(t.type.caption), color: t.textMuted }}>{desc}</span>}
     </div>
   );

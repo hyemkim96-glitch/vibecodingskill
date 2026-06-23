@@ -124,4 +124,23 @@ export const kakaobankToken: BrandToken = {
     ],
   },
   updatedAt: '2026.06',
+  deep: {
+    interaction: {
+      duration: '180ms (탭/버튼), 250ms (화면 전환), 300ms (잔액 숫자 count-up)',
+      easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+      pressScale: 'scale(0.98)',
+      notes: '금융 특성상 안정적이고 신중한 모션. 잔액 숫자는 count-up 애니메이션(300ms). 이체 완료는 체크마크 draw animation. 생체 인증은 진동 피드백. 실수 방지 UI에 충분한 딜레이.',
+    },
+    voice: {
+      tone: '신뢰할 수 있는 동생 같은 은행 — 친근하지만 금융은 정확하게. 카카오 DNA + 금융 전문성.',
+      examples: [
+        '"이체가 완료됐어요 ✓" (이체 완료)',
+        '"이번 달 얼마 썼는지 볼까요?" (지출 분석)',
+        '"금리가 올랐어요!" (알림)',
+        '"잠깐, 확인해볼게요" (로딩 중)',
+      ],
+      avoid: ['지나친 전문 금융 용어 — "입금 완료" 대신 "돈이 들어왔어요"', '불안감을 주는 표현 — "잔액 부족" 대신 "조금 더 필요해요"'],
+    },
+    iconStyle: 'Lucide 계열, 2px stroke. 금융 아이콘: 카드, 이체, 적금, 대출. 카카오 패밀리 아이콘과 일관성. 24×24px 기준.',
+  },
 };

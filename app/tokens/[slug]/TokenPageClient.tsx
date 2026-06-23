@@ -7,6 +7,7 @@ import BrandUIPreview from '@/components/BrandUIPreview';
 import ComponentSheet, { COMPONENT_CATEGORIES, ComponentCategory } from '@/components/ComponentSheet';
 import { renderPattern, PATTERN_TYPES, PatternType } from '@/components/patterns';
 import { resolveTheme } from '@/lib/tokens/resolveTheme';
+import { hexToOklch, oklchToHex } from '@/lib/tokens/oklch';
 import { createDS, motionVars } from '@/components/ds';
 import styles from './TokenPage.module.css';
 
@@ -116,14 +117,99 @@ function SubTabStrip({ items, active, onChange }: {
   );
 }
 
+const HUE_STEPS = [
+  { name: '50',  l: 0.975, cf: 0.20 },
+  { name: '100', l: 0.940, cf: 0.30 },
+  { name: '200', l: 0.880, cf: 0.50 },
+  { name: '300', l: 0.800, cf: 0.70 },
+  { name: '400', l: 0.700, cf: 0.88 },
+  { name: '500', l: 0.588, cf: 1.00 },
+  { name: '600', l: 0.478, cf: 0.92 },
+  { name: '700', l: 0.370, cf: 0.78 },
+  { name: '800', l: 0.265, cf: 0.60 },
+  { name: '900', l: 0.175, cf: 0.45 },
+];
+
+function generateBrandPalette(primary: string) {
+  const { l: baseL, c: baseC, h } = hexToOklch(primary);
+
+  // Find closest step to primary's actual lightness
+  let baseIdx = 0;
+  let minDiff = Infinity;
+  HUE_STEPS.forEach((s, i) => {
+    const d = Math.abs(s.l - baseL);
+    if (d < minDiff) { minDiff = d; baseIdx = i; }
+  });
+
+  const hueScale = HUE_STEPS.map((s, i) => ({
+    name: s.name,
+    // slot closest to primary uses the exact primary hex for accuracy
+    value: i === baseIdx ? primary : oklchToHex(s.l, Math.min(baseC * s.cf, 0.32), h),
+    isBase: i === baseIdx,
+  }));
+
+  // Neutral: brand-hue tinted, near-zero chroma
+  const neutralScale = HUE_STEPS.map(s => ({
+    name: s.name,
+    value: oklchToHex(s.l, Math.min(baseC * 0.08, 0.008), h),
+    isBase: false,
+  }));
+
+  // Vibrant: same L/C as primary, shifted hues for data-viz / illustration palette
+  const vibrantL = Math.max(0.46, Math.min(baseL, 0.62));
+  const vibrantC = Math.max(0.14, Math.min(baseC, 0.21));
+  const vibrantScale = [
+    { name: '보색', offset: 180 },
+    { name: '+60°', offset: 60 },
+    { name: '+120°', offset: 120 },
+    { name: '-60°', offset: -60 },
+    { name: '-120°', offset: -120 },
+    { name: '+30°', offset: 30 },
+  ].map(v => ({
+    name: v.name,
+    value: oklchToHex(vibrantL, vibrantC, ((h + v.offset) % 360 + 360) % 360),
+  }));
+
+  return { hueScale, neutralScale, vibrantScale };
+}
+
+const BRAND_PATTERNS: Record<string, PatternType[]> = {
+  daangn:    ['main', 'list', 'search', 'mypage'],
+  kakao:     ['main', 'auth', 'search', 'mypage'],
+  kakaobank: ['main', 'history', 'payment', 'mypage'],
+  naver:     ['main', 'search', 'list', 'detail'],
+  baemin:    ['main', 'list', 'detail', 'payment'],
+  coupang:   ['main', 'list', 'detail', 'payment'],
+  '29cm':    ['main', 'list', 'detail', 'mypage'],
+  musinsa:   ['main', 'search', 'list', 'detail'],
+  ohouse:    ['main', 'list', 'detail', 'mypage'],
+  toss:      ['main', 'history', 'payment', 'mypage'],
+};
+
+const BRAND_COMP_CATS: Record<string, ComponentCategory[]> = {
+  daangn:    ['buttons', 'cards', 'navigation', 'feedback'],
+  kakao:     ['buttons', 'cards', 'navigation', 'feedback'],
+  kakaobank: ['buttons', 'cards', 'feedback'],
+  naver:     ['buttons', 'navigation', 'cards', 'inputs'],
+  baemin:    ['buttons', 'cards', 'navigation', 'feedback'],
+  coupang:   ['buttons', 'cards', 'inputs'],
+  '29cm':    ['buttons', 'cards', 'navigation'],
+  musinsa:   ['buttons', 'cards', 'inputs'],
+  ohouse:    ['buttons', 'cards', 'feedback', 'navigation'],
+  toss:      ['buttons', 'cards', 'feedback'],
+};
+
 export default function TokenPageClient({ token, mobileCodes, webCodes }: Props) {
+  const brandPatterns = BRAND_PATTERNS[token.slug] ?? (PATTERN_TYPES.map(p => p.key) as PatternType[]);
+  const brandCompCats = BRAND_COMP_CATS[token.slug] ?? (COMPONENT_CATEGORIES.map(c => c.key) as ComponentCategory[]);
+
   const [activeTab,       setActiveTab]       = useState<TabKey>('designMd');
   const [platform,        setPlatform]        = useState<Platform>('mobile');
   const [copied,          setCopied]          = useState(false);
   const [selectedType,    setSelectedType]    = useState<string | null>(null);
   const [section,         setSection]         = useState<Section>('foundation');
-  const [compCategory,    setCompCategory]    = useState<ComponentCategory>('all');
-  const [activePattern,   setActivePattern]   = useState<PatternType>('list');
+  const [compCategory,    setCompCategory]    = useState<ComponentCategory>(brandCompCats[0] ?? 'cards');
+  const [activePattern,   setActivePattern]   = useState<PatternType>(brandPatterns[0] ?? 'main');
 
   const codes = platform === 'mobile' ? mobileCodes : webCodes;
   const p = token.platforms[platform];
@@ -138,6 +224,11 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
     ds.t = { ...ds.t, isMobile: platform === 'mobile' };
     return ds;
   }, [brandTheme, platform]);
+
+  const brandPalette = useMemo(
+    () => generateBrandPalette(brandTheme.primary),
+    [brandTheme.primary],
+  );
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(codes[activeTab]);
@@ -192,20 +283,106 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
         {/* ── Foundation ── */}
         {section === 'foundation' && (
           <>
-            {/* Color Palette */}
+            {/* Color Palette — 5 groups: Hue / Neutral / Semantic / Role / Vibrant */}
             <section className={styles.section}>
               <h2 className={styles.sectionTitle}>컬러 팔레트</h2>
-              <div className={styles.colorGrid}>
-                {token.colors.map((color) => (
-                  <div key={color.variable} className={styles.colorItem}>
-                    <div className={styles.colorSwatch} style={{ background: color.value }} />
-                    <div className={styles.colorInfo}>
-                      <span className={styles.colorName}>{color.name}</span>
-                      <span className={styles.colorValue}>{color.value}</span>
-                      <span className={styles.colorRole}>{color.role}</span>
+
+              {/* ── Hue scale ── */}
+              <div>
+                <div className={styles.paletteGroupLabel}>Hue — 브랜드 색조 스케일</div>
+                <div className={styles.colorScale}>
+                  {brandPalette.hueScale.map(step => (
+                    <div key={step.name} className={`${styles.scaleStep} ${step.isBase ? styles.scaleStepBase : ''}`}>
+                      <div className={styles.scaleStepSwatch} style={{ background: step.value }} title={step.value} />
+                      <span className={styles.scaleStepLabel}>{step.name}</span>
+                      <span className={styles.scaleStepHex}>{step.value}</span>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
+              </div>
+
+              {/* ── Neutral scale ── */}
+              <div>
+                <div className={styles.paletteGroupLabel}>Neutral — 뉴트럴 스케일</div>
+                <div className={styles.colorScale}>
+                  {brandPalette.neutralScale.map(step => (
+                    <div key={step.name} className={styles.scaleStep}>
+                      <div className={styles.scaleStepSwatch} style={{ background: step.value }} title={step.value} />
+                      <span className={styles.scaleStepLabel}>{step.name}</span>
+                      <span className={styles.scaleStepHex}>{step.value}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* ── Semantic ── */}
+              <div>
+                <div className={styles.paletteGroupLabel}>Semantic — 상태 색상</div>
+                <div className={styles.colorGrid}>
+                  {[
+                    { name: '성공 Fill', value: brandTheme.success,     role: '완료, 증가 지표, 안전 거래' },
+                    { name: '위험 Fill', value: brandTheme.danger,      role: '에러, 삭제, 감소 지표' },
+                    { name: '경고 Fill', value: brandTheme.warning,     role: '주의 안내, 임박 마감' },
+                    { name: '정보 Fill', value: brandTheme.info,        role: '공지, 도움말, 중립 안내' },
+                    { name: '성공 Text', value: brandTheme.successText, role: '성공 상태 텍스트 (WCAG AA)' },
+                    { name: '위험 Text', value: brandTheme.dangerText,  role: '에러 상태 텍스트 (WCAG AA)' },
+                    { name: '경고 Text', value: brandTheme.warningText, role: '경고 상태 텍스트 (WCAG AA)' },
+                    { name: '정보 Text', value: brandTheme.infoText,    role: '정보 상태 텍스트 (WCAG AA)' },
+                  ].map(color => (
+                    <div key={color.name} className={styles.colorItem}>
+                      <div className={styles.colorSwatch} style={{ background: color.value }} />
+                      <div className={styles.colorInfo}>
+                        <span className={styles.colorName}>{color.name}</span>
+                        <span className={styles.colorValue}>{color.value}</span>
+                        <span className={styles.colorRole}>{color.role}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* ── Role ── */}
+              <div>
+                <div className={styles.paletteGroupLabel}>Role — 컴포넌트 슬롯</div>
+                <div className={styles.colorGrid}>
+                  {[
+                    { name: 'Primary BG',    value: brandTheme.primary,      role: 'CTA 버튼 배경, 활성 탭, 핵심 링크' },
+                    { name: 'Primary Text',  value: brandTheme.onPrimary,    role: 'CTA 버튼 텍스트 · 아이콘 (on Primary)' },
+                    { name: 'Primary Tint',  value: brandTheme.primaryTint,  role: '배지 배경, 선택 상태 배경' },
+                    { name: 'BG',            value: brandTheme.bg,           role: '페이지 배경' },
+                    { name: 'Surface',       value: brandTheme.surface,      role: '카드, 모달, 바텀 시트' },
+                    { name: 'Surface Alt',   value: brandTheme.surfaceAlt,   role: '스켈레톤, 비활성 영역 배경' },
+                    { name: 'Text Main',     value: brandTheme.textMain,     role: '본문, 제목, 강조 레이블' },
+                    { name: 'Text Sub',      value: brandTheme.textSub,      role: '메타 정보, 보조 레이블' },
+                    { name: 'Text Muted',    value: brandTheme.textMuted,    role: '플레이스홀더, 힌트' },
+                    { name: 'Border',        value: brandTheme.border,       role: '카드 보더, 구분선, 입력 테두리' },
+                    { name: 'Disabled',      value: brandTheme.disabled,     role: '비활성 버튼, 비활성 입력 배경' },
+                    { name: 'Text Disabled', value: brandTheme.textDisabled, role: '비활성 텍스트' },
+                  ].map(color => (
+                    <div key={color.name} className={styles.colorItem}>
+                      <div className={styles.colorSwatch} style={{ background: color.value }} />
+                      <div className={styles.colorInfo}>
+                        <span className={styles.colorName}>{color.name}</span>
+                        <span className={styles.colorValue}>{color.value}</span>
+                        <span className={styles.colorRole}>{color.role}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* ── Vibrant ── */}
+              <div>
+                <div className={styles.paletteGroupLabel}>Vibrant — 보조 액센트 팔레트</div>
+                <div className={styles.colorScale}>
+                  {brandPalette.vibrantScale.map(step => (
+                    <div key={step.name} className={styles.scaleStep}>
+                      <div className={styles.scaleStepSwatch} style={{ background: step.value }} title={step.value} />
+                      <span className={styles.scaleStepLabel}>{step.name}</span>
+                      <span className={styles.scaleStepHex}>{step.value}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </section>
 
@@ -340,7 +517,7 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
         {section === 'components' && (
           <div>
             <SubTabStrip
-              items={COMPONENT_CATEGORIES}
+              items={COMPONENT_CATEGORIES.filter(c => brandCompCats.includes(c.key as ComponentCategory))}
               active={compCategory}
               onChange={(k) => setCompCategory(k as ComponentCategory)}
             />
@@ -352,7 +529,7 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
         {section === 'patterns' && (
           <div>
             <SubTabStrip
-              items={PATTERN_TYPES}
+              items={PATTERN_TYPES.filter(p => brandPatterns.includes(p.key as PatternType))}
               active={activePattern}
               onChange={(k) => setActivePattern(k as PatternType)}
             />

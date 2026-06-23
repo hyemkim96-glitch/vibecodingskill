@@ -243,6 +243,83 @@
   line-height: 1.4;
 }
 
+/* Color Scale (Hue + Neutral) */
+.colorScale {
+  display: flex;
+  gap: 3px;
+}
+
+.scaleStep {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+.scaleStepSwatch {
+  width: 100%;
+  height: 56px;
+  border-radius: 6px;
+  border: 1px solid rgba(0,0,0,0.06);
+  position: relative;
+  transition: transform 0.12s;
+}
+
+.scaleStepSwatch:hover {
+  transform: scaleY(1.06);
+  z-index: 1;
+}
+
+.scaleStepBase .scaleStepSwatch::after {
+  content: '';
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.8);
+  box-shadow: 0 0 0 1.5px rgba(0,0,0,0.25);
+}
+
+.scaleStepLabel {
+  font-size: 10px;
+  font-family: var(--font-code);
+  color: var(--color-ash);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.scaleStepHex {
+  font-size: 9px;
+  font-family: var(--font-code);
+  color: var(--color-graphite);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  display: none;
+}
+
+.scaleStep:hover .scaleStepHex {
+  display: block;
+}
+
+/* Palette group label */
+.paletteGroupLabel {
+  font-size: var(--font-size-caption);
+  font-family: var(--font-ui);
+  letter-spacing: 0.06em;
+  font-weight: 600;
+  color: var(--color-text-assistive);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
 /* Typography */
 .typeMeta {
   display: flex;

@@ -8,7 +8,7 @@ const colors = [
   { name: 'Gray 400', value: '#999999', variable: '--color-gray-400', role: '보조 텍스트, 캡션' },
   { name: 'Gray 200', value: '#DDDDDD', variable: '--color-gray-200', role: '구분선, 보더' },
   { name: 'Gray 100', value: '#F5F5F5', variable: '--color-gray-100', role: '배경 섹션, 카드 배경' },
-  { name: 'Point Red', value: '#FF0000', variable: '--color-point-red', role: '할인율, 세일 뱃지, 긴급 포인트' },
+  { name: 'Point Red', value: '#FF0000', variable: '--color-point-red', role: '에러, 위험, 할인율, 세일 뱃지' },
   { name: 'Blue', value: '#0066FF', variable: '--color-blue', role: '링크, 브랜드 인증 뱃지' },
   { name: 'Mustard', value: '#F5C000', variable: '--color-mustard', role: '베스트, 인기 아이템 강조' },
 ];
@@ -123,4 +123,23 @@ export const musinsaToken: BrandToken = {
     ],
   },
   updatedAt: '2026.06',
+  deep: {
+    interaction: {
+      duration: '100ms (탭/버튼 즉각 반응), 150ms (카드/이미지 hover)',
+      easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+      pressScale: 'scale(0.94) — 강렬한 눌림 피드백',
+      notes: '패션 특성상 빠르고 결단력 있는 인터랙션. 상품 이미지 스와이프는 물리적 momentum. 컬러 선택은 즉각 적용(스피너 없이). 필터 적용도 300ms 내 결과 표시.',
+    },
+    voice: {
+      tone: '자신감 있고 쿨하게 — 트렌디 패션 언어, 과장 없이 스타일리시하게. 절제된 쿨함.',
+      examples: [
+        '"이번 시즌 픽" (에디터 추천)',
+        '"SOLD OUT" (품절)',
+        '"쿠폰 받기" (직접적 CTA)',
+        '"지금 N명이 보는 중" (인기 지표)',
+      ],
+      avoid: ['과도한 이모지 — 무신사 톤은 쿨하고 절제된 편', '긴 설명 문구 — 비주얼이 설명을 대체해야 함'],
+    },
+    iconStyle: 'Tabler icons — 가는 1px stroke, 각진 코너. 24×24px. 의류/패션: 옷걸이, 장바구니, 검색. 아이콘 자체도 미니멀리즘 원칙.',
+  },
 };
