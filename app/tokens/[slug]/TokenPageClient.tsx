@@ -7,6 +7,7 @@ import BrandUIPreview from '@/components/BrandUIPreview';
 import ComponentSheet, { COMPONENT_CATEGORIES, ComponentCategory } from '@/components/ComponentSheet';
 import { renderPattern, PATTERN_TYPES, PatternType } from '@/components/patterns';
 import { resolveTheme } from '@/lib/tokens/resolveTheme';
+import { hexToOklch, oklchToHex } from '@/lib/tokens/oklch';
 import { createDS, motionVars } from '@/components/ds';
 import styles from './TokenPage.module.css';
 
@@ -116,6 +117,62 @@ function SubTabStrip({ items, active, onChange }: {
   );
 }
 
+const HUE_STEPS = [
+  { name: '50',  l: 0.975, cf: 0.20 },
+  { name: '100', l: 0.940, cf: 0.30 },
+  { name: '200', l: 0.880, cf: 0.50 },
+  { name: '300', l: 0.800, cf: 0.70 },
+  { name: '400', l: 0.700, cf: 0.88 },
+  { name: '500', l: 0.588, cf: 1.00 },
+  { name: '600', l: 0.478, cf: 0.92 },
+  { name: '700', l: 0.370, cf: 0.78 },
+  { name: '800', l: 0.265, cf: 0.60 },
+  { name: '900', l: 0.175, cf: 0.45 },
+];
+
+function generateBrandPalette(primary: string) {
+  const { l: baseL, c: baseC, h } = hexToOklch(primary);
+
+  // Find closest step to primary's actual lightness
+  let baseIdx = 0;
+  let minDiff = Infinity;
+  HUE_STEPS.forEach((s, i) => {
+    const d = Math.abs(s.l - baseL);
+    if (d < minDiff) { minDiff = d; baseIdx = i; }
+  });
+
+  const hueScale = HUE_STEPS.map((s, i) => ({
+    name: s.name,
+    // slot closest to primary uses the exact primary hex for accuracy
+    value: i === baseIdx ? primary : oklchToHex(s.l, Math.min(baseC * s.cf, 0.32), h),
+    isBase: i === baseIdx,
+  }));
+
+  // Neutral: brand-hue tinted, near-zero chroma
+  const neutralScale = HUE_STEPS.map(s => ({
+    name: s.name,
+    value: oklchToHex(s.l, Math.min(baseC * 0.08, 0.008), h),
+    isBase: false,
+  }));
+
+  // Vibrant: same L/C as primary, shifted hues for data-viz / illustration palette
+  const vibrantL = Math.max(0.46, Math.min(baseL, 0.62));
+  const vibrantC = Math.max(0.14, Math.min(baseC, 0.21));
+  const vibrantScale = [
+    { name: '보색', offset: 180 },
+    { name: '+60°', offset: 60 },
+    { name: '+120°', offset: 120 },
+    { name: '-60°', offset: -60 },
+    { name: '-120°', offset: -120 },
+    { name: '+30°', offset: 30 },
+  ].map(v => ({
+    name: v.name,
+    value: oklchToHex(vibrantL, vibrantC, ((h + v.offset) % 360 + 360) % 360),
+  }));
+
+  return { hueScale, neutralScale, vibrantScale };
+}
+
 const BRAND_PATTERNS: Record<string, PatternType[]> = {
   daangn:    ['main', 'list', 'search', 'mypage'],
   kakao:     ['main', 'auth', 'search', 'mypage'],
@@ -167,6 +224,11 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
     ds.t = { ...ds.t, isMobile: platform === 'mobile' };
     return ds;
   }, [brandTheme, platform]);
+
+  const brandPalette = useMemo(
+    () => generateBrandPalette(brandTheme.primary),
+    [brandTheme.primary],
+  );
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(codes[activeTab]);
@@ -221,70 +283,107 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
         {/* ── Foundation ── */}
         {section === 'foundation' && (
           <>
-            {/* Color Palette — semantic groups from resolved theme */}
+            {/* Color Palette — 5 groups: Hue / Neutral / Semantic / Role / Vibrant */}
             <section className={styles.section}>
               <h2 className={styles.sectionTitle}>컬러 팔레트</h2>
-              {[
-                {
-                  label: '브랜드',
-                  items: [
-                    { name: '프라이머리', value: brandTheme.primary, role: 'CTA 버튼, 활성 탭, 핵심 링크' },
-                    { name: '온 프라이머리', value: brandTheme.onPrimary, role: '프라이머리 위 텍스트 · 아이콘' },
-                    { name: '프라이머리 틴트', value: brandTheme.primaryTint, role: '배지 배경, 약한 강조 영역' },
-                  ],
-                },
-                {
-                  label: '배경 & 표면',
-                  items: [
-                    { name: '배경 기본', value: brandTheme.bg, role: '페이지 배경' },
-                    { name: '서피스', value: brandTheme.surface, role: '카드, 모달, 바텀 시트' },
-                    { name: '서피스 보조', value: brandTheme.surfaceAlt, role: '비활성 채움, 스켈레톤 배경' },
-                  ],
-                },
-                {
-                  label: '텍스트',
-                  items: [
-                    { name: '기본 텍스트', value: brandTheme.textMain, role: '본문, 제목, 강조 레이블' },
-                    { name: '보조 텍스트', value: brandTheme.textSub, role: '메타 정보, 보조 레이블' },
-                    { name: '힌트 텍스트', value: brandTheme.textMuted, role: '플레이스홀더, 힌트, 비활성 설명' },
-                    { name: '비활성 텍스트', value: brandTheme.textDisabled, role: '비활성 버튼, 선택 불가 항목' },
-                  ],
-                },
-                {
-                  label: '시멘틱 상태',
-                  items: [
-                    { name: '성공', value: brandTheme.success, role: '완료, 증가 지표, 안전 거래' },
-                    { name: '위험', value: brandTheme.danger, role: '에러, 삭제, 감소 지표' },
-                    { name: '경고', value: brandTheme.warning, role: '주의 안내, 임박 마감' },
-                    { name: '정보', value: brandTheme.info, role: '공지, 도움말, 중립 안내' },
-                  ],
-                },
-                {
-                  label: '경계 & 비활성',
-                  items: [
-                    { name: '테두리', value: brandTheme.border, role: '카드 보더, 구분선, 입력 테두리' },
-                    { name: '비활성 채움', value: brandTheme.disabled, role: '비활성 버튼, 비활성 입력 배경' },
-                  ],
-                },
-              ].map(group => (
-                <div key={group.label} style={{ marginBottom: 20 }}>
-                  <div style={{ fontSize: 'var(--font-size-caption)', fontFamily: 'var(--font-ui)', letterSpacing: '0.06em', fontWeight: 600, color: 'var(--color-text-assistive)', marginBottom: 8, textTransform: 'uppercase' }}>
-                    {group.label}
-                  </div>
-                  <div className={styles.colorGrid}>
-                    {group.items.map((color) => (
-                      <div key={color.name} className={styles.colorItem}>
-                        <div className={styles.colorSwatch} style={{ background: color.value }} />
-                        <div className={styles.colorInfo}>
-                          <span className={styles.colorName}>{color.name}</span>
-                          <span className={styles.colorValue}>{color.value}</span>
-                          <span className={styles.colorRole}>{color.role}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+
+              {/* ── Hue scale ── */}
+              <div>
+                <div className={styles.paletteGroupLabel}>Hue — 브랜드 색조 스케일</div>
+                <div className={styles.colorScale}>
+                  {brandPalette.hueScale.map(step => (
+                    <div key={step.name} className={`${styles.scaleStep} ${step.isBase ? styles.scaleStepBase : ''}`}>
+                      <div className={styles.scaleStepSwatch} style={{ background: step.value }} title={step.value} />
+                      <span className={styles.scaleStepLabel}>{step.name}</span>
+                      <span className={styles.scaleStepHex}>{step.value}</span>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
+
+              {/* ── Neutral scale ── */}
+              <div>
+                <div className={styles.paletteGroupLabel}>Neutral — 뉴트럴 스케일</div>
+                <div className={styles.colorScale}>
+                  {brandPalette.neutralScale.map(step => (
+                    <div key={step.name} className={styles.scaleStep}>
+                      <div className={styles.scaleStepSwatch} style={{ background: step.value }} title={step.value} />
+                      <span className={styles.scaleStepLabel}>{step.name}</span>
+                      <span className={styles.scaleStepHex}>{step.value}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* ── Semantic ── */}
+              <div>
+                <div className={styles.paletteGroupLabel}>Semantic — 상태 색상</div>
+                <div className={styles.colorGrid}>
+                  {[
+                    { name: '성공 Fill', value: brandTheme.success,     role: '완료, 증가 지표, 안전 거래' },
+                    { name: '위험 Fill', value: brandTheme.danger,      role: '에러, 삭제, 감소 지표' },
+                    { name: '경고 Fill', value: brandTheme.warning,     role: '주의 안내, 임박 마감' },
+                    { name: '정보 Fill', value: brandTheme.info,        role: '공지, 도움말, 중립 안내' },
+                    { name: '성공 Text', value: brandTheme.successText, role: '성공 상태 텍스트 (WCAG AA)' },
+                    { name: '위험 Text', value: brandTheme.dangerText,  role: '에러 상태 텍스트 (WCAG AA)' },
+                    { name: '경고 Text', value: brandTheme.warningText, role: '경고 상태 텍스트 (WCAG AA)' },
+                    { name: '정보 Text', value: brandTheme.infoText,    role: '정보 상태 텍스트 (WCAG AA)' },
+                  ].map(color => (
+                    <div key={color.name} className={styles.colorItem}>
+                      <div className={styles.colorSwatch} style={{ background: color.value }} />
+                      <div className={styles.colorInfo}>
+                        <span className={styles.colorName}>{color.name}</span>
+                        <span className={styles.colorValue}>{color.value}</span>
+                        <span className={styles.colorRole}>{color.role}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* ── Role ── */}
+              <div>
+                <div className={styles.paletteGroupLabel}>Role — 컴포넌트 슬롯</div>
+                <div className={styles.colorGrid}>
+                  {[
+                    { name: 'Primary BG',    value: brandTheme.primary,      role: 'CTA 버튼 배경, 활성 탭, 핵심 링크' },
+                    { name: 'Primary Text',  value: brandTheme.onPrimary,    role: 'CTA 버튼 텍스트 · 아이콘 (on Primary)' },
+                    { name: 'Primary Tint',  value: brandTheme.primaryTint,  role: '배지 배경, 선택 상태 배경' },
+                    { name: 'BG',            value: brandTheme.bg,           role: '페이지 배경' },
+                    { name: 'Surface',       value: brandTheme.surface,      role: '카드, 모달, 바텀 시트' },
+                    { name: 'Surface Alt',   value: brandTheme.surfaceAlt,   role: '스켈레톤, 비활성 영역 배경' },
+                    { name: 'Text Main',     value: brandTheme.textMain,     role: '본문, 제목, 강조 레이블' },
+                    { name: 'Text Sub',      value: brandTheme.textSub,      role: '메타 정보, 보조 레이블' },
+                    { name: 'Text Muted',    value: brandTheme.textMuted,    role: '플레이스홀더, 힌트' },
+                    { name: 'Border',        value: brandTheme.border,       role: '카드 보더, 구분선, 입력 테두리' },
+                    { name: 'Disabled',      value: brandTheme.disabled,     role: '비활성 버튼, 비활성 입력 배경' },
+                    { name: 'Text Disabled', value: brandTheme.textDisabled, role: '비활성 텍스트' },
+                  ].map(color => (
+                    <div key={color.name} className={styles.colorItem}>
+                      <div className={styles.colorSwatch} style={{ background: color.value }} />
+                      <div className={styles.colorInfo}>
+                        <span className={styles.colorName}>{color.name}</span>
+                        <span className={styles.colorValue}>{color.value}</span>
+                        <span className={styles.colorRole}>{color.role}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* ── Vibrant ── */}
+              <div>
+                <div className={styles.paletteGroupLabel}>Vibrant — 보조 액센트 팔레트</div>
+                <div className={styles.colorScale}>
+                  {brandPalette.vibrantScale.map(step => (
+                    <div key={step.name} className={styles.scaleStep}>
+                      <div className={styles.scaleStepSwatch} style={{ background: step.value }} title={step.value} />
+                      <span className={styles.scaleStepLabel}>{step.name}</span>
+                      <span className={styles.scaleStepHex}>{step.value}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </section>
 
             <div className={styles.divider} />
