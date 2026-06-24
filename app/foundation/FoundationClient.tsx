@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { ResolvedTheme } from '@/lib/tokens/resolveTheme';
-import { typeStyle, createDS } from '@/components/ds';
+import { typeStyle, createDS, motionVars } from '@/components/ds';
 import PillTabs from '@/components/PillTabs';
 import { serviceDS, serviceMobileTheme } from '@/lib/tokens/serviceTheme';
 import { neutral, hues, HueName } from '@/lib/tokens/palette';
@@ -713,30 +713,19 @@ function EffectPanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
 }
 
 function MotionPanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
-  const { Table, TokenCard } = ds;
+  const { Table, Card, Button } = ds;
   const m = t.motion;
   const dur = m.duration;
+  const [faded, setFaded] = useState(false);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
       <style>{`
         @keyframes fd-slide {
           0%   { transform: translateX(0); }
-          45%  { transform: translateX(calc(100% - 88px)); }
-          55%  { transform: translateX(calc(100% - 88px)); }
+          45%  { transform: translateX(calc(100% - 92px)); }
+          55%  { transform: translateX(calc(100% - 92px)); }
           100% { transform: translateX(0); }
-        }
-        @keyframes fd-press {
-          0%, 100% { transform: scale(1); }
-          35%, 55% { transform: scale(${m.pressScale}); }
-        }
-        @keyframes fd-hover {
-          0%, 100% { transform: scale(1); box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
-          35%, 55% { transform: scale(${m.hoverScale}); box-shadow: 0 6px 20px rgba(0,0,0,0.12); }
-        }
-        @keyframes fd-fade {
-          0%, 100% { opacity: 1; }
-          35%, 55% { opacity: 0.08; }
         }
       `}</style>
 
@@ -744,113 +733,93 @@ function MotionPanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
       <Section t={t} title="토큰" first>
         <Table
           rows={[
-            { label: 'duration',   value: `${dur}ms`,       tone: 'default' as const },
-            { label: 'easing',     value: m.easing,         tone: 'default' as const },
-            { label: 'pressScale', value: String(m.pressScale), tone: 'default' as const },
-            { label: 'hoverScale', value: String(m.hoverScale), tone: 'default' as const },
+            { label: 'duration',   value: `${dur}ms`,            tone: 'default' as const },
+            { label: 'easing',     value: m.easing,              tone: 'default' as const },
+            { label: 'pressScale', value: String(m.pressScale),  tone: 'default' as const },
+            { label: 'hoverScale', value: String(m.hoverScale),  tone: 'default' as const },
           ]}
         />
       </Section>
 
-      {/* ── 미리보기 ── */}
+      {/* ── 미리보기 — ds-root로 감싸서 브랜드 모션 변수 주입 ── */}
       <Section t={t} title="애니메이션 미리보기">
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: t.space.md }}>
+        <div className="ds-root" style={{ ...motionVars(t), display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: t.space.md }}>
 
-          {/* Slide */}
-          <div style={{ borderRadius: t.radius.card, border: `1px solid ${t.border}`, background: t.surface, padding: t.space.lg, display: 'flex', flexDirection: 'column', gap: t.space.sm }}>
-            <div>
+          {/* Slide — 진입/전환은 루프 자동재생이 가장 직관적 */}
+          <Card interactive={false}>
+            <div style={{ marginBottom: t.space.sm }}>
               <div style={{ ...bodySm(t), fontWeight: t.weightBold, color: t.textMain }}>Slide</div>
               <div style={{ ...cap(t), color: t.textMuted }}>{dur}ms · {m.easing}</div>
             </div>
             <div style={{ position: 'relative', height: 44, background: t.surfaceAlt, borderRadius: t.radius.input, overflow: 'hidden', border: `1px solid ${t.border}` }}>
               <div style={{
-                position: 'absolute',
-                left: 6,
-                top: 6,
-                height: 32,
-                width: 80,
-                borderRadius: t.radius.chip,
-                background: t.primary,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
+                position: 'absolute', left: 6, top: 6, height: 32, width: 80,
+                borderRadius: t.radius.chip, background: t.primary,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
                 animation: `fd-slide ${dur * 3}ms ${m.easing} infinite`,
               }}>
                 <span style={{ ...cap(t), color: t.onPrimary, fontWeight: t.weightBold }}>토스트</span>
               </div>
             </div>
-            <div style={{ ...cap(t), color: t.textMuted }}>표시 전환 · 드로어 · 토스트</div>
-          </div>
+            <div style={{ ...cap(t), color: t.textMuted, marginTop: t.space.sm }}>표시 전환 · 드로어 · 토스트</div>
+          </Card>
 
-          {/* Press Scale */}
-          <div style={{ borderRadius: t.radius.card, border: `1px solid ${t.border}`, background: t.surface, padding: t.space.lg, display: 'flex', flexDirection: 'column', gap: t.space.sm }}>
-            <div>
+          {/* Press Scale — DS Button 직접 사용 (ds-press 내장) */}
+          <Card interactive={false}>
+            <div style={{ marginBottom: t.space.sm }}>
               <div style={{ ...bodySm(t), fontWeight: t.weightBold, color: t.textMain }}>Press Scale</div>
-              <div style={{ ...cap(t), color: t.textMuted }}>scale({m.pressScale}) — 탭/클릭 시 축소</div>
+              <div style={{ ...cap(t), color: t.textMuted }}>scale({m.pressScale}) · 클릭해보세요</div>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 56 }}>
-              <div style={{
-                padding: '10px 24px',
-                borderRadius: t.radius.button,
-                background: t.primary,
-                color: t.onPrimary,
-                fontSize: t.type.bodySm.size,
-                fontWeight: t.weightBold,
-                animation: `fd-press ${dur * 4}ms ${m.easing} infinite`,
-                cursor: 'pointer',
-                userSelect: 'none' as const,
-                letterSpacing: '-0.01em',
-              }}>
-                버튼
-              </div>
+              <Button variant="primary">눌러보세요</Button>
             </div>
-            <div style={{ ...cap(t), color: t.textMuted }}>버튼 · 아이콘 버튼 · 리스트 행</div>
-          </div>
+            <div style={{ ...cap(t), color: t.textMuted, marginTop: t.space.sm }}>버튼 · 아이콘 버튼 · 리스트 행</div>
+          </Card>
 
-          {/* Hover Scale */}
-          <div style={{ borderRadius: t.radius.card, border: `1px solid ${t.border}`, background: t.surface, padding: t.space.lg, display: 'flex', flexDirection: 'column', gap: t.space.sm }}>
-            <div>
+          {/* Hover Scale — DS Card(interactive) 직접 사용 (ds-hover 내장) */}
+          <Card interactive={false}>
+            <div style={{ marginBottom: t.space.sm }}>
               <div style={{ ...bodySm(t), fontWeight: t.weightBold, color: t.textMain }}>Hover Scale</div>
-              <div style={{ ...cap(t), color: t.textMuted }}>scale({m.hoverScale}){m.hoverScale > 1 ? ' — 호버 시 확대' : ' — 호버 시 리프트'}</div>
+              <div style={{ ...cap(t), color: t.textMuted }}>scale({m.hoverScale}){m.hoverScale > 1 ? ' · 호버 시 확대' : ' · 호버 시 리프트'}</div>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 56 }}>
-              <div style={{
-                padding: '10px 18px',
-                borderRadius: t.radius.card,
-                background: t.primaryTint,
-                border: `1px solid ${t.primary}`,
-                textAlign: 'center',
-                animation: `fd-hover ${dur * 4}ms ${m.easing} infinite`,
-              }}>
+              <Card pad={false} style={{ padding: `${t.space.sm}px ${t.space.lg}px`, textAlign: 'center' }}>
                 <div style={{ ...cap(t), fontWeight: t.weightBold, color: t.primary }}>카드</div>
-                <div style={{ ...cap(t), color: t.textMuted, marginTop: 2 }}>콘텐츠</div>
-              </div>
+                <div style={{ ...cap(t), color: t.textMuted, marginTop: 2 }}>호버해보세요</div>
+              </Card>
             </div>
-            <div style={{ ...cap(t), color: t.textMuted }}>카드 · 썸네일 · 인터랙티브 셀</div>
-          </div>
+            <div style={{ ...cap(t), color: t.textMuted, marginTop: t.space.sm }}>카드 · 썸네일 · 인터랙티브 셀</div>
+          </Card>
 
-          {/* Fade */}
-          <div style={{ borderRadius: t.radius.card, border: `1px solid ${t.border}`, background: t.surface, padding: t.space.lg, display: 'flex', flexDirection: 'column', gap: t.space.sm }}>
-            <div>
+          {/* Fade — 클릭 토글로 직접 체험 */}
+          <Card interactive={false}>
+            <div style={{ marginBottom: t.space.sm }}>
               <div style={{ ...bodySm(t), fontWeight: t.weightBold, color: t.textMain }}>Fade</div>
-              <div style={{ ...cap(t), color: t.textMuted }}>{dur}ms — 표시·숨김 전환</div>
+              <div style={{ ...cap(t), color: t.textMuted }}>{dur}ms · 표시·숨김 전환</div>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 56 }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: t.space.sm, height: 56 }}>
               <div style={{
-                padding: '10px 16px',
+                padding: `${t.space.sm}px ${t.space.md}px`,
                 borderRadius: t.radius.card,
                 background: t.surfaceAlt,
                 border: `1px solid ${t.border}`,
-                animation: `fd-fade ${dur * 4}ms ${m.easing} infinite`,
-                width: 110,
+                opacity: faded ? 0 : 1,
+                transition: `opacity ${dur}ms ${m.easing}`,
+                width: 90, flexShrink: 0,
               }}>
-                <div style={{ height: 7, background: t.textMuted, borderRadius: 4, opacity: 0.4 }} />
-                <div style={{ height: 7, background: t.textMuted, borderRadius: 4, width: '65%', opacity: 0.25, marginTop: 5 }} />
-                <div style={{ height: 7, background: t.textMuted, borderRadius: 4, width: '80%', opacity: 0.25, marginTop: 5 }} />
+                <div style={{ height: 6, background: t.textMuted, borderRadius: 3, opacity: 0.4 }} />
+                <div style={{ height: 6, background: t.textMuted, borderRadius: 3, width: '65%', opacity: 0.25, marginTop: 4 }} />
               </div>
+              <button className="ds-press" onClick={() => setFaded((f) => !f)} style={{
+                ...cap(t), color: t.primary, cursor: 'pointer', background: 'none', border: 'none',
+                fontWeight: t.weightBold, padding: `${t.space.xs}px ${t.space.sm}px`,
+                borderRadius: t.radius.badge,
+              }}>
+                {faded ? '표시' : '숨김'}
+              </button>
             </div>
-            <div style={{ ...cap(t), color: t.textMuted }}>모달 · 오버레이 · 스켈레톤</div>
-          </div>
+            <div style={{ ...cap(t), color: t.textMuted, marginTop: t.space.sm }}>모달 · 오버레이 · 스켈레톤</div>
+          </Card>
 
         </div>
       </Section>
