@@ -184,23 +184,13 @@ function ItemsLayout({ ds, pack, platform }: { ds: DS; pack: ContentPack; platfo
 
 /* ── 메인 ── */
 function PatternMain({ ds, pack, platform }: { ds: DS; pack: ContentPack; platform: 'mobile' | 'web' }) {
-  const { t, Chip, Text, Thumb } = ds;
+  const { t, Chip, Text, Thumb, EditorialCard } = ds;
   const { space } = t;
 
-  // Fashion leads with an editorial hero; others use a scrim banner.
-  const hero = pack.signature === 'editorial'
-    ? <Signature ds={ds} pack={pack} />
-    : (
-      <div style={{ position: 'relative', borderRadius: t.radius.card, overflow: 'hidden' }}>
-        <Thumb h={platform === 'web' ? 150 : 120} />
-        <div style={{ position: 'absolute', inset: 0, padding: t.cardPad, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', background: t.scrim }}>
-          <Text role="h2" weight={t.weightBold} color={t.textOnImage}>{pack.heroTitle}</Text>
-          <Text role="caption" color={t.textOnImage} style={{ opacity: 0.85 }}>{pack.heroSub}</Text>
-        </div>
-      </div>
-    );
+  // EditorialCard is always the hero — visible in base patterns, not just fashion brands.
+  const hero = <EditorialCard tag={pack.chips[0] ?? '추천'} title={pack.heroTitle} sub={pack.heroSub} h={platform === 'web' ? 150 : 120} />;
 
-  // Signature band under hero (skip editorial — already the hero; skip collect — shown in masonry items)
+  // Signature band under hero (skip editorial/collect — editorial is already the hero)
   const showSignatureBand = pack.signature !== 'editorial' && pack.signature !== 'collect';
 
   return (
@@ -257,10 +247,16 @@ function PatternAuth({ ds, pack, platform }: { ds: DS; pack: ContentPack; platfo
 
 /* ── 검색 ── */
 function PatternSearch({ ds, pack, platform }: { ds: DS; pack: ContentPack; platform: 'mobile' | 'web' }) {
-  const { t, Text, Icon } = ds;
+  const { t, Text, Icon, RankingList } = ds;
   const { space } = t;
   const query = pack.items[0]?.name ?? '검색어';
   const suggestions = pack.items.slice(0, 3).map((it) => it.name);
+  // RankingList always shown — visible in base patterns, not just portal brands.
+  const rankItems = pack.items.slice(0, 4).map((it, i) => ({
+    title: it.name,
+    sub: `인기 ${i + 1}위`,
+    delta: (['up', 'up', 'same', 'down'] as const)[i],
+  }));
 
   return (
     <Screen ds={ds}>
@@ -280,6 +276,10 @@ function PatternSearch({ ds, pack, platform }: { ds: DS; pack: ContentPack; plat
           </div>
         ))}
       </div>
+      <div>
+        <Text role="caption" weight={t.weightBold} color={t.textMuted} style={{ display: 'block', marginBottom: space.sm }}>실시간 인기</Text>
+        <RankingList items={rankItems} />
+      </div>
       <div style={{ display: 'flex', overflow: 'hidden', gap: space.xs }}>
         {pack.chips.map((f, i) => <ds.Chip key={f} active={i === 0}>{f}</ds.Chip>)}
       </div>
@@ -290,8 +290,10 @@ function PatternSearch({ ds, pack, platform }: { ds: DS; pack: ContentPack; plat
 
 /* ── 목록 (PLP) ── */
 function PatternList({ ds, pack, platform }: { ds: DS; pack: ContentPack; platform: 'mobile' | 'web' }) {
-  const { t, Button, Text, Icon } = ds;
+  const { t, Button, Text, Icon, SaveCollect } = ds;
   const { space } = t;
+  // SaveCollect tiles always shown — visible in base patterns, not just interior/ohouse brands.
+  const collectItems = pack.items.slice(0, platform === 'web' ? 4 : 2);
 
   return (
     <Screen ds={ds}>
@@ -304,6 +306,11 @@ function PatternList({ ds, pack, platform }: { ds: DS; pack: ContentPack; platfo
       </div>
       <div style={{ display: 'flex', overflow: 'hidden', gap: space.xs }}>
         {pack.chips.map((f, i) => <ds.Chip key={f} active={i === 0}>{f}</ds.Chip>)}
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: `repeat(${collectItems.length}, 1fr)`, gap: space.sm }}>
+        {collectItems.map((it, i) => (
+          <SaveCollect key={it.name} count={1200 - i * 180} saved={i === 0} tag={it.name} h={90} />
+        ))}
       </div>
       <ItemsLayout ds={ds} pack={pack} platform={platform} />
     </Screen>
@@ -330,7 +337,7 @@ function PatternDetail({ ds, pack, platform }: { ds: DS; pack: ContentPack; plat
           <Text role="h1" weight={t.weightBold} color={t.textMain}>{price(priceItem.price)}</Text>
         </div>
       )}
-      <div style={{ padding: space.sm, borderRadius: t.radius.card, background: t.surface, border: `1px solid ${t.border}`, display: 'flex', flexDirection: 'column', gap: space.xs }}>
+      <div style={{ padding: space.sm, borderRadius: t.radius.card, background: t.bg, border: `1px solid ${t.border}`, display: 'flex', flexDirection: 'column', gap: space.xs }}>
         {pack.detailMeta.slice(1).map((line) => (
           <div key={line} style={{ display: 'flex', alignItems: 'center', gap: space.xs }}>
             <Icon name="check" size={12} color={ensureContrast(t.success, t.bg)} />
@@ -438,18 +445,18 @@ function PatternMyPage({ ds, pack, platform }: { ds: DS; pack: ContentPack; plat
         </div>
         <Button variant="outline" size="sm"><span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><Icon name="edit" size={12} color={ensureContrast(t.primary, t.bg)} />편집</span></Button>
       </div>
-      {/* membership / signature highlight */}
-      {pack.signature === 'gauge' || pack.signature === 'balance'
-        ? <Signature ds={ds} pack={pack} />
-        : (
-          <div style={{ background: t.primary, borderRadius: t.radius.card, padding: t.cardPad, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div>
-              <Text role="caption" color={t.onPrimary} style={{ opacity: 0.8, display: 'block', marginBottom: space.xxs }}>현재 등급</Text>
-              <Text role="bodySm" weight={t.weightBold} color={t.onPrimary}>골드 멤버</Text>
-            </div>
-            <Badge tone="soft">VIP</Badge>
-          </div>
-        )}
+      {/* GaugeMeter always shown — visible in base patterns, not just local/daangn brands */}
+      <ds.GaugeMeter
+        label={pack.metric?.label ?? '활동 점수'}
+        value={pack.metric?.value ?? '72점'}
+        ratio={0.72}
+        caption={pack.metric?.delta ?? '좋아요'}
+      />
+      {/* ChatList always shown — visible in base patterns, not just messenger/kakao brands */}
+      <div>
+        <Text role="caption" weight={t.weightBold} color={t.textMuted} style={{ display: 'block', marginBottom: space.sm }}>최근 대화</Text>
+        <ds.ChatList messages={pack.listRows.slice(0, 2).map((r, i) => ({ text: r.sub ?? r.title, me: i === 1, time: r.meta }))} />
+      </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: space.sm }}>
         {[
           { label: '주문', count: 12, icon: 'package' as const },
@@ -463,7 +470,7 @@ function PatternMyPage({ ds, pack, platform }: { ds: DS; pack: ContentPack; plat
           </div>
         ))}
       </div>
-      <div style={{ background: t.surface, borderRadius: t.radius.card, overflow: 'hidden', border: `1px solid ${t.border}` }}>
+      <div style={{ background: t.bg, borderRadius: t.radius.card, overflow: 'hidden', border: `1px solid ${t.border}` }}>
         {menuItems.map((item, i, arr) => (
           <ListRow key={item.label} divider={i < arr.length - 1} style={{ paddingLeft: space.md, paddingRight: space.md }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: space.sm }}>
