@@ -511,22 +511,25 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
           </div>
         )}
 
-        {/* ── Patterns ── (coming soon overlay) */}
+        {/* ── Patterns ── (coming soon — bubble over tab strip) */}
         {section === 'patterns' && (
-          <div style={{ position: 'relative' }}>
-            {/* Dimmed background — disabled tabs + placeholder area */}
-            <div style={{ opacity: 0.3, pointerEvents: 'none', userSelect: 'none' }}>
-              <SubTabStrip
-                items={brandPatterns.map(p => PATTERN_TYPES.find(pt => pt.key === p)).filter(Boolean) as { key: string; label: string }[]}
-                active={activePattern}
-                onChange={() => {}}
-              />
-              <div style={{ minHeight: 320, background: brandTheme.surfaceAlt, borderRadius: brandTheme.radius.card }} />
+          <div>
+            {/* Tab strip wrapped in relative so bubble floats directly over it */}
+            <div style={{ position: 'relative' }}>
+              <div style={{ opacity: 0.25, pointerEvents: 'none', userSelect: 'none' }}>
+                <SubTabStrip
+                  items={brandPatterns.map(p => PATTERN_TYPES.find(pt => pt.key === p)).filter(Boolean) as { key: string; label: string }[]}
+                  active={activePattern}
+                  onChange={() => {}}
+                />
+              </div>
+              {/* Speech bubble hovers centered over the tab menu; tail points down at tabs */}
+              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
+                <brandDS.ComingSoon sub="더 완성도 높은 패턴 미리보기를 준비 중이에요" style={{ background: 'transparent', minHeight: 0 }} />
+              </div>
             </div>
-            {/* ComingSoon floats as absolute overlay */}
-            <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none' }}>
-              <brandDS.ComingSoon sub="더 완성도 높은 패턴 미리보기를 준비 중이에요" style={{ background: 'transparent', minHeight: 0 }} />
-            </div>
+            {/* Dimmed content placeholder below */}
+            <div style={{ opacity: 0.15, pointerEvents: 'none', marginTop: 8, minHeight: 280, background: brandTheme.surfaceAlt, borderRadius: brandTheme.radius.card }} />
           </div>
         )}
       </div>

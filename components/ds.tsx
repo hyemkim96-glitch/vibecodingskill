@@ -760,16 +760,14 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
           border: `1px solid ${t.border}`, borderRadius: t.radius.card,
           padding: `${space.sm}px ${space.lg}px`,
           display: 'flex', flexDirection: 'column', alignItems: 'center', gap: space.xs,
-          boxShadow: `0 4px 20px rgba(0,0,0,0.06)`, marginBottom: 10,
+          boxShadow: `0 4px 20px rgba(0,0,0,0.06)`, marginBottom: 14,
         }}>
           <span style={{ ...typeStyle(t.type.bodySm), fontWeight: t.weightBold, color: t.textMain }}>
             🔒 {title}
           </span>
           {sub && <span style={{ ...typeStyle(t.type.caption), color: t.textSub, textAlign: 'center', maxWidth: 220 }}>{sub}</span>}
-          {/* Tail — border layer */}
-          <div style={{ position: 'absolute', bottom: -10, left: '50%', transform: 'translateX(-50%)', width: 0, height: 0, borderLeft: '9px solid transparent', borderRight: '9px solid transparent', borderTop: `9px solid ${t.border}` }} />
-          {/* Tail — fill layer */}
-          <div style={{ position: 'absolute', bottom: -8, left: '50%', transform: 'translateX(-50%)', width: 0, height: 0, borderLeft: '7px solid transparent', borderRight: '7px solid transparent', borderTop: `7px solid ${t.bg}` }} />
+          {/* Tail — rotated square, half hidden behind bubble bottom for seamless joint */}
+          <div style={{ position: 'absolute', bottom: -6, left: '50%', transform: 'translateX(-50%) rotate(45deg)', width: 10, height: 10, background: t.bg, borderBottom: `1px solid ${t.border}`, borderRight: `1px solid ${t.border}` }} />
         </div>
       </div>
     </div>
