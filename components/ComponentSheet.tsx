@@ -58,7 +58,7 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
   const ds = createDS(t, true);
   const { Button, Input, Badge, Chip, Card, Text, Thumb, Avatar, ListRow, Stepper, Rating,
           Checkbox, Switch, Radio, Textarea, Select, Divider, Skeleton, Progress, TopBar, Table, Toast,
-          StatusTracker, BalanceCard, GaugeMeter, RankingList, SaveCollect, EditorialCard, ChatList } = ds;
+          StatusTracker, BalanceCard, GaugeMeter, RankingList, SaveCollect, EditorialCard, ChatList, ComingSoon } = ds;
   const { space } = t;
   const all = category === 'all';
   // Brand pages pass a single signature → show only that brand's component.
@@ -406,6 +406,9 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
               ]} />
             </Tile>
           )}
+          <Tile t={t} ds={ds} title="오픈 예정">
+            <ComingSoon sub="준비 중인 기능이에요" />
+          </Tile>
 
         </div>
         </section>

@@ -153,11 +153,12 @@ function generateBrandPalette(primary: string) {
   }));
 
   return {
+    primaryHue:   Math.round(h),
     hueScale:     toScale(harmony.primary, primary),  // actual primary hex marked
-    successScale: toScale(harmony.green),
-    dangerScale:  toScale(harmony.red),
-    warningScale: toScale(harmony.amber),
-    infoScale:    toScale(harmony.blue),
+    greenScale:   toScale(harmony.green),
+    redScale:     toScale(harmony.red),
+    amberScale:   toScale(harmony.amber),
+    blueScale:    toScale(harmony.blue),
     neutralScale,
     vibrantScale,
   };
@@ -283,11 +284,11 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
 
               {/* Reusable scale row */}
               {([
-                { label: 'Hue — 브랜드 색조 스케일',   scale: brandPalette.hueScale,     semantic: null },
-                { label: 'Success — 성공 색조 스케일',  scale: brandPalette.successScale, semantic: { fill: brandTheme.success, text: brandTheme.successText } },
-                { label: 'Danger — 위험 색조 스케일',   scale: brandPalette.dangerScale,  semantic: { fill: brandTheme.danger,  text: brandTheme.dangerText  } },
-                { label: 'Warning — 경고 색조 스케일',  scale: brandPalette.warningScale, semantic: { fill: brandTheme.warning, text: brandTheme.warningText } },
-                { label: 'Info — 정보 색조 스케일',     scale: brandPalette.infoScale,    semantic: { fill: brandTheme.info,    text: brandTheme.infoText    } },
+                { label: `Hue ${brandPalette.primaryHue} — 브랜드 원시 스케일`, scale: brandPalette.hueScale,   semantic: null },
+                { label: 'Green — Hue 145',                                     scale: brandPalette.greenScale, semantic: { fill: brandTheme.success, text: brandTheme.successText } },
+                { label: 'Red — Hue 22',                                        scale: brandPalette.redScale,   semantic: { fill: brandTheme.danger,  text: brandTheme.dangerText  } },
+                { label: 'Amber — Hue 62',                                      scale: brandPalette.amberScale, semantic: { fill: brandTheme.warning, text: brandTheme.warningText } },
+                { label: 'Blue — Hue 254',                                      scale: brandPalette.blueScale,  semantic: { fill: brandTheme.info,    text: brandTheme.infoText    } },
               ] as const).map(({ label, scale, semantic }) => (
                 <div key={label}>
                   <div className={styles.paletteGroupLabel}>{label}</div>
@@ -510,27 +511,9 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
           </div>
         )}
 
-        {/* ── Patterns ── */}
+        {/* ── Patterns ── (coming soon) */}
         {section === 'patterns' && (
-          <div>
-            <SubTabStrip
-              items={PATTERN_TYPES.filter(p => brandPatterns.includes(p.key as PatternType))}
-              active={activePattern}
-              onChange={(k) => setActivePattern(k as PatternType)}
-            />
-            <div
-              style={{
-                border: '1px solid var(--color-border-normal)',
-                borderRadius: 8,
-                overflow: 'hidden',
-                maxWidth: platform === 'mobile' ? 390 : '100%',
-              }}
-            >
-              <div className="ds-root" style={motionVars(brandTheme)}>
-                {renderPattern(activePattern, brandDS, platform, contentPack)}
-              </div>
-            </div>
-          </div>
+          <brandDS.ComingSoon sub="더 완성도 높은 패턴 미리보기를 준비 중이에요" />
         )}
       </div>
 

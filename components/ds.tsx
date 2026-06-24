@@ -121,6 +121,7 @@ export interface DS {
   SaveCollect: React.FC<{ count?: number; saved?: boolean; tag?: string; h?: number; style?: React.CSSProperties }>;
   EditorialCard: React.FC<{ title: string; sub?: string; tag?: string; h?: number; style?: React.CSSProperties }>;
   ChatList: React.FC<{ messages: Array<{ text: string; me?: boolean; time?: string }>; style?: React.CSSProperties }>;
+  ComingSoon: React.FC<{ title?: string; sub?: string; style?: React.CSSProperties }>;
 }
 
 export function createDS(t: ResolvedTheme, wireframe = false): DS {
@@ -734,5 +735,33 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
     </div>
   );
 
-  return { t, Text, Button, Card, Input, Badge, Chip, NavTab, Stepper, Rating, ListRow, Thumb, Avatar, Icon, Checkbox, Switch, Radio, Textarea, Select, Divider, Skeleton, Progress, TopBar, Table, Toast, TokenCard, StatusTracker, BalanceCard, GaugeMeter, RankingList, SaveCollect, EditorialCard, ChatList };
+  const ComingSoon: DS['ComingSoon'] = ({ title = '오픈 예정', sub, style }) => (
+    <div style={{
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      minHeight: 180, background: t.surfaceAlt, borderRadius: t.radius.card,
+      ...style,
+    }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', paddingBottom: 16 }}>
+        {/* Speech bubble */}
+        <div style={{
+          position: 'relative', background: t.bg,
+          border: `1.5px solid ${t.primary}`, borderRadius: t.radius.card,
+          padding: `${space.sm}px ${space.lg}px`,
+          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: space.xs,
+          boxShadow: `0 4px 20px rgba(0,0,0,0.08)`, marginBottom: 10,
+        }}>
+          <span style={{ ...typeStyle(t.type.bodySm), fontWeight: t.weightBold, color: ensureContrast(t.primary, t.bg) }}>
+            🔒 {title}
+          </span>
+          {sub && <span style={{ ...typeStyle(t.type.caption), color: t.textSub, textAlign: 'center', maxWidth: 220 }}>{sub}</span>}
+          {/* Tail — border layer */}
+          <div style={{ position: 'absolute', bottom: -10, left: '50%', transform: 'translateX(-50%)', width: 0, height: 0, borderLeft: '9px solid transparent', borderRight: '9px solid transparent', borderTop: `9px solid ${t.primary}` }} />
+          {/* Tail — fill layer */}
+          <div style={{ position: 'absolute', bottom: -8, left: '50%', transform: 'translateX(-50%)', width: 0, height: 0, borderLeft: '7px solid transparent', borderRight: '7px solid transparent', borderTop: `7px solid ${t.bg}` }} />
+        </div>
+      </div>
+    </div>
+  );
+
+  return { t, Text, Button, Card, Input, Badge, Chip, NavTab, Stepper, Rating, ListRow, Thumb, Avatar, Icon, Checkbox, Switch, Radio, Textarea, Select, Divider, Skeleton, Progress, TopBar, Table, Toast, TokenCard, StatusTracker, BalanceCard, GaugeMeter, RankingList, SaveCollect, EditorialCard, ChatList, ComingSoon };
 }
