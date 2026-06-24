@@ -46,13 +46,13 @@ function Tile({ t, ds, title, children, col = 1 }: {
 }) {
   return (
     <div style={{
-      background: t.bg, border: `1px solid ${t.border}`, borderRadius: t.radius.card, padding: t.space.xl,
+      background: t.bg, border: `1px solid ${t.border}`, borderRadius: t.radius.card, padding: t.space.md,
       gridColumn: col > 1 ? `span ${col}` : undefined,
     }}>
-      <p style={{ ...typeStyle(t.type.bodySm), color: t.textMain, fontWeight: t.weightBold, marginBottom: t.space.lg }}>
+      <p style={{ ...typeStyle(t.type.bodySm), color: t.textMain, fontWeight: t.weightBold, marginBottom: t.space.sm }}>
         {title}
       </p>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.xl }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.sm }}>
         {children}
       </div>
     </div>
@@ -73,11 +73,11 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
   const showSig = (k: SignatureKind) => !signature || signature === k;
 
   return (
-    <div className="ds-root" style={{ ...motionVars(t), display: 'flex', flexDirection: 'column', background: t.surfaceAlt, padding: t.space.xl, fontFamily: t.font, gap: all ? space.xl * 2 : 0 }}>
+    <div className="ds-root" style={{ ...motionVars(t), display: 'flex', flexDirection: 'column', background: t.surfaceAlt, padding: t.space.md, fontFamily: t.font, gap: all ? space.xl : 0 }}>
       {(all || category === 'buttons') && (
         <section>
         <SectionHeading t={t} show={all}>버튼 & 액션</SectionHeading>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', alignItems: 'start', gap: space.xl }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', alignItems: 'start', gap: space.sm }}>
 
           <Tile t={t} ds={ds} title="텍스트 버튼" col={1}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
@@ -155,7 +155,7 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
       {(all || category === 'inputs') && (
         <section>
         <SectionHeading t={t} show={all}>입력 & 폼</SectionHeading>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', alignItems: 'start', gap: space.xl }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', alignItems: 'start', gap: space.sm }}>
 
           <Tile t={t} ds={ds} title="텍스트 입력" col={2}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
@@ -226,7 +226,7 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
       {(all || category === 'cards') && (
         <section>
         <SectionHeading t={t} show={all}>카드 & 리스트</SectionHeading>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', alignItems: 'start', gap: space.xl }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', alignItems: 'start', gap: space.sm }}>
 
           <Tile t={t} ds={ds} title="카드 변형" col={2}>
             {/* 기본/강조 카드 */}
@@ -428,7 +428,7 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
       {(all || category === 'feedback') && (
         <section>
         <SectionHeading t={t} show={all}>피드백</SectionHeading>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', alignItems: 'start', gap: space.xl }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', alignItems: 'start', gap: space.sm }}>
 
           <Tile t={t} ds={ds} title="배지 & 칩" col={2}>
             {/* 배지 변형 */}
@@ -579,7 +579,7 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
       {(all || category === 'navigation') && (
         <section>
         <SectionHeading t={t} show={all}>내비게이션</SectionHeading>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', alignItems: 'start', gap: space.xl }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', alignItems: 'start', gap: space.sm }}>
 
           <Tile t={t} ds={ds} title="탑 내비게이션 바" col={2}>
             {/* 상세 페이지: ← + 제목 + 우측 액션 */}
@@ -683,22 +683,18 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
       {(all || category === 'messaging') && (
         <section>
         <SectionHeading t={t} show={all}>메시지</SectionHeading>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', alignItems: 'start', gap: space.xl }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', alignItems: 'start', gap: space.sm }}>
 
-          <Tile t={t} ds={ds} title="수신 버블" col={1}>
+          <Tile t={t} ds={ds} title="수신 버블" col={2}>
             <ChatList messages={[{ text: '주문하신 상품이 배송 출발했어요 📦', time: '오전 10:24' }]} />
+            <ChatList messages={[{ text: '긴 수신 메시지는 말풍선 안에서 자동으로 줄 바꿈 처리됩니다. 여러 줄이 될 수 있어요.' }]} />
+            <ChatList messages={[{ text: '타임스탬프 없는 메시지' }]} />
           </Tile>
 
-          <Tile t={t} ds={ds} title="발신 버블" col={1}>
+          <Tile t={t} ds={ds} title="발신 버블" col={2}>
             <ChatList messages={[{ text: '감사합니다! 잘 받겠습니다 😊', me: true, time: '오전 10:25' }]} />
-          </Tile>
-
-          <Tile t={t} ds={ds} title="버블 상태" col={2}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: space.md }}>
-              <ChatList messages={[{ text: '일반 메시지입니다.' }]} />
-              <ChatList messages={[{ text: '긴 텍스트 메시지는 말풍선 안에서 자동으로 줄 바꿈 처리됩니다. 여러 줄이 될 수 있어요.' }]} />
-              <ChatList messages={[{ text: '나의 메시지', me: true }]} />
-            </div>
+            <ChatList messages={[{ text: '긴 발신 메시지도 동일하게 줄 바꿈이 적용되어 말풍선 너비 안에서 자연스럽게 표시됩니다.', me: true }]} />
+            <ChatList messages={[{ text: '짧은 발신', me: true }]} />
           </Tile>
 
         </div>
