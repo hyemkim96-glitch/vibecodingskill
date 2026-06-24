@@ -349,18 +349,23 @@ function StrokePanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
       <Section t={t} title="굵기 (Width)" first>
-        <Table
-          rows={widths.map(({ name, w, desc }) => ({
-            label: name,
-            value: (
-              <div style={{ display: 'flex', alignItems: 'center', gap: t.space.md, flex: 1 }}>
-                <div style={{ flex: 1, height: w, background: t.textMain, borderRadius: w, maxWidth: 160 }} />
-                <span style={{ ...cap(t), color: t.textMuted, fontFamily: 'monospace', width: 36 }}>{w}px</span>
-                <span style={{ ...cap(t), color: t.textMuted }}>{desc}</span>
+        <div style={{ borderRadius: t.radius.card, border: `1px solid ${t.border}`, overflow: 'hidden' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '100px 1fr 180px', padding: `${t.space.xs}px ${t.space.md}px`, background: t.surfaceAlt, borderBottom: `1px solid ${t.border}` }}>
+            {['이름', '굵기', '용도'].map((h) => (
+              <span key={h} style={{ ...cap(t), fontWeight: t.weightBold, color: t.textSub }}>{h}</span>
+            ))}
+          </div>
+          {widths.map(({ name, w, desc }, i) => (
+            <div key={name} style={{ display: 'grid', gridTemplateColumns: '100px 1fr 180px', padding: `${t.space.sm}px ${t.space.md}px`, background: t.surface, borderBottom: i < widths.length - 1 ? `1px solid ${t.border}` : 'none', alignItems: 'center' }}>
+              <span style={{ ...cap(t), color: t.textMain, fontFamily: 'monospace' }}>{name}</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: t.space.sm }}>
+                <div style={{ flex: 1, height: w, background: t.textMain, borderRadius: w, maxWidth: 140 }} />
+                <span style={{ ...cap(t), color: t.textMuted, fontFamily: 'monospace', width: 32, flexShrink: 0 }}>{w}px</span>
               </div>
-            ),
-          }))}
-        />
+              <span style={{ ...cap(t), color: t.textMuted }}>{desc}</span>
+            </div>
+          ))}
+        </div>
       </Section>
 
       <Section t={t} title="컬러 역할 (Color Role)">
