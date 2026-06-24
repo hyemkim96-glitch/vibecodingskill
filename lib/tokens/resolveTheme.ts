@@ -1,6 +1,7 @@
 import { BrandToken } from '@/types/token';
 import { lightTokens, darkTokens } from './semanticTokens';
 import { deriveTintOklch, ensureContrastOklch, relativeLuminance } from './oklch';
+import { makeBrandHarmony, BrandHueStep } from './palette';
 
 /**
  * Design System Engine — Theme Resolver v2
@@ -332,6 +333,12 @@ export function resolveTheme(
   const lt = lightTokens;
   const dt = darkTokens;
 
+  // Harmonious semantic hue families — same chromaScale as brand primary so
+  // success/danger/warning/info read as perceptually matched in saturation.
+  const harmony = makeBrandHarmony(primary);
+  const hAt = (family: BrandHueStep[], step: 600 | 700) =>
+    family.find((s) => s.step === step)?.hex;
+
   const brandColors = {
     primary,
     onPrimary,
@@ -346,10 +353,12 @@ export function resolveTheme(
     textMuted:  findColor(c, /비활성 텍스트|플레이스홀더|힌트/,             isDark ? dt['--color-text-assistive']   : lt['--color-text-assistive']),
     border:     findColor(c, /구분선|보더|^선$/,                            isDark ? dt['--color-border-normal']    : lt['--color-border-normal']),
     accent,
-    success:      findColor(c, /성공|증가|긍정/, lt['--color-fill-success']),
-    danger:       findColor(c, /에러|위험|감소|부정/, lt['--color-fill-danger']),
-    warning:      lt['--color-fill-warning'],
-    info:         lt['--color-fill-info'],
+    // Semantic colors derived from brand-harmonious hue families (step 600 = fill).
+    // Brand token overrides take priority (e.g. Baemin explicitly sets Success Teal).
+    success: findColor(c, /성공|증가|긍정/, hAt(harmony.success, 600) ?? lt['--color-fill-success']),
+    danger:  findColor(c, /에러|위험|감소|부정/, hAt(harmony.danger,  600) ?? lt['--color-fill-danger']),
+    warning: hAt(harmony.warning, 600) ?? lt['--color-fill-warning'],
+    info:    hAt(harmony.info,    600) ?? lt['--color-fill-info'],
     disabled:     isDark ? dt['--color-fill-neutral']     : lt['--color-fill-neutral'],
     textDisabled: isDark ? dt['--color-text-disabled']    : lt['--color-text-disabled'],
     starFill:     isDark ? dt['--color-fill-highlight']    : lt['--color-fill-highlight'],

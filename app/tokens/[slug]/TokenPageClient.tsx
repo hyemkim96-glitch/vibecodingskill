@@ -9,7 +9,7 @@ import { renderPattern, PATTERN_TYPES, PatternType } from '@/components/patterns
 import { getContentPack } from '@/lib/content/packs';
 import { resolveTheme } from '@/lib/tokens/resolveTheme';
 import { hexToOklch, oklchToHex } from '@/lib/tokens/oklch';
-import { makeBrandHueScale } from '@/lib/tokens/palette';
+import { makeBrandHarmony } from '@/lib/tokens/palette';
 import { createDS, motionVars } from '@/components/ds';
 import styles from './TokenPage.module.css';
 
@@ -121,48 +121,46 @@ function SubTabStrip({ items, active, onChange }: {
 
 function generateBrandPalette(primary: string) {
   const { l: baseL, c: baseC, h } = hexToOklch(primary);
+  const harmony = makeBrandHarmony(primary);
 
-  // Hue scale — Foundation STEPS at the brand's hue (gamut-corrected chroma).
-  // Monotonic by construction; the primary sits naturally at its L-matched step.
-  const steps = makeBrandHueScale(h);
+  const toScale = (family: typeof harmony.primary, markHex?: string) =>
+    family.map(s => ({
+      name:   String(s.step),
+      value:  s.hex,
+      isBase: markHex ? s.hex === markHex : false,
+    }));
 
-  // Mark the step closest to the primary's lightness as the brand anchor.
-  let baseIdx = 0;
-  let minDiff = Infinity;
-  steps.forEach((s, i) => {
-    const d = Math.abs(s.l - baseL);
-    if (d < minDiff) { minDiff = d; baseIdx = i; }
-  });
-
-  const hueScale = steps.map((s, i) => ({
-    name: String(s.step),
-    value: s.hex,
-    isBase: i === baseIdx,
-  }));
-
-  // Neutral: same Foundation lightness ramp, brand-hue tinted, near-achromatic.
-  const neutralScale = steps.map(s => ({
-    name: String(s.step),
-    value: oklchToHex(s.l, Math.min(baseC * 0.06, 0.008), h),
+  // Neutral: brand-hue tinted near-achromatic (same L ramp as primary family)
+  const neutralScale = harmony.primary.map(s => ({
+    name:   String(s.step),
+    value:  oklchToHex(s.l, Math.min(baseC * 0.06, 0.008), h),
     isBase: false,
   }));
 
-  // Vibrant: same L/C as primary, shifted hues for data-viz / illustration palette
+  // Vibrant: hue rotations at fill L/C — data-viz / illustration accents
   const vibrantL = Math.max(0.46, Math.min(baseL, 0.62));
   const vibrantC = Math.max(0.14, Math.min(baseC, 0.21));
   const vibrantScale = [
-    { name: '보색', offset: 180 },
-    { name: '+60°', offset: 60 },
+    { name: '보색',   offset: 180 },
+    { name: '+60°',  offset:  60 },
     { name: '+120°', offset: 120 },
-    { name: '-60°', offset: -60 },
+    { name: '-60°',  offset: -60 },
     { name: '-120°', offset: -120 },
-    { name: '+30°', offset: 30 },
+    { name: '+30°',  offset:  30 },
   ].map(v => ({
-    name: v.name,
+    name:  v.name,
     value: oklchToHex(vibrantL, vibrantC, ((h + v.offset) % 360 + 360) % 360),
   }));
 
-  return { hueScale, neutralScale, vibrantScale };
+  return {
+    hueScale:     toScale(harmony.primary, primary),  // actual primary hex marked
+    successScale: toScale(harmony.success),
+    dangerScale:  toScale(harmony.danger),
+    warningScale: toScale(harmony.warning),
+    infoScale:    toScale(harmony.info),
+    neutralScale,
+    vibrantScale,
+  };
 }
 
 const BRAND_PATTERNS: Record<string, PatternType[]> = {
@@ -279,23 +277,40 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
         {/* ── Foundation ── */}
         {section === 'foundation' && (
           <>
-            {/* Color Palette — 5 groups: Hue / Neutral / Semantic / Role / Vibrant */}
+            {/* Color Palette — Hue / Semantic hue families / Neutral / Role / Vibrant */}
             <section className={styles.section}>
               <h2 className={styles.sectionTitle}>컬러 팔레트</h2>
 
-              {/* ── Hue scale ── */}
-              <div>
-                <div className={styles.paletteGroupLabel}>Hue — 브랜드 색조 스케일</div>
-                <div className={styles.colorScale}>
-                  {brandPalette.hueScale.map(step => (
-                    <div key={step.name} className={`${styles.scaleStep} ${step.isBase ? styles.scaleStepBase : ''}`}>
-                      <div className={styles.scaleStepSwatch} style={{ background: step.value }} title={step.value} />
-                      <span className={styles.scaleStepLabel}>{step.name}</span>
-                      <span className={styles.scaleStepHex}>{step.value}</span>
-                    </div>
-                  ))}
+              {/* Reusable scale row */}
+              {([
+                { label: 'Hue — 브랜드 색조 스케일',   scale: brandPalette.hueScale,     semantic: null },
+                { label: 'Success — 성공 색조 스케일',  scale: brandPalette.successScale, semantic: { fill: brandTheme.success, text: brandTheme.successText } },
+                { label: 'Danger — 위험 색조 스케일',   scale: brandPalette.dangerScale,  semantic: { fill: brandTheme.danger,  text: brandTheme.dangerText  } },
+                { label: 'Warning — 경고 색조 스케일',  scale: brandPalette.warningScale, semantic: { fill: brandTheme.warning, text: brandTheme.warningText } },
+                { label: 'Info — 정보 색조 스케일',     scale: brandPalette.infoScale,    semantic: { fill: brandTheme.info,    text: brandTheme.infoText    } },
+              ] as const).map(({ label, scale, semantic }) => (
+                <div key={label}>
+                  <div className={styles.paletteGroupLabel}>{label}</div>
+                  <div className={styles.colorScale}>
+                    {(scale as { name: string; value: string; isBase?: boolean }[]).map(step => {
+                      const isFill = semantic && step.value === semantic.fill;
+                      const isText = semantic && step.value === semantic.text;
+                      return (
+                        <div key={step.name} className={`${styles.scaleStep} ${(step.isBase || isFill) ? styles.scaleStepBase : ''}`}>
+                          <div className={styles.scaleStepSwatch} style={{ background: step.value }} title={step.value} />
+                          <span className={styles.scaleStepLabel}>
+                            {step.name}
+                            {step.isBase && ' ★'}
+                            {isFill && ' Fill'}
+                            {isText && ' Text'}
+                          </span>
+                          <span className={styles.scaleStepHex}>{step.value}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
+              ))}
 
               {/* ── Neutral scale ── */}
               <div>
@@ -306,32 +321,6 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
                       <div className={styles.scaleStepSwatch} style={{ background: step.value }} title={step.value} />
                       <span className={styles.scaleStepLabel}>{step.name}</span>
                       <span className={styles.scaleStepHex}>{step.value}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* ── Semantic ── */}
-              <div>
-                <div className={styles.paletteGroupLabel}>Semantic — 상태 색상</div>
-                <div className={styles.colorGrid}>
-                  {[
-                    { name: '성공 Fill', value: brandTheme.success,     role: '완료, 증가 지표, 안전 거래' },
-                    { name: '위험 Fill', value: brandTheme.danger,      role: '에러, 삭제, 감소 지표' },
-                    { name: '경고 Fill', value: brandTheme.warning,     role: '주의 안내, 임박 마감' },
-                    { name: '정보 Fill', value: brandTheme.info,        role: '공지, 도움말, 중립 안내' },
-                    { name: '성공 Text', value: brandTheme.successText, role: '성공 상태 텍스트 (WCAG AA)' },
-                    { name: '위험 Text', value: brandTheme.dangerText,  role: '에러 상태 텍스트 (WCAG AA)' },
-                    { name: '경고 Text', value: brandTheme.warningText, role: '경고 상태 텍스트 (WCAG AA)' },
-                    { name: '정보 Text', value: brandTheme.infoText,    role: '정보 상태 텍스트 (WCAG AA)' },
-                  ].map(color => (
-                    <div key={color.name} className={styles.colorItem}>
-                      <div className={styles.colorSwatch} style={{ background: color.value }} />
-                      <div className={styles.colorInfo}>
-                        <span className={styles.colorName}>{color.name}</span>
-                        <span className={styles.colorValue}>{color.value}</span>
-                        <span className={styles.colorRole}>{color.role}</span>
-                      </div>
                     </div>
                   ))}
                 </div>

@@ -129,6 +129,60 @@ export function makeBrandHueScale(h: number): BrandHueStep[] {
   return STEPS.map(([step, l, c]) => ({ step, l, hex: oklchToHex(l, c * chromaScale, h) }));
 }
 
+// ── Brand harmony — primary + 4 semantic analog hue families ─────────────────
+//
+// All 5 families share the brand primary's chromaScale so they read as
+// perceptually harmonious in saturation. Each analog is capped at its own
+// sRGB gamut to prevent clipping.
+//
+// Semantic hue anchors follow Foundation families:
+//   success = 145 (green)   danger = 22 (red)
+//   warning = 62  (amber)   info   = 254 (blue)
+
+export interface BrandHarmony {
+  chromaScale: number;
+  primary: BrandHueStep[];
+  success: BrandHueStep[];
+  danger:  BrandHueStep[];
+  warning: BrandHueStep[];
+  info:    BrandHueStep[];
+}
+
+function makeHarmonyHue(h: number, targetScale: number): BrandHueStep[] {
+  const ownMax = Math.max(0.32, Math.min(1, maxChromaAt(0.545, h) / 0.193));
+  const cs = Math.min(targetScale, ownMax);
+  return STEPS.map(([step, l, c]) => ({ step, l, hex: oklchToHex(l, c * cs, h) }));
+}
+
+/**
+ * Returns 5 harmonious hue families for a brand primary hex.
+ * Primary: actual primary hex injected at its anchor step (L-closest Foundation step).
+ * Success/danger/warning/info: same chromaScale, fixed semantic hues.
+ */
+export function makeBrandHarmony(primaryHex: string): BrandHarmony {
+  const { l: baseL, h } = hexToOklch(primaryHex);
+  const chromaScale = Math.max(0.32, Math.min(1, maxChromaAt(0.545, h) / 0.193));
+
+  const rawPrimary = makeBrandHueScale(h);
+  let anchorIdx = 0, minDiff = Infinity;
+  rawPrimary.forEach((s, i) => {
+    const d = Math.abs(s.l - baseL);
+    if (d < minDiff) { minDiff = d; anchorIdx = i; }
+  });
+  const primary = rawPrimary.map((s, i) =>
+    i === anchorIdx ? { ...s, hex: primaryHex } : s
+  );
+
+  return {
+    chromaScale,
+    primary,
+    success: makeHarmonyHue(145, chromaScale),
+    danger:  makeHarmonyHue( 22, chromaScale),
+    warning: makeHarmonyHue( 62, chromaScale),
+    info:    makeHarmonyHue(254, chromaScale),
+  };
+}
+
 // ── Hue families ──────────────────────────────────────────────────────────────
 
 export const red    = makeHue( 22, 1.00); // hue 22 — classic red
