@@ -154,7 +154,7 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
         fontWeight: t.weightBold,
         borderRadius: t.radius.button,
         background:
-          variant === 'primary' ? t.primary : variant === 'secondary' ? t.surface : 'transparent',
+          variant === 'primary' ? t.primary : t.bg,
         color:
           variant === 'primary' ? t.onPrimary : variant === 'outline' ? ensureContrast(t.primary, t.bg) : t.textMain,
         border:
@@ -174,9 +174,9 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
     <div
       className={cn('overflow-hidden', interactive && 'ds-hover cursor-pointer', className)}
       style={{
-        background: t.surface,
+        background: t.bg,
         borderRadius: t.radius.card,
-        border: `1px solid ${t.border}`,
+        boxShadow: `0 0 0 1px ${t.border}`,
         padding: pad ? t.cardPad : 0,
         ...style,
       }}

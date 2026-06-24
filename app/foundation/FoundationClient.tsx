@@ -806,7 +806,7 @@ function MotionPanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
           <div style={{ borderRadius: t.radius.card, border: `1px solid ${t.border}`, background: t.surface, padding: t.space.lg, display: 'flex', flexDirection: 'column', gap: t.space.sm }}>
             <div>
               <div style={{ ...bodySm(t), fontWeight: t.weightBold, color: t.textMain }}>Hover Scale</div>
-              <div style={{ ...cap(t), color: t.textMuted }}>scale({m.hoverScale}) — 호버 시 확대</div>
+              <div style={{ ...cap(t), color: t.textMuted }}>scale({m.hoverScale}){m.hoverScale > 1 ? ' — 호버 시 확대' : ' — 호버 시 리프트'}</div>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 56 }}>
               <div style={{

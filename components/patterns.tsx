@@ -110,7 +110,7 @@ function ItemsLayout({ ds, pack, platform }: { ds: DS; pack: ContentPack; platfo
               <Text role="bodySm" weight={t.weightBold} style={{ display: 'block', marginBottom: space.xxs }}>{it.name}</Text>
               {it.meta && <Text role="caption" color={t.textSub}>{it.meta}</Text>}
             </div>
-            {it.price && <Text role="bodySm" weight={t.weightBold} color={ensureContrast(t.primary, t.surface)}>{price(it.price)}</Text>}
+            {it.price && <Text role="bodySm" weight={t.weightBold} color={ensureContrast(t.primary, t.bg)}>{price(it.price)}</Text>}
           </Card>
         ))}
       </div>
@@ -269,7 +269,7 @@ function PatternSearch({ ds, pack, platform }: { ds: DS; pack: ContentPack; plat
         <Text role="bodySm">{query}</Text>
         <span style={{ marginLeft: 'auto', color: t.textMuted, display: 'flex' }}><Icon name="close" size={14} color={t.textMuted} /></span>
       </div>
-      <div style={{ background: t.surface, borderRadius: t.radius.card, border: `1px solid ${t.border}`, overflow: 'hidden' }}>
+      <div style={{ background: t.bg, borderRadius: t.radius.card, border: `1px solid ${t.border}`, overflow: 'hidden' }}>
         {suggestions.map((item, i) => (
           <div key={item} className="ds-press cursor-pointer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: `${space.sm}px ${space.md}px`, borderBottom: i < suggestions.length - 1 ? `1px solid ${t.border}` : 'none' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: space.sm }}>
@@ -333,7 +333,7 @@ function PatternDetail({ ds, pack, platform }: { ds: DS; pack: ContentPack; plat
       <div style={{ padding: space.sm, borderRadius: t.radius.card, background: t.surface, border: `1px solid ${t.border}`, display: 'flex', flexDirection: 'column', gap: space.xs }}>
         {pack.detailMeta.slice(1).map((line) => (
           <div key={line} style={{ display: 'flex', alignItems: 'center', gap: space.xs }}>
-            <Icon name="check" size={12} color={ensureContrast(t.success, t.surface)} />
+            <Icon name="check" size={12} color={ensureContrast(t.success, t.bg)} />
             <Text role="caption" color={t.textSub}>{line}</Text>
           </div>
         ))}
@@ -379,13 +379,22 @@ function PatternDetail({ ds, pack, platform }: { ds: DS; pack: ContentPack; plat
 
 /* ── 내역 ── */
 function PatternHistory({ ds, pack, platform }: { ds: DS; pack: ContentPack; platform: 'mobile' | 'web' }) {
-  const { t, Badge, Text, Thumb, ListRow, TopBar } = ds;
+  const { t, Badge, Text, Thumb, ListRow, TopBar, BalanceCard } = ds;
   const { space } = t;
   const tones = ['soft', 'solid', 'muted'] as const;
+  const m = pack.metric;
 
   return (
     <Screen ds={ds} topBar={<TopBar title="내역" actions={[{ icon: 'filter', label: '필터' }]} />}>
-      <Signature ds={ds} pack={pack} />
+      {/* Summary card — always shown so the component is visible in base patterns too */}
+      <BalanceCard
+        label={m?.label ?? '이번 달 지출'}
+        value={m?.value ?? '0원'}
+        delta={m?.delta}
+        actions={['내보내기', '보내기']}
+      />
+      {/* Non-balance signature still shows (e.g. StatusTracker for delivery order history) */}
+      {pack.signature !== 'balance' && <Signature ds={ds} pack={pack} />}
       <div style={{ display: 'flex', flexDirection: 'column', gap: space.xs }}>
         <Text role="caption" color={t.textMuted} weight={t.weightBold}>최근 활동</Text>
         {pack.listRows.map((item, i) => (
@@ -421,13 +430,13 @@ function PatternMyPage({ ds, pack, platform }: { ds: DS; pack: ContentPack; plat
 
   return (
     <Screen ds={ds} topBar={<TopBar title="마이페이지" back={false} actions={[{ icon: 'settings' }]} />}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: space.md, padding: t.cardPad, background: t.surface, borderRadius: t.radius.card, border: `1px solid ${t.border}` }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: space.md, padding: t.cardPad, background: t.bg, borderRadius: t.radius.card, border: `1px solid ${t.border}` }}>
         <Avatar size={52} />
         <div style={{ flex: 1 }}>
           <Text role="bodySm" weight={t.weightBold} style={{ display: 'block' }}>홍길동</Text>
           <Text role="caption" color={t.textSub}>{pack.snippets[0]}</Text>
         </div>
-        <Button variant="outline" size="sm"><span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><Icon name="edit" size={12} color={ensureContrast(t.primary, t.surface)} />편집</span></Button>
+        <Button variant="outline" size="sm"><span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><Icon name="edit" size={12} color={ensureContrast(t.primary, t.bg)} />편집</span></Button>
       </div>
       {/* membership / signature highlight */}
       {pack.signature === 'gauge' || pack.signature === 'balance'
@@ -447,9 +456,9 @@ function PatternMyPage({ ds, pack, platform }: { ds: DS; pack: ContentPack; plat
           { label: '찜', count: 38, icon: 'heart' as const },
           { label: '리뷰', count: 7, icon: 'star' as const },
         ].map(({ label, count, icon }) => (
-          <div key={label} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: space.xs, padding: space.sm, background: t.surface, borderRadius: t.radius.card, border: `1px solid ${t.border}` }}>
-            <Icon name={icon} size={16} color={ensureContrast(t.primary, t.surface)} />
-            <Text role="h2" weight={t.weightBold} color={ensureContrast(t.primary, t.surface)}>{count}</Text>
+          <div key={label} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: space.xs, padding: space.sm, background: t.bg, borderRadius: t.radius.card, border: `1px solid ${t.border}` }}>
+            <Icon name={icon} size={16} color={ensureContrast(t.primary, t.bg)} />
+            <Text role="h2" weight={t.weightBold} color={ensureContrast(t.primary, t.bg)}>{count}</Text>
             <Text role="caption" color={t.textSub}>{label}</Text>
           </div>
         ))}
@@ -478,7 +487,7 @@ function PatternPayment({ ds, pack, platform }: { ds: DS; pack: ContentPack; pla
 
   const summary = (
     <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
-      <div style={{ background: t.surface, borderRadius: t.radius.card, border: `1px solid ${t.border}`, padding: t.cardPad }}>
+      <div style={{ background: t.bg, borderRadius: t.radius.card, border: `1px solid ${t.border}`, padding: t.cardPad }}>
         <Text role="caption" weight={t.weightBold} color={t.textSub} style={{ display: 'block', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: space.sm }}>주문 상품</Text>
         <div style={{ display: 'flex', alignItems: 'center', gap: space.sm }}>
           <Thumb h={48} w={48} style={{ borderRadius: t.radius.card, flexShrink: 0 }} />

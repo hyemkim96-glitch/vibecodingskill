@@ -139,36 +139,52 @@ export function makeBrandHueScale(h: number): BrandHueStep[] {
 //   success = 145 (green)   danger = 22 (red)
 //   warning = 62  (amber)   info   = 254 (blue)
 
+// Hue-named families (palette tier — no semantic meaning here)
+// Semantic mapping (success=green, danger=red, warning=amber, info=blue) happens in resolveTheme.ts
 export interface BrandHarmony {
   chromaScale: number;
   primary: BrandHueStep[];
-  success: BrandHueStep[];
-  danger:  BrandHueStep[];
-  warning: BrandHueStep[];
-  info:    BrandHueStep[];
+  green:   BrandHueStep[];  // hue 145
+  red:     BrandHueStep[];  // hue  22
+  amber:   BrandHueStep[];  // hue  62
+  blue:    BrandHueStep[];  // hue 254
 }
 
-function makeHarmonyHue(h: number, targetScale: number): BrandHueStep[] {
-  const ownMax = Math.max(0.32, Math.min(1, maxChromaAt(0.545, h) / 0.193));
-  const cs = Math.min(targetScale, ownMax);
-  return STEPS.map(([step, l, c]) => ({ step, l, hex: oklchToHex(l, c * cs, h) }));
+// Per-step gamut-safe scale: each step is individually capped at its own sRGB gamut
+// so the gradient stays smooth even when chromaScale > 1 (bright high-L primaries like yellow).
+function makeHarmonyHue(h: number, chromaScale: number): BrandHueStep[] {
+  return STEPS.map(([step, l, c]) => {
+    const scaledC = Math.min(c * chromaScale, maxChromaAt(l, h));
+    return { step, l, hex: oklchToHex(l, scaledC, h) };
+  });
 }
 
 /**
  * Returns 5 harmonious hue families for a brand primary hex.
  * Primary: actual primary hex injected at its anchor step (L-closest Foundation step).
  * Success/danger/warning/info: same chromaScale, fixed semantic hues.
+ *
+ * chromaScale is anchored to the primary's own C at its Foundation step — NOT to the
+ * fill step (L=0.545). This prevents the "pale scale + vibrant outlier" discontinuity
+ * for high-L primaries (e.g. yellow) where maxChromaAt(0.545) hugely underestimates
+ * achievable chroma at the primary's actual L.
  */
 export function makeBrandHarmony(primaryHex: string): BrandHarmony {
-  const { l: baseL, h } = hexToOklch(primaryHex);
-  const chromaScale = Math.max(0.32, Math.min(1, maxChromaAt(0.545, h) / 0.193));
+  const { l: baseL, c: baseC, h } = hexToOklch(primaryHex);
 
-  const rawPrimary = makeBrandHueScale(h);
+  // Anchor step: Foundation step with L closest to primary's L
   let anchorIdx = 0, minDiff = Infinity;
-  rawPrimary.forEach((s, i) => {
-    const d = Math.abs(s.l - baseL);
+  STEPS.forEach(([, l], i) => {
+    const d = Math.abs(l - baseL);
     if (d < minDiff) { minDiff = d; anchorIdx = i; }
   });
+  const anchorNominalC = STEPS[anchorIdx][2];
+
+  // chromaScale relative to primary's own step — not fill step.
+  // Floor at 0.32 so very desaturated primaries still produce a visible scale.
+  const chromaScale = Math.max(0.32, baseC / anchorNominalC);
+
+  const rawPrimary = makeHarmonyHue(h, chromaScale);
   const primary = rawPrimary.map((s, i) =>
     i === anchorIdx ? { ...s, hex: primaryHex } : s
   );
@@ -176,10 +192,10 @@ export function makeBrandHarmony(primaryHex: string): BrandHarmony {
   return {
     chromaScale,
     primary,
-    success: makeHarmonyHue(145, chromaScale),
-    danger:  makeHarmonyHue( 22, chromaScale),
-    warning: makeHarmonyHue( 62, chromaScale),
-    info:    makeHarmonyHue(254, chromaScale),
+    green: makeHarmonyHue(145, chromaScale),
+    red:   makeHarmonyHue( 22, chromaScale),
+    amber: makeHarmonyHue( 62, chromaScale),
+    blue:  makeHarmonyHue(254, chromaScale),
   };
 }
 

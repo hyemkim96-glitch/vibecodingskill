@@ -71,7 +71,7 @@ const food: ContentPack = {
   statusSteps: ['주문접수', '조리중', '배달중', '배달완료'],
   snippets: ['치킨이 달려오는 중! 🍗', '배달완료! 맛있게 드세요 😋', '리뷰 남기고 3,000원 받기'],
   signature: 'status',
-  metric: { label: '예상 도착', value: '28분', delta: '조리중' },
+  metric: { label: '이번 달 주문', value: '8건', delta: '+3건' },
 };
 
 const finance: ContentPack = {
@@ -120,6 +120,7 @@ const fashion: ContentPack = {
   statusSteps: ['주문완료', '상품준비', '배송중', '배송완료'],
   snippets: ['장바구니에 담았어요', '이 브랜드 신상 알림 받기', '오늘의 코디 추천'],
   signature: 'editorial',
+  metric: { label: '이번 달 구매', value: '2건', delta: '189,000원' },
 };
 
 const interior: ContentPack = {
@@ -143,6 +144,7 @@ const interior: ContentPack = {
   statusSteps: ['주문완료', '상품준비', '배송중', '배송완료'],
   snippets: ['스크랩 완료!', '이런 공간 어때요?', '이 제품이 사용됐어요'],
   signature: 'collect',
+  metric: { label: '이번 달 구매', value: '3건', delta: '171,000원' },
 };
 
 const portal: ContentPack = {
@@ -167,6 +169,7 @@ const portal: ContentPack = {
   statusSteps: [],
   snippets: ['검색 결과 1,234개', '실시간 검색어 1위', '3분 전 업데이트'],
   signature: 'ranking',
+  metric: { label: '스크랩 기사', value: '24건', delta: '+12건' },
 };
 
 const local: ContentPack = {
@@ -214,7 +217,7 @@ const commerce: ContentPack = {
   statusSteps: ['결제완료', '상품준비', '배송중', '배송완료'],
   snippets: ['내일 새벽 도착 예정', '장바구니에 담았어요', '와우회원가 적용'],
   signature: 'status',
-  metric: { label: '도착 예정', value: '내일 오전', delta: '배송중' },
+  metric: { label: '이번 달 지출', value: '124,300원', delta: '+8.3%' },
 };
 
 const messenger: ContentPack = {
@@ -238,6 +241,7 @@ const messenger: ContentPack = {
   statusSteps: ['선택', '메시지', '결제', '전송완료'],
   snippets: ['선물이 도착했어요 🎁', '읽음', '새로운 메시지가 있어요'],
   signature: 'chat',
+  metric: { label: '대화 상대', value: '18명', delta: '+2명' },
 };
 
 const PACKS: Record<string, ContentPack> = {

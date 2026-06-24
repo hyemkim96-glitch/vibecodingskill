@@ -154,10 +154,10 @@ function generateBrandPalette(primary: string) {
 
   return {
     hueScale:     toScale(harmony.primary, primary),  // actual primary hex marked
-    successScale: toScale(harmony.success),
-    dangerScale:  toScale(harmony.danger),
-    warningScale: toScale(harmony.warning),
-    infoScale:    toScale(harmony.info),
+    successScale: toScale(harmony.green),
+    dangerScale:  toScale(harmony.red),
+    warningScale: toScale(harmony.amber),
+    infoScale:    toScale(harmony.blue),
     neutralScale,
     vibrantScale,
   };

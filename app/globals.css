@@ -369,6 +369,7 @@
 .ds-hover:hover {
   transform: scale(var(--ds-hover)) translateY(-1px);
   filter: brightness(0.98);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.10);
 }
 
 body {

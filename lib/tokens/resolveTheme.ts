@@ -355,10 +355,11 @@ export function resolveTheme(
     accent,
     // Semantic colors derived from brand-harmonious hue families (step 600 = fill).
     // Brand token overrides take priority (e.g. Baemin explicitly sets Success Teal).
-    success: findColor(c, /성공|증가|긍정/, hAt(harmony.success, 600) ?? lt['--color-fill-success']),
-    danger:  findColor(c, /에러|위험|감소|부정/, hAt(harmony.danger,  600) ?? lt['--color-fill-danger']),
-    warning: hAt(harmony.warning, 600) ?? lt['--color-fill-warning'],
-    info:    hAt(harmony.info,    600) ?? lt['--color-fill-info'],
+    // Semantic mapping: green→success, red→danger, amber→warning, blue→info
+    success: findColor(c, /성공|증가|긍정/, hAt(harmony.green, 600) ?? lt['--color-fill-success']),
+    danger:  findColor(c, /에러|위험|감소|부정/, hAt(harmony.red,   600) ?? lt['--color-fill-danger']),
+    warning: hAt(harmony.amber, 600) ?? lt['--color-fill-warning'],
+    info:    hAt(harmony.blue,  600) ?? lt['--color-fill-info'],
     disabled:     isDark ? dt['--color-fill-neutral']     : lt['--color-fill-neutral'],
     textDisabled: isDark ? dt['--color-text-disabled']    : lt['--color-text-disabled'],
     starFill:     isDark ? dt['--color-fill-highlight']    : lt['--color-fill-highlight'],
