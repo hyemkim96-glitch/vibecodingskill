@@ -95,6 +95,7 @@ export interface DS {
     style?: React.CSSProperties;
   }>;
   Table: React.FC<{
+    headers?: string[];
     rows: Array<{ label: string; value: React.ReactNode; tone?: 'default' | 'danger' | 'success' | 'muted' }>;
     footer?: { label: string; value: React.ReactNode };
     style?: React.CSSProperties;
@@ -112,6 +113,20 @@ export interface DS {
     swatch?: string;
     style?: React.CSSProperties;
   }>;
+
+  // ── signature primitives (brand-distinctive, theme-driven) ──
+  StatusTracker: React.FC<{ steps: string[]; current?: number; style?: React.CSSProperties }>;
+  BalanceCard: React.FC<{ label: string; value: string; delta?: string; actions?: string[]; style?: React.CSSProperties }>;
+  GaugeMeter: React.FC<{ label: string; value: string; ratio?: number; caption?: string; style?: React.CSSProperties }>;
+  RankingList: React.FC<{ items: Array<{ title: string; sub?: string; delta?: 'up' | 'down' | 'same' }>; style?: React.CSSProperties }>;
+  SaveCollect: React.FC<{ count?: number; saved?: boolean; tag?: string; h?: number; style?: React.CSSProperties }>;
+  EditorialCard: React.FC<{ title: string; sub?: string; tag?: string; h?: number; style?: React.CSSProperties }>;
+  ChatList: React.FC<{ messages: Array<{ text: string; me?: boolean; time?: string }>; style?: React.CSSProperties }>;
+  ComingSoon: React.FC<{ title?: string; sub?: string; style?: React.CSSProperties }>;
+  AspectRatio: React.FC<{ ratio?: number; label?: string; children?: React.ReactNode; style?: React.CSSProperties }>;
+  Carousel: React.FC<{ items: Array<{ label: string; sub?: string; h?: number }>; style?: React.CSSProperties }>;
+  ContextMenu: React.FC<{ items: Array<{ icon?: IconName; label: string; danger?: boolean; divider?: boolean }>; style?: React.CSSProperties }>;
+  Dialogue: React.FC<{ title: string; body?: string; actions?: string[]; style?: React.CSSProperties }>;
 }
 
 export function createDS(t: ResolvedTheme, wireframe = false): DS {
@@ -145,9 +160,11 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
         fontWeight: t.weightBold,
         borderRadius: t.radius.button,
         background:
-          variant === 'primary' ? t.primary : variant === 'secondary' ? t.surface : 'transparent',
+          variant === 'primary' ? t.primary
+          : variant === 'ghost' ? 'transparent'
+          : t.surface,
         color:
-          variant === 'primary' ? t.onPrimary : variant === 'outline' ? ensureContrast(t.primary, t.bg) : t.textMain,
+          variant === 'primary' ? t.onPrimary : variant === 'outline' ? ensureContrast(t.primary, t.surface) : t.textMain,
         border:
           variant === 'outline'
             ? `1px solid ${t.primary}`
@@ -165,9 +182,9 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
     <div
       className={cn('overflow-hidden', interactive && 'ds-hover cursor-pointer', className)}
       style={{
-        background: t.surface,
+        background: t.bg,
         borderRadius: t.radius.card,
-        border: `1px solid ${t.border}`,
+        boxShadow: `0 0 0 1px ${t.border}`,
         padding: pad ? t.cardPad : 0,
         ...style,
       }}
@@ -289,17 +306,22 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
     </div>
   );
 
-  const Rating: DS['Rating'] = ({ value = 4, max = 5, size = 16 }) => (
+  // Review stars read as gold/amber regardless of brand — a stable Foundation
+  // semantic, so the colour comes from t.warning (amber), never a hardcoded hex.
+  const Rating: DS['Rating'] = ({ value = 4, max = 5, size = 16 }) => {
+    const star = t.starFill;
+    const gid = React.useId();
+    return (
     <div style={{ display: 'inline-flex', alignItems: 'center', gap: 2 }}>
       {Array.from({ length: max }, (_, i) => {
         const filled = i < Math.floor(value);
         const half = !filled && i < value;
         return (
-          <svg key={i} width={size} height={size} viewBox="0 0 16 16" fill={filled ? '#F5A623' : half ? 'url(#half)' : 'none'} stroke={filled || half ? '#F5A623' : t.border} strokeWidth="1.5">
+          <svg key={i} width={size} height={size} viewBox="0 0 16 16" fill={filled ? star : half ? `url(#${gid})` : 'none'} stroke={filled || half ? star : t.border} strokeWidth="1.5">
             {half && (
               <defs>
-                <linearGradient id="half" x1="0" x2="1" y1="0" y2="0">
-                  <stop offset="50%" stopColor="#F5A623" />
+                <linearGradient id={gid} x1="0" x2="1" y1="0" y2="0">
+                  <stop offset="50%" stopColor={star} />
                   <stop offset="50%" stopColor="transparent" />
                 </linearGradient>
               </defs>
@@ -309,7 +331,8 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
         );
       })}
     </div>
-  );
+    );
+  };
 
   const ListRow: DS['ListRow'] = ({ children, divider = false, style = {} }) => (
     <div
@@ -379,7 +402,7 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
         }}
       >
         <span style={{
-          position: 'absolute', top: 2, left: on ? 18 : 2,
+          position: 'absolute', top: 2, left: on ? 21 : 2,
           width: 16, height: 16, borderRadius: 9999,
           background: on ? t.onPrimary : t.textMuted,
           transition: 'left 0.15s',
@@ -466,13 +489,14 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
 
   const Progress: DS['Progress'] = ({ value = 60, max = 100, tone = 'primary', label }) => {
     const barColor = tone === 'success' ? t.success : tone === 'danger' ? t.danger : t.primary;
+    const labelColor = tone === 'success' ? t.successText : tone === 'danger' ? t.dangerText : t.textMain;
     const ratio = Math.min(1, Math.max(0, value / max));
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: space.xs }}>
         {label && (
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <span style={{ ...typeStyle(t.type.caption), color: t.textSub }}>{label}</span>
-            <span style={{ ...typeStyle(t.type.caption), color: ensureContrast(barColor, t.surface), fontWeight: t.weightBold }}>{Math.round(ratio * 100)}%</span>
+            <span style={{ ...typeStyle(t.type.caption), color: labelColor, fontWeight: t.weightBold }}>{Math.round(ratio * 100)}%</span>
           </div>
         )}
         <div style={{ height: 6, borderRadius: 9999, background: t.surfaceAlt, overflow: 'hidden' }}>
@@ -519,8 +543,15 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
     </div>
   );
 
-  const Table: DS['Table'] = ({ rows, footer, style }) => (
+  const Table: DS['Table'] = ({ headers, rows, footer, style }) => (
     <div style={{ borderRadius: t.radius.card, border: `1px solid ${t.border}`, overflow: 'hidden', ...style }}>
+      {headers && (
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: `${space.xs}px ${space.md}px`, background: t.surfaceAlt, borderBottom: `1px solid ${t.border}` }}>
+          {headers.map((h) => (
+            <span key={h} style={{ ...typeStyle(t.type.caption), fontWeight: t.weightBold, color: t.textSub }}>{h}</span>
+          ))}
+        </div>
+      )}
       {rows.map(({ label, value, tone }, i) => {
         const valueColor = tone === 'danger' ? t.danger : tone === 'success' ? t.success : tone === 'muted' ? t.textMuted : t.textMain;
         return (
@@ -541,24 +572,26 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
 
   const Toast: DS['Toast'] = ({ message, tone = 'default', action, style }) => {
     const TONE = {
-      success: { accent: t.success,   textColor: t.successText, icon: 'checkCircle' as IconName },
-      danger:  { accent: t.danger,    textColor: t.dangerText,  icon: 'alertCircle' as IconName },
-      warning: { accent: t.warning,   textColor: t.warningText, icon: 'alertCircle' as IconName },
-      info:    { accent: t.info,      textColor: t.infoText,    icon: 'info'        as IconName },
-      default: { accent: t.textMuted, textColor: t.textSub,     icon: 'info'        as IconName },
+      success: { bg: t.successWeak, border: t.success,   accent: t.success,   textColor: t.successText, icon: 'checkCircle' as IconName },
+      danger:  { bg: t.dangerWeak,  border: t.danger,    accent: t.danger,    textColor: t.dangerText,  icon: 'alertCircle' as IconName },
+      warning: { bg: t.warningWeak, border: t.warning,   accent: t.warning,   textColor: t.warningText, icon: 'alertCircle' as IconName },
+      info:    { bg: t.infoWeak,    border: t.info,      accent: t.info,      textColor: t.infoText,    icon: 'info'        as IconName },
+      default: { bg: t.surface,     border: t.border,    accent: t.textMuted, textColor: t.textSub,     icon: 'info'        as IconName },
     };
-    const { accent, textColor, icon } = TONE[tone];
+    const { bg, border: bdColor, accent, textColor, icon } = TONE[tone];
     return (
       <div style={{
         display: 'flex', alignItems: 'center', gap: space.sm,
         padding: `${space.sm}px ${space.md}px`, borderRadius: t.radius.card,
-        background: t.surface, border: `1px solid ${t.border}`,
-        boxShadow: '0 2px 8px rgba(0,0,0,0.07)',
+        background: bg,
+        border: `1px solid ${bdColor}`,
+        borderLeft: tone !== 'default' ? `3px solid ${accent}` : `1px solid ${bdColor}`,
+        boxShadow: t.shadow.md,
         ...style,
       }}>
         <Icon name={icon} size={16} color={accent} />
         <span style={{ ...typeStyle(t.type.bodySm), color: textColor, flex: 1 }}>{message}</span>
-        {action && <span className="ds-press" style={{ ...typeStyle(t.type.bodySm), color: ensureContrast(accent, t.surface), fontWeight: t.weightBold, cursor: 'pointer', flexShrink: 0 }}>{action}</span>}
+        {action && <span className="ds-press" style={{ ...typeStyle(t.type.bodySm), color: ensureContrast(accent, bg), fontWeight: t.weightBold, cursor: 'pointer', flexShrink: 0 }}>{action}</span>}
       </div>
     );
   };
@@ -572,5 +605,251 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
     </div>
   );
 
-  return { t, Text, Button, Card, Input, Badge, Chip, NavTab, Stepper, Rating, ListRow, Thumb, Avatar, Icon, Checkbox, Switch, Radio, Textarea, Select, Divider, Skeleton, Progress, TopBar, Table, Toast, TokenCard };
+  /* ── signature primitives ── */
+
+  const StatusTracker: DS['StatusTracker'] = ({ steps, current = 0, style }) => (
+    <div style={{ display: 'flex', alignItems: 'flex-start', ...style }}>
+      {steps.map((label, i) => {
+        const done = i < current;
+        const active = i === current;
+        const reached = i <= current;
+        const dotColor = reached ? t.primary : t.surfaceAlt;
+        return (
+          <div key={label} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: space.xs, position: 'relative' }}>
+            {i > 0 && (
+              <div style={{ position: 'absolute', top: 11, right: '50%', width: '100%', height: 2, background: i <= current ? t.primary : t.border }} />
+            )}
+            <div style={{
+              width: 24, height: 24, borderRadius: 9999, zIndex: 1,
+              background: dotColor, color: t.onPrimary,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              border: active ? `2px solid ${t.primary}` : 'none',
+              boxShadow: active ? `0 0 0 3px ${t.primaryTint}` : 'none',
+            }}>
+              {done
+                ? <Icon name="check" size={13} color={t.onPrimary} />
+                : <span style={{ ...typeStyle(t.type.caption), fontWeight: t.weightBold, color: reached ? t.onPrimary : t.textMuted }}>{i + 1}</span>}
+            </div>
+            <span style={{ ...typeStyle(t.type.caption), color: reached ? t.textMain : t.textMuted, fontWeight: active ? t.weightBold : t.weightRegular, textAlign: 'center' }}>{label}</span>
+          </div>
+        );
+      })}
+    </div>
+  );
+
+  const BalanceCard: DS['BalanceCard'] = ({ label, value, delta, actions = [], style }) => (
+    <div style={{
+      display: 'flex', flexDirection: 'column', gap: space.sm,
+      padding: t.cardPad, borderRadius: t.radius.card,
+      background: t.surface, border: `1px solid ${t.border}`, ...style,
+    }}>
+      <span style={{ ...typeStyle(t.type.caption), color: t.textSub }}>{label}</span>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: space.sm }}>
+        <span style={{ ...typeStyle(t.type.h1), fontWeight: t.weightBold, color: t.textMain }}>{value}</span>
+        {delta && <span style={{ ...typeStyle(t.type.caption), fontWeight: t.weightBold, color: ensureContrast(t.success, t.surface) }}>{delta}</span>}
+      </div>
+      {actions.length > 0 && (
+        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: space.sm, marginTop: space.xs }}>
+          {actions.map((a, i) => {
+            const isPrimary = i === actions.length - 1;
+            return (
+              <span key={a} className="ds-press" style={{
+                ...typeStyle(t.type.bodySm), fontWeight: t.weightBold,
+                color: isPrimary ? t.onPrimary : t.primary,
+                background: isPrimary ? t.primary : 'transparent',
+                border: isPrimary ? 'none' : `1.5px solid ${t.primary}`,
+                padding: `${space.xs}px ${space.md}px`,
+                borderRadius: t.radius.button, cursor: 'pointer',
+              }}>{a}</span>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+
+  const GaugeMeter: DS['GaugeMeter'] = ({ label, value, ratio = 0.6, caption, style }) => {
+    const r = Math.min(1, Math.max(0, ratio));
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: space.xs, padding: t.cardPad, borderRadius: t.radius.card, background: t.surface, border: `1px solid ${t.border}`, ...style }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+          <span style={{ ...typeStyle(t.type.caption), color: t.textSub }}>{label}</span>
+          <span style={{ ...typeStyle(t.type.body), fontWeight: t.weightBold, color: ensureContrast(t.primary, t.surface) }}>{value}</span>
+        </div>
+        <div style={{ position: 'relative', height: 8, borderRadius: 9999, background: t.surfaceAlt, overflow: 'hidden' }}>
+          <div style={{ position: 'absolute', inset: 0, width: `${r * 100}%`, borderRadius: 9999, background: `linear-gradient(90deg, ${t.primaryTint}, ${t.primary})` }} />
+        </div>
+        {caption && <span style={{ ...typeStyle(t.type.caption), color: t.textMuted }}>{caption}</span>}
+      </div>
+    );
+  };
+
+  const RankingList: DS['RankingList'] = ({ items, style }) => (
+    <div style={{ display: 'flex', flexDirection: 'column', borderRadius: t.radius.card, border: `1px solid ${t.border}`, background: t.surface, overflow: 'hidden', ...style }}>
+      {items.map((it, i) => {
+        const deltaColor = it.delta === 'up' ? t.danger : it.delta === 'down' ? ensureContrast(t.info, t.surface) : t.textMuted;
+        const deltaSym = it.delta === 'up' ? '▲' : it.delta === 'down' ? '▼' : '▬';
+        return (
+          <div key={it.title} className="ds-press" style={{ display: 'flex', alignItems: 'center', gap: space.sm, padding: `${space.sm}px ${space.md}px`, borderBottom: i < items.length - 1 ? `1px solid ${t.border}` : 'none', background: t.surface, cursor: 'pointer' }}>
+            <span style={{ ...typeStyle(t.type.bodySm), fontWeight: t.weightBold, color: ensureContrast(t.primary, t.surface), width: 18, flexShrink: 0 }}>{i + 1}</span>
+            <div style={{ flex: 1, overflow: 'hidden' }}>
+              <span style={{ ...typeStyle(t.type.bodySm), color: t.textMain, display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{it.title}</span>
+              {it.sub && <span style={{ ...typeStyle(t.type.caption), color: t.textMuted }}>{it.sub}</span>}
+            </div>
+            <span style={{ ...typeStyle(t.type.caption), color: deltaColor, flexShrink: 0 }}>{deltaSym}</span>
+          </div>
+        );
+      })}
+    </div>
+  );
+
+  const SaveCollect: DS['SaveCollect'] = ({ count = 0, saved = false, tag, h = 120, style }) => (
+    <div style={{ position: 'relative', borderRadius: t.radius.card, overflow: 'hidden', ...style }}>
+      <Thumb h={h} />
+      <div className="ds-press" style={{ position: 'absolute', top: space.sm, right: space.sm, width: 30, height: 30, borderRadius: 9999, background: t.surface, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: t.shadow.sm, cursor: 'pointer' }}>
+        <Icon name="heart" size={16} color={saved ? t.danger : t.textMuted} />
+      </div>
+      {tag && (
+        <div style={{ position: 'absolute', left: space.sm, bottom: space.sm, display: 'flex', alignItems: 'center', gap: space.xs, padding: `${space.xxs}px ${space.sm}px`, borderRadius: 9999, background: 'rgba(0,0,0,0.6)' }}>
+          <Icon name="bookmark" size={11} color={t.textOnImage} />
+          <span style={{ ...typeStyle(t.type.caption), color: t.textOnImage }}>{tag}</span>
+        </div>
+      )}
+      <div style={{ position: 'absolute', right: space.sm, bottom: space.sm, display: 'flex', alignItems: 'center', gap: space.xxs, padding: `${space.xxs}px ${space.sm}px`, borderRadius: 9999, background: 'rgba(0,0,0,0.6)' }}>
+        <Icon name="heart" size={11} color={t.textOnImage} />
+        <span style={{ ...typeStyle(t.type.caption), color: t.textOnImage }}>{count.toLocaleString()}</span>
+      </div>
+    </div>
+  );
+
+  const EditorialCard: DS['EditorialCard'] = ({ title, sub, tag, h = 180, style }) => (
+    <div style={{ position: 'relative', borderRadius: t.radius.card, overflow: 'hidden', ...style }}>
+      <Thumb h={h} />
+      <div style={{ position: 'absolute', inset: 0, background: t.scrim }} />
+      <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, padding: t.cardPad, display: 'flex', flexDirection: 'column', gap: space.xxs }}>
+        {tag && <span style={{ ...typeStyle(t.type.caption), fontWeight: t.weightBold, letterSpacing: '0.1em', textTransform: 'uppercase', color: t.textOnImage, opacity: 0.85 }}>{tag}</span>}
+        <span style={{ ...typeStyle(t.type.h2), fontWeight: t.weightBold, color: t.textOnImage }}>{title}</span>
+        {sub && <span style={{ ...typeStyle(t.type.caption), color: t.textOnImage, opacity: 0.85 }}>{sub}</span>}
+      </div>
+    </div>
+  );
+
+  const ChatList: DS['ChatList'] = ({ messages, style }) => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm, padding: t.cardPad, borderRadius: t.radius.card, background: t.surfaceAlt, ...style }}>
+      {messages.map((m, i) => (
+        <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: m.me ? 'flex-end' : 'flex-start', gap: 2 }}>
+          <div style={{
+            maxWidth: '78%', padding: `${space.xs}px ${space.lg}px`, borderRadius: t.radius.card,
+            background: m.me ? t.primary : t.surface,
+            color: m.me ? t.onPrimary : t.textMain,
+            border: m.me ? 'none' : `1px solid ${t.border}`,
+          }}>
+            <span style={{ ...typeStyle(t.type.bodySm), color: 'inherit' }}>{m.text}</span>
+          </div>
+          {m.time && <span style={{ ...typeStyle(t.type.caption), color: t.textMuted }}>{m.time}</span>}
+        </div>
+      ))}
+    </div>
+  );
+
+  const ComingSoon: DS['ComingSoon'] = ({ title = '오픈 예정', sub, style }) => (
+    <div style={{
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      minHeight: 180, background: t.surfaceAlt, borderRadius: t.radius.card,
+      ...style,
+    }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', paddingBottom: 16 }}>
+        {/* Speech bubble */}
+        <div style={{
+          position: 'relative', background: t.bg,
+          border: `1px solid ${t.border}`, borderRadius: t.radius.card,
+          padding: `${space.sm}px ${space.lg}px`,
+          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: space.xs,
+          boxShadow: `0 4px 20px rgba(0,0,0,0.06)`, marginBottom: 14,
+        }}>
+          <span style={{ ...typeStyle(t.type.bodySm), fontWeight: t.weightBold, color: t.textMain }}>
+            🔒 {title}
+          </span>
+          {sub && <span style={{ ...typeStyle(t.type.caption), color: t.textSub, textAlign: 'center', maxWidth: 220 }}>{sub}</span>}
+          {/* Tail — rotated square, half hidden behind bubble bottom for seamless joint */}
+          <div style={{ position: 'absolute', bottom: -6, left: '50%', transform: 'translateX(-50%) rotate(45deg)', width: 10, height: 10, background: t.bg, borderBottom: `1px solid ${t.border}`, borderRight: `1px solid ${t.border}` }} />
+        </div>
+      </div>
+    </div>
+  );
+
+  const AspectRatio: DS['AspectRatio'] = ({ ratio = 16 / 9, label, children, style }) => (
+    <div style={{ position: 'relative', width: '100%', paddingTop: `${(1 / ratio) * 100}%`, borderRadius: t.radius.card, overflow: 'hidden', ...style }}>
+      <div style={{
+        position: 'absolute', inset: 0,
+        background: wireframe
+          ? `repeating-linear-gradient(135deg, ${t.surfaceAlt}, ${t.surfaceAlt} 6px, ${t.surface} 6px, ${t.surface} 12px)`
+          : t.surfaceAlt,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+      }}>
+        {children ?? (label && <span style={{ ...typeStyle(t.type.caption), color: t.textMuted }}>{label}</span>)}
+      </div>
+    </div>
+  );
+
+  const Carousel: DS['Carousel'] = ({ items, style }) => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm, ...style }}>
+      <div style={{ display: 'flex', gap: space.sm, overflow: 'hidden' }}>
+        {items.map((item, i) => (
+          <div key={i} className="ds-hover" style={{ flexShrink: 0, width: 140, borderRadius: t.radius.card, overflow: 'hidden', background: t.surface, boxShadow: `0 0 0 1px ${t.border}`, cursor: 'pointer' }}>
+            <Thumb h={item.h ?? 80} />
+            <div style={{ padding: space.sm }}>
+              <Text role="caption" weight={t.weightBold} style={{ display: 'block', marginBottom: item.sub ? space.xxs : 0 }}>{item.label}</Text>
+              {item.sub && <Text role="caption" color={t.textSub}>{item.sub}</Text>}
+            </div>
+          </div>
+        ))}
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'center', gap: space.xxs }}>
+        {items.map((_, i) => (
+          <div key={i} style={{ width: i === 0 ? 18 : 6, height: 6, borderRadius: 9999, background: i === 0 ? t.primary : t.border }} />
+        ))}
+      </div>
+    </div>
+  );
+
+  const ContextMenu: DS['ContextMenu'] = ({ items, style }) => (
+    <div style={{ background: t.bg, border: `1px solid ${t.border}`, borderRadius: t.radius.card, boxShadow: t.shadow.lg, overflow: 'hidden', ...style }}>
+      {items.map((item, i) => (
+        <React.Fragment key={`${item.label}-${i}`}>
+          {item.divider && i > 0 && <div style={{ height: 1, background: t.border }} />}
+          <div className="ds-press" style={{ display: 'flex', alignItems: 'center', gap: space.sm, padding: `${space.sm}px ${space.md}px`, cursor: 'pointer' }}>
+            {item.icon && <Icon name={item.icon} size={15} color={item.danger ? t.danger : t.textSub} />}
+            <span style={{ ...typeStyle(t.type.bodySm), color: item.danger ? t.danger : t.textMain, flex: 1 }}>{item.label}</span>
+          </div>
+        </React.Fragment>
+      ))}
+    </div>
+  );
+
+  const Dialogue: DS['Dialogue'] = ({ title, body, actions = ['취소', '확인'], style }) => (
+    <div style={{ position: 'relative', minHeight: 160, background: 'rgba(0,0,0,0.35)', borderRadius: t.radius.card, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: `${space.xl}px`, ...style }}>
+      <div style={{ width: '100%', background: t.bg, borderRadius: t.radius.card, padding: `${space.xl}px`, boxShadow: t.shadow.lg }}>
+        <div style={{ ...typeStyle(t.type.bodySm), fontWeight: t.weightBold, color: t.textMain, marginBottom: body ? space.sm : space.lg }}>{title}</div>
+        {body && <div style={{ ...typeStyle(t.type.bodySm), color: t.textSub, marginBottom: space.lg }}>{body}</div>}
+        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: space.sm }}>
+          {actions.map((a, i) => {
+            const isPrimary = i === actions.length - 1;
+            return (
+              <span key={a} className="ds-press" style={{
+                ...typeStyle(t.type.bodySm), fontWeight: t.weightBold,
+                color: isPrimary ? t.onPrimary : t.textMain,
+                background: isPrimary ? t.primary : 'transparent',
+                border: isPrimary ? 'none' : `1.5px solid ${t.border}`,
+                padding: `${space.xs}px ${space.md}px`,
+                borderRadius: t.radius.button, cursor: 'pointer', display: 'inline-flex', alignItems: 'center',
+              }}>{a}</span>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+
+  return { t, Text, Button, Card, Input, Badge, Chip, NavTab, Stepper, Rating, ListRow, Thumb, Avatar, Icon, Checkbox, Switch, Radio, Textarea, Select, Divider, Skeleton, Progress, TopBar, Table, Toast, TokenCard, StatusTracker, BalanceCard, GaugeMeter, RankingList, SaveCollect, EditorialCard, ChatList, ComingSoon, AspectRatio, Carousel, ContextMenu, Dialogue };
 }

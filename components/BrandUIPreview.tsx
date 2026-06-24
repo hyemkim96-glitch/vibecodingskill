@@ -4,6 +4,7 @@ import { BrandToken } from '@/types/token';
 import { resolveTheme, ThemeMode } from '@/lib/tokens/resolveTheme';
 import { createDS, motionVars } from '@/components/ds';
 import { renderPattern, PatternType } from '@/components/patterns';
+import { getContentPack } from '@/lib/content/packs';
 import { getServiceType, ServiceType } from '@/lib/serviceCategories';
 
 /**
@@ -44,7 +45,7 @@ export default function BrandUIPreview({
 
   return (
     <div className="ds-root" style={motionVars(theme)}>
-      {renderPattern(patternType, ds, platform)}
+      {renderPattern(patternType, ds, platform, getContentPack(token))}
     </div>
   );
 }

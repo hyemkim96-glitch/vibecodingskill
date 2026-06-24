@@ -6,8 +6,10 @@ import { Copy, Check, Download } from 'lucide-react';
 import BrandUIPreview from '@/components/BrandUIPreview';
 import ComponentSheet, { COMPONENT_CATEGORIES, ComponentCategory } from '@/components/ComponentSheet';
 import { renderPattern, PATTERN_TYPES, PatternType } from '@/components/patterns';
+import { getContentPack } from '@/lib/content/packs';
 import { resolveTheme } from '@/lib/tokens/resolveTheme';
 import { hexToOklch, oklchToHex } from '@/lib/tokens/oklch';
+import { makeBrandHarmony } from '@/lib/tokens/palette';
 import { createDS, motionVars } from '@/components/ds';
 import styles from './TokenPage.module.css';
 
@@ -57,29 +59,34 @@ function SectionNav({ section, onChange }: { section: Section; onChange: (s: Sec
       borderRadius: 8,
       padding: 3,
     }}>
-      {SECTIONS.map(s => (
-        <button
-          key={s.key}
-          onClick={() => onChange(s.key)}
-          style={{
-            flex: 1,
-            padding: '6px 12px',
-            fontSize: 'var(--font-size-caption)',
-            fontFamily: 'var(--font-ui)',
-            letterSpacing: '0.04em',
-            border: 'none',
-            borderRadius: 6,
-            cursor: 'pointer',
-            transition: 'all 0.15s',
-            background:  section === s.key ? 'var(--color-bg-normal)'    : 'transparent',
-            color:       section === s.key ? 'var(--color-text-normal)'   : 'var(--color-text-assistive)',
-            boxShadow:   section === s.key ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
-            fontWeight:  section === s.key ? 600 : 400,
-          }}
-        >
-          {s.label}
-        </button>
-      ))}
+      {SECTIONS.map(s => {
+        const isPatterns = s.key === 'patterns';
+        const isActive = section === s.key && !isPatterns;
+        return (
+          <button
+            key={s.key}
+            onClick={() => onChange(s.key)}
+            style={{
+              flex: 1,
+              padding: '6px 12px',
+              fontSize: 'var(--font-size-caption)',
+              fontFamily: 'var(--font-ui)',
+              letterSpacing: '0.04em',
+              border: 'none',
+              borderRadius: 6,
+              cursor: isPatterns ? 'not-allowed' : 'pointer',
+              transition: 'all 0.15s',
+              background:  isActive ? 'var(--color-bg-normal)'    : 'transparent',
+              color:       isActive ? 'var(--color-text-normal)'   : 'var(--color-text-assistive)',
+              boxShadow:   isActive ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
+              fontWeight:  isActive ? 600 : 400,
+              opacity:     isPatterns ? 0.35 : 1,
+            }}
+          >
+            {s.label}
+          </button>
+        );
+      })}
     </div>
   );
 }
@@ -117,60 +124,49 @@ function SubTabStrip({ items, active, onChange }: {
   );
 }
 
-const HUE_STEPS = [
-  { name: '50',  l: 0.975, cf: 0.20 },
-  { name: '100', l: 0.940, cf: 0.30 },
-  { name: '200', l: 0.880, cf: 0.50 },
-  { name: '300', l: 0.800, cf: 0.70 },
-  { name: '400', l: 0.700, cf: 0.88 },
-  { name: '500', l: 0.588, cf: 1.00 },
-  { name: '600', l: 0.478, cf: 0.92 },
-  { name: '700', l: 0.370, cf: 0.78 },
-  { name: '800', l: 0.265, cf: 0.60 },
-  { name: '900', l: 0.175, cf: 0.45 },
-];
-
 function generateBrandPalette(primary: string) {
   const { l: baseL, c: baseC, h } = hexToOklch(primary);
+  const harmony = makeBrandHarmony(primary);
 
-  // Find closest step to primary's actual lightness
-  let baseIdx = 0;
-  let minDiff = Infinity;
-  HUE_STEPS.forEach((s, i) => {
-    const d = Math.abs(s.l - baseL);
-    if (d < minDiff) { minDiff = d; baseIdx = i; }
-  });
+  const toScale = (family: typeof harmony.primary, markHex?: string) =>
+    family.map(s => ({
+      name:   String(s.step),
+      value:  s.hex,
+      isBase: markHex ? s.hex === markHex : false,
+    }));
 
-  const hueScale = HUE_STEPS.map((s, i) => ({
-    name: s.name,
-    // slot closest to primary uses the exact primary hex for accuracy
-    value: i === baseIdx ? primary : oklchToHex(s.l, Math.min(baseC * s.cf, 0.32), h),
-    isBase: i === baseIdx,
-  }));
-
-  // Neutral: brand-hue tinted, near-zero chroma
-  const neutralScale = HUE_STEPS.map(s => ({
-    name: s.name,
-    value: oklchToHex(s.l, Math.min(baseC * 0.08, 0.008), h),
+  // Neutral: brand-hue tinted near-achromatic (same L ramp as primary family)
+  const neutralScale = harmony.primary.map(s => ({
+    name:   String(s.step),
+    value:  oklchToHex(s.l, Math.min(baseC * 0.06, 0.008), h),
     isBase: false,
   }));
 
-  // Vibrant: same L/C as primary, shifted hues for data-viz / illustration palette
+  // Vibrant: hue rotations at fill L/C — data-viz / illustration accents
   const vibrantL = Math.max(0.46, Math.min(baseL, 0.62));
   const vibrantC = Math.max(0.14, Math.min(baseC, 0.21));
   const vibrantScale = [
-    { name: '보색', offset: 180 },
-    { name: '+60°', offset: 60 },
+    { name: '보색',   offset: 180 },
+    { name: '+60°',  offset:  60 },
     { name: '+120°', offset: 120 },
-    { name: '-60°', offset: -60 },
+    { name: '-60°',  offset: -60 },
     { name: '-120°', offset: -120 },
-    { name: '+30°', offset: 30 },
+    { name: '+30°',  offset:  30 },
   ].map(v => ({
-    name: v.name,
+    name:  v.name,
     value: oklchToHex(vibrantL, vibrantC, ((h + v.offset) % 360 + 360) % 360),
   }));
 
-  return { hueScale, neutralScale, vibrantScale };
+  return {
+    primaryHue:   Math.round(h),
+    hueScale:     toScale(harmony.primary, primary),  // actual primary hex marked
+    greenScale:   toScale(harmony.green),
+    redScale:     toScale(harmony.red),
+    amberScale:   toScale(harmony.amber),
+    blueScale:    toScale(harmony.blue),
+    neutralScale,
+    vibrantScale,
+  };
 }
 
 const BRAND_PATTERNS: Record<string, PatternType[]> = {
@@ -186,17 +182,19 @@ const BRAND_PATTERNS: Record<string, PatternType[]> = {
   toss:      ['main', 'history', 'payment', 'mypage'],
 };
 
+// Each brand's category list includes the category hosting its signature component
+// (feedback for status/gauge, cards for balance/collect/editorial/ranking/chat).
 const BRAND_COMP_CATS: Record<string, ComponentCategory[]> = {
-  daangn:    ['buttons', 'cards', 'navigation', 'feedback'],
-  kakao:     ['buttons', 'cards', 'navigation', 'feedback'],
-  kakaobank: ['buttons', 'cards', 'feedback'],
-  naver:     ['buttons', 'navigation', 'cards', 'inputs'],
-  baemin:    ['buttons', 'cards', 'navigation', 'feedback'],
-  coupang:   ['buttons', 'cards', 'inputs'],
-  '29cm':    ['buttons', 'cards', 'navigation'],
-  musinsa:   ['buttons', 'cards', 'inputs'],
-  ohouse:    ['buttons', 'cards', 'feedback', 'navigation'],
-  toss:      ['buttons', 'cards', 'feedback'],
+  daangn:    ['buttons', 'feedback', 'cards', 'navigation'],   // gauge → feedback
+  kakao:     ['buttons', 'messaging', 'navigation', 'feedback'], // chat → messaging
+  kakaobank: ['buttons', 'cards', 'feedback'],                 // balance → cards
+  naver:     ['buttons', 'cards', 'navigation', 'inputs'],     // ranking → cards
+  baemin:    ['buttons', 'feedback', 'cards', 'navigation'],   // status → feedback
+  coupang:   ['buttons', 'feedback', 'cards', 'inputs'],       // status → feedback
+  '29cm':    ['buttons', 'cards', 'navigation'],               // editorial → cards
+  musinsa:   ['buttons', 'cards', 'inputs'],                   // editorial → cards
+  ohouse:    ['buttons', 'cards', 'feedback', 'navigation'],   // collect → cards
+  toss:      ['buttons', 'cards', 'feedback'],                 // balance → cards
 };
 
 export default function TokenPageClient({ token, mobileCodes, webCodes }: Props) {
@@ -229,6 +227,8 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
     () => generateBrandPalette(brandTheme.primary),
     [brandTheme.primary],
   );
+
+  const contentPack = useMemo(() => getContentPack(token), [token]);
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(codes[activeTab]);
@@ -277,29 +277,56 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
           ))}
         </div>
 
-        {/* Section navigation */}
-        <SectionNav section={section} onChange={setSection} />
+        {/* Section navigation — 패턴 is permanently disabled; ComingSoon floats above the tab */}
+        <div style={{ position: 'relative' }}>
+          <SectionNav section={section} onChange={(s) => { if (s !== 'patterns') setSection(s); }} />
+          <div style={{
+            position: 'absolute', right: '6%', bottom: 23,
+            pointerEvents: 'none',
+          }}>
+            <brandDS.ComingSoon
+              style={{ background: 'transparent', minHeight: 0 }}
+            />
+          </div>
+        </div>
 
         {/* ── Foundation ── */}
         {section === 'foundation' && (
           <>
-            {/* Color Palette — 5 groups: Hue / Neutral / Semantic / Role / Vibrant */}
+            {/* Color Palette — Hue / Semantic hue families / Neutral / Role / Vibrant */}
             <section className={styles.section}>
               <h2 className={styles.sectionTitle}>컬러 팔레트</h2>
 
-              {/* ── Hue scale ── */}
-              <div>
-                <div className={styles.paletteGroupLabel}>Hue — 브랜드 색조 스케일</div>
-                <div className={styles.colorScale}>
-                  {brandPalette.hueScale.map(step => (
-                    <div key={step.name} className={`${styles.scaleStep} ${step.isBase ? styles.scaleStepBase : ''}`}>
-                      <div className={styles.scaleStepSwatch} style={{ background: step.value }} title={step.value} />
-                      <span className={styles.scaleStepLabel}>{step.name}</span>
-                      <span className={styles.scaleStepHex}>{step.value}</span>
-                    </div>
-                  ))}
+              {/* Reusable scale row */}
+              {([
+                { label: `Hue ${brandPalette.primaryHue} — 브랜드 원시 스케일`, scale: brandPalette.hueScale,   semantic: null },
+                { label: 'Green — Hue 145',                                     scale: brandPalette.greenScale, semantic: { fill: brandTheme.success, text: brandTheme.successText } },
+                { label: 'Red — Hue 22',                                        scale: brandPalette.redScale,   semantic: { fill: brandTheme.danger,  text: brandTheme.dangerText  } },
+                { label: 'Amber — Hue 62',                                      scale: brandPalette.amberScale, semantic: { fill: brandTheme.warning, text: brandTheme.warningText } },
+                { label: 'Blue — Hue 254',                                      scale: brandPalette.blueScale,  semantic: { fill: brandTheme.info,    text: brandTheme.infoText    } },
+              ] as const).map(({ label, scale, semantic }) => (
+                <div key={label}>
+                  <div className={styles.paletteGroupLabel}>{label}</div>
+                  <div className={styles.colorScale}>
+                    {(scale as { name: string; value: string; isBase?: boolean }[]).map(step => {
+                      const isFill = semantic && step.value === semantic.fill;
+                      const isText = semantic && step.value === semantic.text;
+                      return (
+                        <div key={step.name} className={`${styles.scaleStep} ${(step.isBase || isFill) ? styles.scaleStepBase : ''}`}>
+                          <div className={styles.scaleStepSwatch} style={{ background: step.value }} title={step.value} />
+                          <span className={styles.scaleStepLabel}>
+                            {step.name}
+                            {step.isBase && ' ★'}
+                            {isFill && ' Fill'}
+                            {isText && ' Text'}
+                          </span>
+                          <span className={styles.scaleStepHex}>{step.value}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
+              ))}
 
               {/* ── Neutral scale ── */}
               <div>
@@ -310,32 +337,6 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
                       <div className={styles.scaleStepSwatch} style={{ background: step.value }} title={step.value} />
                       <span className={styles.scaleStepLabel}>{step.name}</span>
                       <span className={styles.scaleStepHex}>{step.value}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* ── Semantic ── */}
-              <div>
-                <div className={styles.paletteGroupLabel}>Semantic — 상태 색상</div>
-                <div className={styles.colorGrid}>
-                  {[
-                    { name: '성공 Fill', value: brandTheme.success,     role: '완료, 증가 지표, 안전 거래' },
-                    { name: '위험 Fill', value: brandTheme.danger,      role: '에러, 삭제, 감소 지표' },
-                    { name: '경고 Fill', value: brandTheme.warning,     role: '주의 안내, 임박 마감' },
-                    { name: '정보 Fill', value: brandTheme.info,        role: '공지, 도움말, 중립 안내' },
-                    { name: '성공 Text', value: brandTheme.successText, role: '성공 상태 텍스트 (WCAG AA)' },
-                    { name: '위험 Text', value: brandTheme.dangerText,  role: '에러 상태 텍스트 (WCAG AA)' },
-                    { name: '경고 Text', value: brandTheme.warningText, role: '경고 상태 텍스트 (WCAG AA)' },
-                    { name: '정보 Text', value: brandTheme.infoText,    role: '정보 상태 텍스트 (WCAG AA)' },
-                  ].map(color => (
-                    <div key={color.name} className={styles.colorItem}>
-                      <div className={styles.colorSwatch} style={{ background: color.value }} />
-                      <div className={styles.colorInfo}>
-                        <span className={styles.colorName}>{color.name}</span>
-                        <span className={styles.colorValue}>{color.value}</span>
-                        <span className={styles.colorRole}>{color.role}</span>
-                      </div>
                     </div>
                   ))}
                 </div>
@@ -521,32 +522,10 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
               active={compCategory}
               onChange={(k) => setCompCategory(k as ComponentCategory)}
             />
-            <ComponentSheet theme={brandTheme} category={compCategory} />
+            <ComponentSheet theme={brandTheme} category={compCategory} signature={contentPack.signature} />
           </div>
         )}
 
-        {/* ── Patterns ── */}
-        {section === 'patterns' && (
-          <div>
-            <SubTabStrip
-              items={PATTERN_TYPES.filter(p => brandPatterns.includes(p.key as PatternType))}
-              active={activePattern}
-              onChange={(k) => setActivePattern(k as PatternType)}
-            />
-            <div
-              style={{
-                border: '1px solid var(--color-border-normal)',
-                borderRadius: 8,
-                overflow: 'hidden',
-                maxWidth: platform === 'mobile' ? 390 : '100%',
-              }}
-            >
-              <div className="ds-root" style={motionVars(brandTheme)}>
-                {renderPattern(activePattern, brandDS, platform)}
-              </div>
-            </div>
-          </div>
-        )}
       </div>
 
       {/* ── Right: sticky code export panel ── */}

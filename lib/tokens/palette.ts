@@ -84,6 +84,121 @@ function makeHue(h: number, chromaScale: number): HuePalette {
   ) as HuePalette;
 }
 
+// ── Brand hue scale (Foundation rules at an arbitrary hue) ────────────────────
+//
+// Generates a full tonal scale for any hue using the SAME STEPS [L,C] table the
+// Foundation hue families use, so brand palettes follow Foundation rules and the
+// scale stays monotonic (no raw-primary injection that breaks ordering — the
+// classic "100 looks darker than 200" bug on bright yellows).
+//
+// chromaScale is derived from the hue's own sRGB gamut so tight hues (yellow)
+// are muted exactly like the hand-tuned Foundation families, without a lookup.
+
+/** Largest in-gamut chroma at (l, h), via binary search on round-trip fidelity. */
+export function maxChromaAt(l: number, h: number): number {
+  let lo = 0;
+  let hi = 0.4;
+  let best = 0;
+  for (let i = 0; i < 22; i++) {
+    const mid = (lo + hi) / 2;
+    const back = hexToOklch(oklchToHex(l, mid, h));
+    if (Math.abs(back.c - mid) < 0.004 && Math.abs(back.l - l) < 0.012) {
+      best = mid;
+      lo = mid;
+    } else {
+      hi = mid;
+    }
+  }
+  return best;
+}
+
+export interface BrandHueStep {
+  step: HueStep;
+  l: number;
+  hex: string;
+}
+
+/**
+ * Brand hue scale at hue `h`, following Foundation STEPS. Chroma is gamut-scaled
+ * so the fill step (≈L 0.545) sits at the hue's achievable max relative to the
+ * nominal 0.193, matching how Foundation tunes yellow ↓ and blue ↑.
+ */
+export function makeBrandHueScale(h: number): BrandHueStep[] {
+  const fillMax = maxChromaAt(0.545, h);
+  const chromaScale = Math.max(0.32, Math.min(1, fillMax / 0.193));
+  return STEPS.map(([step, l, c]) => ({ step, l, hex: oklchToHex(l, c * chromaScale, h) }));
+}
+
+// ── Brand harmony — primary + 4 semantic analog hue families ─────────────────
+//
+// All 5 families share the brand primary's chromaScale so they read as
+// perceptually harmonious in saturation. Each analog is capped at its own
+// sRGB gamut to prevent clipping.
+//
+// Semantic hue anchors follow Foundation families:
+//   success = 145 (green)   danger = 22 (red)
+//   warning = 62  (amber)   info   = 254 (blue)
+
+// Hue-named families (palette tier — no semantic meaning here)
+// Semantic mapping (success=green, danger=red, warning=amber, info=blue) happens in resolveTheme.ts
+export interface BrandHarmony {
+  chromaScale: number;
+  primary: BrandHueStep[];
+  green:   BrandHueStep[];  // hue 145
+  red:     BrandHueStep[];  // hue  22
+  amber:   BrandHueStep[];  // hue  62
+  blue:    BrandHueStep[];  // hue 254
+}
+
+// Per-step gamut-safe scale: each step is individually capped at its own sRGB gamut
+// so the gradient stays smooth even when chromaScale > 1 (bright high-L primaries like yellow).
+function makeHarmonyHue(h: number, chromaScale: number): BrandHueStep[] {
+  return STEPS.map(([step, l, c]) => {
+    const scaledC = Math.min(c * chromaScale, maxChromaAt(l, h));
+    return { step, l, hex: oklchToHex(l, scaledC, h) };
+  });
+}
+
+/**
+ * Returns 5 harmonious hue families for a brand primary hex.
+ * Primary: actual primary hex injected at its anchor step (L-closest Foundation step).
+ * Success/danger/warning/info: same chromaScale, fixed semantic hues.
+ *
+ * chromaScale is anchored to the primary's own C at its Foundation step — NOT to the
+ * fill step (L=0.545). This prevents the "pale scale + vibrant outlier" discontinuity
+ * for high-L primaries (e.g. yellow) where maxChromaAt(0.545) hugely underestimates
+ * achievable chroma at the primary's actual L.
+ */
+export function makeBrandHarmony(primaryHex: string): BrandHarmony {
+  const { l: baseL, c: baseC, h } = hexToOklch(primaryHex);
+
+  // Anchor step: Foundation step with L closest to primary's L
+  let anchorIdx = 0, minDiff = Infinity;
+  STEPS.forEach(([, l], i) => {
+    const d = Math.abs(l - baseL);
+    if (d < minDiff) { minDiff = d; anchorIdx = i; }
+  });
+  const anchorNominalC = STEPS[anchorIdx][2];
+
+  // chromaScale relative to primary's own step — not fill step.
+  // Floor at 0.32 so very desaturated primaries still produce a visible scale.
+  const chromaScale = Math.max(0.32, baseC / anchorNominalC);
+
+  const rawPrimary = makeHarmonyHue(h, chromaScale);
+  const primary = rawPrimary.map((s, i) =>
+    i === anchorIdx ? { ...s, hex: primaryHex } : s
+  );
+
+  return {
+    chromaScale,
+    primary,
+    green: makeHarmonyHue(145, chromaScale),
+    red:   makeHarmonyHue( 22, chromaScale),
+    amber: makeHarmonyHue( 62, chromaScale),
+    blue:  makeHarmonyHue(254, chromaScale),
+  };
+}
+
 // ── Hue families ──────────────────────────────────────────────────────────────
 
 export const red    = makeHue( 22, 1.00); // hue 22 — classic red

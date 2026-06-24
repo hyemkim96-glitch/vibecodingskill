@@ -1,6 +1,7 @@
 import { BrandToken } from '@/types/token';
 import { lightTokens, darkTokens } from './semanticTokens';
 import { deriveTintOklch, ensureContrastOklch, relativeLuminance } from './oklch';
+import { makeBrandHarmony, BrandHueStep } from './palette';
 
 /**
  * Design System Engine — Theme Resolver v2
@@ -59,6 +60,12 @@ export interface ResolvedTheme {
   dangerText: string;
   warningText: string;
   infoText: string;
+  // Weak (tint) fills — semantic bg tints for toasts, banners, chips
+  successWeak: string;
+  dangerWeak: string;
+  warningWeak: string;
+  infoWeak: string;
+  starFill: string;      // warm highlight amber — --color-fill-highlight
   textOnImage: string;   // text placed over imagery (inverse)
   scrim: string;         // gradient overlay for image legibility
 
@@ -95,6 +102,9 @@ export interface ResolvedTheme {
   // ── motion ──
   motion: ResolvedMotion;
 
+  // ── elevation (shadow scale) ──
+  shadow: { sm: string; md: string; lg: string; xl: string };
+
   // ── meta ──
   density: string;
   isMobile: boolean;
@@ -102,7 +112,11 @@ export interface ResolvedTheme {
   category: string;
   isLocal: boolean;
   iconStyle: 'lucide' | 'phosphor' | 'tabler';
+  // structural layout signature derived from layout.columns + category
+  archetype: LayoutArchetype;
 }
+
+export type LayoutArchetype = 'masonry' | 'grid' | 'list' | 'stack' | 'feed';
 
 /* ── helpers ── */
 
@@ -225,6 +239,11 @@ const WIREFRAME_LIGHT = {
   info:         wl['--color-fill-info'],
   disabled:     wl['--color-fill-neutral-alt'],
   textDisabled: wl['--color-text-disabled'],
+  starFill:     wl['--color-fill-highlight'],
+  successWeak:  wl['--color-fill-success-weak'],
+  dangerWeak:   wl['--color-fill-danger-weak'],
+  warningWeak:  wl['--color-fill-warning-weak'],
+  infoWeak:     wl['--color-fill-info-weak'],
   successText: '', dangerText: '', warningText: '', infoText: '',
 };
 
@@ -247,6 +266,11 @@ const WIREFRAME_DARK = {
   info:         wd['--color-fill-info'],
   disabled:     wd['--color-fill-neutral-alt'],
   textDisabled: wd['--color-text-disabled'],
+  starFill:     wd['--color-fill-highlight'],
+  successWeak:  wd['--color-fill-success-weak'],
+  dangerWeak:   wd['--color-fill-danger-weak'],
+  warningWeak:  wd['--color-fill-warning-weak'],
+  infoWeak:     wd['--color-fill-info-weak'],
   successText: '', dangerText: '', warningText: '', infoText: '',
 };
 
@@ -303,11 +327,13 @@ export function resolveTheme(
     xl: baseUnit * 6,      // 24–36px
   };
 
+  // Amplified rhythm — compact vs spacious gap widened so density reads as a
+  // real brand signal (Naver dense multi-section vs Toss airy single-focus).
   const rhythm = {
-    compact:     { container: 12, card: 12, stack: 8,  row: 6  },
-    regular:     { container: 16, card: 16, stack: 12, row: 8  },
-    comfortable: { container: 18, card: 16, stack: 14, row: 9  },
-    spacious:    { container: 24, card: 20, stack: 16, row: 10 },
+    compact:     { container: 10, card: 10, stack: 6,  row: 5  },
+    regular:     { container: 16, card: 14, stack: 12, row: 8  },
+    comfortable: { container: 20, card: 18, stack: 16, row: 10 },
+    spacious:    { container: 28, card: 24, stack: 20, row: 13 },
   } as const;
   const r = rhythm[(density as keyof typeof rhythm)] ?? rhythm.regular;
 
@@ -319,6 +345,12 @@ export function resolveTheme(
   // Fallbacks use Foundation semantic token names, not raw palette refs.
   const lt = lightTokens;
   const dt = darkTokens;
+
+  // Harmonious semantic hue families — same chromaScale as brand primary so
+  // success/danger/warning/info read as perceptually matched in saturation.
+  const harmony = makeBrandHarmony(primary);
+  const hAt = (family: BrandHueStep[], step: 600 | 700) =>
+    family.find((s) => s.step === step)?.hex;
 
   const brandColors = {
     primary,
@@ -334,12 +366,20 @@ export function resolveTheme(
     textMuted:  findColor(c, /비활성 텍스트|플레이스홀더|힌트/,             isDark ? dt['--color-text-assistive']   : lt['--color-text-assistive']),
     border:     findColor(c, /구분선|보더|^선$/,                            isDark ? dt['--color-border-normal']    : lt['--color-border-normal']),
     accent,
-    success:      findColor(c, /성공|증가|긍정/, lt['--color-fill-success']),
-    danger:       findColor(c, /에러|위험|감소|부정/, lt['--color-fill-danger']),
-    warning:      lt['--color-fill-warning'],
-    info:         lt['--color-fill-info'],
+    // Semantic colors derived from brand-harmonious hue families (step 600 = fill).
+    // Brand token overrides take priority (e.g. Baemin explicitly sets Success Teal).
+    // Semantic mapping: green→success, red→danger, amber→warning, blue→info
+    success: findColor(c, /성공|증가|긍정/, hAt(harmony.green, 600) ?? lt['--color-fill-success']),
+    danger:  findColor(c, /에러|위험|감소|부정/, hAt(harmony.red,   600) ?? lt['--color-fill-danger']),
+    warning: hAt(harmony.amber, 600) ?? lt['--color-fill-warning'],
+    info:    hAt(harmony.blue,  600) ?? lt['--color-fill-info'],
     disabled:     isDark ? dt['--color-fill-neutral']     : lt['--color-fill-neutral'],
     textDisabled: isDark ? dt['--color-text-disabled']    : lt['--color-text-disabled'],
+    starFill:     isDark ? dt['--color-fill-highlight']    : lt['--color-fill-highlight'],
+    successWeak:  isDark ? dt['--color-fill-success-weak'] : lt['--color-fill-success-weak'],
+    dangerWeak:   isDark ? dt['--color-fill-danger-weak']  : lt['--color-fill-danger-weak'],
+    warningWeak:  isDark ? dt['--color-fill-warning-weak'] : lt['--color-fill-warning-weak'],
+    infoWeak:     isDark ? dt['--color-fill-info-weak']    : lt['--color-fill-info-weak'],
     successText: '', dangerText: '', warningText: '', infoText: '',
   };
 
@@ -393,12 +433,61 @@ export function resolveTheme(
 
     motion: resolveMotion(token.deep),
 
+    shadow: resolveShadows(isDark),
+
     density,
     isMobile: platform === 'mobile',
     isDark,
     category: token.category,
     isLocal,
     iconStyle: resolveIconStyleFromToken(token),
+    archetype: resolveLayoutArchetype(token),
+  };
+}
+
+/**
+ * Derive the structural layout signature — a brand-level trait, so always read
+ * from the web layout.columns (mobile has no columns field) plus category.
+ *   "핀터레스트형 2열 Masonry"  → masonry   (Ohouse)
+ *   "음식점 4열 그리드"/"product grid" → grid (Baemin·Coupang·Musinsa)
+ *   "주 콘텐츠 + 사이드바"       → list      (Naver·Daangn·Kakao)
+ *   "매거진 레이아웃 비대칭"     → feed      (29CM)
+ *   핀테크 single column         → stack     (Toss·KakaoBank)
+ * A bare "12-column grid" is a generic CSS descriptor, not a product grid, so it
+ * is ignored in favour of the category default.
+ */
+function resolveLayoutArchetype(token: BrandToken): LayoutArchetype {
+  const c = (token.platforms.web.layout.columns ?? '').toLowerCase();
+  const cat = token.category;
+  if (/masonry|핀터레스트/.test(c)) return 'masonry';
+  if (/매거진|에디토리얼|비대칭|editorial|magazine/.test(c)) return 'feed';
+  if (/사이드바|sidebar/.test(c)) return 'list';
+  if (/\d+열|상품.*그리드|음식점.*그리드|product\s*grid/.test(c)) return 'grid';
+  if (/핀테크|금융|뱅킹/.test(cat)) return 'stack';
+  if (/커머스/.test(cat)) return 'grid';
+  if (/플랫폼/.test(cat)) return 'list';
+  return 'feed';
+}
+
+/**
+ * Elevation ramp — a single consistent shadow scale (sm→xl). Each level layers an
+ * ambient + key shadow whose blur and opacity grow with elevation, so depth reads
+ * uniformly across the system instead of ad-hoc per-component shadows.
+ *   sm  미묘한 분리 (탭, 칩, 작은 토글)
+ *   md  떠 있는 표면 (카드, 토스트, 스낵바)
+ *   lg  오버레이 (드롭다운, 팝오버, 메뉴)
+ *   xl  모달 (다이얼로그, 바텀시트)
+ * Dark surfaces need deeper shadows to register, so opacities scale up when isDark.
+ */
+function resolveShadows(isDark: boolean): ResolvedTheme['shadow'] {
+  const rgb = isDark ? '0,0,0' : '17,17,17';
+  const k = isDark ? 1.8 : 1;
+  const a = (n: number) => Math.min(0.5, n * k).toFixed(3);
+  return {
+    sm: `0 1px 2px rgba(${rgb},${a(0.06)})`,
+    md: `0 2px 4px rgba(${rgb},${a(0.05)}), 0 4px 12px rgba(${rgb},${a(0.08)})`,
+    lg: `0 4px 8px rgba(${rgb},${a(0.06)}), 0 12px 28px rgba(${rgb},${a(0.12)})`,
+    xl: `0 8px 16px rgba(${rgb},${a(0.08)}), 0 24px 56px rgba(${rgb},${a(0.16)})`,
   };
 }
 
