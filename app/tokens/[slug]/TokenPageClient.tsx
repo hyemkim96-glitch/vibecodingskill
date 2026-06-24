@@ -59,29 +59,34 @@ function SectionNav({ section, onChange }: { section: Section; onChange: (s: Sec
       borderRadius: 8,
       padding: 3,
     }}>
-      {SECTIONS.map(s => (
-        <button
-          key={s.key}
-          onClick={() => onChange(s.key)}
-          style={{
-            flex: 1,
-            padding: '6px 12px',
-            fontSize: 'var(--font-size-caption)',
-            fontFamily: 'var(--font-ui)',
-            letterSpacing: '0.04em',
-            border: 'none',
-            borderRadius: 6,
-            cursor: 'pointer',
-            transition: 'all 0.15s',
-            background:  section === s.key ? 'var(--color-bg-normal)'    : 'transparent',
-            color:       section === s.key ? 'var(--color-text-normal)'   : 'var(--color-text-assistive)',
-            boxShadow:   section === s.key ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
-            fontWeight:  section === s.key ? 600 : 400,
-          }}
-        >
-          {s.label}
-        </button>
-      ))}
+      {SECTIONS.map(s => {
+        const isPatterns = s.key === 'patterns';
+        const isActive = section === s.key && !isPatterns;
+        return (
+          <button
+            key={s.key}
+            onClick={() => onChange(s.key)}
+            style={{
+              flex: 1,
+              padding: '6px 12px',
+              fontSize: 'var(--font-size-caption)',
+              fontFamily: 'var(--font-ui)',
+              letterSpacing: '0.04em',
+              border: 'none',
+              borderRadius: 6,
+              cursor: isPatterns ? 'not-allowed' : 'pointer',
+              transition: 'all 0.15s',
+              background:  isActive ? 'var(--color-bg-normal)'    : 'transparent',
+              color:       isActive ? 'var(--color-text-normal)'   : 'var(--color-text-assistive)',
+              boxShadow:   isActive ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
+              fontWeight:  isActive ? 600 : 400,
+              opacity:     isPatterns ? 0.35 : 1,
+            }}
+          >
+            {s.label}
+          </button>
+        );
+      })}
     </div>
   );
 }
@@ -272,8 +277,20 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
           ))}
         </div>
 
-        {/* Section navigation */}
-        <SectionNav section={section} onChange={setSection} />
+        {/* Section navigation — 패턴 is permanently disabled; ComingSoon floats over the nav */}
+        <div style={{ position: 'relative' }}>
+          <SectionNav section={section} onChange={(s) => { if (s !== 'patterns') setSection(s); }} />
+          <div style={{
+            position: 'absolute', inset: 0,
+            display: 'flex', alignItems: 'center', justifyContent: 'flex-end',
+            paddingRight: '6%', pointerEvents: 'none',
+          }}>
+            <brandDS.ComingSoon
+              sub="더 완성도 높은 패턴 미리보기를 준비 중이에요"
+              style={{ background: 'transparent', minHeight: 0 }}
+            />
+          </div>
+        </div>
 
         {/* ── Foundation ── */}
         {section === 'foundation' && (
@@ -511,27 +528,6 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
           </div>
         )}
 
-        {/* ── Patterns ── (coming soon — bubble over tab strip) */}
-        {section === 'patterns' && (
-          <div>
-            {/* Tab strip wrapped in relative so bubble floats directly over it */}
-            <div style={{ position: 'relative' }}>
-              <div style={{ opacity: 0.25, pointerEvents: 'none', userSelect: 'none' }}>
-                <SubTabStrip
-                  items={brandPatterns.map(p => PATTERN_TYPES.find(pt => pt.key === p)).filter(Boolean) as { key: string; label: string }[]}
-                  active={activePattern}
-                  onChange={() => {}}
-                />
-              </div>
-              {/* Speech bubble hovers centered over the tab menu; tail points down at tabs */}
-              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
-                <brandDS.ComingSoon sub="더 완성도 높은 패턴 미리보기를 준비 중이에요" style={{ background: 'transparent', minHeight: 0 }} />
-              </div>
-            </div>
-            {/* Dimmed content placeholder below */}
-            <div style={{ opacity: 0.15, pointerEvents: 'none', marginTop: 8, minHeight: 280, background: brandTheme.surfaceAlt, borderRadius: brandTheme.radius.card }} />
-          </div>
-        )}
       </div>
 
       {/* ── Right: sticky code export panel ── */}
