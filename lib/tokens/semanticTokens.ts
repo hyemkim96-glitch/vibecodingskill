@@ -22,15 +22,15 @@ export const lightTokens: TokenMap = {
   '--color-fill-neutral-alt': neutral[200].hex,
   '--color-fill-brand':       neutral[900].hex,
   '--color-fill-brand-weak':  neutral[100].hex,
-  '--color-fill-success':      green[600].hex,
+  '--color-fill-success':      green[500].hex,
   '--color-fill-success-weak': green[50].hex,
-  '--color-fill-danger':       red[600].hex,
+  '--color-fill-danger':       red[500].hex,
   '--color-fill-danger-weak':  red[50].hex,
-  '--color-fill-warning':      amber[600].hex,
+  '--color-fill-warning':      amber[500].hex,
   '--color-fill-warning-weak': amber[50].hex,
-  '--color-fill-info':         blue[600].hex,
+  '--color-fill-info':         blue[500].hex,
   '--color-fill-info-weak':    blue[50].hex,
-  '--color-fill-accent':       violet[600].hex,
+  '--color-fill-accent':       violet[500].hex,
   '--color-fill-accent-weak':  violet[50].hex,
 
   // Text
@@ -52,10 +52,10 @@ export const lightTokens: TokenMap = {
   '--color-border-weak':      neutral[100].hex,
   '--color-border-brand':     neutral[900].hex,
   '--color-border-focus':     neutral[900].hex,
-  '--color-border-success':    green[600].hex,
-  '--color-border-danger':     red[600].hex,
-  '--color-border-warning':    amber[600].hex,
-  '--color-border-info':       blue[600].hex,
+  '--color-border-success':    green[500].hex,
+  '--color-border-danger':     red[500].hex,
+  '--color-border-warning':    amber[500].hex,
+  '--color-border-info':       blue[500].hex,
 
   // Highlight — warm amber for positive emphasis (ratings, featured, callouts)
   '--color-fill-highlight':    amber[400].hex,   // L≈0.752 — bright amber, no warning connotation
@@ -76,15 +76,15 @@ export const darkTokens: TokenMap = {
   '--color-fill-neutral-alt': neutral[700].hex,
   '--color-fill-brand':       neutral[50].hex,
   '--color-fill-brand-weak':  neutral[800].hex,
-  '--color-fill-success':      green[600].hex,
+  '--color-fill-success':      green[400].hex,
   '--color-fill-success-weak': green[50].hex,
-  '--color-fill-danger':       red[600].hex,
+  '--color-fill-danger':       red[400].hex,
   '--color-fill-danger-weak':  red[50].hex,
-  '--color-fill-warning':      amber[600].hex,
+  '--color-fill-warning':      amber[400].hex,
   '--color-fill-warning-weak': amber[50].hex,
-  '--color-fill-info':         blue[600].hex,
+  '--color-fill-info':         blue[400].hex,
   '--color-fill-info-weak':    blue[50].hex,
-  '--color-fill-accent':       violet[600].hex,
+  '--color-fill-accent':       violet[400].hex,
   '--color-fill-accent-weak':  violet[50].hex,
 
   // Text
@@ -106,10 +106,10 @@ export const darkTokens: TokenMap = {
   '--color-border-weak':      neutral[800].hex,
   '--color-border-brand':     neutral[50].hex,
   '--color-border-focus':     neutral[50].hex,
-  '--color-border-success':    green[600].hex,
-  '--color-border-danger':     red[600].hex,
-  '--color-border-warning':    amber[600].hex,
-  '--color-border-info':       blue[600].hex,
+  '--color-border-success':    green[400].hex,
+  '--color-border-danger':     red[400].hex,
+  '--color-border-warning':    amber[400].hex,
+  '--color-border-info':       blue[400].hex,
 
   // Highlight — warm amber for positive emphasis (ratings, featured, callouts)
   '--color-fill-highlight':    amber[300].hex,   // L≈0.832 — brighter on dark bg

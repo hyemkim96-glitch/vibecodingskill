@@ -400,7 +400,7 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
         }}
       >
         <span style={{
-          position: 'absolute', top: 2, left: on ? 18 : 2,
+          position: 'absolute', top: 2, left: on ? 21 : 2,
           width: 16, height: 16, borderRadius: 9999,
           background: on ? t.onPrimary : t.textMuted,
           transition: 'left 0.15s',

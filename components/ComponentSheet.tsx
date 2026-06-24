@@ -555,17 +555,17 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
 
           {/* brand-distinctive feedback components — gated by brand (all shown in the master gallery) */}
           {showSig('status') && (
-            <Tile t={t} ds={ds} title="단계 인디케이터">
+            <Tile t={t} ds={ds} title="단계 인디케이터" col={1}>
               <StatusTracker steps={['주문접수', '조리중', '배달중', '완료']} current={2} />
             </Tile>
           )}
           {showSig('gauge') && (
-            <Tile t={t} ds={ds} title="게이지">
+            <Tile t={t} ds={ds} title="게이지" col={1}>
               <GaugeMeter label="매너온도" value="36.5°C" ratio={0.66} caption="따뜻한 이웃이에요" />
             </Tile>
           )}
 
-          <Tile t={t} ds={ds} title="다이얼로그" col={2}>
+          <Tile t={t} ds={ds} title="다이얼로그" col={1}>
             <Dialogue
               title="결제를 진행할까요?"
               body="선택한 상품 189,000원이 결제됩니다. 취소하면 장바구니로 돌아갑니다."
@@ -573,7 +573,7 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
             />
           </Tile>
 
-          <Tile t={t} ds={ds} title="오픈 예정 말풍선" col={2}>
+          <Tile t={t} ds={ds} title="오픈 예정 말풍선" col={1}>
             <ComingSoon sub="준비 중인 기능이에요" />
           </Tile>
 
