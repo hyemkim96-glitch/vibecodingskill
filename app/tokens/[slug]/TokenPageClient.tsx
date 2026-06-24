@@ -181,7 +181,7 @@ const BRAND_PATTERNS: Record<string, PatternType[]> = {
 // (feedback for status/gauge, cards for balance/collect/editorial/ranking/chat).
 const BRAND_COMP_CATS: Record<string, ComponentCategory[]> = {
   daangn:    ['buttons', 'feedback', 'cards', 'navigation'],   // gauge → feedback
-  kakao:     ['buttons', 'cards', 'navigation', 'feedback'],   // chat → cards
+  kakao:     ['buttons', 'messaging', 'navigation', 'feedback'], // chat → messaging
   kakaobank: ['buttons', 'cards', 'feedback'],                 // balance → cards
   naver:     ['buttons', 'cards', 'navigation', 'inputs'],     // ranking → cards
   baemin:    ['buttons', 'feedback', 'cards', 'navigation'],   // status → feedback
@@ -511,9 +511,23 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
           </div>
         )}
 
-        {/* ── Patterns ── (coming soon) */}
+        {/* ── Patterns ── (coming soon overlay) */}
         {section === 'patterns' && (
-          <brandDS.ComingSoon sub="더 완성도 높은 패턴 미리보기를 준비 중이에요" />
+          <div style={{ position: 'relative' }}>
+            {/* Dimmed background — disabled tabs + placeholder area */}
+            <div style={{ opacity: 0.3, pointerEvents: 'none', userSelect: 'none' }}>
+              <SubTabStrip
+                items={brandPatterns.map(p => PATTERN_TYPES.find(pt => pt.key === p)).filter(Boolean) as { key: string; label: string }[]}
+                active={activePattern}
+                onChange={() => {}}
+              />
+              <div style={{ minHeight: 320, background: brandTheme.surfaceAlt, borderRadius: brandTheme.radius.card }} />
+            </div>
+            {/* ComingSoon floats as absolute overlay */}
+            <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none' }}>
+              <brandDS.ComingSoon sub="더 완성도 높은 패턴 미리보기를 준비 중이에요" style={{ background: 'transparent', minHeight: 0 }} />
+            </div>
+          </div>
         )}
       </div>
 

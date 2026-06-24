@@ -95,6 +95,7 @@ export interface DS {
     style?: React.CSSProperties;
   }>;
   Table: React.FC<{
+    headers?: string[];
     rows: Array<{ label: string; value: React.ReactNode; tone?: 'default' | 'danger' | 'success' | 'muted' }>;
     footer?: { label: string; value: React.ReactNode };
     style?: React.CSSProperties;
@@ -122,6 +123,10 @@ export interface DS {
   EditorialCard: React.FC<{ title: string; sub?: string; tag?: string; h?: number; style?: React.CSSProperties }>;
   ChatList: React.FC<{ messages: Array<{ text: string; me?: boolean; time?: string }>; style?: React.CSSProperties }>;
   ComingSoon: React.FC<{ title?: string; sub?: string; style?: React.CSSProperties }>;
+  AspectRatio: React.FC<{ ratio?: number; label?: string; children?: React.ReactNode; style?: React.CSSProperties }>;
+  Carousel: React.FC<{ items: Array<{ label: string; sub?: string; h?: number }>; style?: React.CSSProperties }>;
+  ContextMenu: React.FC<{ items: Array<{ icon?: IconName; label: string; danger?: boolean; divider?: boolean }>; style?: React.CSSProperties }>;
+  Dialogue: React.FC<{ title: string; body?: string; actions?: string[]; style?: React.CSSProperties }>;
 }
 
 export function createDS(t: ResolvedTheme, wireframe = false): DS {
@@ -535,8 +540,15 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
     </div>
   );
 
-  const Table: DS['Table'] = ({ rows, footer, style }) => (
+  const Table: DS['Table'] = ({ headers, rows, footer, style }) => (
     <div style={{ borderRadius: t.radius.card, border: `1px solid ${t.border}`, overflow: 'hidden', ...style }}>
+      {headers && (
+        <div style={{ display: 'grid', gridTemplateColumns: `repeat(${headers.length}, 1fr)`, padding: `${space.xs}px ${space.md}px`, background: t.surfaceAlt, borderBottom: `1px solid ${t.border}` }}>
+          {headers.map((h) => (
+            <span key={h} style={{ ...typeStyle(t.type.caption), fontWeight: t.weightBold, color: t.textSub }}>{h}</span>
+          ))}
+        </div>
+      )}
       {rows.map(({ label, value, tone }, i) => {
         const valueColor = tone === 'danger' ? t.danger : tone === 'success' ? t.success : tone === 'muted' ? t.textMuted : t.textMain;
         return (
@@ -745,17 +757,17 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
         {/* Speech bubble */}
         <div style={{
           position: 'relative', background: t.bg,
-          border: `1.5px solid ${t.primary}`, borderRadius: t.radius.card,
+          border: `1px solid ${t.border}`, borderRadius: t.radius.card,
           padding: `${space.sm}px ${space.lg}px`,
           display: 'flex', flexDirection: 'column', alignItems: 'center', gap: space.xs,
-          boxShadow: `0 4px 20px rgba(0,0,0,0.08)`, marginBottom: 10,
+          boxShadow: `0 4px 20px rgba(0,0,0,0.06)`, marginBottom: 10,
         }}>
-          <span style={{ ...typeStyle(t.type.bodySm), fontWeight: t.weightBold, color: ensureContrast(t.primary, t.bg) }}>
+          <span style={{ ...typeStyle(t.type.bodySm), fontWeight: t.weightBold, color: t.textMain }}>
             🔒 {title}
           </span>
           {sub && <span style={{ ...typeStyle(t.type.caption), color: t.textSub, textAlign: 'center', maxWidth: 220 }}>{sub}</span>}
           {/* Tail — border layer */}
-          <div style={{ position: 'absolute', bottom: -10, left: '50%', transform: 'translateX(-50%)', width: 0, height: 0, borderLeft: '9px solid transparent', borderRight: '9px solid transparent', borderTop: `9px solid ${t.primary}` }} />
+          <div style={{ position: 'absolute', bottom: -10, left: '50%', transform: 'translateX(-50%)', width: 0, height: 0, borderLeft: '9px solid transparent', borderRight: '9px solid transparent', borderTop: `9px solid ${t.border}` }} />
           {/* Tail — fill layer */}
           <div style={{ position: 'absolute', bottom: -8, left: '50%', transform: 'translateX(-50%)', width: 0, height: 0, borderLeft: '7px solid transparent', borderRight: '7px solid transparent', borderTop: `7px solid ${t.bg}` }} />
         </div>
@@ -763,5 +775,78 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
     </div>
   );
 
-  return { t, Text, Button, Card, Input, Badge, Chip, NavTab, Stepper, Rating, ListRow, Thumb, Avatar, Icon, Checkbox, Switch, Radio, Textarea, Select, Divider, Skeleton, Progress, TopBar, Table, Toast, TokenCard, StatusTracker, BalanceCard, GaugeMeter, RankingList, SaveCollect, EditorialCard, ChatList, ComingSoon };
+  const AspectRatio: DS['AspectRatio'] = ({ ratio = 16 / 9, label, children, style }) => (
+    <div style={{ position: 'relative', width: '100%', paddingTop: `${(1 / ratio) * 100}%`, borderRadius: t.radius.card, overflow: 'hidden', ...style }}>
+      <div style={{
+        position: 'absolute', inset: 0,
+        background: wireframe
+          ? `repeating-linear-gradient(135deg, ${t.surfaceAlt}, ${t.surfaceAlt} 6px, ${t.surface} 6px, ${t.surface} 12px)`
+          : t.surfaceAlt,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+      }}>
+        {children ?? (label && <span style={{ ...typeStyle(t.type.caption), color: t.textMuted }}>{label}</span>)}
+      </div>
+    </div>
+  );
+
+  const Carousel: DS['Carousel'] = ({ items, style }) => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm, ...style }}>
+      <div style={{ display: 'flex', gap: space.sm, overflow: 'hidden' }}>
+        {items.map((item, i) => (
+          <div key={i} className="ds-hover" style={{ flexShrink: 0, width: 140, borderRadius: t.radius.card, overflow: 'hidden', background: t.surface, boxShadow: `0 0 0 1px ${t.border}`, cursor: 'pointer' }}>
+            <Thumb h={item.h ?? 80} />
+            <div style={{ padding: space.sm }}>
+              <Text role="caption" weight={t.weightBold} style={{ display: 'block', marginBottom: item.sub ? space.xxs : 0 }}>{item.label}</Text>
+              {item.sub && <Text role="caption" color={t.textSub}>{item.sub}</Text>}
+            </div>
+          </div>
+        ))}
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'center', gap: space.xxs }}>
+        {items.map((_, i) => (
+          <div key={i} style={{ width: i === 0 ? 18 : 6, height: 6, borderRadius: 9999, background: i === 0 ? t.primary : t.border }} />
+        ))}
+      </div>
+    </div>
+  );
+
+  const ContextMenu: DS['ContextMenu'] = ({ items, style }) => (
+    <div style={{ background: t.bg, border: `1px solid ${t.border}`, borderRadius: t.radius.card, boxShadow: t.shadow.lg, overflow: 'hidden', ...style }}>
+      {items.map((item, i) => (
+        <React.Fragment key={`${item.label}-${i}`}>
+          {item.divider && i > 0 && <div style={{ height: 1, background: t.border }} />}
+          <div className="ds-press" style={{ display: 'flex', alignItems: 'center', gap: space.sm, padding: `${space.sm}px ${space.md}px`, cursor: 'pointer' }}>
+            {item.icon && <Icon name={item.icon} size={15} color={item.danger ? t.danger : t.textSub} />}
+            <span style={{ ...typeStyle(t.type.bodySm), color: item.danger ? t.danger : t.textMain, flex: 1 }}>{item.label}</span>
+          </div>
+        </React.Fragment>
+      ))}
+    </div>
+  );
+
+  const Dialogue: DS['Dialogue'] = ({ title, body, actions = ['취소', '확인'], style }) => (
+    <div style={{ position: 'relative', minHeight: 160, background: 'rgba(0,0,0,0.35)', borderRadius: t.radius.card, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: `${space.xl}px`, ...style }}>
+      <div style={{ width: '100%', background: t.bg, borderRadius: t.radius.card, padding: `${space.xl}px`, boxShadow: t.shadow.lg }}>
+        <div style={{ ...typeStyle(t.type.bodySm), fontWeight: t.weightBold, color: t.textMain, marginBottom: body ? space.sm : space.lg }}>{title}</div>
+        {body && <div style={{ ...typeStyle(t.type.bodySm), color: t.textSub, marginBottom: space.lg }}>{body}</div>}
+        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: space.sm }}>
+          {actions.map((a, i) => {
+            const isPrimary = i === actions.length - 1;
+            return (
+              <span key={a} className="ds-press" style={{
+                ...typeStyle(t.type.bodySm), fontWeight: t.weightBold,
+                color: isPrimary ? t.onPrimary : t.textMain,
+                background: isPrimary ? t.primary : 'transparent',
+                border: isPrimary ? 'none' : `1.5px solid ${t.border}`,
+                padding: `${space.xs}px ${space.md}px`,
+                borderRadius: t.radius.button, cursor: 'pointer', display: 'inline-flex', alignItems: 'center',
+              }}>{a}</span>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+
+  return { t, Text, Button, Card, Input, Badge, Chip, NavTab, Stepper, Rating, ListRow, Thumb, Avatar, Icon, Checkbox, Switch, Radio, Textarea, Select, Divider, Skeleton, Progress, TopBar, Table, Toast, TokenCard, StatusTracker, BalanceCard, GaugeMeter, RankingList, SaveCollect, EditorialCard, ChatList, ComingSoon, AspectRatio, Carousel, ContextMenu, Dialogue };
 }

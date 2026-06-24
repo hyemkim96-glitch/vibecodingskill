@@ -15,7 +15,7 @@ import { SignatureKind } from '@/lib/content/packs';
  * All tiles are built from DS primitives — the same atoms the patterns use.
  */
 
-export type ComponentCategory = 'all' | 'buttons' | 'inputs' | 'cards' | 'feedback' | 'navigation';
+export type ComponentCategory = 'all' | 'buttons' | 'inputs' | 'cards' | 'feedback' | 'navigation' | 'messaging';
 
 export const COMPONENT_CATEGORIES: { key: ComponentCategory; label: string }[] = [
   { key: 'all',        label: '전체' },
@@ -24,6 +24,7 @@ export const COMPONENT_CATEGORIES: { key: ComponentCategory; label: string }[] =
   { key: 'cards',      label: '카드 & 리스트' },
   { key: 'feedback',   label: '피드백' },
   { key: 'navigation', label: '내비게이션' },
+  { key: 'messaging',  label: '메시지' },
 ];
 
 /** Section label shown only in "전체" view to separate category groups. */
@@ -58,7 +59,8 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
   const ds = createDS(t, true);
   const { Button, Input, Badge, Chip, Card, Text, Thumb, Avatar, ListRow, Stepper, Rating,
           Checkbox, Switch, Radio, Textarea, Select, Divider, Skeleton, Progress, TopBar, Table, Toast,
-          StatusTracker, BalanceCard, GaugeMeter, RankingList, SaveCollect, EditorialCard, ChatList, ComingSoon } = ds;
+          StatusTracker, BalanceCard, GaugeMeter, RankingList, SaveCollect, EditorialCard, ChatList, ComingSoon,
+          AspectRatio, Carousel, ContextMenu, Dialogue } = ds;
   const { space } = t;
   const all = category === 'all';
   // Brand pages pass a single signature → show only that brand's component.
@@ -397,19 +399,35 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
               ]} />
             </Tile>
           )}
-          {showSig('chat') && (
-            <Tile t={t} ds={ds} title="채팅 말풍선">
-              <ChatList messages={[
-                { text: '저녁 뭐 먹을래?', time: '오후 6:20' },
-                { text: '치킨 어때요 🍗', me: true, time: '오후 6:21' },
-                { text: '좋아요! 주문할게요', time: '오후 6:22' },
-              ]} />
-            </Tile>
-          )}
-          <Tile t={t} ds={ds} title="오픈 예정">
-            <ComingSoon sub="준비 중인 기능이에요" />
+
+          <Tile t={t} ds={ds} title="애스펙트 레이샤">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
+              <AspectRatio ratio={16 / 9} label="16:9 — 와이드" />
+              <AspectRatio ratio={4 / 3} label="4:3 — 표준" />
+              <AspectRatio ratio={1} label="1:1 — 정방형" />
+              <AspectRatio ratio={9 / 16} label="9:16 — 포트레이트" />
+            </div>
           </Tile>
 
+          <Tile t={t} ds={ds} title="캐러셀">
+            <Carousel items={[
+              { label: '슬라이드 1', sub: '첫 번째 항목' },
+              { label: '슬라이드 2', sub: '두 번째 항목' },
+              { label: '슬라이드 3', sub: '세 번째 항목' },
+            ]} />
+          </Tile>
+
+          <Tile t={t} ds={ds} title="데이터 테이블 (헤더 포함)">
+            <Table
+              headers={['상품명', '가격']}
+              rows={[
+                { label: '반팔 티셔츠', value: '29,000원' },
+                { label: '데님 팬츠',   value: '59,000원' },
+                { label: '운동화',      value: '89,000원' },
+              ]}
+              footer={{ label: '총 합계', value: '177,000원' }}
+            />
+          </Tile>
         </div>
         </section>
       )}
@@ -549,6 +567,18 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
             </Tile>
           )}
 
+          <Tile t={t} ds={ds} title="다이얼로그">
+            <Dialogue
+              title="결제를 진행할까요?"
+              body="선택한 상품 189,000원이 결제됩니다. 취소하면 장바구니로 돌아갑니다."
+              actions={['취소', '결제하기']}
+            />
+          </Tile>
+
+          <Tile t={t} ds={ds} title="오픈 예정 말풍선">
+            <ComingSoon sub="준비 중인 기능이에요" />
+          </Tile>
+
         </div>
         </section>
       )}
@@ -624,6 +654,15 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
             </div>
           </Tile>
 
+          <Tile t={t} ds={ds} title="컨텍스트 메뉴">
+            <ContextMenu items={[
+              { icon: 'edit',       label: '수정하기' },
+              { icon: 'send',       label: '공유하기' },
+              { icon: 'bookmark',   label: '저장하기', divider: true },
+              { icon: 'close',      label: '삭제하기', danger: true },
+            ]} />
+          </Tile>
+
           <Tile t={t} ds={ds} title="브레드크럼 & 페이지네이션">
             <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: space.xs }}>
               {['홈', '카테고리', '상의', '티셔츠'].map((crumb, i, arr) => (
@@ -641,6 +680,31 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
                     : <Text role="caption" color={p === '2' ? t.onPrimary : t.textSub} weight={p === '2' ? t.weightBold : t.weightRegular}>{p}</Text>}
                 </div>
               ))}
+            </div>
+          </Tile>
+
+        </div>
+        </section>
+      )}
+
+      {(all || category === 'messaging') && (
+        <section>
+        <SectionHeading t={t} show={all}>메시지</SectionHeading>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', alignItems: 'start', gap: space.xl }}>
+
+          <Tile t={t} ds={ds} title="수신 버블">
+            <ChatList messages={[{ text: '주문하신 상품이 배송 출발했어요 📦', time: '오전 10:24' }]} />
+          </Tile>
+
+          <Tile t={t} ds={ds} title="발신 버블">
+            <ChatList messages={[{ text: '감사합니다! 잘 받겠습니다 😊', me: true, time: '오전 10:25' }]} />
+          </Tile>
+
+          <Tile t={t} ds={ds} title="버블 상태">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: space.md }}>
+              <ChatList messages={[{ text: '일반 메시지입니다.' }]} />
+              <ChatList messages={[{ text: '긴 텍스트 메시지는 말풍선 안에서 자동으로 줄 바꿈 처리됩니다. 여러 줄이 될 수 있어요.' }]} />
+              <ChatList messages={[{ text: '나의 메시지', me: true }]} />
             </div>
           </Tile>
 
