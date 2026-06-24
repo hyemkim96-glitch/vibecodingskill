@@ -357,25 +357,30 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
           </Tile>
 
           <Tile t={t} ds={ds} title="테이블 (키-값)" col={2}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: space.md }}>
-              <Table
-                rows={[
-                  { label: '상품 금액', value: '229,000원' },
-                  { label: '할인', value: '-40,000원', tone: 'danger' },
-                  { label: '배송비', value: '무료', tone: 'success' },
-                ]}
-                footer={{ label: '총 결제 금액', value: '189,000원' }}
-              />
-              <Table
-                headers={['상품명', '가격']}
-                rows={[
-                  { label: '반팔 티셔츠', value: '29,000원' },
-                  { label: '데님 팬츠',   value: '59,000원' },
-                  { label: '운동화',      value: '89,000원' },
-                ]}
-                footer={{ label: '총 합계', value: '177,000원' }}
-              />
-            </div>
+            <Divider label="테이블 셀" />
+            <Table
+              rows={[
+                { label: '상품 금액', value: '229,000원' },
+                { label: '할인',     value: '-40,000원', tone: 'danger' },
+                { label: '배송비',   value: '무료',      tone: 'success' },
+              ]}
+              footer={{ label: '총 결제 금액', value: '189,000원' }}
+            />
+            <Divider label="헤더" />
+            <Table
+              headers={['상품명', '가격']}
+              rows={[]}
+            />
+            <Divider label="합본" />
+            <Table
+              headers={['상품명', '가격']}
+              rows={[
+                { label: '반팔 티셔츠', value: '29,000원' },
+                { label: '데님 팬츠',   value: '59,000원' },
+                { label: '운동화',      value: '89,000원' },
+              ]}
+              footer={{ label: '총 합계', value: '177,000원' }}
+            />
           </Tile>
 
           {/* brand-distinctive card components — gated by brand (all shown in the master gallery) */}
