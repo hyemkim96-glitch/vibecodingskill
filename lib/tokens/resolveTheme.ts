@@ -60,6 +60,11 @@ export interface ResolvedTheme {
   dangerText: string;
   warningText: string;
   infoText: string;
+  // Weak (tint) fills — semantic bg tints for toasts, banners, chips
+  successWeak: string;
+  dangerWeak: string;
+  warningWeak: string;
+  infoWeak: string;
   starFill: string;      // warm highlight amber — --color-fill-highlight
   textOnImage: string;   // text placed over imagery (inverse)
   scrim: string;         // gradient overlay for image legibility
@@ -235,6 +240,10 @@ const WIREFRAME_LIGHT = {
   disabled:     wl['--color-fill-neutral-alt'],
   textDisabled: wl['--color-text-disabled'],
   starFill:     wl['--color-fill-highlight'],
+  successWeak:  wl['--color-fill-success-weak'],
+  dangerWeak:   wl['--color-fill-danger-weak'],
+  warningWeak:  wl['--color-fill-warning-weak'],
+  infoWeak:     wl['--color-fill-info-weak'],
   successText: '', dangerText: '', warningText: '', infoText: '',
 };
 
@@ -258,6 +267,10 @@ const WIREFRAME_DARK = {
   disabled:     wd['--color-fill-neutral-alt'],
   textDisabled: wd['--color-text-disabled'],
   starFill:     wd['--color-fill-highlight'],
+  successWeak:  wd['--color-fill-success-weak'],
+  dangerWeak:   wd['--color-fill-danger-weak'],
+  warningWeak:  wd['--color-fill-warning-weak'],
+  infoWeak:     wd['--color-fill-info-weak'],
   successText: '', dangerText: '', warningText: '', infoText: '',
 };
 
@@ -363,6 +376,10 @@ export function resolveTheme(
     disabled:     isDark ? dt['--color-fill-neutral']     : lt['--color-fill-neutral'],
     textDisabled: isDark ? dt['--color-text-disabled']    : lt['--color-text-disabled'],
     starFill:     isDark ? dt['--color-fill-highlight']    : lt['--color-fill-highlight'],
+    successWeak:  isDark ? dt['--color-fill-success-weak'] : lt['--color-fill-success-weak'],
+    dangerWeak:   isDark ? dt['--color-fill-danger-weak']  : lt['--color-fill-danger-weak'],
+    warningWeak:  isDark ? dt['--color-fill-warning-weak'] : lt['--color-fill-warning-weak'],
+    infoWeak:     isDark ? dt['--color-fill-info-weak']    : lt['--color-fill-info-weak'],
     successText: '', dangerText: '', warningText: '', infoText: '',
   };
 

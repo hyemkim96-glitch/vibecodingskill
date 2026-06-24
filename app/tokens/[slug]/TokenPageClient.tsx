@@ -281,8 +281,8 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
         <div style={{ position: 'relative' }}>
           <SectionNav section={section} onChange={(s) => { if (s !== 'patterns') setSection(s); }} />
           <div style={{
-            position: 'absolute', right: '6%', bottom: '100%',
-            paddingBottom: 6, pointerEvents: 'none',
+            position: 'absolute', right: '6%', bottom: 23,
+            pointerEvents: 'none',
           }}>
             <brandDS.ComingSoon
               style={{ background: 'transparent', minHeight: 0 }}

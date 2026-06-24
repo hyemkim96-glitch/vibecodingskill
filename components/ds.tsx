@@ -489,13 +489,14 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
 
   const Progress: DS['Progress'] = ({ value = 60, max = 100, tone = 'primary', label }) => {
     const barColor = tone === 'success' ? t.success : tone === 'danger' ? t.danger : t.primary;
+    const labelColor = tone === 'success' ? t.successText : tone === 'danger' ? t.dangerText : t.textMain;
     const ratio = Math.min(1, Math.max(0, value / max));
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: space.xs }}>
         {label && (
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <span style={{ ...typeStyle(t.type.caption), color: t.textSub }}>{label}</span>
-            <span style={{ ...typeStyle(t.type.caption), color: ensureContrast(barColor, t.surface), fontWeight: t.weightBold }}>{Math.round(ratio * 100)}%</span>
+            <span style={{ ...typeStyle(t.type.caption), color: labelColor, fontWeight: t.weightBold }}>{Math.round(ratio * 100)}%</span>
           </div>
         )}
         <div style={{ height: 6, borderRadius: 9999, background: t.surfaceAlt, overflow: 'hidden' }}>
@@ -571,24 +572,26 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
 
   const Toast: DS['Toast'] = ({ message, tone = 'default', action, style }) => {
     const TONE = {
-      success: { accent: t.success,   textColor: t.successText, icon: 'checkCircle' as IconName },
-      danger:  { accent: t.danger,    textColor: t.dangerText,  icon: 'alertCircle' as IconName },
-      warning: { accent: t.warning,   textColor: t.warningText, icon: 'alertCircle' as IconName },
-      info:    { accent: t.info,      textColor: t.infoText,    icon: 'info'        as IconName },
-      default: { accent: t.textMuted, textColor: t.textSub,     icon: 'info'        as IconName },
+      success: { bg: t.successWeak, border: t.success,   accent: t.success,   textColor: t.successText, icon: 'checkCircle' as IconName },
+      danger:  { bg: t.dangerWeak,  border: t.danger,    accent: t.danger,    textColor: t.dangerText,  icon: 'alertCircle' as IconName },
+      warning: { bg: t.warningWeak, border: t.warning,   accent: t.warning,   textColor: t.warningText, icon: 'alertCircle' as IconName },
+      info:    { bg: t.infoWeak,    border: t.info,      accent: t.info,      textColor: t.infoText,    icon: 'info'        as IconName },
+      default: { bg: t.surface,     border: t.border,    accent: t.textMuted, textColor: t.textSub,     icon: 'info'        as IconName },
     };
-    const { accent, textColor, icon } = TONE[tone];
+    const { bg, border: bdColor, accent, textColor, icon } = TONE[tone];
     return (
       <div style={{
         display: 'flex', alignItems: 'center', gap: space.sm,
         padding: `${space.sm}px ${space.md}px`, borderRadius: t.radius.card,
-        background: t.surface, border: `1px solid ${t.border}`,
+        background: bg,
+        border: `1px solid ${bdColor}`,
+        borderLeft: tone !== 'default' ? `3px solid ${accent}` : `1px solid ${bdColor}`,
         boxShadow: t.shadow.md,
         ...style,
       }}>
         <Icon name={icon} size={16} color={accent} />
         <span style={{ ...typeStyle(t.type.bodySm), color: textColor, flex: 1 }}>{message}</span>
-        {action && <span className="ds-press" style={{ ...typeStyle(t.type.bodySm), color: ensureContrast(accent, t.surface), fontWeight: t.weightBold, cursor: 'pointer', flexShrink: 0 }}>{action}</span>}
+        {action && <span className="ds-press" style={{ ...typeStyle(t.type.bodySm), color: ensureContrast(accent, bg), fontWeight: t.weightBold, cursor: 'pointer', flexShrink: 0 }}>{action}</span>}
       </div>
     );
   };

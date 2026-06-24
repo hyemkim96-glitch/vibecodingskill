@@ -48,11 +48,13 @@ function Tile({ t, ds, title, children, col = 1 }: {
     <div style={{
       background: t.bg, border: `1px solid ${t.border}`, borderRadius: t.radius.card, padding: t.space.md,
       gridColumn: col > 1 ? `span ${col}` : undefined,
+      display: 'flex', flexDirection: 'column',
+      minHeight: 140,
     }}>
-      <p style={{ ...typeStyle(t.type.bodySm), color: t.textMain, fontWeight: t.weightBold, marginBottom: t.space.sm }}>
+      <p style={{ ...typeStyle(t.type.bodySm), color: t.textMain, fontWeight: t.weightBold, marginBottom: t.space.sm, flexShrink: 0 }}>
         {title}
       </p>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.sm }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.sm, flex: 1 }}>
         {children}
       </div>
     </div>
@@ -77,7 +79,7 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
       {(all || category === 'buttons') && (
         <section>
         <SectionHeading t={t} show={all}>버튼 & 액션</SectionHeading>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', alignItems: 'start', gap: space.sm }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: space.sm }}>
 
           <Tile t={t} ds={ds} title="텍스트 버튼" col={1}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
@@ -155,7 +157,7 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
       {(all || category === 'inputs') && (
         <section>
         <SectionHeading t={t} show={all}>입력 & 폼</SectionHeading>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', alignItems: 'start', gap: space.sm }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: space.sm }}>
 
           <Tile t={t} ds={ds} title="텍스트 입력" col={2}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
@@ -226,7 +228,7 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
       {(all || category === 'cards') && (
         <section>
         <SectionHeading t={t} show={all}>카드 & 리스트</SectionHeading>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', alignItems: 'start', gap: space.sm }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: space.sm }}>
 
           <Tile t={t} ds={ds} title="카드 변형" col={2}>
             {/* 기본/강조 카드 */}
@@ -433,7 +435,7 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
       {(all || category === 'feedback') && (
         <section>
         <SectionHeading t={t} show={all}>피드백</SectionHeading>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', alignItems: 'start', gap: space.sm }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: space.sm }}>
 
           <Tile t={t} ds={ds} title="배지 & 칩" col={2}>
             {/* 배지 변형 */}
@@ -584,7 +586,7 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
       {(all || category === 'navigation') && (
         <section>
         <SectionHeading t={t} show={all}>내비게이션</SectionHeading>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', alignItems: 'start', gap: space.sm }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: space.sm }}>
 
           <Tile t={t} ds={ds} title="탑 내비게이션 바" col={2}>
             {/* 상세 페이지: ← + 제목 + 우측 액션 */}
@@ -688,7 +690,7 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
       {(all || category === 'messaging') && (
         <section>
         <SectionHeading t={t} show={all}>메시지</SectionHeading>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', alignItems: 'start', gap: space.sm }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: space.sm }}>
 
           <Tile t={t} ds={ds} title="수신 버블" col={2}>
             <ChatList messages={[{ text: '주문하신 상품이 배송 출발했어요 📦', time: '오전 10:24' }]} />
