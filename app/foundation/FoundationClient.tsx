@@ -9,12 +9,13 @@ import { neutral, hues, HueName } from '@/lib/tokens/palette';
 import { lightTokens, darkTokens } from '@/lib/tokens/semanticTokens';
 import { lightRoleTokens, darkRoleTokens, lightVariantTokens, darkVariantTokens } from '@/lib/tokens/roleTokens';
 
-type FoundationCategory = 'color' | 'type' | 'space' | 'radius' | 'stroke' | 'effect' | 'motion';
+type FoundationCategory = 'color' | 'type' | 'space' | 'ratio' | 'radius' | 'stroke' | 'effect' | 'motion';
 
 const CATEGORIES: { key: FoundationCategory; label: string }[] = [
   { key: 'color',  label: '컬러' },
   { key: 'type',   label: '타이포그래피' },
   { key: 'space',  label: '여백' },
+  { key: 'ratio',  label: '콘텐츠 비율' },
   { key: 'radius', label: '모서리' },
   { key: 'stroke', label: '스트로크' },
   { key: 'effect', label: '이펙트' },
@@ -53,6 +54,7 @@ export default function FoundationClient() {
         {active === 'color'  && <ColorPanel  t={t} ds={ds} />}
         {active === 'type'   && <TypePanel   t={t} ds={ds} />}
         {active === 'space'  && <SpacePanel  t={t} ds={ds} />}
+        {active === 'ratio'  && <RatioPanel  t={t} ds={ds} />}
         {active === 'radius' && <RadiusPanel t={t} ds={ds} />}
         {active === 'stroke' && <StrokePanel t={t} ds={ds} />}
         {active === 'effect' && <EffectPanel t={t} ds={ds} />}
@@ -653,6 +655,74 @@ function RadiusPanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
 /* ══════════════════════════════════════════
    이펙트 (그림자/엘리베이션) 패널
 ══════════════════════════════════════════ */
+/* ══════════════════════════════════════════
+   콘텐츠 비율 패널
+══════════════════════════════════════════ */
+const RATIOS = [
+  { label: '1:1',   ratio: 1,       desc: '프로필·상품 그리드·아이콘', css: '1 / 1' },
+  { label: '4:3',   ratio: 4 / 3,   desc: '썸네일·카드·가로 이미지',  css: '4 / 3' },
+  { label: '16:9',  ratio: 16 / 9,  desc: '동영상·배너·히어로',       css: '16 / 9' },
+  { label: '3:4',   ratio: 3 / 4,   desc: '포트레이트·패션·인물',     css: '3 / 4' },
+  { label: '9:16',  ratio: 9 / 16,  desc: '쇼츠·릴스·스토리',        css: '9 / 16' },
+  { label: '21:9',  ratio: 21 / 9,  desc: '와이드스크린·시네마 배너', css: '21 / 9' },
+] as const;
+
+function RatioPanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
+  return (
+    <div>
+      <Section t={t} title="콘텐츠 비율 토큰" first>
+        <p style={{ ...cap(t), color: t.textSub, marginBottom: t.space.xl }}>
+          이미지·썸네일·카드 UI의 가로세로 비율 기준입니다. 고정 높이(px) 대신 <code>aspect-ratio</code> CSS 속성으로 비율을 지정하면 컨테이너 너비에 따라 자동으로 높이가 결정됩니다.
+        </p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: t.space.md }}>
+          {RATIOS.map(({ label, ratio, desc, css }) => {
+            const isLandscape = ratio >= 1;
+            const previewW = 120;
+            const previewH = Math.round(previewW / ratio);
+            return (
+              <div key={label} style={{ display: 'flex', flexDirection: 'column', gap: t.space.sm, background: t.bg, border: `1px solid ${t.border}`, borderRadius: t.radius.card, padding: t.space.md }}>
+                <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'center', minHeight: 80 }}>
+                  <div style={{
+                    width: isLandscape ? previewW : previewH,
+                    height: isLandscape ? previewH : previewW,
+                    background: t.primaryTint,
+                    borderRadius: t.radius.badge,
+                    border: `1px solid ${t.border}`,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  }}>
+                    <span style={{ ...cap(t), fontWeight: t.weightBold, color: t.primary }}>{label}</span>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.xxs }}>
+                  <span style={{ ...bodySm(t), fontWeight: t.weightBold, color: t.textMain, fontFamily: 'monospace' }}>aspect-ratio: {css}</span>
+                  <span style={{ ...cap(t), color: t.textSub }}>{desc}</span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </Section>
+
+      <Section t={t} title="카드 UI 비율 예시">
+        <p style={{ ...cap(t), color: t.textSub, marginBottom: t.space.lg }}>
+          동일한 카드 컴포넌트에 비율 토큰만 교체해 보여줍니다.
+        </p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: t.space.md, alignItems: 'start' }}>
+          {([['1 / 1', '1:1 그리드'], ['4 / 3', '4:3 카드'], ['16 / 9', '16:9 배너'], ['3 / 4', '3:4 포트레이트']] as const).map(([css, label]) => (
+            <div key={css} style={{ background: t.bg, border: `1px solid ${t.border}`, borderRadius: t.radius.card, overflow: 'hidden' }}>
+              <div style={{ aspectRatio: css, background: t.surfaceAlt, width: '100%' }} />
+              <div style={{ padding: t.space.sm }}>
+                <span style={{ ...cap(t), fontWeight: t.weightBold, color: t.textMain, display: 'block', marginBottom: t.space.xxs }}>카드 제목</span>
+                <span style={{ ...cap(t), color: t.textSub }}>{label}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Section>
+    </div>
+  );
+}
+
 function EffectPanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
   const { Table } = ds;
   const levels: { key: keyof Theme['shadow']; label: string; usage: string }[] = [

@@ -585,7 +585,6 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
         padding: `${space.sm}px ${space.md}px`, borderRadius: t.radius.card,
         background: bg,
         border: `1px solid ${bdColor}`,
-        borderLeft: tone !== 'default' ? `3px solid ${accent}` : `1px solid ${bdColor}`,
         boxShadow: t.shadow.md,
         ...style,
       }}>
@@ -630,7 +629,7 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
                 ? <Icon name="check" size={13} color={t.onPrimary} />
                 : <span style={{ ...typeStyle(t.type.caption), fontWeight: t.weightBold, color: reached ? t.onPrimary : t.textMuted }}>{i + 1}</span>}
             </div>
-            <span style={{ ...typeStyle(t.type.caption), color: reached ? t.textMain : t.textMuted, fontWeight: active ? t.weightBold : t.weightRegular, textAlign: 'center' }}>{label}</span>
+            <span style={{ ...typeStyle(t.type.caption), color: reached ? t.textMain : t.textMuted, fontWeight: active ? t.weightBold : t.weightRegular, textAlign: 'center', wordBreak: 'keep-all', overflowWrap: 'break-word' }}>{label}</span>
           </div>
         );
       })}
@@ -639,8 +638,8 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
 
   const BalanceCard: DS['BalanceCard'] = ({ label, value, delta, actions = [], style }) => (
     <div style={{
-      display: 'flex', flexDirection: 'column', gap: space.sm,
-      padding: t.cardPad, borderRadius: t.radius.card,
+      display: 'flex', flexDirection: 'column', gap: space.md,
+      padding: space.lg, borderRadius: t.radius.card,
       background: t.surface, border: `1px solid ${t.border}`, ...style,
     }}>
       <span style={{ ...typeStyle(t.type.caption), color: t.textSub }}>{label}</span>

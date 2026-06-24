@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { createDS, motionVars } from '@/components/ds';
+import { createDS, motionVars, typeStyle } from '@/components/ds';
 import { renderPattern, PATTERN_TYPES, PATTERN_VARIANTS, PatternType } from '@/components/patterns';
 import { defaultPack } from '@/lib/content/packs';
 import PillTabs from '@/components/PillTabs';
@@ -11,18 +11,13 @@ const { Text, t: st } = serviceDS;
 
 export default function PatternsClient() {
   const [activePattern, setActivePattern] = useState<PatternType>('main');
-  const [activeVariant, setActiveVariant] = useState<string>('commerce');
   const [platform, setPlatform] = useState<'mobile' | 'web'>('mobile');
 
   const theme = platform === 'mobile' ? serviceMobileTheme : serviceTheme;
   const ds = createDS(theme, true);
 
   const variants = PATTERN_VARIANTS[activePattern];
-
-  function handlePatternChange(p: PatternType) {
-    setActivePattern(p);
-    setActiveVariant(PATTERN_VARIANTS[p][0].key);
-  }
+  const cols = variants.length;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: st.space.xl }}>
@@ -46,38 +41,37 @@ export default function PatternsClient() {
         </div>
       </div>
 
-      <PillTabs tabs={PATTERN_TYPES} active={activePattern} onChange={handlePatternChange} />
+      <PillTabs tabs={PATTERN_TYPES} active={activePattern} onChange={setActivePattern} />
 
-      {/* 서브 탭 — variant */}
-      {variants.length > 1 && (
-        <div style={{ display: 'flex', gap: st.space.xs }}>
-          {variants.map((v) => (
-            <button
-              key={v.key}
-              onClick={() => setActiveVariant(v.key)}
-              style={{
-                background: 'none',
-                border: 'none',
-                padding: 0,
-                cursor: 'pointer',
-              }}
-            >
-              <ds.Chip active={activeVariant === v.key}>{v.label}</ds.Chip>
-            </button>
-          ))}
-        </div>
-      )}
-
-      {/* 패턴 렌더 */}
+      {/* 변형 벤토 그리드 */}
       <div style={{
-        borderRadius: st.radius.card,
-        overflow: 'hidden',
-        border: `1px solid ${st.border}`,
-        maxWidth: platform === 'mobile' ? 390 : '100%',
+        display: 'grid',
+        gridTemplateColumns: `repeat(${cols}, 1fr)`,
+        gap: st.space.lg,
+        alignItems: 'start',
       }}>
-        <div className="ds-root" style={motionVars(theme)}>
-          {renderPattern(activePattern, ds, platform, defaultPack, activeVariant)}
-        </div>
+        {variants.map((v) => (
+          <div key={v.key} style={{ display: 'flex', flexDirection: 'column', gap: st.space.sm }}>
+            <span style={{
+              ...typeStyle(st.type.caption),
+              fontWeight: st.weightBold,
+              color: st.textSub,
+              letterSpacing: '0.06em',
+              textTransform: 'uppercase',
+            }}>
+              {v.label}
+            </span>
+            <div style={{
+              borderRadius: st.radius.card,
+              overflow: 'hidden',
+              border: `1px solid ${st.border}`,
+            }}>
+              <div className="ds-root" style={motionVars(theme)}>
+                {renderPattern(activePattern, ds, platform, defaultPack, v.key)}
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

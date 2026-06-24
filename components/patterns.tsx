@@ -75,7 +75,7 @@ function Screen({ ds, topBar, children }: { ds: DS; topBar?: React.ReactNode; ch
   return (
     <div style={{ display: 'flex', flexDirection: 'column', background: t.bg, minHeight: t.isMobile ? 320 : 280, fontFamily: t.font, overflow: 'hidden' }}>
       {topBar}
-      <div style={{ display: 'flex', flexDirection: 'column', padding: t.containerPad, gap: t.stackGap, flex: 1 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', padding: t.containerPad, gap: t.space.md, flex: 1 }}>
         {children}
       </div>
     </div>
