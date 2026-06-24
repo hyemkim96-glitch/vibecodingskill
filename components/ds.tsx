@@ -160,9 +160,11 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
         fontWeight: t.weightBold,
         borderRadius: t.radius.button,
         background:
-          variant === 'primary' ? t.primary : t.bg,
+          variant === 'primary' ? t.primary
+          : variant === 'ghost' ? 'transparent'
+          : t.surface,
         color:
-          variant === 'primary' ? t.onPrimary : variant === 'outline' ? ensureContrast(t.primary, t.bg) : t.textMain,
+          variant === 'primary' ? t.onPrimary : variant === 'outline' ? ensureContrast(t.primary, t.surface) : t.textMain,
         border:
           variant === 'outline'
             ? `1px solid ${t.primary}`
