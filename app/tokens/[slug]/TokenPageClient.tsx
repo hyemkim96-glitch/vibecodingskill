@@ -277,16 +277,14 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
           ))}
         </div>
 
-        {/* Section navigation — 패턴 is permanently disabled; ComingSoon floats over the nav */}
+        {/* Section navigation — 패턴 is permanently disabled; ComingSoon floats above the tab */}
         <div style={{ position: 'relative' }}>
           <SectionNav section={section} onChange={(s) => { if (s !== 'patterns') setSection(s); }} />
           <div style={{
-            position: 'absolute', inset: 0,
-            display: 'flex', alignItems: 'center', justifyContent: 'flex-end',
-            paddingRight: '6%', pointerEvents: 'none',
+            position: 'absolute', right: '6%', bottom: '100%',
+            paddingBottom: 6, pointerEvents: 'none',
           }}>
             <brandDS.ComingSoon
-              sub="더 완성도 높은 패턴 미리보기를 준비 중이에요"
               style={{ background: 'transparent', minHeight: 0 }}
             />
           </div>
