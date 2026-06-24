@@ -543,7 +543,7 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
   const Table: DS['Table'] = ({ headers, rows, footer, style }) => (
     <div style={{ borderRadius: t.radius.card, border: `1px solid ${t.border}`, overflow: 'hidden', ...style }}>
       {headers && (
-        <div style={{ display: 'grid', gridTemplateColumns: `repeat(${headers.length}, 1fr)`, padding: `${space.xs}px ${space.md}px`, background: t.surfaceAlt, borderBottom: `1px solid ${t.border}` }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: `${space.xs}px ${space.md}px`, background: t.surfaceAlt, borderBottom: `1px solid ${t.border}` }}>
           {headers.map((h) => (
             <span key={h} style={{ ...typeStyle(t.type.caption), fontWeight: t.weightBold, color: t.textSub }}>{h}</span>
           ))}

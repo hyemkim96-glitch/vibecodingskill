@@ -37,14 +37,18 @@ function SectionHeading({ t, show, children }: { t: ResolvedTheme; show: boolean
   );
 }
 
-function Tile({ t, ds, title, children }: {
+function Tile({ t, ds, title, children, col = 1 }: {
   t: ResolvedTheme;
   ds: ReturnType<typeof createDS>;
   title: string;
   children: React.ReactNode;
+  col?: 1 | 2 | 3 | 4;
 }) {
   return (
-    <div style={{ background: t.bg, border: `1px solid ${t.border}`, borderRadius: t.radius.card, padding: t.space.xl }}>
+    <div style={{
+      background: t.bg, border: `1px solid ${t.border}`, borderRadius: t.radius.card, padding: t.space.xl,
+      gridColumn: col > 1 ? `span ${col}` : undefined,
+    }}>
       <p style={{ ...typeStyle(t.type.bodySm), color: t.textMain, fontWeight: t.weightBold, marginBottom: t.space.lg }}>
         {title}
       </p>
@@ -73,9 +77,9 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
       {(all || category === 'buttons') && (
         <section>
         <SectionHeading t={t} show={all}>버튼 & 액션</SectionHeading>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', alignItems: 'start', gap: space.xl }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', alignItems: 'start', gap: space.xl }}>
 
-          <Tile t={t} ds={ds} title="텍스트 버튼">
+          <Tile t={t} ds={ds} title="텍스트 버튼" col={1}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
               <Button variant="primary" full>Primary</Button>
               <Button variant="secondary" full>Secondary</Button>
@@ -89,7 +93,7 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
             </div>
           </Tile>
 
-          <Tile t={t} ds={ds} title="아이콘 버튼">
+          <Tile t={t} ds={ds} title="아이콘 버튼" col={2}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: space.md }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: space.sm }}>
                 {(['arrowLeft', 'close', 'more', 'settings'] as const).map((ic) => (
@@ -115,7 +119,7 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
             </div>
           </Tile>
 
-          <Tile t={t} ds={ds} title="플로팅 버튼 (FAB)">
+          <Tile t={t} ds={ds} title="플로팅 버튼 (FAB)" col={1}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: space.md }}>
               <div style={{ display: 'flex', alignItems: 'flex-end', gap: space.md }}>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: space.xs }}>
@@ -151,9 +155,9 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
       {(all || category === 'inputs') && (
         <section>
         <SectionHeading t={t} show={all}>입력 & 폼</SectionHeading>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', alignItems: 'start', gap: space.xl }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', alignItems: 'start', gap: space.xl }}>
 
-          <Tile t={t} ds={ds} title="텍스트 입력">
+          <Tile t={t} ds={ds} title="텍스트 입력" col={2}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
               <Input label="레이블" placeholder="플레이스홀더" />
               <Input label="포커스 상태" placeholder="입력 중…" focus />
@@ -178,7 +182,7 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
             <Textarea label="후기 작성" placeholder="내용을 입력해주세요…" rows={3} />
           </Tile>
 
-          <Tile t={t} ds={ds} title="셀렉트 & 드롭다운">
+          <Tile t={t} ds={ds} title="셀렉트 & 드롭다운" col={1}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
               <Select label="카테고리" placeholder="옵션 선택" />
               <Select label="선택됨" placeholder="" value="옵션 1" />
@@ -194,7 +198,7 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
             </div>
           </Tile>
 
-          <Tile t={t} ds={ds} title="체크박스 · 라디오 · 스위치">
+          <Tile t={t} ds={ds} title="체크박스 · 라디오 · 스위치" col={1}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
               <Checkbox checked label="선택됨" />
               <Checkbox label="선택 안 됨" />
@@ -222,9 +226,9 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
       {(all || category === 'cards') && (
         <section>
         <SectionHeading t={t} show={all}>카드 & 리스트</SectionHeading>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', alignItems: 'start', gap: space.xl }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', alignItems: 'start', gap: space.xl }}>
 
-          <Tile t={t} ds={ds} title="카드 변형">
+          <Tile t={t} ds={ds} title="카드 변형" col={2}>
             {/* 기본/강조 카드 */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
               <Card>
@@ -270,7 +274,7 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
             </div>
           </Tile>
 
-          <Tile t={t} ds={ds} title="리스트 로우">
+          <Tile t={t} ds={ds} title="리스트 로우" col={2}>
             <div style={{ background: t.surface, borderRadius: t.radius.card, overflow: 'hidden', border: `1px solid ${t.border}` }}>
               {['첫 번째 항목', '두 번째 항목', '세 번째 항목'].map((item, i) => (
                 <ListRow key={item} divider={i < 2} style={{ paddingLeft: space.md, paddingRight: space.md }}>
@@ -292,7 +296,7 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
             </ListRow>
           </Tile>
 
-          <Tile t={t} ds={ds} title="아바타">
+          <Tile t={t} ds={ds} title="아바타" col={2}>
             <div style={{ display: 'flex', alignItems: 'flex-end', gap: space.md }}>
               {[56, 44, 36, 28, 20].map((sz) => (
                 <div key={sz} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: space.xs }}>
@@ -323,7 +327,7 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
             </div>
           </Tile>
 
-          <Tile t={t} ds={ds} title="스테퍼">
+          <Tile t={t} ds={ds} title="스테퍼" col={1}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Text role="caption" color={t.textSub}>기본</Text>
@@ -340,7 +344,7 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
             </div>
           </Tile>
 
-          <Tile t={t} ds={ds} title="구분선">
+          <Tile t={t} ds={ds} title="구분선" col={1}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: space.md }}>
               <Divider />
               <Divider label="또는" />
@@ -352,7 +356,7 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
             </div>
           </Tile>
 
-          <Tile t={t} ds={ds} title="테이블 (키-값)">
+          <Tile t={t} ds={ds} title="테이블 (키-값)" col={2}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: space.md }}>
               <Table
                 rows={[
@@ -363,12 +367,13 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
                 footer={{ label: '총 결제 금액', value: '189,000원' }}
               />
               <Table
+                headers={['상품명', '가격']}
                 rows={[
-                  { label: '브랜드', value: '소니 코리아' },
-                  { label: '모델명', value: 'WF-1000XM5' },
-                  { label: '색상', value: '블랙' },
-                  { label: '재고', value: '품절', tone: 'danger' },
+                  { label: '반팔 티셔츠', value: '29,000원' },
+                  { label: '데님 팬츠',   value: '59,000원' },
+                  { label: '운동화',      value: '89,000원' },
                 ]}
+                footer={{ label: '총 합계', value: '177,000원' }}
               />
             </div>
           </Tile>
@@ -400,7 +405,7 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
             </Tile>
           )}
 
-          <Tile t={t} ds={ds} title="애스펙트 레이샤">
+          <Tile t={t} ds={ds} title="콘텐츠 비율" col={1}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
               <AspectRatio ratio={16 / 9} label="16:9 — 와이드" />
               <AspectRatio ratio={4 / 3} label="4:3 — 표준" />
@@ -409,24 +414,12 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
             </div>
           </Tile>
 
-          <Tile t={t} ds={ds} title="캐러셀">
+          <Tile t={t} ds={ds} title="캐러셀" col={1}>
             <Carousel items={[
               { label: '슬라이드 1', sub: '첫 번째 항목' },
               { label: '슬라이드 2', sub: '두 번째 항목' },
               { label: '슬라이드 3', sub: '세 번째 항목' },
             ]} />
-          </Tile>
-
-          <Tile t={t} ds={ds} title="데이터 테이블 (헤더 포함)">
-            <Table
-              headers={['상품명', '가격']}
-              rows={[
-                { label: '반팔 티셔츠', value: '29,000원' },
-                { label: '데님 팬츠',   value: '59,000원' },
-                { label: '운동화',      value: '89,000원' },
-              ]}
-              footer={{ label: '총 합계', value: '177,000원' }}
-            />
           </Tile>
         </div>
         </section>
@@ -435,9 +428,9 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
       {(all || category === 'feedback') && (
         <section>
         <SectionHeading t={t} show={all}>피드백</SectionHeading>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', alignItems: 'start', gap: space.xl }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', alignItems: 'start', gap: space.xl }}>
 
-          <Tile t={t} ds={ds} title="배지 & 칩">
+          <Tile t={t} ds={ds} title="배지 & 칩" col={2}>
             {/* 배지 변형 */}
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: space.sm }}>
               <Badge tone="solid">Solid</Badge>
@@ -465,7 +458,7 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
             </div>
           </Tile>
 
-          <Tile t={t} ds={ds} title="레이팅">
+          <Tile t={t} ds={ds} title="레이팅" col={1}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
               {([5, 4.3, 3.5, 1] as const).map((v) => (
                 <div key={v} style={{ display: 'flex', alignItems: 'center', gap: space.sm }}>
@@ -489,7 +482,7 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
             </div>
           </Tile>
 
-          <Tile t={t} ds={ds} title="상태 인디케이터">
+          <Tile t={t} ds={ds} title="상태 인디케이터" col={1}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
               {[
                 { dot: t.success,   label: '온라인', sub: '방금 접속' },
@@ -505,7 +498,7 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
             </div>
           </Tile>
 
-          <Tile t={t} ds={ds} title="토스트 & 알림">
+          <Tile t={t} ds={ds} title="토스트 & 알림" col={2}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
               <Toast message="저장되었습니다" />
               <Toast message="결제가 완료되었습니다" tone="success" />
@@ -515,7 +508,7 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
             </div>
           </Tile>
 
-          <Tile t={t} ds={ds} title="프로그레스">
+          <Tile t={t} ds={ds} title="프로그레스" col={1}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
               <Progress value={30} max={100} label="업로드 중" />
               <Progress value={65} max={100} label="처리 중" />
@@ -529,7 +522,7 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
             </div>
           </Tile>
 
-          <Tile t={t} ds={ds} title="스켈레톤">
+          <Tile t={t} ds={ds} title="스켈레톤" col={1}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: space.sm }}>
                 <Skeleton w={40} h={40} radius="9999px" />
@@ -567,7 +560,7 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
             </Tile>
           )}
 
-          <Tile t={t} ds={ds} title="다이얼로그">
+          <Tile t={t} ds={ds} title="다이얼로그" col={2}>
             <Dialogue
               title="결제를 진행할까요?"
               body="선택한 상품 189,000원이 결제됩니다. 취소하면 장바구니로 돌아갑니다."
@@ -575,7 +568,7 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
             />
           </Tile>
 
-          <Tile t={t} ds={ds} title="오픈 예정 말풍선">
+          <Tile t={t} ds={ds} title="오픈 예정 말풍선" col={2}>
             <ComingSoon sub="준비 중인 기능이에요" />
           </Tile>
 
@@ -586,9 +579,9 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
       {(all || category === 'navigation') && (
         <section>
         <SectionHeading t={t} show={all}>내비게이션</SectionHeading>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', alignItems: 'start', gap: space.xl }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', alignItems: 'start', gap: space.xl }}>
 
-          <Tile t={t} ds={ds} title="탑 내비게이션 바">
+          <Tile t={t} ds={ds} title="탑 내비게이션 바" col={2}>
             {/* 상세 페이지: ← + 제목 + 우측 액션 */}
             <TopBar title="상품 상세" actions={[{ icon: 'send' }, { icon: 'more' }]} />
             {/* 텍스트 액션: ← + 제목 + 텍스트 버튼 */}
@@ -599,7 +592,7 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
             <TopBar back />
           </Tile>
 
-          <Tile t={t} ds={ds} title="탭 내비게이션">
+          <Tile t={t} ds={ds} title="탭 내비게이션" col={2}>
             {/* 하단 탭 바 */}
             <div style={{ background: t.bg, borderTop: `1px solid ${t.border}`, padding: `${space.sm}px ${space.md}px` }}>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)' }}>
@@ -635,7 +628,7 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
             </div>
           </Tile>
 
-          <Tile t={t} ds={ds} title="사이드 메뉴 항목">
+          <Tile t={t} ds={ds} title="사이드 메뉴 항목" col={1}>
             <div style={{ background: t.surface, borderRadius: t.radius.card, overflow: 'hidden', border: `1px solid ${t.border}` }}>
               {([
                 { icon: 'user' as const, label: '내 프로필' },
@@ -654,7 +647,7 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
             </div>
           </Tile>
 
-          <Tile t={t} ds={ds} title="컨텍스트 메뉴">
+          <Tile t={t} ds={ds} title="컨텍스트 메뉴" col={1}>
             <ContextMenu items={[
               { icon: 'edit',       label: '수정하기' },
               { icon: 'send',       label: '공유하기' },
@@ -663,7 +656,7 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
             ]} />
           </Tile>
 
-          <Tile t={t} ds={ds} title="브레드크럼 & 페이지네이션">
+          <Tile t={t} ds={ds} title="브레드크럼 & 페이지네이션" col={2}>
             <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: space.xs }}>
               {['홈', '카테고리', '상의', '티셔츠'].map((crumb, i, arr) => (
                 <React.Fragment key={crumb}>
@@ -690,17 +683,17 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
       {(all || category === 'messaging') && (
         <section>
         <SectionHeading t={t} show={all}>메시지</SectionHeading>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', alignItems: 'start', gap: space.xl }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', alignItems: 'start', gap: space.xl }}>
 
-          <Tile t={t} ds={ds} title="수신 버블">
+          <Tile t={t} ds={ds} title="수신 버블" col={1}>
             <ChatList messages={[{ text: '주문하신 상품이 배송 출발했어요 📦', time: '오전 10:24' }]} />
           </Tile>
 
-          <Tile t={t} ds={ds} title="발신 버블">
+          <Tile t={t} ds={ds} title="발신 버블" col={1}>
             <ChatList messages={[{ text: '감사합니다! 잘 받겠습니다 😊', me: true, time: '오전 10:25' }]} />
           </Tile>
 
-          <Tile t={t} ds={ds} title="버블 상태">
+          <Tile t={t} ds={ds} title="버블 상태" col={2}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: space.md }}>
               <ChatList messages={[{ text: '일반 메시지입니다.' }]} />
               <ChatList messages={[{ text: '긴 텍스트 메시지는 말풍선 안에서 자동으로 줄 바꿈 처리됩니다. 여러 줄이 될 수 있어요.' }]} />
