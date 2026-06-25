@@ -482,7 +482,7 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
                 </div>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: space.md }}>
                   {([12, 16, 20, 24] as const).map((sz) => (
-                    <div key={sz} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: space.xs, minWidth: 0 }}>
+                    <div key={sz} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: space.xs }}>
                       <Rating value={4} max={5} size={sz} />
                       <Text role="caption" color={t.textMuted}>{sz}px</Text>
                     </div>

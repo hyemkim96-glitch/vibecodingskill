@@ -316,7 +316,7 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
     return (
     // min size hugs the stars; max size fills the container and wraps instead
     // of overflowing when the column is too narrow for the full row.
-    <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 2, maxWidth: '100%', minWidth: 0 }}>
+    <div style={{ display: 'flex', flexWrap: 'nowrap', alignItems: 'center', gap: 2, flexShrink: 0 }}>
       {Array.from({ length: max }, (_, i) => {
         const filled = i < Math.floor(value);
         const half = !filled && i < value;
