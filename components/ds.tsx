@@ -312,7 +312,7 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
     const star = t.starFill;
     const gid = React.useId();
     return (
-    <div style={{ display: 'inline-flex', alignItems: 'center', gap: 2 }}>
+    <div style={{ display: 'inline-flex', alignItems: 'center', gap: space.xxs }}>
       {Array.from({ length: max }, (_, i) => {
         const filled = i < Math.floor(value);
         const half = !filled && i < value;
@@ -688,7 +688,7 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
     <div style={{ display: 'flex', flexDirection: 'column', borderRadius: t.radius.card, border: `1px solid ${t.border}`, background: t.surface, overflow: 'hidden', ...style }}>
       {items.map((it, i) => {
         const deltaColor = it.delta === 'up' ? t.danger : it.delta === 'down' ? ensureContrast(t.info, t.surface) : t.textMuted;
-        const deltaSym = it.delta === 'up' ? '▲' : it.delta === 'down' ? '▼' : '▬';
+        const deltaIcon: IconName = it.delta === 'up' ? 'arrowUp' : it.delta === 'down' ? 'chevronDown' : 'minus';
         return (
           <div key={it.title} className="ds-press" style={{ display: 'flex', alignItems: 'center', gap: space.sm, padding: `${space.sm}px ${space.md}px`, borderBottom: i < items.length - 1 ? `1px solid ${t.border}` : 'none', background: t.surface, cursor: 'pointer' }}>
             <span style={{ ...typeStyle(t.type.bodySm), fontWeight: t.weightBold, color: ensureContrast(t.primary, t.surface), width: 18, flexShrink: 0 }}>{i + 1}</span>
@@ -696,7 +696,9 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
               <span style={{ ...typeStyle(t.type.bodySm), color: t.textMain, display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{it.title}</span>
               {it.sub && <span style={{ ...typeStyle(t.type.caption), color: t.textMuted }}>{it.sub}</span>}
             </div>
-            <span style={{ ...typeStyle(t.type.caption), color: deltaColor, flexShrink: 0 }}>{deltaSym}</span>
+            <span style={{ color: deltaColor, flexShrink: 0, display: 'inline-flex' }}>
+              <Icon name={deltaIcon} size={13} color={deltaColor} />
+            </span>
           </div>
         );
       })}
@@ -710,12 +712,12 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
         <Icon name="heart" size={16} color={saved ? t.danger : t.textMuted} />
       </div>
       {tag && (
-        <div style={{ position: 'absolute', left: space.sm, bottom: space.sm, display: 'flex', alignItems: 'center', gap: space.xs, padding: `${space.xxs}px ${space.sm}px`, borderRadius: 9999, background: 'rgba(0,0,0,0.6)' }}>
+        <div style={{ position: 'absolute', left: space.sm, bottom: space.sm, display: 'flex', alignItems: 'center', gap: space.xs, padding: `${space.xxs}px ${space.sm}px`, borderRadius: 9999, background: t.overlay }}>
           <Icon name="bookmark" size={11} color={t.textOnImage} />
           <span style={{ ...typeStyle(t.type.caption), color: t.textOnImage }}>{tag}</span>
         </div>
       )}
-      <div style={{ position: 'absolute', right: space.sm, bottom: space.sm, display: 'flex', alignItems: 'center', gap: space.xxs, padding: `${space.xxs}px ${space.sm}px`, borderRadius: 9999, background: 'rgba(0,0,0,0.6)' }}>
+      <div style={{ position: 'absolute', right: space.sm, bottom: space.sm, display: 'flex', alignItems: 'center', gap: space.xxs, padding: `${space.xxs}px ${space.sm}px`, borderRadius: 9999, background: t.overlay }}>
         <Icon name="heart" size={11} color={t.textOnImage} />
         <span style={{ ...typeStyle(t.type.caption), color: t.textOnImage }}>{count.toLocaleString()}</span>
       </div>
@@ -737,7 +739,7 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
   const ChatList: DS['ChatList'] = ({ messages, style }) => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm, padding: t.cardPad, borderRadius: t.radius.card, background: t.surfaceAlt, ...style }}>
       {messages.map((m, i) => (
-        <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: m.me ? 'flex-end' : 'flex-start', gap: 2 }}>
+        <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: m.me ? 'flex-end' : 'flex-start', gap: space.xxs }}>
           <div style={{
             maxWidth: '78%', padding: `${space.xs}px ${space.lg}px`, borderRadius: t.radius.card,
             background: m.me ? t.primary : t.surface,
@@ -758,17 +760,18 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
       minHeight: 180, background: t.surfaceAlt, borderRadius: t.radius.card,
       ...style,
     }}>
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', paddingBottom: 16 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', paddingBottom: space.lg }}>
         {/* Speech bubble */}
         <div style={{
           position: 'relative', background: t.bg,
           border: `1px solid ${t.border}`, borderRadius: t.radius.card,
           padding: `${space.sm}px ${space.lg}px`,
           display: 'flex', flexDirection: 'column', alignItems: 'center', gap: space.xs,
-          boxShadow: `0 4px 20px rgba(0,0,0,0.06)`, marginBottom: 14,
+          boxShadow: t.shadow.lg, marginBottom: space.md,
         }}>
-          <span style={{ ...typeStyle(t.type.bodySm), fontWeight: t.weightBold, color: t.textMain }}>
-            🔒 {title}
+          <span style={{ ...typeStyle(t.type.bodySm), fontWeight: t.weightBold, color: t.textMain, display: 'inline-flex', alignItems: 'center', gap: space.xs }}>
+            <Icon name="info" size={14} color={t.textMain} />
+            {title}
           </span>
           {sub && <span style={{ ...typeStyle(t.type.caption), color: t.textSub, textAlign: 'center', maxWidth: 220 }}>{sub}</span>}
           {/* Tail — rotated square, half hidden behind bubble bottom for seamless joint */}
@@ -828,7 +831,7 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
   );
 
   const Dialogue: DS['Dialogue'] = ({ title, body, actions = ['취소', '확인'], style }) => (
-    <div style={{ position: 'relative', minHeight: 160, background: 'rgba(0,0,0,0.35)', borderRadius: t.radius.card, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: `${space.xl}px`, ...style }}>
+    <div style={{ position: 'relative', minHeight: 160, background: t.overlay, borderRadius: t.radius.card, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: `${space.xl}px`, ...style }}>
       <div style={{ width: '100%', background: t.bg, borderRadius: t.radius.card, padding: `${space.xl}px`, boxShadow: t.shadow.lg }}>
         <div style={{ ...typeStyle(t.type.bodySm), fontWeight: t.weightBold, color: t.textMain, marginBottom: body ? space.sm : space.lg }}>{title}</div>
         {body && <div style={{ ...typeStyle(t.type.bodySm), color: t.textSub, marginBottom: space.lg }}>{body}</div>}

@@ -87,6 +87,8 @@ function Signature({ ds, pack }: { ds: DS; pack: ContentPack }) {
   const { StatusTracker, BalanceCard, GaugeMeter, RankingList, SaveCollect, EditorialCard, ChatList } = ds;
   const m = pack.metric;
   const steps = pack.statusSteps.length ? pack.statusSteps : ['접수', '준비', '배송', '완료'];
+  const trendUp = String.fromCharCode(9650);
+  const trendDown = String.fromCharCode(9660);
   switch (pack.signature) {
     case 'status':
       return <StatusTracker steps={steps} current={Math.min(2, steps.length - 1)} />;
@@ -95,7 +97,7 @@ function Signature({ ds, pack }: { ds: DS; pack: ContentPack }) {
     case 'gauge':
       return <GaugeMeter label={m?.label ?? '점수'} value={m?.value ?? ''} ratio={0.66} caption={m?.delta} />;
     case 'ranking':
-      return <RankingList items={pack.listRows.map((r) => ({ title: r.title, sub: r.sub, delta: r.meta === '▲' ? 'up' : r.meta === '▼' ? 'down' : 'same' }))} />;
+      return <RankingList items={pack.listRows.map((r) => ({ title: r.title, sub: r.sub, delta: r.meta === trendUp ? 'up' : r.meta === trendDown ? 'down' : 'same' }))} />;
     case 'collect':
       return <SaveCollect count={1204} saved tag={pack.detailMeta[0]} h={140} />;
     case 'editorial':
@@ -217,7 +219,7 @@ function ItemsLayout({ ds, pack, platform, forceArchetype }: { ds: DS; pack: Con
 
 /* ── 메인 ── */
 function PatternMain({ ds, pack, platform, variant = 'commerce' }: { ds: DS; pack: ContentPack; platform: 'mobile' | 'web'; variant?: string }) {
-  const { t, Chip, Text, Thumb, EditorialCard, BalanceCard, Icon, Card, RankingList } = ds;
+  const { t, Chip, Text, Thumb, EditorialCard, BalanceCard, Icon, RankingList } = ds;
   const { space } = t;
 
   /* ── 금융 홈 ── */
@@ -310,7 +312,7 @@ function PatternMain({ ds, pack, platform, variant = 'commerce' }: { ds: DS; pac
 
 /* ── 로그인·가입 ── */
 function PatternAuth({ ds, pack, platform, variant = 'login' }: { ds: DS; pack: ContentPack; platform: 'mobile' | 'web'; variant?: string }) {
-  const { t, Button, Input, Text, Icon } = ds;
+  const { t, Button, Input, Text } = ds;
   const { space } = t;
 
   /* ── PIN 입력 ── */
@@ -491,8 +493,8 @@ function PatternList({ ds, pack, platform, variant = 'grid' }: { ds: DS; pack: C
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Text role="bodySm" weight={t.weightBold}>{pack.heroTitle} <Text role="caption" color={t.textSub}>245개</Text></Text>
         <div style={{ display: 'flex', alignItems: 'center', gap: space.sm }}>
-          <Button variant="secondary" size="sm"><span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><Icon name="filter" size={12} color={t.textSub} />필터</span></Button>
-          <Button variant="secondary" size="sm"><span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>정렬<Icon name="chevronDown" size={12} color={t.textSub} /></span></Button>
+          <Button variant="secondary" size="sm"><span style={{ display: 'flex', alignItems: 'center', gap: space.xs }}><Icon name="filter" size={12} color={t.textSub} />필터</span></Button>
+          <Button variant="secondary" size="sm"><span style={{ display: 'flex', alignItems: 'center', gap: space.xs }}>정렬<Icon name="chevronDown" size={12} color={t.textSub} /></span></Button>
         </div>
       </div>
       <div style={{ display: 'flex', overflow: 'hidden', gap: space.xs }}>
@@ -528,7 +530,7 @@ function PatternDetail({ ds, pack, platform, variant = 'product' }: { ds: DS; pa
         <div style={{ display: 'flex', gap: space.lg, padding: t.cardPad, background: t.surface, borderRadius: t.radius.card, border: `1px solid ${t.border}` }}>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: space.xs, flexShrink: 0 }}>
             <Text role="h1" weight={t.weightBold}>{avgRating}</Text>
-            <div style={{ display: 'flex', gap: 2 }}>
+            <div style={{ display: 'flex', gap: space.xxs }}>
               {[1,2,3,4,5].map((s) => (
                 <svg key={s} width={12} height={12} viewBox="0 0 12 12" fill={s <= Math.round(avgRating) ? t.starFill : t.border}>
                   <path d="M6 1l1.4 2.8L11 4.4l-2.5 2.4.6 3.4L6 8.8l-3.1 1.4.6-3.4L1 4.4l3.6-.6z" />
@@ -551,7 +553,7 @@ function PatternDetail({ ds, pack, platform, variant = 'product' }: { ds: DS; pa
         {reviews.map((r, i) => (
           <div key={r.title} style={{ padding: t.cardPad, background: t.surface, borderRadius: t.radius.card, border: `1px solid ${t.border}`, display: 'flex', flexDirection: 'column', gap: space.sm }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <div style={{ display: 'flex', gap: 2 }}>
+              <div style={{ display: 'flex', gap: space.xxs }}>
                 {[1,2,3,4,5].map((s) => (
                   <svg key={s} width={10} height={10} viewBox="0 0 12 12" fill={s <= 4 + (i % 2) ? t.starFill : t.border}>
                     <path d="M6 1l1.4 2.8L11 4.4l-2.5 2.4.6 3.4L6 8.8l-3.1 1.4.6-3.4L1 4.4l3.6-.6z" />
@@ -601,7 +603,7 @@ function PatternDetail({ ds, pack, platform, variant = 'product' }: { ds: DS; pa
         <Thumb h={180} style={{ borderRadius: t.radius.card }} />
         {info}
         <div style={{ display: 'flex', gap: space.sm }}>
-          <Button variant="secondary"><span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><Icon name="heart" size={14} color={t.textSub} />찜</span></Button>
+          <Button variant="secondary"><span style={{ display: 'flex', alignItems: 'center', gap: space.xs }}><Icon name="heart" size={14} color={t.textSub} />찜</span></Button>
           <Button variant="primary" full>{pack.snippets[2] ?? '바로구매'}</Button>
         </div>
         <div style={{ display: 'flex', borderBottom: `1px solid ${t.border}` }}>
@@ -622,7 +624,7 @@ function PatternDetail({ ds, pack, platform, variant = 'product' }: { ds: DS; pa
         <div style={{ display: 'flex', flexDirection: 'column', gap: space.md }}>
           {info}
           <div style={{ display: 'flex', gap: space.sm }}>
-            <Button variant="secondary"><span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><Icon name="heart" size={14} color={t.textSub} />찜</span></Button>
+            <Button variant="secondary"><span style={{ display: 'flex', alignItems: 'center', gap: space.xs }}><Icon name="heart" size={14} color={t.textSub} />찜</span></Button>
             <Button variant="primary" full>{pack.snippets[2] ?? '바로구매'}</Button>
           </div>
         </div>
@@ -632,10 +634,9 @@ function PatternDetail({ ds, pack, platform, variant = 'product' }: { ds: DS; pa
 }
 
 /* ── 내역 ── */
-function PatternHistory({ ds, pack, platform, variant = 'bank' }: { ds: DS; pack: ContentPack; platform: 'mobile' | 'web'; variant?: string }) {
-  const { t, Badge, Text, Thumb, ListRow, TopBar, BalanceCard, StatusTracker, Icon } = ds;
+function PatternHistory({ ds, pack, variant = 'bank' }: { ds: DS; pack: ContentPack; platform: 'mobile' | 'web'; variant?: string }) {
+  const { t, Badge, Text, Thumb, TopBar, BalanceCard, StatusTracker, Icon } = ds;
   const { space } = t;
-  const tones = ['soft', 'solid', 'muted'] as const;
   const m = pack.metric;
 
   /* ── 결제 내역 ── */
@@ -686,7 +687,7 @@ function PatternHistory({ ds, pack, platform, variant = 'bank' }: { ds: DS; pack
         <div style={{ display: 'flex', flexDirection: 'column', background: t.surface, borderRadius: t.radius.card, border: `1px solid ${t.border}`, overflow: 'hidden' }}>
           {activities.map((act, i) => (
             <div key={act.text} className="ds-press" style={{ display: 'flex', alignItems: 'flex-start', gap: space.md, padding: `${space.sm}px ${space.md}px`, borderBottom: i < activities.length - 1 ? `1px solid ${t.border}` : 'none', cursor: 'pointer' }}>
-              <div style={{ width: 32, height: 32, borderRadius: 9999, background: t.primaryTint, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
+              <div style={{ width: 32, height: 32, borderRadius: 9999, background: t.primaryTint, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: space.xxs }}>
                 <Icon name={act.icon} size={14} color={act.color} />
               </div>
               <div style={{ flex: 1 }}>
@@ -736,7 +737,7 @@ function PatternHistory({ ds, pack, platform, variant = 'bank' }: { ds: DS; pack
 }
 
 /* ── 마이페이지 ── */
-function PatternMyPage({ ds, pack, platform, variant = 'default' }: { ds: DS; pack: ContentPack; platform: 'mobile' | 'web'; variant?: string }) {
+function PatternMyPage({ ds, pack, variant = 'default' }: { ds: DS; pack: ContentPack; platform: 'mobile' | 'web'; variant?: string }) {
   const { t, Button, Badge, Text, Avatar, ListRow, Icon, TopBar, BalanceCard } = ds;
   const { space } = t;
 
@@ -801,7 +802,7 @@ function PatternMyPage({ ds, pack, platform, variant = 'default' }: { ds: DS; pa
           <Text role="bodySm" weight={t.weightBold} style={{ display: 'block' }}>홍길동</Text>
           <Text role="caption" color={t.textSub}>{pack.snippets[0]}</Text>
         </div>
-        <Button variant="outline" size="sm"><span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><Icon name="edit" size={12} color={ensureContrast(t.primary, t.surface)} />편집</span></Button>
+        <Button variant="outline" size="sm"><span style={{ display: 'flex', alignItems: 'center', gap: space.xs }}><Icon name="edit" size={12} color={ensureContrast(t.primary, t.surface)} />편집</span></Button>
       </div>
       <ds.GaugeMeter
         label={pack.metric?.label ?? '활동 점수'}

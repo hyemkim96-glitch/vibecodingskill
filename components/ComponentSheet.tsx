@@ -37,9 +37,9 @@ function SectionHeading({ t, show, children }: { t: ResolvedTheme; show: boolean
   );
 }
 
-function Tile({ t, ds, title, children, col = 1 }: {
+function Tile({ t, title, children, col = 1 }: {
   t: ResolvedTheme;
-  ds: ReturnType<typeof createDS>;
+  ds?: ReturnType<typeof createDS>;
   title: string;
   children: React.ReactNode;
   col?: 1 | 2 | 3 | 4;
@@ -620,7 +620,7 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
             {/* 세그먼트 컨트롤 */}
             <div style={{ background: t.surface, borderRadius: t.radius.button, padding: space.xxs, display: 'flex' }}>
               {['전체', '판매중', '거래완료'].map((label, i) => (
-                <div key={label} className="ds-press" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', padding: `${space.xs + 2}px ${space.sm}px`, borderRadius: t.radius.button, background: i === 0 ? t.bg : 'transparent', boxShadow: i === 0 ? '0 1px 3px rgba(0,0,0,0.08)' : 'none' }}>
+                <div key={label} className="ds-press" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', padding: `${space.xs + 2}px ${space.sm}px`, borderRadius: t.radius.button, background: i === 0 ? t.bg : 'transparent', boxShadow: i === 0 ? t.shadow.sm : 'none' }}>
                   <Text role="caption" weight={i === 0 ? t.weightBold : t.weightRegular} color={i === 0 ? t.textMain : t.textSub}>{label}</Text>
                 </div>
               ))}
@@ -693,13 +693,13 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: space.sm }}>
 
           <Tile t={t} ds={ds} title="수신 버블" col={2}>
-            <ChatList messages={[{ text: '주문하신 상품이 배송 출발했어요 📦', time: '오전 10:24' }]} />
+            <ChatList messages={[{ text: '주문하신 상품이 배송 출발했어요', time: '오전 10:24' }]} />
             <ChatList messages={[{ text: '긴 수신 메시지는 말풍선 안에서 자동으로 줄 바꿈 처리됩니다. 여러 줄이 될 수 있어요.' }]} />
             <ChatList messages={[{ text: '타임스탬프 없는 메시지' }]} />
           </Tile>
 
           <Tile t={t} ds={ds} title="발신 버블" col={2}>
-            <ChatList messages={[{ text: '감사합니다! 잘 받겠습니다 😊', me: true, time: '오전 10:25' }]} />
+            <ChatList messages={[{ text: '감사합니다! 잘 받겠습니다', me: true, time: '오전 10:25' }]} />
             <ChatList messages={[{ text: '긴 발신 메시지도 동일하게 줄 바꿈이 적용되어 말풍선 너비 안에서 자연스럽게 표시됩니다.', me: true }]} />
             <ChatList messages={[{ text: '짧은 발신', me: true }]} />
           </Tile>
@@ -712,14 +712,3 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
   );
 }
 
-// local helper since contrastOn is not exported from resolveTheme v2
-function contrastOnHex(hex: string): string {
-  const h = hex.replace('#', '');
-  if (h.length < 6) return '#ffffff';
-  const linearize = (v: number) => { const s = v / 255; return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4); };
-  const r = linearize(parseInt(h.slice(0, 2), 16));
-  const g = linearize(parseInt(h.slice(2, 4), 16));
-  const b = linearize(parseInt(h.slice(4, 6), 16));
-  const L = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-  return ((1.05) / (L + 0.05)) > ((L + 0.05) / 0.05) ? '#ffffff' : '#111111';
-}

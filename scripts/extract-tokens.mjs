@@ -27,7 +27,7 @@ async function extractTokens(page, url, viewport) {
   try {
     await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 15000 });
     await page.waitForTimeout(2000);
-  } catch (e) {
+  } catch {
     console.warn(`  ⚠️  Load timeout: ${url}`);
   }
 
@@ -56,7 +56,7 @@ async function extractTokens(page, url, viewport) {
             }
           }
         }
-      } catch (_) { /* cross-origin sheet */ }
+      } catch { /* cross-origin sheet */ }
     }
 
     // 2. 실제 사용 중인 컬러 수집 (상위 200개 요소)

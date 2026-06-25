@@ -67,6 +67,7 @@ export interface ResolvedTheme {
   infoWeak: string;
   starFill: string;      // warm highlight amber — --color-fill-highlight
   textOnImage: string;   // text placed over imagery (inverse)
+  overlay: string;       // modal/image overlay tint from semantic tokens
   scrim: string;         // gradient overlay for image legibility
 
   // ── typography ──
@@ -240,6 +241,7 @@ const WIREFRAME_LIGHT = {
   disabled:     wl['--color-fill-neutral-alt'],
   textDisabled: wl['--color-text-disabled'],
   starFill:     wl['--color-fill-highlight'],
+  overlay:      wl['--color-bg-overlay'],
   successWeak:  wl['--color-fill-success-weak'],
   dangerWeak:   wl['--color-fill-danger-weak'],
   warningWeak:  wl['--color-fill-warning-weak'],
@@ -267,6 +269,7 @@ const WIREFRAME_DARK = {
   disabled:     wd['--color-fill-neutral-alt'],
   textDisabled: wd['--color-text-disabled'],
   starFill:     wd['--color-fill-highlight'],
+  overlay:      wd['--color-bg-overlay'],
   successWeak:  wd['--color-fill-success-weak'],
   dangerWeak:   wd['--color-fill-danger-weak'],
   warningWeak:  wd['--color-fill-warning-weak'],
@@ -399,6 +402,7 @@ export function resolveTheme(
     infoText:    ensureContrast(palette.info,    bgColor),
 
     textOnImage: lightTokens['--color-text-on-fill'],
+    overlay: isDark ? darkTokens['--color-bg-overlay'] : lightTokens['--color-bg-overlay'],
     scrim: 'linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 60%)',
 
     font: mode === 'wireframe'

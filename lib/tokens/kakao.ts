@@ -1,4 +1,4 @@
-import { BrandToken, BrandDeep } from '@/types/token';
+import { BrandToken } from '@/types/token';
 
 const colors = [
   { name: '시그니처 옐로우', value: '#FEE500', variable: '--color-brand-yellow', role: '브랜드 아이덴티티, Primary CTA 배경' },

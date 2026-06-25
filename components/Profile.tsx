@@ -3,12 +3,23 @@
 import styles from './Profile.module.css';
 import { User, Shield } from 'lucide-react';
 
+type ProfileUser = {
+    email?: string | null;
+};
+
+type ProfileData = {
+    username?: string | null;
+    badge?: string | null;
+    ranking?: { level?: string | null } | null;
+    role?: string | null;
+};
+
 export default function ProfilePage({
     user,
     profile,
 }: {
-    user: any,
-    profile: any,
+    user: ProfileUser | null,
+    profile: ProfileData | null,
 }) {
     return (
         <div className={styles.container}>

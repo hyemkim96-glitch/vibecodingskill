@@ -1,4 +1,4 @@
-import { BrandToken, BrandDeep } from '@/types/token';
+import { BrandToken } from '@/types/token';
 
 const colors = [
   { name: 'Blue', value: '#246CF8', variable: '--color-blue', role: '주요 액션, CTA 버튼, 활성 상태' },

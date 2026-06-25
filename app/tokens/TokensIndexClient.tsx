@@ -6,6 +6,8 @@ import { BrandToken } from '@/types/token';
 import PillTabs from '@/components/PillTabs';
 import styles from './TokensIndex.module.css';
 import { serviceDS } from '@/lib/tokens/serviceTheme';
+import { contrastOn } from '@/lib/tokens/resolveTheme';
+import { lightTokens } from '@/lib/tokens/semanticTokens';
 
 const { Text, t: st } = serviceDS;
 
@@ -21,7 +23,7 @@ function getBrandColors(colors: BrandToken['colors']) {
 /** 브랜드 primary 컬러 — role에 Primary 명시된 색 우선 */
 function getPrimaryColor(colors: BrandToken['colors']) {
     const explicit = colors.find(c => /primary/i.test(c.role));
-    return explicit?.value ?? getBrandColors(colors)[0]?.value ?? '#888';
+    return explicit?.value ?? getBrandColors(colors)[0]?.value ?? lightTokens['--color-fill-brand'];
 }
 
 /** 브랜드 배경색 — '메인 배경' 또는 '보조 배경'에서 찾기 */
@@ -29,16 +31,12 @@ function getBgColor(colors: BrandToken['colors']) {
     const warm = colors.find(c => /메인 배경/.test(c.role));
     if (warm) return warm.value;
     const sub = colors.find(c => /카드 배경|보조 배경/.test(c.role));
-    return sub?.value ?? '#f5f5f5';
+    return sub?.value ?? lightTokens['--color-fill-neutral'];
 }
 
 /** primary 위에 올라갈 텍스트 색상 (명도 판단) */
 function getContrastColor(hex: string): string {
-    const r = parseInt(hex.slice(1, 3), 16);
-    const g = parseInt(hex.slice(3, 5), 16);
-    const b = parseInt(hex.slice(5, 7), 16);
-    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-    return luminance > 0.62 ? '#111111' : '#ffffff';
+    return contrastOn(hex);
 }
 
 /** 브랜드 카드 — 컬러 팔레트 형식 썸네일 */
@@ -86,7 +84,7 @@ function BrandMiniUI({ token }: { token: BrandToken }) {
                             style={{ flex: 1, background: c.value }}
                         />
                     ))
-                    : <div style={{ flex: 1, background: '#f5f5f5' }} />
+                    : <div style={{ flex: 1, background: getBgColor(token.colors) }} />
                 }
             </div>
         </div>

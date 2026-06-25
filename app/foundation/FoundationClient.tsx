@@ -96,16 +96,6 @@ function Section({ t, title, children, first = false }: { t: Theme; title: strin
   );
 }
 
-function TokenLabel({ t, name, value, sub }: { t: Theme; name: string; value: string; sub?: string }) {
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.xxs }}>
-      <span style={{ ...cap(t), fontWeight: t.weightBold, color: t.textMain }}>{name}</span>
-      <span style={{ ...cap(t), color: t.textMuted }}>{value}</span>
-      {sub && <span style={{ ...cap(t), color: t.textMuted }}>{sub}</span>}
-    </div>
-  );
-}
-
 /* ══════════════════════════════════════════
    컬러 패널
 ══════════════════════════════════════════ */
@@ -182,12 +172,12 @@ function ColorPanel({ t }: { t: Theme; ds: ReturnType<typeof createDS> }) {
     }}>{children}</div>
   );
 
-  // 컬럼 헤더 (☀ light / ◑ dark)
+  // 컬럼 헤더 (light / dark)
   const ColHeader = () => (
     <div style={{ display: 'grid', gridTemplateColumns: '1fr 110px 110px', gap: t.space.xs, padding: `${t.space.xs}px 0`, marginBottom: 1 }}>
       <span />
-      <span style={{ ...cap(t), color: t.textMuted }}>☀ light</span>
-      <span style={{ ...cap(t), color: t.textMuted }}>◑ dark</span>
+      <span style={{ ...cap(t), color: t.textMuted }}>light</span>
+      <span style={{ ...cap(t), color: t.textMuted }}>dark</span>
     </div>
   );
 
@@ -376,11 +366,11 @@ function StrokePanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
               <div style={{ display: 'flex', gap: t.space.lg, flex: 1, alignItems: 'center' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: t.space.sm, flex: 1 }}>
                   <div style={{ width: 20, height: 20, borderRadius: t.radius.badge, border: `2px solid ${light ?? t.border}`, background: t.bg, flexShrink: 0 }} />
-                  <span style={{ ...cap(t), color: t.textMuted, fontFamily: 'monospace' }}>☀ {light ?? '—'}</span>
+                  <span style={{ ...cap(t), color: t.textMuted, fontFamily: 'monospace' }}>light {light ?? '—'}</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: t.space.sm, flex: 1 }}>
-                  <div style={{ width: 20, height: 20, borderRadius: t.radius.badge, border: `2px solid ${dark ?? t.border}`, background: '#18181b', flexShrink: 0 }} />
-                  <span style={{ ...cap(t), color: t.textMuted, fontFamily: 'monospace' }}>◑ {dark ?? '—'}</span>
+                  <div style={{ width: 20, height: 20, borderRadius: t.radius.badge, border: `2px solid ${dark ?? t.border}`, background: darkTokens['--color-bg-normal'], flexShrink: 0 }} />
+                  <span style={{ ...cap(t), color: t.textMuted, fontFamily: 'monospace' }}>dark {dark ?? '—'}</span>
                 </div>
                 <span style={{ ...cap(t), color: t.textMuted, width: 100, flexShrink: 0 }}>{desc}</span>
               </div>
@@ -396,7 +386,7 @@ function StrokePanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
    타이포그래피 패널
 ══════════════════════════════════════════ */
 function TypePanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
-  const { Table, TokenCard, Card } = ds;
+  const { Table, Card } = ds;
   const roles: { name: string; role: keyof Theme['type']; sample: string }[] = [
     { name: 'display', role: 'display', sample: '브랜드 디자인을 코드로' },
     { name: 'h1',      role: 'h1',      sample: '디자인 시스템 파운데이션' },
@@ -545,7 +535,7 @@ function TypePanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
           rows={pretendardWeights.map((w) => {
             const isUsed = [t.weightRegular, t.weightMedium, t.weightBold].includes(w);
             return {
-              label: `${w}${isUsed ? ' ★' : ''}`,
+              label: `${w}${isUsed ? ' used' : ''}`,
               value: (
                 <span style={{ fontSize: t.type.h2.size, fontWeight: w, color: isUsed ? t.textMain : t.textMuted, fontFamily: t.font, letterSpacing: t.type.h2.letterSpacing, opacity: isUsed ? 1 : 0.5 }}>
                   가나다라 Aa 0123
@@ -554,7 +544,7 @@ function TypePanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
             };
           })}
         />
-        <div style={{ ...cap(t), color: t.textMuted, marginTop: t.space.sm }}>★ = 디자인 시스템 사용 웨이트 (regular·medium·bold)</div>
+        <div style={{ ...cap(t), color: t.textMuted, marginTop: t.space.sm }}>used = 디자인 시스템 사용 웨이트 (regular·medium·bold)</div>
       </Section>
     </div>
   );
@@ -636,7 +626,7 @@ function RadiusPanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
           ))}
         </div>
         <Table
-          rows={radii.map(({ name, value, desc }) => ({
+          rows={radii.map(({ name, value }) => ({
             label: name,
             value: `${value}`,
             tone: 'muted' as const,
@@ -668,7 +658,7 @@ function EffectPanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
       <Section t={t} title="원칙" first>
         <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.sm }}>
           {[
-            '엘리베이션은 4단계 스케일(sm→xl)만 사용 — 임의의 그림자 값을 컴포넌트에 직접 작성하지 않습니다.',
+            '엘리베이션은 4단계 스케일(sm to xl)만 사용 — 임의의 그림자 값을 컴포넌트에 직접 작성하지 않습니다.',
             '높이가 올라갈수록 blur와 불투명도가 함께 커져 깊이가 일관되게 읽힙니다.',
             '같은 평면(같은 레이어)의 요소는 같은 엘리베이션을 공유합니다.',
             '다크 모드에서는 그림자 불투명도가 자동으로 강해져 어두운 표면에서도 깊이가 보입니다.',
