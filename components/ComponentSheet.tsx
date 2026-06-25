@@ -612,7 +612,7 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
                       { icon: 'heart' as const, label: '찜', active: false },
                       { icon: 'user' as const, label: '마이', active: false },
                     ].map(({ icon, label, active }) => (
-                      <div key={label} className="ds-press" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: 'pointer', gap: space.xxs, paddingTop: space.xs, paddingBottom: space.xs }}>
+                      <div key={label} className="ds-press" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: 'pointer', gap: space.xxs, paddingTop: space.xs, paddingBottom: space.xs, whiteSpace: 'nowrap' }}>
                         <Icon name={icon} size={18} color={active ? ensureContrast(t.primary, t.bg) : t.textMuted} />
                         <Text role="caption" weight={active ? t.weightBold : t.weightRegular} color={active ? ensureContrast(t.primary, t.bg) : t.textMuted}>{label}</Text>
                       </div>
@@ -621,7 +621,7 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
                 </div>
                 <div style={{ background: t.isDark ? t.bg : t.surfaceAlt, borderRadius: t.radius.button, padding: space.xxs, display: 'flex' }}>
                   {['전체', '판매중', '거래완료'].map((label, i) => (
-                    <div key={label} className="ds-press" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', padding: `${space.xs + 2}px ${space.sm}px`, borderRadius: t.radius.button, background: i === 0 ? t.primary : 'transparent', boxShadow: i === 0 ? t.shadow.sm : 'none' }}>
+                    <div key={label} className="ds-press" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', padding: `${space.xs + 2}px ${space.sm}px`, borderRadius: t.radius.button, background: i === 0 ? t.primary : 'transparent', boxShadow: i === 0 ? t.shadow.sm : 'none', whiteSpace: 'nowrap' }}>
                       <Text role="caption" weight={i === 0 ? t.weightBold : t.weightRegular} color={i === 0 ? t.onPrimary : t.textSub}>{label}</Text>
                     </div>
                   ))}
@@ -647,9 +647,9 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
                     { icon: 'settings' as const, label: '설정' },
                   ]).map((item, i) => (
                     <ListRow key={item.label} divider={i < 3} style={{ paddingLeft: space.md, paddingRight: space.md }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: space.sm, color: t.textMain }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: space.sm, color: t.textMain, whiteSpace: 'nowrap', minWidth: 0 }}>
                         <Icon name={item.icon} size={18} />
-                        <Text role="bodySm" weight={t.weightMedium}>{item.label}</Text>
+                        <Text role="bodySm" weight={t.weightMedium} style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.label}</Text>
                       </div>
                       <span style={{ color: t.textSub, display: 'inline-flex' }}><Icon name="chevronRight" size={16} /></span>
                     </ListRow>
