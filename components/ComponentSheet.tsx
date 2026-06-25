@@ -330,18 +330,16 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
 
               <Tile t={t} ds={ds} title="스테퍼" col={1}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: space.md }}>
-                    <Text role="caption" color={t.textSub}>기본</Text>
-                    <Stepper value={1} />
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: space.md }}>
-                    <Text role="caption" color={t.textSub}>최솟값</Text>
-                    <Stepper value={0} min={0} />
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: space.md }}>
-                    <Text role="caption" color={t.textSub}>최댓값</Text>
-                    <Stepper value={99} max={99} />
-                  </div>
+                  {([
+                    { label: '기본',   props: { value: 1 } },
+                    { label: '최솟값', props: { value: 0, min: 0 } },
+                    { label: '최댓값', props: { value: 99, max: 99 } },
+                  ] as const).map(({ label, props }) => (
+                    <div key={label} style={{ display: 'flex', alignItems: 'center', gap: space.md }}>
+                      <Text role="caption" color={t.textSub} style={{ width: t.type.caption.size * 3.4, flexShrink: 0, whiteSpace: 'nowrap' }}>{label}</Text>
+                      <Stepper {...props} />
+                    </div>
+                  ))}
                 </div>
               </Tile>
 
