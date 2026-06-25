@@ -190,7 +190,7 @@ function ColorPanel({ t }: { t: Theme; ds: ReturnType<typeof createDS> }) {
 
   // 컬럼 헤더 (☀ light / ◑ dark)
   const ColHeader = () => (
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 110px 110px', gap: t.space.xs, padding: `${t.space.xs}px 0`, marginBottom: 1 }}>
+    <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 150px 150px', gap: t.space.xs, padding: `${t.space.xs}px 0`, marginBottom: 1 }}>
       <span />
       <span style={{ ...cap(t), color: t.textMuted }}>☀ light</span>
       <span style={{ ...cap(t), color: t.textMuted }}>◑ dark</span>
@@ -201,20 +201,20 @@ function ColorPanel({ t }: { t: Theme; ds: ReturnType<typeof createDS> }) {
   const TRow = ({ name, light, dark }: { name: string; light: string; dark: string }) => (
     <div style={{
       display: 'grid',
-      gridTemplateColumns: '1fr 110px 110px',
+      gridTemplateColumns: 'minmax(0, 1fr) 150px 150px',
       gap: t.space.xs,
       alignItems: 'center',
       padding: `6px 0`,
       borderBottom: `1px solid ${t.border}`,
     }}>
-      <span style={{ ...cap(t), fontFamily: 'var(--font-ui)', color: t.textSub }}>{name}</span>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+      <span style={{ ...cap(t), fontFamily: 'var(--font-ui)', color: t.textSub, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{name}</span>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 5, width: 150, flexShrink: 0 }}>
         <div style={{ width: 12, height: 12, borderRadius: 3, background: light, border: `1px solid ${t.border}`, flexShrink: 0 }} />
-        <span style={{ ...cap(t), fontFamily: 'var(--font-ui)', color: t.textMuted }}>{light}</span>
+        <span style={{ ...cap(t), fontFamily: 'var(--font-ui)', color: t.textMuted, whiteSpace: 'nowrap' }}>{light}</span>
       </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 5, width: 150, flexShrink: 0 }}>
         <div style={{ width: 12, height: 12, borderRadius: 3, background: dark, border: `1px solid ${t.border}`, flexShrink: 0 }} />
-        <span style={{ ...cap(t), fontFamily: 'var(--font-ui)', color: t.textMuted }}>{dark}</span>
+        <span style={{ ...cap(t), fontFamily: 'var(--font-ui)', color: t.textMuted, whiteSpace: 'nowrap' }}>{dark}</span>
       </div>
     </div>
   );
@@ -379,14 +379,14 @@ function StrokePanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
           rows={colorRoles.map(({ role, light, dark, desc }) => ({
             label: role,
             value: (
-              <div style={{ display: 'flex', gap: t.space.lg, flex: 1, alignItems: 'center' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: t.space.sm, flex: 1 }}>
+              <div style={{ display: 'flex', gap: t.space.md, flex: 1, alignItems: 'center' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: t.space.sm, width: 140, flexShrink: 0 }}>
                   <div style={{ width: 20, height: 20, borderRadius: t.radius.badge, border: `2px solid ${light ?? t.border}`, background: t.bg, flexShrink: 0 }} />
-                  <span style={{ ...cap(t), color: t.textMuted, fontFamily: 'var(--font-ui)' }}>☀ {light ?? '—'}</span>
+                  <span style={{ ...cap(t), color: t.textMuted, fontFamily: 'var(--font-ui)', whiteSpace: 'nowrap' }}>☀ {light ?? '—'}</span>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: t.space.sm, flex: 1 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: t.space.sm, width: 140, flexShrink: 0 }}>
                   <div style={{ width: 20, height: 20, borderRadius: t.radius.badge, border: `2px solid ${dark ?? t.border}`, background: darkTokens['--color-bg-normal'], flexShrink: 0 }} />
-                  <span style={{ ...cap(t), color: t.textMuted, fontFamily: 'var(--font-ui)' }}>◑ {dark ?? '—'}</span>
+                  <span style={{ ...cap(t), color: t.textMuted, fontFamily: 'var(--font-ui)', whiteSpace: 'nowrap' }}>◑ {dark ?? '—'}</span>
                 </div>
                 <span style={{ ...cap(t), color: t.textMuted, width: 100, flexShrink: 0 }}>{desc}</span>
               </div>
