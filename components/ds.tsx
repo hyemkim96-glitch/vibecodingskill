@@ -648,7 +648,7 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
         {delta && <span style={{ ...typeStyle(t.type.caption), fontWeight: t.weightBold, color: ensureContrast(t.success, t.surface) }}>{delta}</span>}
       </div>
       {actions.length > 0 && (
-        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: space.md, marginTop: space.xs }}>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: space.sm, marginTop: space.lg }}>
           {actions.map((a, i) => {
             const isPrimary = i === actions.length - 1;
             return (
