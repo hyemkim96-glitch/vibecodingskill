@@ -14,18 +14,6 @@ function getContrastText(hex: string) {
   return (0.299 * r + 0.587 * g + 0.114 * b) / 255 > 0.55 ? '#111111' : '#ffffff';
 }
 
-const BRAND_KO: Record<string, string> = {
-  toss:      '토스',
-  kakao:     '카카오',
-  daangn:    '당근',
-  musinsa:   '무신사',
-  '29cm':    '29CM',
-  baemin:    '배달의민족',
-  naver:     '네이버',
-  kakaobank: '카카오뱅크',
-  coupang:   '쿠팡',
-  ohouse:    '오늘의집',
-};
 
 const CAT_KO: Record<string, string> = {
   '핀테크/금융': 'FINTECH',
@@ -117,7 +105,7 @@ CTA:    16px / 1   / weight 600 / ls -0.01em`;
 export default function LandingPage() {
   const brands = allTokens.map(t => ({
     slug:     t.slug,
-    name:     BRAND_KO[t.slug] ?? t.name,
+    name:     t.tagline,
     primary:  getPrimary(t.colors),
     category: t.category,
   }));
@@ -142,7 +130,7 @@ export default function LandingPage() {
         </h1>
 
         <p className={styles.heroDesc}>
-          한국 주요 서비스 10개의 디자인 시스템을 OKLCH 4계층 토큰으로 즉시 제공합니다.
+          한국 주요 서비스 9개의 디자인 시스템을 OKLCH 4계층 토큰으로 즉시 제공합니다.
           Design.md 한 장으로 AI가 프로덕션 수준 UI를 완성합니다.
         </p>
 
@@ -189,13 +177,13 @@ export default function LandingPage() {
             </h2>
             <p className={styles.sectionDesc}>
               브랜드마다 디자인 시스템을 직접 구축할 필요 없습니다.
-              이미 검증된 10개 서비스의 토큰을 그대로 활용하세요.
+              이미 검증된 9개 서비스의 토큰을 그대로 활용하세요.
               Figma 없이도 AI가 브랜드를 완전히 이해합니다.
             </p>
           </div>
           <div className={styles.statsRow}>
             {[
-              { num: '10',   label: '브랜드 지원' },
+              { num: '9',    label: '브랜드 지원' },
               { num: '4',    label: '계층 토큰' },
               { num: '5',    label: '내보내기 포맷' },
               { num: '100+', label: '컴포넌트 변형' },
@@ -215,7 +203,7 @@ export default function LandingPage() {
       <section className={styles.section}>
         <p className={styles.sectionEyebrow}>Supported brands</p>
         <h2 className={styles.sectionTitle} style={{ marginBottom: 'var(--spacing-8)' }}>
-          10개 브랜드 디자인 시스템
+          9개 브랜드 디자인 시스템
         </h2>
         <div className={styles.brandGrid}>
           {brands.map(b => {
@@ -254,7 +242,7 @@ export default function LandingPage() {
             </div>
             <div className={styles.stepTitle}>원하는 브랜드의<br />토큰 페이지 입장</div>
             <p className={styles.stepDesc}>
-              토스, 카카오, 당근 등 10개 브랜드 중 레퍼런스로 삼을 서비스를 선택합니다.
+              깔끔한 금융, 일상의 연결, 동네 생활권 등 9개 브랜드 중 레퍼런스로 삼을 서비스를 선택합니다.
               각 브랜드의 실제 컬러·타이포·스페이싱이 토큰으로 정리되어 있습니다.
             </p>
             <div className={styles.stepPreview}>
@@ -423,7 +411,7 @@ export default function LandingPage() {
           지금 바로 탐색해보세요
         </h2>
         <p className={styles.ctaSectionDesc}>
-          10개 브랜드 × 5가지 포맷 × 4계층 토큰 — 무료로 사용할 수 있습니다.
+          9개 브랜드 × 5가지 포맷 × 4계층 토큰 — 무료로 사용할 수 있습니다.
         </p>
         <div className={styles.heroCtas}>
           <Link href="/tokens" className={styles.ctaPrimary}>

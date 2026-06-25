@@ -6,7 +6,6 @@ import { musinsaToken } from './musinsa';
 import { cm29Token } from './cm29';
 import { baeminToken } from './baemin';
 import { naverToken } from './naver';
-import { kakaobankToken } from './kakaobank';
 import { coupangToken } from './coupang';
 import { ohouseToken } from './ohouse';
 
@@ -18,7 +17,6 @@ export const allTokens: BrandToken[] = [
   cm29Token,
   baeminToken,
   naverToken,
-  kakaobankToken,
   coupangToken,
   ohouseToken,
 ];
