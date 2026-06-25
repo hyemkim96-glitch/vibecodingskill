@@ -362,16 +362,17 @@ export function resolveTheme(
   const brandColors = {
     primary,
     onPrimary,
-    primaryTint:
-      c.find((col) => /강조 영역 배경|강조 배경|tint/.test(col.role))?.value ??
-      deriveTint(primary, isDark),
-    bg:         findColor(c, /^기본 배경$|^배경$|배경 \(기본\)/,  isDark ? dt['--color-bg-normal']         : lt['--color-bg-normal']),
-    surface:    findColor(c, /카드 배경|카드 표면/,                isDark ? dt['--color-bg-elevated']       : lt['--color-bg-elevated']),
-    surfaceAlt: findColor(c, /보조 배경|비활성 배경|입력 배경/,    isDark ? dt['--color-fill-neutral-alt']  : lt['--color-fill-neutral']),
-    textMain:   findColor(c, /본문 텍스트|주요 컨텐츠|^텍스트 \(기본\)$/,  isDark ? dt['--color-text-normal']      : lt['--color-text-normal']),
-    textSub:    findColor(c, /보조 텍스트|라벨|^텍스트 \(보조\)$/,         isDark ? dt['--color-text-alternative'] : lt['--color-text-alternative']),
-    textMuted:  findColor(c, /비활성 텍스트|플레이스홀더|힌트/,             isDark ? dt['--color-text-assistive']   : lt['--color-text-assistive']),
-    border:     findColor(c, /구분선|보더|^선$/,                            isDark ? dt['--color-border-normal']    : lt['--color-border-normal']),
+    primaryTint: isDark
+      ? deriveTint(primary, true)
+      : (c.find((col) => /강조 영역 배경|강조 배경|tint/.test(col.role))?.value ??
+         deriveTint(primary, false)),
+    bg:         isDark ? dt['--color-bg-normal']        : findColor(c, /^기본 배경$|^배경$|배경 \(기본\)/,  lt['--color-bg-normal']),
+    surface:    isDark ? dt['--color-bg-elevated']      : findColor(c, /카드 배경|카드 표면/,                lt['--color-bg-elevated']),
+    surfaceAlt: isDark ? dt['--color-fill-neutral-alt'] : findColor(c, /보조 배경|비활성 배경|입력 배경/,    lt['--color-fill-neutral']),
+    textMain:   isDark ? dt['--color-text-normal']      : findColor(c, /본문 텍스트|주요 컨텐츠|^텍스트 \(기본\)$/,  lt['--color-text-normal']),
+    textSub:    isDark ? dt['--color-text-alternative'] : findColor(c, /보조 텍스트|라벨|^텍스트 \(보조\)$/,         lt['--color-text-alternative']),
+    textMuted:  isDark ? dt['--color-text-assistive']   : findColor(c, /비활성 텍스트|플레이스홀더|힌트/,             lt['--color-text-assistive']),
+    border:     isDark ? dt['--color-border-normal']    : findColor(c, /구분선|보더|^선$/,                            lt['--color-border-normal']),
     accent,
     // Semantic colors derived from brand-harmonious hue families (step 600 = fill).
     // Brand token overrides take priority (e.g. Baemin explicitly sets Success Teal).
