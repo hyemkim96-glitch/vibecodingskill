@@ -1,7 +1,7 @@
 import { BrandToken, PlatformToken } from '@/types/token';
 import { lightTokens, darkTokens } from './semanticTokens';
 import { suggestColorScheme } from './colorAutomation';
-import { resolveIconStyleFromToken } from './resolveTheme';
+import { resolveIconStyleFromToken, resolveTheme } from './resolveTheme';
 
 /* ═══════════════════════════════════════════════════════════════
  * 4-Tier CSS var reference maps
@@ -77,18 +77,51 @@ const VARIANT_TOKEN_VARS: Record<string, string> = {
 /* ─────────────── helpers ─────────────── */
 
 function getBrandPrimary(token: BrandToken): string {
-  return token.colors.find(c => /primary/i.test(c.role))?.value
-    ?? lightTokens['--color-fill-normal'];
+  // Same resolution the renderer uses, so brand colours (often Korean roles like
+  // "주요 액션"/"CTA") are detected instead of falling back to a neutral.
+  return resolveTheme(token, 'mobile', 'brand').primary;
 }
 
 function getMergedSemanticLight(token: BrandToken): Record<string, string> {
-  const brandPrimary = getBrandPrimary(token);
-  const brandOverrides = suggestColorScheme(brandPrimary);
+  // Drive the exported semantic colours from resolveTheme — the exact values the
+  // on-screen preview renders — so copying the CSS reproduces the UI 1:1.
+  const rt = resolveTheme(token, 'mobile', 'brand');
+  const brandOverrides = suggestColorScheme(rt.primary);
   const merged: Record<string, string> = { ...lightTokens };
   for (const [k, v] of Object.entries(brandOverrides)) {
     if (v) merged[k] = v;
   }
+  // The renderer paints every primary-action surface (primary button, solid
+  // badge, active chip, tab indicator → all bound to --color-fill-normal) with
+  // the brand primary, so the exported fill-normal must be the brand colour too.
+  merged['--color-fill-normal']      = rt.primary;
+  merged['--color-fill-strong']      = rt.primary;
+  merged['--color-fill-brand']       = rt.primary;
+  merged['--color-fill-brand-weak']  = rt.primaryTint;
+  merged['--color-text-on-fill']     = rt.onPrimary;
+  // Semantic families are harmonised to the brand hue at render time — export the
+  // same harmonised values, not the raw Foundation palette.
+  merged['--color-fill-success']      = rt.success;
+  merged['--color-fill-danger']       = rt.danger;
+  merged['--color-fill-warning']      = rt.warning;
+  merged['--color-fill-info']         = rt.info;
+  merged['--color-fill-success-weak'] = rt.successWeak;
+  merged['--color-fill-danger-weak']  = rt.dangerWeak;
+  merged['--color-fill-warning-weak'] = rt.warningWeak;
+  merged['--color-fill-info-weak']    = rt.infoWeak;
+  merged['--color-text-success']      = rt.successText;
+  merged['--color-text-danger']       = rt.dangerText;
+  merged['--color-text-warning']      = rt.warningText;
+  merged['--color-text-info']         = rt.infoText;
   return merged;
+}
+
+/** Semantic spacing scale (xxs…xl) with the density-derived values the renderer
+ *  actually uses — exported alongside the raw scale so copied tokens reproduce
+ *  the on-screen gaps/padding. */
+function semanticSpaceScale(token: BrandToken, platform: 'mobile' | 'web'): Array<[string, number]> {
+  const sp = resolveTheme(token, platform, 'brand').space;
+  return (['xxs', 'xs', 'sm', 'md', 'lg', 'xl'] as const).map((k) => [k, sp[k]] as [string, number]);
 }
 
 function typeSizes(p: PlatformToken): string {
@@ -532,6 +565,7 @@ export function generateCSS(token: BrandToken, platform: 'mobile' | 'web' = 'mob
     .join('\n');
 
   const spacingVars = p.spacing.scale.map(s => `  ${s.token}: ${s.value};`).join('\n');
+  const semanticSpaceVars = semanticSpaceScale(token, platform).map(([k, v]) => `  --space-${k}: ${v}px;`).join('\n');
   const shapeVars = p.shapes.map(s => `  --radius-${s.element}: ${s.value};`).join('\n');
 
   return `/* =====================================================
@@ -561,8 +595,11 @@ ${tier2Light}
   --font-substitute: ${p.typography.substitute ?? 'system-ui'};
 ${typeVars}
 
-  /* Spacing */
+  /* Spacing — raw scale (4px grid design tokens) */
 ${spacingVars}
+
+  /* Spacing — semantic scale (the density-aware gaps/padding components render) */
+${semanticSpaceVars}
 
   /* Border radius */
 ${shapeVars}
@@ -609,6 +646,7 @@ ${tier2Dark.split('\n').map(l => '  ' + l).join('\n')}
 export function generateTailwind(token: BrandToken, platform: 'mobile' | 'web' = 'mobile'): string {
   const p = token.platforms[platform];
   const spacingVars = p.spacing.scale.map(s => `  ${s.token}: ${s.value};`).join('\n');
+  const semanticSpaceVars = semanticSpaceScale(token, platform).map(([k, v]) => `  --spacing-${k}: ${v}px;`).join('\n');
   const shapeVars = p.shapes.map(s => `  --radius-${s.element}: ${s.value};`).join('\n');
 
   return `/* =====================================================
@@ -660,8 +698,11 @@ export function generateTailwind(token: BrandToken, platform: 'mobile' | 'web' =
   --font-primary: ${p.typography.family};
 ${p.typography.sizes.map(s => `  --text-${s.role.toLowerCase().replace(/\s+/g, '-')}: ${s.size};`).join('\n')}
 
-  /* Spacing */
+  /* Spacing — raw 4px grid scale (p-4, gap-8 …) */
 ${spacingVars}
+
+  /* Spacing — semantic scale (p-md, gap-lg … = the gaps components render) */
+${semanticSpaceVars}
 
   /* Border radius */
 ${shapeVars}
@@ -714,6 +755,10 @@ export function generateDesignTokensJSON(token: BrandToken, platform: 'mobile' |
   const spacing: Record<string, { value: string; type: string }> = {};
   p.spacing.scale.forEach(s => {
     spacing[s.name] = { value: s.value, type: 'spacing' };
+  });
+  // Semantic scale (xxs…xl) with the density-derived values components render.
+  semanticSpaceScale(token, platform).forEach(([k, v]) => {
+    spacing[k] = { value: `${v}px`, type: 'spacing' };
   });
 
   const radius: Record<string, { value: string; type: string }> = {};
