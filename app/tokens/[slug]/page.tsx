@@ -23,13 +23,5 @@ export default async function TokenPage({ params }: { params: Promise<{ slug: st
     figma: generateFigmaVariables(token, 'mobile'),
   };
 
-  const webCodes = {
-    designMd: generateDesignMd(token, 'web'),
-    css: generateCSS(token, 'web'),
-    tailwind: generateTailwind(token, 'web'),
-    json: generateDesignTokensJSON(token, 'web'),
-    figma: generateFigmaVariables(token, 'web'),
-  };
-
-  return <TokenPageClient token={token} mobileCodes={mobileCodes} webCodes={webCodes} />;
+  return <TokenPageClient token={token} mobileCodes={mobileCodes} />;
 }

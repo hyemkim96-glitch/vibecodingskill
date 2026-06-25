@@ -261,7 +261,7 @@
   --color-fill-brand-weak:  var(--palette-neutral-800);
   --color-text-normal:      var(--palette-neutral-50);
   --color-text-alternative: var(--palette-neutral-400);
-  --color-text-assistive:   var(--palette-neutral-600);
+  --color-text-assistive:   var(--palette-neutral-500);
   --color-text-disabled:    var(--palette-neutral-700);
   --color-text-on-fill:     var(--palette-neutral-950);
   --color-text-brand:       var(--palette-neutral-50);
@@ -270,6 +270,18 @@
   --color-border-weak:      var(--palette-neutral-800);
   --color-border-brand:     var(--palette-neutral-50);
   --color-border-focus:     var(--palette-neutral-50);
+  /* Status text — lightened for dark background */
+  --color-text-success:     oklch(0.700 0.155 145);
+  --color-text-danger:      oklch(0.700 0.175 27);
+  --color-text-warning:     oklch(0.740 0.125 62);
+  --color-text-info:        oklch(0.690 0.145 254);
+  --color-text-accent:      oklch(0.700 0.178 293);
+  /* Status fill-weak — darkened tints for dark background */
+  --color-fill-success-weak: oklch(0.200 0.042 145);
+  --color-fill-danger-weak:  oklch(0.200 0.048 27);
+  --color-fill-warning-weak: oklch(0.210 0.033 62);
+  --color-fill-info-weak:    oklch(0.200 0.038 254);
+  --color-fill-accent-weak:  oklch(0.200 0.046 293);
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
@@ -285,7 +297,7 @@
     --color-fill-brand-weak:  var(--palette-neutral-800);
     --color-text-normal:      var(--palette-neutral-50);
     --color-text-alternative: var(--palette-neutral-400);
-    --color-text-assistive:   var(--palette-neutral-600);
+    --color-text-assistive:   var(--palette-neutral-500);
     --color-text-disabled:    var(--palette-neutral-700);
     --color-text-on-fill:     var(--palette-neutral-950);
     --color-text-brand:       var(--palette-neutral-50);
@@ -294,6 +306,16 @@
     --color-border-weak:      var(--palette-neutral-800);
     --color-border-brand:     var(--palette-neutral-50);
     --color-border-focus:     var(--palette-neutral-50);
+    --color-text-success:     oklch(0.700 0.155 145);
+    --color-text-danger:      oklch(0.700 0.175 27);
+    --color-text-warning:     oklch(0.740 0.125 62);
+    --color-text-info:        oklch(0.690 0.145 254);
+    --color-text-accent:      oklch(0.700 0.178 293);
+    --color-fill-success-weak: oklch(0.200 0.042 145);
+    --color-fill-danger-weak:  oklch(0.200 0.048 27);
+    --color-fill-warning-weak: oklch(0.210 0.033 62);
+    --color-fill-info-weak:    oklch(0.200 0.038 254);
+    --color-fill-accent-weak:  oklch(0.200 0.046 293);
   }
 }
 

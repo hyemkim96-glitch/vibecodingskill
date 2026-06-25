@@ -15,7 +15,6 @@ import { useTheme } from '@/components/ThemeProvider';
 import styles from './TokenPage.module.css';
 
 type TabKey = 'designMd' | 'css' | 'tailwind' | 'json' | 'figma';
-type Platform = 'mobile' | 'web';
 type Section = 'foundation' | 'components' | 'patterns';
 
 const TABS: { key: TabKey; label: string }[] = [
@@ -43,7 +42,6 @@ const SECTIONS: { key: Section; label: string }[] = [
 interface Props {
   token: BrandToken;
   mobileCodes: Record<TabKey, string>;
-  webCodes: Record<TabKey, string>;
 }
 
 const KOREAN_SAMPLE = '한글은 아름다운 언어입니다. 디자인 시스템이 이를 담아냅니다.';
@@ -199,22 +197,21 @@ const BRAND_COMP_CATS: Record<string, ComponentCategory[]> = {
   toss:      ['buttons', 'cards', 'feedback'],                 // balance → cards
 };
 
-export default function TokenPageClient({ token, mobileCodes, webCodes }: Props) {
+export default function TokenPageClient({ token, mobileCodes }: Props) {
   const brandPatterns = BRAND_PATTERNS[token.slug] ?? (PATTERN_TYPES.map(p => p.key) as PatternType[]);
   const brandCompCats = BRAND_COMP_CATS[token.slug] ?? (COMPONENT_CATEGORIES.map(c => c.key) as ComponentCategory[]);
 
   const { theme: appTheme } = useTheme();
 
   const [activeTab,       setActiveTab]       = useState<TabKey>('designMd');
-  const [platform,        setPlatform]        = useState<Platform>('mobile');
   const [copied,          setCopied]          = useState(false);
   const [selectedType,    setSelectedType]    = useState<string | null>(null);
   const [section,         setSection]         = useState<Section>('foundation');
   const [compCategory,    setCompCategory]    = useState<ComponentCategory>(brandCompCats[0] ?? 'cards');
   const [activePattern,   setActivePattern]   = useState<PatternType>(brandPatterns[0] ?? 'main');
 
-  const codes = platform === 'mobile' ? mobileCodes : webCodes;
-  const p = token.platforms[platform];
+  const codes = mobileCodes;
+  const p = token.platforms['mobile'];
 
   /* Brand DS — brand primary preserved, structural colors switch to dark foundation when app is dark */
   const effectiveToken = useMemo(
@@ -222,14 +219,14 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
     [token, appTheme],
   );
   const brandTheme = useMemo(
-    () => resolveTheme(effectiveToken, platform, 'brand'),
-    [effectiveToken, platform],
+    () => resolveTheme(effectiveToken, 'mobile', 'brand'),
+    [effectiveToken],
   );
   const brandDS = useMemo(() => {
     const ds = createDS(brandTheme);
-    ds.t = { ...ds.t, isMobile: platform === 'mobile' };
+    ds.t = { ...ds.t, isMobile: true };
     return ds;
-  }, [brandTheme, platform]);
+  }, [brandTheme]);
 
   const brandPalette = useMemo(
     () => generateBrandPalette(brandTheme.primary),
@@ -249,7 +246,7 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${token.slug}-${platform}-${FILE_EXTENSIONS[activeTab]}`;
+    a.download = `${token.slug}-${FILE_EXTENSIONS[activeTab]}`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -271,19 +268,6 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
         </div>
 
         <div className={styles.divider} />
-
-        {/* Platform toggle */}
-        <div className={styles.platformToggle}>
-          {(['mobile', 'web'] as const).map(pl => (
-            <button
-              key={pl}
-              className={`${styles.platformBtn} ${platform === pl ? styles.platformBtnActive : ''}`}
-              onClick={() => setPlatform(pl)}
-            >
-              {pl === 'mobile' ? '모바일' : '웹'}
-            </button>
-          ))}
-        </div>
 
         {/* Section navigation — 패턴 is permanently disabled; ComingSoon floats above the tab */}
         <div style={{ position: 'relative' }}>
@@ -552,7 +536,7 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
           </div>
 
           <div className={styles.codeActions}>
-            <span className={styles.fileName}>{platform.toUpperCase()} · {FILE_EXTENSIONS[activeTab]}</span>
+            <span className={styles.fileName}>{FILE_EXTENSIONS[activeTab]}</span>
             <div className={styles.actionBtns}>
               <button
                 className={`${styles.actionBtn} ${copied ? styles.actionBtnCopied : ''}`}

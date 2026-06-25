@@ -5,15 +5,14 @@ import { createDS, motionVars, typeStyle } from '@/components/ds';
 import { renderPattern, PATTERN_TYPES, PATTERN_VARIANTS, PatternType } from '@/components/patterns';
 import { defaultPack } from '@/lib/content/packs';
 import PillTabs from '@/components/PillTabs';
-import { serviceDS, serviceTheme, serviceMobileTheme } from '@/lib/tokens/serviceTheme';
+import { serviceDS, serviceMobileTheme } from '@/lib/tokens/serviceTheme';
 
 const { Text, t: st } = serviceDS;
 
 export default function PatternsClient() {
   const [activePattern, setActivePattern] = useState<PatternType>('main');
-  const [platform, setPlatform] = useState<'mobile' | 'web'>('mobile');
 
-  const theme = platform === 'mobile' ? serviceMobileTheme : serviceTheme;
+  const theme = serviceMobileTheme;
   const ds = createDS(theme, true);
 
   const variants = PATTERN_VARIANTS[activePattern];
@@ -30,14 +29,6 @@ export default function PatternsClient() {
           <Text role="caption" color={st.textMuted}>
             {PATTERN_TYPES.find((p) => p.key === activePattern)?.desc}
           </Text>
-        </div>
-        {/* 플랫폼 토글 */}
-        <div style={{ display: 'flex', flexShrink: 0, gap: st.space.sm }}>
-          {(['mobile', 'web'] as const).map((p) => (
-            <button key={p} onClick={() => setPlatform(p)} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
-              <ds.Chip active={platform === p}>{p === 'mobile' ? '모바일' : '웹'}</ds.Chip>
-            </button>
-          ))}
         </div>
       </div>
 
@@ -67,7 +58,7 @@ export default function PatternsClient() {
               border: `1px solid ${st.border}`,
             }}>
               <div className="ds-root" style={motionVars(theme)}>
-                {renderPattern(activePattern, ds, platform, defaultPack, v.key)}
+                {renderPattern(activePattern, ds, 'mobile', defaultPack, v.key)}
               </div>
             </div>
           </div>
