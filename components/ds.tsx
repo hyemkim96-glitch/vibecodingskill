@@ -573,14 +573,21 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
   );
 
   const Toast: DS['Toast'] = ({ message, tone = 'default', action, style }) => {
+    // BG/border stay uniform (neutral surface) across every tone — only the icon
+    // and text carry the semantic color. Works the same in light and dark because
+    // surface and ensureContrast both adapt to the active theme.
     const TONE = {
-      success: { bg: t.successWeak, border: t.success,   accent: t.success,   textColor: t.successText, icon: 'checkCircle' as IconName },
-      danger:  { bg: t.dangerWeak,  border: t.danger,    accent: t.danger,    textColor: t.dangerText,  icon: 'alertCircle' as IconName },
-      warning: { bg: t.warningWeak, border: t.warning,   accent: t.warning,   textColor: t.warningText, icon: 'alertCircle' as IconName },
-      info:    { bg: t.infoWeak,    border: t.info,      accent: t.info,      textColor: t.infoText,    icon: 'info'        as IconName },
-      default: { bg: t.surface,     border: t.border,    accent: t.textMuted, textColor: t.textSub,     icon: 'info'        as IconName },
+      success: { accent: t.success,  icon: 'checkCircle' as IconName },
+      danger:  { accent: t.danger,   icon: 'alertCircle' as IconName },
+      warning: { accent: t.warning,  icon: 'alertCircle' as IconName },
+      info:    { accent: t.info,     icon: 'info'        as IconName },
+      default: { accent: t.textSub,  icon: 'info'        as IconName },
     };
-    const { bg, border: bdColor, accent, textColor, icon } = TONE[tone];
+    const { accent: rawAccent, icon } = TONE[tone];
+    const bg = t.surface;
+    const bdColor = t.border;
+    const accent = ensureContrast(rawAccent, bg);
+    const textColor = tone === 'default' ? t.textMain : accent;
     return (
       <div style={{
         display: 'flex', alignItems: 'center', gap: space.sm,
