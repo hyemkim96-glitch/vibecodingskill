@@ -70,7 +70,7 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
   const { Button, Input, Badge, Chip, Card, Text, Thumb, Avatar, ListRow, Stepper, Rating,
           Checkbox, Switch, Radio, Textarea, Select, Divider, Skeleton, Progress, TopBar, Table, Toast,
           StatusTracker, BalanceCard, GaugeMeter, RankingList, SaveCollect, EditorialCard, ChatList, ComingSoon,
-          Carousel, ContextMenu, Dialogue } = ds;
+          NavTab, Carousel, ContextMenu, Dialogue } = ds;
   const { space } = t;
   const all = category === 'all';
   const showSig = (k: SignatureKind) => !signature || signature === k;
@@ -628,8 +628,8 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
                 </div>
                 <div style={{ borderBottom: `1px solid ${t.border}`, display: 'flex' }}>
                   {['홈', '카테고리', '라이브', '마이'].map((label, i) => (
-                    <div key={label} className="ds-press" style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: 'pointer', paddingBottom: space.sm, paddingTop: space.sm, borderBottom: i === 0 ? `2px solid ${t.primary}` : '2px solid transparent', marginBottom: -1 }}>
-                      <Text role="caption" weight={i === 0 ? t.weightBold : t.weightRegular} color={i === 0 ? ensureContrast(t.primary, t.bg) : t.textSub}>{label}</Text>
+                    <div key={label} style={{ flex: 1, display: 'flex', justifyContent: 'center', marginBottom: -1 }}>
+                      <NavTab active={i === 0}>{label}</NavTab>
                     </div>
                   ))}
                 </div>
