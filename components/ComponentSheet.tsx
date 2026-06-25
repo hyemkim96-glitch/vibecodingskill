@@ -37,15 +37,17 @@ function Tile({ t, ds, title, children, col = 1 }: {
 }) {
   return (
     <div style={{
-      background: t.bg, border: `1px solid ${t.border}`, borderRadius: t.radius.card, padding: t.space.md,
+      background: t.bg, border: `1px solid ${t.border}`, borderRadius: t.radius.card, padding: t.space.lg,
       gridColumn: col > 1 ? `span ${col}` : undefined,
       display: 'flex', flexDirection: 'column',
       minHeight: 100, minWidth: 0,
     }}>
-      <p style={{ ...typeStyle(t.type.bodySm), color: t.textMain, fontWeight: t.weightBold, marginBottom: t.space.sm, flexShrink: 0 }}>
+      <p style={{ ...typeStyle(t.type.bodySm), color: t.textMain, fontWeight: t.weightBold, marginBottom: t.space.md, flexShrink: 0 }}>
         {title}
       </p>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.sm }}>
+      {/* Distinct component groups inside a tile get a roomier gap so they don't
+          read as crammed together. */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.lg }}>
         {children}
       </div>
     </div>

@@ -4,7 +4,8 @@ import { useState } from 'react';
 import { ResolvedTheme } from '@/lib/tokens/resolveTheme';
 import { typeStyle, createDS, motionVars } from '@/components/ds';
 import PillTabs from '@/components/PillTabs';
-import { serviceDS, serviceMobileTheme } from '@/lib/tokens/serviceTheme';
+import { useTheme } from '@/components/ThemeProvider';
+import { serviceDS, serviceMobileTheme, serviceDarkDS, serviceDarkMobileTheme } from '@/lib/tokens/serviceTheme';
 import { neutral, hues, HueName } from '@/lib/tokens/palette';
 import { lightTokens, darkTokens } from '@/lib/tokens/semanticTokens';
 import { lightRoleTokens, darkRoleTokens, lightVariantTokens, darkVariantTokens } from '@/lib/tokens/roleTokens';
@@ -22,14 +23,17 @@ const CATEGORIES: { key: FoundationCategory; label: string }[] = [
   { key: 'motion', label: '모션' },
 ];
 
-const { Text: ServiceText, t: st } = serviceDS;
-
 type Theme = ResolvedTheme;
 
 export default function FoundationClient() {
   const [active, setActive] = useState<FoundationCategory>('color');
-  const t = serviceMobileTheme;
+  const { theme } = useTheme();
+  const dark = theme === 'dark';
+  // Foundation previews are DS components styled with inline values, so they must
+  // follow the app theme explicitly (CSS-var elements switch on their own).
+  const t = dark ? serviceDarkMobileTheme : serviceMobileTheme;
   const ds = createDS(t, true);
+  const { Text: ServiceText, t: st } = dark ? serviceDarkDS : serviceDS;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.xl }}>
@@ -155,7 +159,7 @@ function ColorPanel({ t }: { t: Theme; ds: ReturnType<typeof createDS> }) {
     }}>
       <span style={{
         ...cap(t),
-        fontFamily: 'monospace',
+        fontFamily: 'var(--font-ui)',
         fontWeight: t.weightBold,
         color: t.textMuted,
         background: t.surface,
@@ -203,14 +207,14 @@ function ColorPanel({ t }: { t: Theme; ds: ReturnType<typeof createDS> }) {
       padding: `6px 0`,
       borderBottom: `1px solid ${t.border}`,
     }}>
-      <span style={{ ...cap(t), fontFamily: 'monospace', color: t.textSub }}>{name}</span>
+      <span style={{ ...cap(t), fontFamily: 'var(--font-ui)', color: t.textSub }}>{name}</span>
       <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
         <div style={{ width: 12, height: 12, borderRadius: 3, background: light, border: `1px solid ${t.border}`, flexShrink: 0 }} />
-        <span style={{ ...cap(t), fontFamily: 'monospace', color: t.textMuted }}>{light}</span>
+        <span style={{ ...cap(t), fontFamily: 'var(--font-ui)', color: t.textMuted }}>{light}</span>
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
         <div style={{ width: 12, height: 12, borderRadius: 3, background: dark, border: `1px solid ${t.border}`, flexShrink: 0 }} />
-        <span style={{ ...cap(t), fontFamily: 'monospace', color: t.textMuted }}>{dark}</span>
+        <span style={{ ...cap(t), fontFamily: 'var(--font-ui)', color: t.textMuted }}>{dark}</span>
       </div>
     </div>
   );
@@ -359,10 +363,10 @@ function StrokePanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
           </div>
           {widths.map(({ name, w, desc }, i) => (
             <div key={name} style={{ display: 'grid', gridTemplateColumns: '100px 1fr 180px', padding: `${t.space.sm}px ${t.space.md}px`, background: t.surface, borderBottom: i < widths.length - 1 ? `1px solid ${t.border}` : 'none', alignItems: 'center' }}>
-              <span style={{ ...cap(t), color: t.textMain, fontFamily: 'monospace' }}>{name}</span>
+              <span style={{ ...cap(t), color: t.textMain, fontFamily: 'var(--font-ui)' }}>{name}</span>
               <div style={{ display: 'flex', alignItems: 'center', gap: t.space.sm }}>
                 <div style={{ flex: 1, height: w, background: t.textMain, borderRadius: w, maxWidth: 140 }} />
-                <span style={{ ...cap(t), color: t.textMuted, fontFamily: 'monospace', width: 32, flexShrink: 0 }}>{w}px</span>
+                <span style={{ ...cap(t), color: t.textMuted, fontFamily: 'var(--font-ui)', width: 32, flexShrink: 0 }}>{w}px</span>
               </div>
               <span style={{ ...cap(t), color: t.textMuted }}>{desc}</span>
             </div>
@@ -378,11 +382,11 @@ function StrokePanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
               <div style={{ display: 'flex', gap: t.space.lg, flex: 1, alignItems: 'center' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: t.space.sm, flex: 1 }}>
                   <div style={{ width: 20, height: 20, borderRadius: t.radius.badge, border: `2px solid ${light ?? t.border}`, background: t.bg, flexShrink: 0 }} />
-                  <span style={{ ...cap(t), color: t.textMuted, fontFamily: 'monospace' }}>☀ {light ?? '—'}</span>
+                  <span style={{ ...cap(t), color: t.textMuted, fontFamily: 'var(--font-ui)' }}>☀ {light ?? '—'}</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: t.space.sm, flex: 1 }}>
                   <div style={{ width: 20, height: 20, borderRadius: t.radius.badge, border: `2px solid ${dark ?? t.border}`, background: '#18181b', flexShrink: 0 }} />
-                  <span style={{ ...cap(t), color: t.textMuted, fontFamily: 'monospace' }}>◑ {dark ?? '—'}</span>
+                  <span style={{ ...cap(t), color: t.textMuted, fontFamily: 'var(--font-ui)' }}>◑ {dark ?? '—'}</span>
                 </div>
                 <span style={{ ...cap(t), color: t.textMuted, width: 100, flexShrink: 0 }}>{desc}</span>
               </div>
@@ -591,7 +595,7 @@ function SpacePanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
             value: (
               <div style={{ display: 'flex', alignItems: 'center', gap: t.space.md }}>
                 <div style={{ height: 14, width: Math.max(value, 2), background: t.primary, borderRadius: 2, flexShrink: 0 }} />
-                <span style={{ ...cap(t), color: t.textMuted, fontFamily: 'monospace' }}>{value}px</span>
+                <span style={{ ...cap(t), color: t.textMuted, fontFamily: 'var(--font-ui)' }}>{value}px</span>
               </div>
             ),
           }))}
@@ -668,6 +672,7 @@ const RATIOS = [
 ] as const;
 
 function RatioPanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
+  const { Card } = ds;
   return (
     <div>
       <Section t={t} title="콘텐츠 비율 토큰" first>
@@ -694,7 +699,7 @@ function RatioPanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
                   </div>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.xxs }}>
-                  <span style={{ ...bodySm(t), fontWeight: t.weightBold, color: t.textMain, fontFamily: 'monospace' }}>aspect-ratio: {css}</span>
+                  <span style={{ ...bodySm(t), fontWeight: t.weightBold, color: t.textMain, fontFamily: 'var(--font-ui)' }}>aspect-ratio: {css}</span>
                   <span style={{ ...cap(t), color: t.textSub }}>{desc}</span>
                 </div>
               </div>
@@ -709,13 +714,18 @@ function RatioPanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
         </p>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: t.space.md, alignItems: 'start' }}>
           {([['1 / 1', '1:1 그리드'], ['4 / 3', '4:3 카드'], ['16 / 9', '16:9 배너'], ['3 / 4', '3:4 포트레이트']] as const).map(([css, label]) => (
-            <div key={css} style={{ background: t.bg, border: `1px solid ${t.border}`, borderRadius: t.radius.card, overflow: 'hidden' }}>
-              <div style={{ aspectRatio: css, background: t.surfaceAlt, width: '100%' }} />
+            <Card key={css} pad={false} interactive={false}>
+              {/* Uniform-height media frame: the ratio box keeps its shape but every
+                  frame is the same height, so the title text starts at the same Y
+                  across all cards regardless of aspect ratio. */}
+              <div style={{ height: 112, display: 'flex', alignItems: 'center', justifyContent: 'center', background: t.surface, borderBottom: `1px solid ${t.border}`, padding: t.space.sm }}>
+                <div style={{ height: '100%', aspectRatio: css, maxWidth: '100%', background: t.surfaceAlt, borderRadius: t.radius.badge }} />
+              </div>
               <div style={{ padding: t.space.sm }}>
                 <span style={{ ...cap(t), fontWeight: t.weightBold, color: t.textMain, display: 'block', marginBottom: t.space.xxs }}>카드 제목</span>
                 <span style={{ ...cap(t), color: t.textSub }}>{label}</span>
               </div>
-            </div>
+            </Card>
           ))}
         </div>
       </Section>
