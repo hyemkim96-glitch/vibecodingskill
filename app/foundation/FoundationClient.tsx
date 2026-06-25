@@ -672,39 +672,25 @@ const RATIOS = [
 ] as const;
 
 function RatioPanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
-  const { Card } = ds;
+  const { Card, AspectRatio } = ds;
   return (
     <div>
       <Section t={t} title="콘텐츠 비율 토큰" first>
         <p style={{ ...cap(t), color: t.textSub, marginBottom: t.space.xl }}>
           이미지·썸네일·카드 UI의 가로세로 비율 기준입니다. 고정 높이(px) 대신 <code>aspect-ratio</code> CSS 속성으로 비율을 지정하면 컨테이너 너비에 따라 자동으로 높이가 결정됩니다.
         </p>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: t.space.md }}>
-          {RATIOS.map(({ label, ratio, desc, css }) => {
-            const isLandscape = ratio >= 1;
-            const previewW = 120;
-            const previewH = Math.round(previewW / ratio);
-            return (
-              <div key={label} style={{ display: 'flex', flexDirection: 'column', gap: t.space.sm, background: t.bg, border: `1px solid ${t.border}`, borderRadius: t.radius.card, padding: t.space.md }}>
-                <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'center', minHeight: 80 }}>
-                  <div style={{
-                    width: isLandscape ? previewW : previewH,
-                    height: isLandscape ? previewH : previewW,
-                    background: t.primaryTint,
-                    borderRadius: t.radius.badge,
-                    border: `1px solid ${t.border}`,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  }}>
-                    <span style={{ ...cap(t), fontWeight: t.weightBold, color: t.primary }}>{label}</span>
-                  </div>
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.xxs }}>
-                  <span style={{ ...bodySm(t), fontWeight: t.weightBold, color: t.textMain, fontFamily: 'var(--font-ui)' }}>aspect-ratio: {css}</span>
-                  <span style={{ ...cap(t), color: t.textSub }}>{desc}</span>
-                </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: t.space.md, alignItems: 'start' }}>
+          {RATIOS.map(({ label, ratio, desc, css }) => (
+            <Card key={label} pad={false} interactive={false}>
+              <AspectRatio ratio={ratio}>
+                <span style={{ ...cap(t), fontWeight: t.weightBold, color: t.primary }}>{label}</span>
+              </AspectRatio>
+              <div style={{ padding: `${t.space.sm}px ${t.space.md}px ${t.space.md}px`, display: 'flex', flexDirection: 'column', gap: t.space.xxs }}>
+                <code style={{ ...cap(t), fontWeight: t.weightBold, color: t.textMain, fontFamily: 'var(--font-code)' }}>aspect-ratio: {css}</code>
+                <span style={{ ...cap(t), color: t.textSub }}>{desc}</span>
               </div>
-            );
-          })}
+            </Card>
+          ))}
         </div>
       </Section>
 
@@ -713,14 +699,14 @@ function RatioPanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
           동일한 카드 컴포넌트에 비율 토큰만 교체해 보여줍니다.
         </p>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: t.space.md, alignItems: 'start' }}>
-          {([['1 / 1', '1:1 그리드'], ['4 / 3', '4:3 카드'], ['16 / 9', '16:9 배너'], ['3 / 4', '3:4 포트레이트']] as const).map(([css, label]) => (
-            <Card key={css} pad={false} interactive={false}>
-              {/* Uniform-height media frame: the ratio box keeps its shape but every
-                  frame is the same height, so the title text starts at the same Y
-                  across all cards regardless of aspect ratio. */}
-              <div style={{ height: 112, display: 'flex', alignItems: 'center', justifyContent: 'center', background: t.surface, borderBottom: `1px solid ${t.border}`, padding: t.space.sm }}>
-                <div style={{ height: '100%', aspectRatio: css, maxWidth: '100%', background: t.surfaceAlt, borderRadius: t.radius.badge }} />
-              </div>
+          {([
+            [1,       '1:1 그리드'],
+            [4/3,     '4:3 카드'],
+            [16/9,    '16:9 배너'],
+            [3/4,     '3:4 포트레이트'],
+          ] as const).map(([ratio, label]) => (
+            <Card key={label} pad={false} interactive={false}>
+              <AspectRatio ratio={ratio} />
               <div style={{ padding: t.space.sm }}>
                 <span style={{ ...cap(t), fontWeight: t.weightBold, color: t.textMain, display: 'block', marginBottom: t.space.xxs }}>카드 제목</span>
                 <span style={{ ...cap(t), color: t.textSub }}>{label}</span>

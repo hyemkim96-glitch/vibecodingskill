@@ -35,10 +35,12 @@ function Tile({ t, ds, title, children, col = 1 }: {
   children: React.ReactNode;
   col?: 1 | 2 | 3 | 4;
 }) {
+  // Grid is 2 columns max; cap spans so nothing overflows
+  const span = Math.min(col, 2);
   return (
     <div style={{
       background: t.bg, border: `1px solid ${t.border}`, borderRadius: t.radius.card, padding: t.space.lg,
-      gridColumn: col > 1 ? `span ${col}` : undefined,
+      gridColumn: span > 1 ? `span ${span}` : undefined,
       display: 'flex', flexDirection: 'column',
       minHeight: 100, minWidth: 0,
     }}>
@@ -55,11 +57,10 @@ function Tile({ t, ds, title, children, col = 1 }: {
 }
 
 /** One row of the bento grid — tiles inside are forced to the same height (CSS grid stretch).
- *  Columns keep a 150px floor so tiles never squish below a usable width; when the container
- *  is narrower than 4 floors, the sheet scrolls horizontally instead of crushing the cells. */
+ *  Two columns max; 200px floor prevents tiles becoming too narrow to read. */
 function RowGrid({ space, children }: { space: ResolvedTheme['space']; children: React.ReactNode }) {
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(150px, 1fr))', gap: space.sm }}>
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(200px, 1fr))', gap: space.sm }}>
       {children}
     </div>
   );
@@ -570,7 +571,7 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
                   <GaugeMeter label="매너온도" value="36.5°C" ratio={0.66} caption="따뜻한 이웃이에요" />
                 </Tile>
               )}
-              <Tile t={t} ds={ds} title="다이얼로그" col={(4 - (showSig('status') ? 1 : 0) - (showSig('gauge') ? 1 : 0) - 1) as 1 | 2 | 3}>
+              <Tile t={t} ds={ds} title="다이얼로그" col={1}>
                 <Dialogue
                   title="결제를 진행할까요?"
                   body="선택한 상품 189,000원이 결제됩니다. 취소하면 장바구니로 돌아갑니다."
