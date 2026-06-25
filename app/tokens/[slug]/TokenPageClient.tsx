@@ -116,6 +116,7 @@ function SubTabStrip({ items, active, onChange }: {
             background:  active === it.key ? 'var(--color-text-normal)'  : 'transparent',
             color:       active === it.key ? 'var(--color-bg-normal)'     : 'var(--color-text-alternative)',
             transition: 'all 0.15s',
+            whiteSpace: 'nowrap',
           }}
         >
           {it.label}

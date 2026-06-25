@@ -503,9 +503,9 @@ function PatternList({ ds, pack, platform, variant = 'grid' }: { ds: DS; pack: C
         {pack.chips.map((f, i) => <ds.Chip key={f} active={i === 0}>{f}</ds.Chip>)}
       </div>
       {variant === 'grid' && (
-        <div style={{ display: 'grid', gridTemplateColumns: `repeat(${collectItems.length}, 1fr)`, gap: space.sm }}>
+        <div style={{ display: 'grid', gridTemplateColumns: `repeat(${platform === 'web' ? 2 : collectItems.length}, 1fr)`, gap: space.sm }}>
           {collectItems.map((it, i) => (
-            <SaveCollect key={it.name} count={1200 - i * 180} saved={i === 0} tag={it.name} h={90} />
+            <SaveCollect key={it.name} count={1200 - i * 180} saved={i === 0} tag={it.name} h={platform === 'web' ? 150 : 90} />
           ))}
         </div>
       )}
@@ -516,7 +516,7 @@ function PatternList({ ds, pack, platform, variant = 'grid' }: { ds: DS; pack: C
 
 /* ── 상세 (PDP) ── */
 function PatternDetail({ ds, pack, platform, variant = 'product' }: { ds: DS; pack: ContentPack; platform: 'mobile' | 'web'; variant?: string }) {
-  const { t, Button, Text, Thumb, Icon, TopBar, Badge } = ds;
+  const { t, Button, Text, Thumb, Icon, TopBar, Badge, Rating } = ds;
   const { space } = t;
   const priceItem = pack.items.find((it) => it.price);
 
@@ -532,13 +532,7 @@ function PatternDetail({ ds, pack, platform, variant = 'product' }: { ds: DS; pa
         <div style={{ display: 'flex', gap: space.lg, padding: t.cardPad, background: t.surface, borderRadius: t.radius.card, border: `1px solid ${t.border}` }}>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: space.xs, flexShrink: 0 }}>
             <Text role="h1" weight={t.weightBold}>{avgRating}</Text>
-            <div style={{ display: 'flex', gap: 2 }}>
-              {[1,2,3,4,5].map((s) => (
-                <svg key={s} width={12} height={12} viewBox="0 0 12 12" fill={s <= Math.round(avgRating) ? t.starFill : t.border}>
-                  <path d="M6 1l1.4 2.8L11 4.4l-2.5 2.4.6 3.4L6 8.8l-3.1 1.4.6-3.4L1 4.4l3.6-.6z" />
-                </svg>
-              ))}
-            </div>
+            <Rating value={avgRating} size={12} />
             <Text role="caption" color={t.textSub}>128개 리뷰</Text>
           </div>
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: space.xs }}>
@@ -546,7 +540,7 @@ function PatternDetail({ ds, pack, platform, variant = 'product' }: { ds: DS; pa
               <div key={stars} style={{ display: 'flex', alignItems: 'center', gap: space.xs }}>
                 <Text role="caption" color={t.textSub} style={{ width: 8, flexShrink: 0 }}>{stars}</Text>
                 <div style={{ flex: 1, height: 4, background: t.border, borderRadius: 9999, overflow: 'hidden' }}>
-                  <div style={{ width: `${pct}%`, height: '100%', background: t.starFill, borderRadius: 9999 }} />
+                  <div style={{ width: `${pct}%`, height: '100%', background: t.primary, borderRadius: 9999 }} />
                 </div>
               </div>
             ))}
@@ -555,13 +549,7 @@ function PatternDetail({ ds, pack, platform, variant = 'product' }: { ds: DS; pa
         {reviews.map((r, i) => (
           <div key={r.title} style={{ padding: t.cardPad, background: t.surface, borderRadius: t.radius.card, border: `1px solid ${t.border}`, display: 'flex', flexDirection: 'column', gap: space.sm }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <div style={{ display: 'flex', gap: 2 }}>
-                {[1,2,3,4,5].map((s) => (
-                  <svg key={s} width={10} height={10} viewBox="0 0 12 12" fill={s <= 4 + (i % 2) ? t.starFill : t.border}>
-                    <path d="M6 1l1.4 2.8L11 4.4l-2.5 2.4.6 3.4L6 8.8l-3.1 1.4.6-3.4L1 4.4l3.6-.6z" />
-                  </svg>
-                ))}
-              </div>
+              <Rating value={4 + (i % 2)} size={10} />
               <Text role="caption" color={t.textMuted}>{r.meta ?? '3일 전'}</Text>
             </div>
             <Text role="caption" weight={t.weightBold}>{r.title}</Text>

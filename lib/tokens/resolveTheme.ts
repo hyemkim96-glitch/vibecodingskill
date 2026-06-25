@@ -288,17 +288,24 @@ export function resolveTheme(
   const isDark = token.theme === 'dark';
 
   // ── primary color ──
-  const primary =
+  const brandPrimaryRaw =
     c.find((col) => /primary|주요 액션|CTA/i.test(col.role))?.value ??
     c.find((col) => !isNeutral(col.name))?.value ??
     (isDark ? darkTokens['--color-fill-brand'] : lightTokens['--color-fill-brand']);
+  // In dark mode, lift a brand primary that's too dark to read on the dark canvas
+  // (e.g. Musinsa's near-black) until it clears WCAG AA against bg. Hue is
+  // preserved, so the brand still reads as itself — black simply inverts toward
+  // white. No-op when the primary is already legible (e.g. Toss blue).
+  const primary = isDark
+    ? ensureContrastOklch(brandPrimaryRaw, darkTokens['--color-bg-normal'], 4.5)
+    : brandPrimaryRaw;
   // Prefer an explicit brand override (e.g. Kakao brown on yellow, Daangn white on orange)
   const onPrimaryExplicit = c.find((col) => /CTA 텍스트|버튼 텍스트/i.test(col.role))?.value;
   const onPrimary = onPrimaryExplicit ?? contrastOn(primary);
 
-  // accent: first non-neutral colour that isn't primary
+  // accent: first non-neutral colour that isn't the brand primary
   const accent =
-    c.find((col) => !isNeutral(col.name) && col.value !== primary)?.value ??
+    c.find((col) => !isNeutral(col.name) && col.value !== brandPrimaryRaw)?.value ??
     primary;
 
   // ── typography weights ──
@@ -355,7 +362,7 @@ export function resolveTheme(
 
   // Harmonious semantic hue families — same chromaScale as brand primary so
   // success/danger/warning/info read as perceptually matched in saturation.
-  const harmony = makeBrandHarmony(primary);
+  const harmony = makeBrandHarmony(brandPrimaryRaw);
   const hAt = (family: BrandHueStep[], step: 600 | 700) =>
     family.find((s) => s.step === step)?.hex;
 

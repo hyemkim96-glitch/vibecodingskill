@@ -42,7 +42,7 @@ function Tile({ t, ds, title, children, col = 1 }: {
       display: 'flex', flexDirection: 'column',
       minHeight: 100, minWidth: 0,
     }}>
-      <p style={{ ...typeStyle(t.type.bodySm), color: t.textMain, fontWeight: t.weightBold, marginBottom: t.space.md, flexShrink: 0 }}>
+      <p style={{ ...typeStyle(t.type.bodySm), color: t.textMain, fontWeight: t.weightBold, marginBottom: t.space.md, flexShrink: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
         {title}
       </p>
       {/* Distinct component groups inside a tile get a roomier gap so they don't
@@ -619,9 +619,9 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
                     ))}
                   </div>
                 </div>
-                <div style={{ background: t.surface, borderRadius: t.radius.button, padding: space.xxs, display: 'flex' }}>
+                <div style={{ background: t.isDark ? t.bg : t.surfaceAlt, borderRadius: t.radius.button, padding: space.xxs, display: 'flex' }}>
                   {['전체', '판매중', '거래완료'].map((label, i) => (
-                    <div key={label} className="ds-press" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', padding: `${space.xs + 2}px ${space.sm}px`, borderRadius: t.radius.button, background: i === 0 ? t.bg : 'transparent', boxShadow: i === 0 ? '0 1px 3px rgba(0,0,0,0.08)' : 'none' }}>
+                    <div key={label} className="ds-press" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', padding: `${space.xs + 2}px ${space.sm}px`, borderRadius: t.radius.button, background: i === 0 ? t.surface : 'transparent', boxShadow: i === 0 ? t.shadow.sm : 'none' }}>
                       <Text role="caption" weight={i === 0 ? t.weightBold : t.weightRegular} color={i === 0 ? t.textMain : t.textSub}>{label}</Text>
                     </div>
                   ))}

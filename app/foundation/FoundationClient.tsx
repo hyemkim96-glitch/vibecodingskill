@@ -385,7 +385,7 @@ function StrokePanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
                   <span style={{ ...cap(t), color: t.textMuted, fontFamily: 'var(--font-ui)' }}>☀ {light ?? '—'}</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: t.space.sm, flex: 1 }}>
-                  <div style={{ width: 20, height: 20, borderRadius: t.radius.badge, border: `2px solid ${dark ?? t.border}`, background: '#18181b', flexShrink: 0 }} />
+                  <div style={{ width: 20, height: 20, borderRadius: t.radius.badge, border: `2px solid ${dark ?? t.border}`, background: darkTokens['--color-bg-normal'], flexShrink: 0 }} />
                   <span style={{ ...cap(t), color: t.textMuted, fontFamily: 'var(--font-ui)' }}>◑ {dark ?? '—'}</span>
                 </div>
                 <span style={{ ...cap(t), color: t.textMuted, width: 100, flexShrink: 0 }}>{desc}</span>

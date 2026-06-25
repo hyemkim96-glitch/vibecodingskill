@@ -172,6 +172,7 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
               ? `1px solid ${t.border}`
               : 'none',
         padding: size === 'sm' ? `${space.xs}px ${space.md}px` : size === 'lg' ? `${space.md}px ${space.xl}px` : `${space.sm}px ${space.lg}px`,
+        whiteSpace: 'nowrap',
       }}
     >
       {children}
@@ -239,6 +240,7 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
           background: s.bg,
           color: s.fg,
           border: s.bd,
+          whiteSpace: 'nowrap',
         }}
       >
         {children}
@@ -729,9 +731,9 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
         <Icon name="heart" size={16} color={saved ? t.danger : t.textMuted} />
       </div>
       {tag && (
-        <div style={{ position: 'absolute', left: space.sm, bottom: space.sm, display: 'flex', alignItems: 'center', gap: space.xs, padding: `${space.xxs}px ${space.sm}px`, borderRadius: 9999, background: 'rgba(0,0,0,0.6)' }}>
+        <div style={{ position: 'absolute', left: space.sm, bottom: space.sm, maxWidth: 'calc(100% - 90px)', display: 'flex', alignItems: 'center', gap: space.xs, padding: `${space.xxs}px ${space.sm}px`, borderRadius: 9999, background: 'rgba(0,0,0,0.6)' }}>
           <Icon name="bookmark" size={11} color={t.textOnImage} />
-          <span style={{ ...typeStyle(t.type.caption), color: t.textOnImage }}>{tag}</span>
+          <span style={{ ...typeStyle(t.type.caption), color: t.textOnImage, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{tag}</span>
         </div>
       )}
       <div style={{ position: 'absolute', right: space.sm, bottom: space.sm, display: 'flex', alignItems: 'center', gap: space.xxs, padding: `${space.xxs}px ${space.sm}px`, borderRadius: 9999, background: 'rgba(0,0,0,0.6)' }}>
@@ -784,7 +786,7 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
           border: `1px solid ${t.border}`, borderRadius: t.radius.card,
           padding: `${space.sm}px ${space.lg}px`,
           display: 'flex', flexDirection: 'column', alignItems: 'center', gap: space.xs,
-          boxShadow: `0 4px 20px rgba(0,0,0,0.06)`, marginBottom: 14,
+          boxShadow: t.shadow.lg, marginBottom: 14,
         }}>
           <span style={{ ...typeStyle(t.type.bodySm), fontWeight: t.weightBold, color: t.textMain }}>
             🔒 {title}
