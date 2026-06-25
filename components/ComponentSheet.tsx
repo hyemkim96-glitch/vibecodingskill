@@ -27,7 +27,7 @@ function SectionHeading({ t, show, children }: { t: ResolvedTheme; show: boolean
   );
 }
 
-/** A single bento tile — fills its grid cell. Content is top-aligned, min/max guards against extreme stretching. */
+/** A single bento tile — fills its grid cell. Content is top-aligned; grows to fit (no height cap so nothing is clipped). */
 function Tile({ t, ds, title, children, col = 1 }: {
   t: ResolvedTheme;
   ds: ReturnType<typeof createDS>;
@@ -40,7 +40,7 @@ function Tile({ t, ds, title, children, col = 1 }: {
       background: t.bg, border: `1px solid ${t.border}`, borderRadius: t.radius.card, padding: t.space.md,
       gridColumn: col > 1 ? `span ${col}` : undefined,
       display: 'flex', flexDirection: 'column',
-      minHeight: 100, maxHeight: 480,
+      minHeight: 100, minWidth: 0,
     }}>
       <p style={{ ...typeStyle(t.type.bodySm), color: t.textMain, fontWeight: t.weightBold, marginBottom: t.space.sm, flexShrink: 0 }}>
         {title}
@@ -52,10 +52,12 @@ function Tile({ t, ds, title, children, col = 1 }: {
   );
 }
 
-/** One row of the bento grid — tiles inside are forced to the same height (CSS grid stretch). */
+/** One row of the bento grid — tiles inside are forced to the same height (CSS grid stretch).
+ *  Columns keep a 150px floor so tiles never squish below a usable width; when the container
+ *  is narrower than 4 floors, the sheet scrolls horizontally instead of crushing the cells. */
 function RowGrid({ space, children }: { space: ResolvedTheme['space']; children: React.ReactNode }) {
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: space.sm }}>
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(150px, 1fr))', gap: space.sm }}>
       {children}
     </div>
   );
@@ -72,7 +74,7 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
   const showSig = (k: SignatureKind) => !signature || signature === k;
 
   return (
-    <div className="ds-root" style={{ ...motionVars(t), display: 'flex', flexDirection: 'column', background: t.surfaceAlt, padding: t.space.md, fontFamily: t.font, gap: all ? space.xl : space.sm }}>
+    <div className="ds-root" style={{ ...motionVars(t), display: 'flex', flexDirection: 'column', background: t.surfaceAlt, padding: t.space.md, fontFamily: t.font, gap: all ? space.xl : space.sm, overflowX: 'auto' }}>
 
       {/* ── 버튼 & 액션 ── */}
       {(all || category === 'buttons') && (
@@ -87,9 +89,10 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
                 <Button variant="ghost" full>Ghost</Button>
                 <Button variant="primary" full disabled>Disabled</Button>
               </div>
-              <div style={{ display: 'flex', gap: space.sm }}>
-                <div style={{ flex: 1 }}><Button variant="primary" size="sm" full>Small</Button></div>
-                <div style={{ flex: 1 }}><Button variant="secondary" size="sm" full>취소</Button></div>
+              <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: space.sm }}>
+                <Button variant="primary" size="lg">Large</Button>
+                <Button variant="primary" size="md">Medium</Button>
+                <Button variant="primary" size="sm">Small</Button>
               </div>
             </Tile>
 
@@ -121,7 +124,7 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
 
             <Tile t={t} ds={ds} title="플로팅 버튼 (FAB)" col={1}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: space.md }}>
-                <div style={{ display: 'flex', alignItems: 'flex-end', gap: space.md }}>
+                <div style={{ display: 'flex', alignItems: 'flex-end', flexWrap: 'wrap', gap: space.md }}>
                   {[{ size: 56, ic: 'plus', label: 'Large' }, { size: 44, ic: 'edit', label: 'Medium' }, { size: 36, ic: 'plus', label: 'Small' }].map(({ size, ic, label }) => (
                     <div key={label} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: space.xs }}>
                       <div className="ds-press" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', width: size, height: size, borderRadius: '9999px', background: t.primary, color: t.onPrimary }}>
@@ -376,20 +379,23 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
                 />
               </Tile>
 
-              <Tile t={t} ds={ds} title="캐러셀" col={1}>
+              <Tile t={t} ds={ds} title="캐러셀" col={2}>
                 <Carousel items={[
                   { label: '슬라이드 1', sub: '첫 번째 항목' },
                   { label: '슬라이드 2', sub: '두 번째 항목' },
                   { label: '슬라이드 3', sub: '세 번째 항목' },
                 ]} />
               </Tile>
+            </RowGrid>
 
-              {showSig('balance') && (
-                <Tile t={t} ds={ds} title="잔액 카드" col={1}>
+            {/* Row 3.5: 잔액 카드 (col=2 확보) */}
+            {showSig('balance') && (
+              <RowGrid space={space}>
+                <Tile t={t} ds={ds} title="잔액 카드" col={2}>
                   <BalanceCard label="총 자산" value="12,480,200원" delta="+2.4%" actions={['보내기', '충전']} />
                 </Tile>
-              )}
-            </RowGrid>
+              </RowGrid>
+            )}
 
             {/* Row 4: sig tiles */}
             {(showSig('collect') || showSig('editorial') || showSig('ranking')) && (
