@@ -72,10 +72,14 @@ function price(p?: string): string {
 
 function Screen({ ds, topBar, children }: { ds: DS; topBar?: React.ReactNode; children: React.ReactNode }) {
   const { t } = ds;
+  // Two-tier rhythm: distinct component areas (the direct children here) are
+  // separated by a wide section gap so boundaries read clearly, while components
+  // that belong to the same area stay tightly grouped inside each child. The gap
+  // is density-aware (space.xl), so brand spacing still drives the feel.
   return (
     <div style={{ display: 'flex', flexDirection: 'column', background: t.bg, minHeight: t.isMobile ? 320 : 280, fontFamily: t.font, overflow: 'hidden' }}>
       {topBar}
-      <div style={{ display: 'flex', flexDirection: 'column', padding: t.containerPad, gap: t.space.md, flex: 1 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', padding: t.containerPad, gap: t.space.xl, flex: 1 }}>
         {children}
       </div>
     </div>

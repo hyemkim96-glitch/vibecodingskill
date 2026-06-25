@@ -688,8 +688,19 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
   const RankingList: DS['RankingList'] = ({ items, style }) => (
     <div style={{ display: 'flex', flexDirection: 'column', borderRadius: t.radius.card, border: `1px solid ${t.border}`, background: t.surface, overflow: 'hidden', ...style }}>
       {items.map((it, i) => {
-        const deltaColor = it.delta === 'up' ? t.danger : it.delta === 'down' ? ensureContrast(t.info, t.surface) : t.textMuted;
-        const deltaSym = it.delta === 'up' ? '▲' : it.delta === 'down' ? '▼' : '▬';
+        // Rank-change indicator — crisp CSS triangles (caret style), coloured from
+        // Foundation semantics: 상승 = danger(red), 하락 = info(blue), 보합 = muted dash.
+        const upColor = ensureContrast(t.danger, t.surface);
+        const downColor = ensureContrast(t.info, t.surface);
+        const Delta = () => {
+          if (it.delta === 'up') {
+            return <span aria-label="상승" style={{ width: 0, height: 0, borderLeft: '4px solid transparent', borderRight: '4px solid transparent', borderBottom: `6px solid ${upColor}`, flexShrink: 0 }} />;
+          }
+          if (it.delta === 'down') {
+            return <span aria-label="하락" style={{ width: 0, height: 0, borderLeft: '4px solid transparent', borderRight: '4px solid transparent', borderTop: `6px solid ${downColor}`, flexShrink: 0 }} />;
+          }
+          return <span aria-label="보합" style={{ width: 8, height: 2, borderRadius: 1, background: t.textMuted, flexShrink: 0 }} />;
+        };
         return (
           <div key={it.title} className="ds-press" style={{ display: 'flex', alignItems: 'center', gap: space.sm, padding: `${space.sm}px ${space.md}px`, borderBottom: i < items.length - 1 ? `1px solid ${t.border}` : 'none', background: t.surface, cursor: 'pointer' }}>
             <span style={{ ...typeStyle(t.type.bodySm), fontWeight: t.weightBold, color: ensureContrast(t.primary, t.surface), width: 18, flexShrink: 0 }}>{i + 1}</span>
@@ -697,7 +708,7 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
               <span style={{ ...typeStyle(t.type.bodySm), color: t.textMain, display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{it.title}</span>
               {it.sub && <span style={{ ...typeStyle(t.type.caption), color: t.textMuted }}>{it.sub}</span>}
             </div>
-            <span style={{ ...typeStyle(t.type.caption), color: deltaColor, flexShrink: 0 }}>{deltaSym}</span>
+            <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 12, flexShrink: 0 }}><Delta /></span>
           </div>
         );
       })}

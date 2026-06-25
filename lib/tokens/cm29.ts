@@ -14,7 +14,7 @@ const colors = [
 ];
 
 const typography = {
-  family: 'Noto Serif KR',
+  family: "'Noto Serif KR', serif",
   substitute: 'Georgia, Times New Roman, serif',
   weights: [300, 400, 500, 700],
   sizes: [

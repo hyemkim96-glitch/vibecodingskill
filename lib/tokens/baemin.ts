@@ -16,7 +16,7 @@ const colors = [
 ];
 
 const typography = {
-  family: '배달체',
+  family: "'Jua', sans-serif",
   substitute: 'Pretendard, Apple SD Gothic Neo, Noto Sans KR, system-ui',
   weights: [400, 500, 700],
   sizes: [

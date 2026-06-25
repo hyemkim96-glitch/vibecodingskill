@@ -15,7 +15,7 @@ const colors = [
 ];
 
 const typography = {
-  family: 'Pretendard',
+  family: "'Nanum Gothic', sans-serif",
   substitute: 'Apple SD Gothic Neo, Noto Sans KR, system-ui',
   weights: [400, 500, 700],
   sizes: [

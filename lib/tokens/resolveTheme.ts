@@ -318,13 +318,20 @@ export function resolveTheme(
     .filter((n) => n > 0)
     .sort((a, b) => a - b);
   const baseUnit = Math.min(6, Math.max(4, scaleNums[0] || 4));
+  // Density drives the *rhythm* of the larger gaps so it reads as a real brand
+  // signal, not just a colour swap. Micro gaps (xxs/xs) stay near the grid base
+  // so component internals don't break; sm is lightly damped; md/lg/xl take the
+  // full factor — compact (Coupang·Naver·Musinsa) visibly tighter, spacious
+  // (Toss·KakaoBank·29CM) visibly airier.
+  const densityFactor =
+    ({ compact: 0.82, regular: 1, comfortable: 1.14, spacious: 1.34 } as Record<string, number>)[density] ?? 1;
   const space = {
-    xxs: Math.round(baseUnit / 2), // 2–3px — micro gaps (label/value, badge stacks)
-    xs: baseUnit,          // 4–6px
-    sm: baseUnit * 2,      // 8–12px
-    md: baseUnit * 3,      // 12–18px
-    lg: baseUnit * 4,      // 16–24px
-    xl: baseUnit * 6,      // 24–36px
+    xxs: Math.round(baseUnit / 2),                       // 2–3px — micro gaps (label/value, badge stacks)
+    xs:  baseUnit,                                       // 4–6px
+    sm:  Math.round(baseUnit * 2 * (0.55 + 0.45 * densityFactor)), // 8–12px, lightly damped
+    md:  Math.round(baseUnit * 3 * densityFactor),       // 12–18px
+    lg:  Math.round(baseUnit * 4 * densityFactor),       // 16–24px
+    xl:  Math.round(baseUnit * 6 * densityFactor),       // 24–36px
   };
 
   // Amplified rhythm — compact vs spacious gap widened so density reads as a
@@ -491,12 +498,19 @@ function resolveShadows(isDark: boolean): ResolvedTheme['shadow'] {
   };
 }
 
-function resolveIconStyleFromToken(token: BrandToken): 'lucide' | 'phosphor' | 'tabler' {
+export function resolveIconStyleFromToken(token: BrandToken): 'lucide' | 'phosphor' | 'tabler' {
   const hint = token.deep?.iconStyle?.toLowerCase() ?? '';
-  if (/fill|bold|두꺼|굵/.test(hint)) return 'phosphor';
-  if (/tabler|editorial|각진/.test(hint)) return 'tabler';
-  if (/lucide|stroke|라인|선형/.test(hint)) return 'lucide';
-  // service type fallback
+  // 1) Explicit library name wins — the brand named its set on purpose. Checked
+  //    before fuzzy hints so e.g. Toss ("Lucide 계열 … 채움(fill) 아이콘은 활성 탭에만")
+  //    reads as lucide, not phosphor from the incidental word "fill".
+  if (/phosphor/.test(hint)) return 'phosphor';
+  if (/tabler/.test(hint))   return 'tabler';
+  if (/lucide/.test(hint))   return 'lucide';
+  // 2) Character hints — rounded/fill → phosphor, angular/editorial → tabler, line → lucide
+  if (/fill|두꺼|굵|bold|라운드|둥글|round|귀여/.test(hint)) return 'phosphor';
+  if (/각진|editorial|에디토리얼|미니멀/.test(hint))        return 'tabler';
+  if (/라인|선형|stroke/.test(hint))                        return 'lucide';
+  // 3) Service-type fallback
   const s = (token.serviceTypes ?? []).join(' ');
   if (/메신저|소셜|채팅|배달|푸드|지역|중고|커뮤니티|동네/.test(s)) return 'phosphor';
   if (token.category === '커머스') return 'tabler';

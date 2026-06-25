@@ -1,6 +1,7 @@
 import { BrandToken, PlatformToken } from '@/types/token';
 import { lightTokens, darkTokens } from './semanticTokens';
 import { suggestColorScheme } from './colorAutomation';
+import { resolveIconStyleFromToken } from './resolveTheme';
 
 /* ═══════════════════════════════════════════════════════════════
  * 4-Tier CSS var reference maps
@@ -202,20 +203,15 @@ border: 1px solid var(--comp-badge-muted-bd)
 }
 
 function verifiedPrinciples(token: BrandToken, p: PlatformToken): string {
-  const s = (token.serviceTypes ?? []).join(' ');
-  const hint = (token.deep?.iconStyle ?? '').toLowerCase();
-  let iconLib: string;
-  let iconWhy: string;
-  if (/fill|bold|두꺼|굵/.test(hint) || /메신저|소셜|채팅|배달|푸드|지역|중고|커뮤니티|동네/.test(s)) {
-    iconLib = 'Phosphor';
-    iconWhy = '따뜻하고 둥근 표정 — 메신저·배달·지역 서비스의 친근함에 적합';
-  } else if (/tabler|editorial|각진/.test(hint) || token.category === '커머스') {
-    iconLib = 'Tabler';
-    iconWhy = '에디토리얼하고 또렷한 선 — 커머스의 상품 중심 위계에 적합';
-  } else {
-    iconLib = 'Lucide';
-    iconWhy = '깔끔하고 전문적인 스트로크 — 금융·검색·도구 서비스에 적합';
-  }
+  // Single source of truth: same resolver the renderer uses, so the exported
+  // recommendation always matches the icons shown in the brand preview.
+  const iconChoice = resolveIconStyleFromToken(token);
+  const ICON_META = {
+    phosphor: { lib: 'Phosphor', why: '따뜻하고 둥근 표정 — 메신저·배달·지역 서비스의 친근함에 적합' },
+    tabler:   { lib: 'Tabler',   why: '에디토리얼하고 또렷한 선 — 커머스의 상품 중심 위계에 적합' },
+    lucide:   { lib: 'Lucide',   why: '깔끔하고 전문적인 스트로크 — 금융·검색·도구 서비스에 적합' },
+  } as const;
+  const { lib: iconLib, why: iconWhy } = ICON_META[iconChoice];
 
   return `## 디자인 시스템 원칙 (검증된 시행착오)
 
@@ -725,7 +721,9 @@ export function generateDesignTokensJSON(token: BrandToken, platform: 'mobile' |
     radius[s.element] = { value: s.value, type: 'borderRadius' };
   });
 
-  const typography: Record<string, { value: string; type: string; lineHeight: string; letterSpacing: string }> = {};
+  const typography: Record<string, { value: string; type: string; lineHeight?: string; letterSpacing?: string }> = {
+    'font-family': { value: p.typography.family, type: 'fontFamilies' },
+  };
   p.typography.sizes.forEach(s => {
     const key = s.role.toLowerCase().replace(/\s+/g, '-');
     typography[key] = {
@@ -776,9 +774,11 @@ export function generateFigmaVariables(token: BrandToken, platform: 'mobile' | '
     .map(s => `| Number | spacing/${s.name} | ${s.value} | all |`)
     .join('\n');
 
-  const typographyRows = p.typography.sizes
-    .map(s => `| Text | type/${s.role.toLowerCase().replace(/\s/g, '-')} | ${s.size} / lh ${s.lineHeight} | — |`)
-    .join('\n');
+  const typographyRows = [
+    `| String | type/font-family | \`${p.typography.family}\` | — |`,
+    ...p.typography.sizes
+      .map(s => `| Text | type/${s.role.toLowerCase().replace(/\s/g, '-')} | ${s.size} / lh ${s.lineHeight} | — |`),
+  ].join('\n');
 
   return `# ${token.tagline} — Figma Variables 가이드 (${platform})
 > Updated: ${token.updatedAt}

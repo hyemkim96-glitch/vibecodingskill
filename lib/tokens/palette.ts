@@ -201,11 +201,11 @@ export function makeBrandHarmony(primaryHex: string): BrandHarmony {
 
 // ── Hue families ──────────────────────────────────────────────────────────────
 
-export const red    = makeHue( 22, 1.00); // hue 22 — classic red
+export const red    = makeHue( 22, 1.02); // hue 22 — classic red (fill C≈0.197, within 0.198 cap)
 export const orange = makeHue( 46, 0.88); // hue 46
 export const amber  = makeHue( 62, 0.70); // hue 62 — gamut-limited
 export const yellow = makeHue( 92, 0.45); // hue 92 — tightest sRGB gamut
-export const green  = makeHue(145, 0.88); // hue 145
+export const green  = makeHue(145, 1.00); // hue 145 — saturation raised (was 0.88, read muddy)
 export const teal   = makeHue(182, 0.82); // hue 182
 export const blue   = makeHue(254, 1.00); // hue 254
 export const indigo = makeHue(270, 0.92); // hue 270

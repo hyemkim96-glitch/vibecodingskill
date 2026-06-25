@@ -3,7 +3,7 @@
 import React from 'react';
 import { ResolvedTheme, ensureContrast } from '@/lib/tokens/resolveTheme';
 import { createDS, motionVars, typeStyle } from '@/components/ds';
-import { Icon } from '@/components/icons';
+import { Icon as RawIcon } from '@/components/icons';
 import { SignatureKind } from '@/lib/content/packs';
 
 export type ComponentCategory = 'all' | 'buttons' | 'inputs' | 'cards' | 'feedback' | 'navigation' | 'messaging';
@@ -72,6 +72,12 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
   const { space } = t;
   const all = category === 'all';
   const showSig = (k: SignatureKind) => !signature || signature === k;
+  // Inject the brand's icon library into every direct <Icon> below so icon
+  // shapes change per brand (lucide line / phosphor rounded / tabler editorial),
+  // matching the DS-internal icons. Per-call style still overrides if passed.
+  const Icon = (props: React.ComponentProps<typeof RawIcon>) => (
+    <RawIcon {...props} style={props.style ?? t.iconStyle} />
+  );
 
   return (
     <div className="ds-root" style={{ ...motionVars(t), display: 'flex', flexDirection: 'column', background: t.surfaceAlt, padding: t.space.md, fontFamily: t.font, gap: all ? space.xl : space.sm, overflowX: 'auto' }}>
