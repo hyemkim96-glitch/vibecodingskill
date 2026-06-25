@@ -221,7 +221,7 @@ function ItemsLayout({ ds, pack, platform, forceArchetype }: { ds: DS; pack: Con
 
 /* ── 메인 ── */
 function PatternMain({ ds, pack, platform, variant = 'commerce' }: { ds: DS; pack: ContentPack; platform: 'mobile' | 'web'; variant?: string }) {
-  const { t, Chip, Text, Thumb, EditorialCard, BalanceCard, Icon, Card, RankingList } = ds;
+  const { t, Chip, Text, Thumb, EditorialCard, BalanceCard, Icon, RankingList } = ds;
   const { space } = t;
 
   /* ── 금융 홈 ── */
@@ -314,7 +314,7 @@ function PatternMain({ ds, pack, platform, variant = 'commerce' }: { ds: DS; pac
 
 /* ── 로그인·가입 ── */
 function PatternAuth({ ds, pack, platform, variant = 'login' }: { ds: DS; pack: ContentPack; platform: 'mobile' | 'web'; variant?: string }) {
-  const { t, Button, Input, Text, Icon } = ds;
+  const { t, Button, Input, Text } = ds;
   const { space } = t;
 
   /* ── PIN 입력 ── */
@@ -624,10 +624,9 @@ function PatternDetail({ ds, pack, platform, variant = 'product' }: { ds: DS; pa
 }
 
 /* ── 내역 ── */
-function PatternHistory({ ds, pack, platform, variant = 'bank' }: { ds: DS; pack: ContentPack; platform: 'mobile' | 'web'; variant?: string }) {
-  const { t, Badge, Text, Thumb, ListRow, TopBar, BalanceCard, StatusTracker, Icon } = ds;
+function PatternHistory({ ds, pack, variant = 'bank' }: { ds: DS; pack: ContentPack; platform: 'mobile' | 'web'; variant?: string }) {
+  const { t, Badge, Text, Thumb, TopBar, BalanceCard, StatusTracker, Icon } = ds;
   const { space } = t;
-  const tones = ['soft', 'solid', 'muted'] as const;
   const m = pack.metric;
 
   /* ── 결제 내역 ── */
@@ -728,7 +727,7 @@ function PatternHistory({ ds, pack, platform, variant = 'bank' }: { ds: DS; pack
 }
 
 /* ── 마이페이지 ── */
-function PatternMyPage({ ds, pack, platform, variant = 'default' }: { ds: DS; pack: ContentPack; platform: 'mobile' | 'web'; variant?: string }) {
+function PatternMyPage({ ds, pack, variant = 'default' }: { ds: DS; pack: ContentPack; platform: 'mobile' | 'web'; variant?: string }) {
   const { t, Button, Badge, Text, Avatar, ListRow, Icon, TopBar, BalanceCard } = ds;
   const { space } = t;
 

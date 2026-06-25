@@ -3,14 +3,12 @@
 import { useState, useMemo } from 'react';
 import { BrandToken } from '@/types/token';
 import { Copy, Check, Download } from 'lucide-react';
-import BrandUIPreview from '@/components/BrandUIPreview';
 import ComponentSheet, { COMPONENT_CATEGORIES, ComponentCategory } from '@/components/ComponentSheet';
-import { renderPattern, PATTERN_TYPES, PatternType } from '@/components/patterns';
 import { getContentPack } from '@/lib/content/packs';
 import { resolveTheme } from '@/lib/tokens/resolveTheme';
 import { hexToOklch, oklchToHex } from '@/lib/tokens/oklch';
 import { makeBrandHarmony } from '@/lib/tokens/palette';
-import { createDS, motionVars } from '@/components/ds';
+import { createDS } from '@/components/ds';
 import { useTheme } from '@/components/ThemeProvider';
 import styles from './TokenPage.module.css';
 
@@ -77,7 +75,7 @@ function SectionNav({ section, onChange }: { section: Section; onChange: (s: Sec
               transition: 'all 0.15s',
               background:  isActive ? 'var(--color-bg-normal)'    : 'transparent',
               color:       isActive ? 'var(--color-text-normal)'   : 'var(--color-text-assistive)',
-              boxShadow:   isActive ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
+              boxShadow:   isActive ? 'var(--shadow-control-active)' : 'none',
               fontWeight:  isActive ? 600 : 400,
               opacity:     isPatterns ? 0.35 : 1,
             }}
@@ -169,19 +167,6 @@ function generateBrandPalette(primary: string) {
   };
 }
 
-const BRAND_PATTERNS: Record<string, PatternType[]> = {
-  daangn:    ['main', 'list', 'search', 'mypage'],
-  kakao:     ['main', 'auth', 'search', 'mypage'],
-  kakaobank: ['main', 'history', 'payment', 'mypage'],
-  naver:     ['main', 'search', 'list', 'detail'],
-  baemin:    ['main', 'list', 'detail', 'payment'],
-  coupang:   ['main', 'list', 'detail', 'payment'],
-  '29cm':    ['main', 'list', 'detail', 'mypage'],
-  musinsa:   ['main', 'search', 'list', 'detail'],
-  ohouse:    ['main', 'list', 'detail', 'mypage'],
-  toss:      ['main', 'history', 'payment', 'mypage'],
-};
-
 // Each brand's category list includes the category hosting its signature component
 // (feedback for status/gauge, cards for balance/collect/editorial/ranking/chat).
 const BRAND_COMP_CATS: Record<string, ComponentCategory[]> = {
@@ -198,7 +183,6 @@ const BRAND_COMP_CATS: Record<string, ComponentCategory[]> = {
 };
 
 export default function TokenPageClient({ token, mobileCodes }: Props) {
-  const brandPatterns = BRAND_PATTERNS[token.slug] ?? (PATTERN_TYPES.map(p => p.key) as PatternType[]);
   const brandCompCats = BRAND_COMP_CATS[token.slug] ?? (COMPONENT_CATEGORIES.map(c => c.key) as ComponentCategory[]);
 
   const { theme: appTheme } = useTheme();
@@ -208,7 +192,6 @@ export default function TokenPageClient({ token, mobileCodes }: Props) {
   const [selectedType,    setSelectedType]    = useState<string | null>(null);
   const [section,         setSection]         = useState<Section>('foundation');
   const [compCategory,    setCompCategory]    = useState<ComponentCategory>(brandCompCats[0] ?? 'cards');
-  const [activePattern,   setActivePattern]   = useState<PatternType>(brandPatterns[0] ?? 'main');
 
   const codes = mobileCodes;
   const p = token.platforms['mobile'];

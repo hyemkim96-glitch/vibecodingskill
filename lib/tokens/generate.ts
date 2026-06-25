@@ -812,7 +812,7 @@ export function generateFigmaVariables(token: BrandToken, platform: 'mobile' | '
 
   const roleRows = Object.entries(ROLE_TOKEN_VARS)
     .slice(0, 10)
-    .map(([k, v]) => `| Color | role/${k.replace('--comp-', '')} | references semantic | light+dark |`)
+    .map(([k]) => `| Color | role/${k.replace('--comp-', '')} | references semantic | light+dark |`)
     .join('\n');
 
   const spacingRows = p.spacing.scale

@@ -1,0 +1,9 @@
+#!/usr/bin/env node
+const { spawnSync } = require('node:child_process');
+
+const result = spawnSync(process.execPath, ['lib/audit/hardcodingAudit.mjs'], {
+  stdio: 'inherit',
+  shell: false,
+});
+
+process.exit(result.status ?? 1);

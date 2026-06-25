@@ -25,8 +25,8 @@
 }
 
 @layer base {
-  * { border-color: hsl(214 13% 89%); }
-  body { background-color: hsl(0 0% 100%); color: hsl(0 0% 8%); }
+  * { border-color: var(--color-border-normal); }
+  body { background-color: var(--color-bg-normal); color: var(--color-text-normal); }
 }
 
 :root {
@@ -68,6 +68,8 @@
   --color-bg-alt:           var(--palette-neutral-50);
   --color-bg-elevated:      var(--palette-neutral-0);
   --color-bg-overlay:       rgba(0,0,0,0.5);
+  --shadow-control-active:  0 1px 3px color-mix(in oklab, var(--color-fill-normal) 8%, transparent);
+  --shadow-interactive:     0 4px 16px color-mix(in oklab, var(--color-fill-normal) 10%, transparent);
 
   /* Fill */
   --color-fill-normal:      var(--palette-neutral-900);
@@ -391,7 +393,7 @@
 .ds-hover:hover {
   transform: scale(var(--ds-hover)) translateY(-1px);
   filter: brightness(0.98);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+  box-shadow: var(--shadow-interactive);
 }
 
 body {

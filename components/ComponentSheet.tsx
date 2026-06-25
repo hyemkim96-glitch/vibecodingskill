@@ -28,7 +28,7 @@ function SectionHeading({ t, show, children }: { t: ResolvedTheme; show: boolean
 }
 
 /** A single bento tile — fills its grid cell. Content is top-aligned; grows to fit (no height cap so nothing is clipped). */
-function Tile({ t, ds, title, children, col = 1 }: {
+function Tile({ t, title, children, col = 1 }: {
   t: ResolvedTheme;
   ds: ReturnType<typeof createDS>;
   title: string;
@@ -134,10 +134,10 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
             <Tile t={t} ds={ds} title="플로팅 버튼 (FAB)" col={1}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: space.md }}>
                 <div style={{ display: 'flex', alignItems: 'flex-end', flexWrap: 'wrap', gap: space.md }}>
-                  {[{ size: 56, ic: 'plus', label: 'Large' }, { size: 44, ic: 'edit', label: 'Medium' }, { size: 36, ic: 'plus', label: 'Small' }].map(({ size, ic, label }) => (
+                  {([{ size: 56, ic: 'plus', label: 'Large' }, { size: 44, ic: 'edit', label: 'Medium' }, { size: 36, ic: 'plus', label: 'Small' }] as const).map(({ size, ic, label }) => (
                     <div key={label} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: space.xs }}>
                       <div className="ds-press" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', width: size, height: size, borderRadius: '9999px', background: t.primary, color: t.onPrimary }}>
-                        <Icon name={ic as any} size={Math.round(size * 0.4)} />
+                        <Icon name={ic} size={Math.round(size * 0.4)} />
                       </div>
                       <Text role="caption" color={t.textMuted}>{label}</Text>
                     </div>
@@ -713,13 +713,3 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
   );
 }
 
-function contrastOnHex(hex: string): string {
-  const h = hex.replace('#', '');
-  if (h.length < 6) return '#ffffff';
-  const linearize = (v: number) => { const s = v / 255; return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4); };
-  const r = linearize(parseInt(h.slice(0, 2), 16));
-  const g = linearize(parseInt(h.slice(2, 4), 16));
-  const b = linearize(parseInt(h.slice(4, 6), 16));
-  const L = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-  return ((1.05) / (L + 0.05)) > ((L + 0.05) / 0.05) ? '#ffffff' : '#111111';
-}

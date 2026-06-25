@@ -86,7 +86,7 @@ function BrandMiniUI({ token }: { token: BrandToken }) {
                             style={{ flex: 1, background: c.value }}
                         />
                     ))
-                    : <div style={{ flex: 1, background: 'var(--color-fill-neutral)' }} />
+                    : <div style={{ flex: 1, background: getBgColor(token.colors) }} />
                 }
             </div>
         </div>

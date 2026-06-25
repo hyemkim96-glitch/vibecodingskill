@@ -102,16 +102,6 @@ function Section({ t, title, children, first = false }: { t: Theme; title: strin
   );
 }
 
-function TokenLabel({ t, name, value, sub }: { t: Theme; name: string; value: string; sub?: string }) {
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.xxs }}>
-      <span style={{ ...cap(t), fontWeight: t.weightBold, color: t.textMain }}>{name}</span>
-      <span style={{ ...cap(t), color: t.textMuted }}>{value}</span>
-      {sub && <span style={{ ...cap(t), color: t.textMuted }}>{sub}</span>}
-    </div>
-  );
-}
-
 /* ══════════════════════════════════════════
    컬러 패널
 ══════════════════════════════════════════ */
@@ -402,7 +392,7 @@ function StrokePanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
    타이포그래피 패널
 ══════════════════════════════════════════ */
 function TypePanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
-  const { Table, TokenCard, Card } = ds;
+  const { Table, Card } = ds;
   const roles: { name: string; role: keyof Theme['type']; sample: string }[] = [
     { name: 'display', role: 'display', sample: '브랜드 디자인을 코드로' },
     { name: 'h1',      role: 'h1',      sample: '디자인 시스템 파운데이션' },
@@ -642,7 +632,7 @@ function RadiusPanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
           ))}
         </div>
         <Table
-          rows={radii.map(({ name, value, desc }) => ({
+          rows={radii.map(({ name, value }) => ({
             label: name,
             value: `${value}`,
             tone: 'muted' as const,

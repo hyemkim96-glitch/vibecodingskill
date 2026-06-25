@@ -392,9 +392,9 @@ export default function LandingPage() {
           </div>
           <div className={styles.codePreview}>
             <div className={styles.codePreviewBar}>
-              <span className={styles.codePreviewDot} style={{ background: '#FF5F57' }} />
-              <span className={styles.codePreviewDot} style={{ background: '#FEBC2E' }} />
-              <span className={styles.codePreviewDot} style={{ background: '#28C840' }} />
+              <span className={styles.codePreviewDot} style={{ background: 'var(--color-fill-danger)' }} />
+              <span className={styles.codePreviewDot} style={{ background: 'var(--color-fill-warning)' }} />
+              <span className={styles.codePreviewDot} style={{ background: 'var(--color-fill-success)' }} />
               <span className={styles.codePreviewFile}>toss-DESIGN.md</span>
             </div>
             <pre className={styles.codePre}>{CODE_SNIPPET}</pre>

@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "audit:ui": "node lib/audit/uiAudit.mjs"
+    "audit:ui": "node lib/audit/uiAudit.mjs",
+    "audit:hardcoding": "node lib/audit/hardcodingAudit.mjs"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",

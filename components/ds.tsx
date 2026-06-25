@@ -731,12 +731,12 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
         <Icon name="heart" size={16} color={saved ? t.danger : t.textMuted} />
       </div>
       {tag && (
-        <div style={{ position: 'absolute', left: space.sm, bottom: space.sm, maxWidth: 'calc(100% - 90px)', display: 'flex', alignItems: 'center', gap: space.xs, padding: `${space.xxs}px ${space.sm}px`, borderRadius: 9999, background: 'rgba(0,0,0,0.6)' }}>
+        <div style={{ position: 'absolute', left: space.sm, bottom: space.sm, maxWidth: 'calc(100% - 90px)', display: 'flex', alignItems: 'center', gap: space.xs, padding: `${space.xxs}px ${space.sm}px`, borderRadius: 9999, background: t.overlay }}>
           <Icon name="bookmark" size={11} color={t.textOnImage} />
           <span style={{ ...typeStyle(t.type.caption), color: t.textOnImage, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{tag}</span>
         </div>
       )}
-      <div style={{ position: 'absolute', right: space.sm, bottom: space.sm, display: 'flex', alignItems: 'center', gap: space.xxs, padding: `${space.xxs}px ${space.sm}px`, borderRadius: 9999, background: 'rgba(0,0,0,0.6)' }}>
+      <div style={{ position: 'absolute', right: space.sm, bottom: space.sm, display: 'flex', alignItems: 'center', gap: space.xxs, padding: `${space.xxs}px ${space.sm}px`, borderRadius: 9999, background: t.overlay }}>
         <Icon name="heart" size={11} color={t.textOnImage} />
         <span style={{ ...typeStyle(t.type.caption), color: t.textOnImage }}>{count.toLocaleString()}</span>
       </div>
@@ -849,7 +849,7 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
   );
 
   const Dialogue: DS['Dialogue'] = ({ title, body, actions = ['취소', '확인'], style }) => (
-    <div style={{ position: 'relative', minHeight: 160, background: 'rgba(0,0,0,0.35)', borderRadius: t.radius.card, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: `${space.xl}px`, ...style }}>
+    <div style={{ position: 'relative', minHeight: 160, background: t.overlay, borderRadius: t.radius.card, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: `${space.xl}px`, ...style }}>
       <div style={{ width: '100%', background: t.bg, borderRadius: t.radius.card, padding: `${space.xl}px`, boxShadow: t.shadow.lg }}>
         <div style={{ ...typeStyle(t.type.bodySm), fontWeight: t.weightBold, color: t.textMain, marginBottom: body ? space.sm : space.lg }}>{title}</div>
         {body && <div style={{ ...typeStyle(t.type.bodySm), color: t.textSub, marginBottom: space.lg }}>{body}</div>}

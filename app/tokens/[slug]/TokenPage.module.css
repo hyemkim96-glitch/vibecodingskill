@@ -108,7 +108,7 @@
   transition: box-shadow 0.2s, transform 0.2s;
 }
 .uiPreview [data-ui="card"]:hover {
-  box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+  box-shadow: var(--shadow-interactive);
   transform: translateY(-1px);
 }
 .uiPreview [data-ui="card"]:active {
@@ -121,7 +121,7 @@
   border-radius: 6px;
 }
 .uiPreview [data-ui="row"]:hover {
-  background: rgba(0,0,0,0.04) !important;
+  background: var(--color-fill-neutral) !important;
 }
 
 .uiPreview [data-ui="chip"] {
@@ -209,7 +209,7 @@
 
 .colorItem:hover {
   border-color: var(--color-bone);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  box-shadow: var(--shadow-control-active);
 }
 
 .colorSwatch {
@@ -262,7 +262,7 @@
   width: 100%;
   height: 56px;
   border-radius: 6px;
-  border: 1px solid rgba(0,0,0,0.06);
+  border: 1px solid var(--color-border-weak);
   position: relative;
   transition: transform 0.12s;
 }
@@ -281,8 +281,8 @@
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.8);
-  box-shadow: 0 0 0 1.5px rgba(0,0,0,0.25);
+  background: var(--color-bg-elevated);
+  box-shadow: 0 0 0 1.5px var(--color-border-strong);
 }
 
 .scaleStepLabel {
