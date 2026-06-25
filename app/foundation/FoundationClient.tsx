@@ -786,16 +786,19 @@ function MotionPanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
   const { Table, Card, Button } = ds;
   const m = t.motion;
   const dur = m.duration;
-  const [faded, setFaded] = useState(false);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
       <style>{`
-        @keyframes fd-slide {
-          0%   { transform: translateX(0); }
-          45%  { transform: translateX(calc(100% - 92px)); }
-          55%  { transform: translateX(calc(100% - 92px)); }
-          100% { transform: translateX(0); }
+        @keyframes fd-toast {
+          0%        { transform: translateY(150%); opacity: 0; }
+          15%       { transform: translateY(0);    opacity: 1; }
+          75%       { transform: translateY(0);    opacity: 1; }
+          90%, 100% { transform: translateY(150%); opacity: 0; }
+        }
+        @keyframes fd-fade {
+          0%, 100% { opacity: 1; }
+          50%      { opacity: 0; }
         }
       `}</style>
 
@@ -815,23 +818,25 @@ function MotionPanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
       <Section t={t} title="애니메이션 미리보기">
         <div className="ds-root" style={{ ...motionVars(t), display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: t.space.md }}>
 
-          {/* Slide — 진입/전환은 루프 자동재생이 가장 직관적 */}
+          {/* Toast — 실제 토스트가 아래에서 올라와 잠시 머문 뒤 사라지는 루프 */}
           <Card interactive={false}>
             <div style={{ marginBottom: t.space.sm }}>
-              <div style={{ ...bodySm(t), fontWeight: t.weightBold, color: t.textMain }}>Slide</div>
+              <div style={{ ...bodySm(t), fontWeight: t.weightBold, color: t.textMain }}>Toast</div>
               <div style={{ ...cap(t), color: t.textMuted }}>{dur}ms · {m.easing}</div>
             </div>
-            <div style={{ position: 'relative', height: 44, background: t.surfaceAlt, borderRadius: t.radius.input, overflow: 'hidden', border: `1px solid ${t.border}` }}>
+            <div style={{ position: 'relative', height: 60, background: t.surfaceAlt, borderRadius: t.radius.input, overflow: 'hidden', border: `1px solid ${t.border}` }}>
               <div style={{
-                position: 'absolute', left: 6, top: 6, height: 32, width: 80,
+                position: 'absolute', left: 6, right: 6, bottom: 6, height: 36,
                 borderRadius: t.radius.chip, background: t.primary,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                animation: `fd-slide ${dur * 3}ms ${m.easing} infinite`,
+                display: 'flex', alignItems: 'center', gap: t.space.sm,
+                paddingLeft: t.space.md, paddingRight: t.space.md,
+                animation: `fd-toast ${dur * 4}ms ${m.easing} infinite`,
               }}>
-                <span style={{ ...cap(t), color: t.onPrimary, fontWeight: t.weightBold }}>토스트</span>
+                <span style={{ width: 8, height: 8, borderRadius: '9999px', background: t.onPrimary, opacity: 0.9, flexShrink: 0 }} />
+                <span style={{ ...cap(t), color: t.onPrimary, fontWeight: t.weightBold }}>저장되었습니다</span>
               </div>
             </div>
-            <div style={{ ...cap(t), color: t.textMuted, marginTop: t.space.sm }}>표시 전환 · 드로어 · 토스트</div>
+            <div style={{ ...cap(t), color: t.textMuted, marginTop: t.space.sm }}>토스트 · 스낵바 · 알림</div>
           </Card>
 
           {/* Press Scale — DS Button 직접 사용 (ds-press 내장) */}
@@ -849,7 +854,7 @@ function MotionPanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
           {/* Hover Scale — DS Card(interactive) 직접 사용 (ds-hover 내장) */}
           <Card interactive={false}>
             <div style={{ marginBottom: t.space.sm }}>
-              <div style={{ ...bodySm(t), fontWeight: t.weightBold, color: t.textMain }}>Hover Scale</div>
+              <div style={{ ...bodySm(t), fontWeight: t.weightBold, color: t.textMain }}>호버 리프트</div>
               <div style={{ ...cap(t), color: t.textMuted }}>scale({m.hoverScale}){m.hoverScale > 1 ? ' · 호버 시 확대' : ' · 호버 시 리프트'}</div>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 56 }}>
@@ -861,32 +866,24 @@ function MotionPanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
             <div style={{ ...cap(t), color: t.textMuted, marginTop: t.space.sm }}>카드 · 썸네일 · 인터랙티브 셀</div>
           </Card>
 
-          {/* Fade — 클릭 토글로 직접 체험 */}
+          {/* Fade — 자동 페이드 루프 (인/아웃 반복) */}
           <Card interactive={false}>
             <div style={{ marginBottom: t.space.sm }}>
               <div style={{ ...bodySm(t), fontWeight: t.weightBold, color: t.textMain }}>Fade</div>
-              <div style={{ ...cap(t), color: t.textMuted }}>{dur}ms · 표시·숨김 전환</div>
+              <div style={{ ...cap(t), color: t.textMuted }}>{dur}ms · 자동 페이드 전환</div>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: t.space.sm, height: 56 }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 56 }}>
               <div style={{
                 padding: `${t.space.sm}px ${t.space.md}px`,
                 borderRadius: t.radius.card,
                 background: t.surfaceAlt,
                 border: `1px solid ${t.border}`,
-                opacity: faded ? 0 : 1,
-                transition: `opacity ${dur}ms ${m.easing}`,
                 width: 90, flexShrink: 0,
+                animation: `fd-fade ${dur * 4}ms ${m.easing} infinite`,
               }}>
                 <div style={{ height: 6, background: t.textMuted, borderRadius: 3, opacity: 0.4 }} />
                 <div style={{ height: 6, background: t.textMuted, borderRadius: 3, width: '65%', opacity: 0.25, marginTop: 4 }} />
               </div>
-              <button className="ds-press" onClick={() => setFaded((f) => !f)} style={{
-                ...cap(t), color: t.primary, cursor: 'pointer', background: 'none', border: 'none',
-                fontWeight: t.weightBold, padding: `${t.space.xs}px ${t.space.sm}px`,
-                borderRadius: t.radius.badge,
-              }}>
-                {faded ? '표시' : '숨김'}
-              </button>
             </div>
             <div style={{ ...cap(t), color: t.textMuted, marginTop: t.space.sm }}>모달 · 오버레이 · 스켈레톤</div>
           </Card>

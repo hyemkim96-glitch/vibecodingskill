@@ -53,7 +53,7 @@ export interface DS {
     variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
     disabled?: boolean;
     full?: boolean;
-    size?: 'sm' | 'md';
+    size?: 'sm' | 'md' | 'lg';
   }>;
   Card: React.FC<{
     children: React.ReactNode;
@@ -156,7 +156,7 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
         disabled && 'opacity-40 pointer-events-none',
       )}
       style={{
-        ...typeStyle(t.type[size === 'sm' ? 'caption' : 'bodySm']),
+        ...typeStyle(t.type[size === 'sm' ? 'caption' : size === 'lg' ? 'body' : 'bodySm']),
         fontWeight: t.weightBold,
         borderRadius: t.radius.button,
         background:
@@ -171,7 +171,7 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
             : variant === 'secondary'
               ? `1px solid ${t.border}`
               : 'none',
-        padding: size === 'sm' ? `${space.xs}px ${space.md}px` : `${space.sm}px ${space.lg}px`,
+        padding: size === 'sm' ? `${space.xs}px ${space.md}px` : size === 'lg' ? `${space.md}px ${space.xl}px` : `${space.sm}px ${space.lg}px`,
       }}
     >
       {children}
@@ -648,7 +648,7 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
         {delta && <span style={{ ...typeStyle(t.type.caption), fontWeight: t.weightBold, color: ensureContrast(t.success, t.surface) }}>{delta}</span>}
       </div>
       {actions.length > 0 && (
-        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: space.sm, marginTop: space.xs }}>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: space.md, marginTop: space.xs }}>
           {actions.map((a, i) => {
             const isPrimary = i === actions.length - 1;
             return (
