@@ -105,7 +105,7 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
               </div>
             </Tile>
 
-            <Tile t={t} ds={ds} title="아이콘 버튼" col={2}>
+            <Tile t={t} ds={ds} title="아이콘 버튼" col={1}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: space.md }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: space.sm }}>
                   {(['arrowLeft', 'close', 'more', 'settings'] as const).map((ic) => (
