@@ -89,16 +89,16 @@ export const darkTokens: TokenMap = {
 
   // Text
   '--color-text-normal':      neutral[50].hex,
-  '--color-text-alternative': neutral[400].hex,
-  '--color-text-assistive':   neutral[600].hex,
-  '--color-text-disabled':    neutral[700].hex,
+  '--color-text-alternative': neutral[300].hex,
+  '--color-text-assistive':   neutral[400].hex,
+  '--color-text-disabled':    neutral[500].hex,
   '--color-text-on-fill':     neutral[950].hex,
   '--color-text-brand':       neutral[50].hex,
-  '--color-text-success':      green[700].hex,
-  '--color-text-danger':       red[700].hex,
-  '--color-text-warning':      amber[700].hex,
-  '--color-text-info':         blue[700].hex,
-  '--color-text-accent':       violet[700].hex,
+  '--color-text-success':      green[400].hex,
+  '--color-text-danger':       red[400].hex,
+  '--color-text-warning':      amber[400].hex,
+  '--color-text-info':         blue[400].hex,
+  '--color-text-accent':       violet[400].hex,
 
   // Border
   '--color-border-normal':    neutral[700].hex,

@@ -262,9 +262,9 @@
   --color-fill-brand:       var(--palette-neutral-50);
   --color-fill-brand-weak:  var(--palette-neutral-800);
   --color-text-normal:      var(--palette-neutral-50);
-  --color-text-alternative: var(--palette-neutral-400);
-  --color-text-assistive:   var(--palette-neutral-500);
-  --color-text-disabled:    var(--palette-neutral-700);
+  --color-text-alternative: var(--palette-neutral-300);
+  --color-text-assistive:   var(--palette-neutral-400);
+  --color-text-disabled:    var(--palette-neutral-500);
   --color-text-on-fill:     var(--palette-neutral-950);
   --color-text-brand:       var(--palette-neutral-50);
   --color-border-normal:    var(--palette-neutral-700);
@@ -298,9 +298,9 @@
     --color-fill-brand:       var(--palette-neutral-50);
     --color-fill-brand-weak:  var(--palette-neutral-800);
     --color-text-normal:      var(--palette-neutral-50);
-    --color-text-alternative: var(--palette-neutral-400);
-    --color-text-assistive:   var(--palette-neutral-500);
-    --color-text-disabled:    var(--palette-neutral-700);
+    --color-text-alternative: var(--palette-neutral-300);
+    --color-text-assistive:   var(--palette-neutral-400);
+    --color-text-disabled:    var(--palette-neutral-500);
     --color-text-on-fill:     var(--palette-neutral-950);
     --color-text-brand:       var(--palette-neutral-50);
     --color-border-normal:    var(--palette-neutral-700);

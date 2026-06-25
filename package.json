@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "eslint",
     "audit:ui": "node lib/audit/uiAudit.mjs",
-    "audit:hardcoding": "node lib/audit/hardcodingAudit.mjs"
+    "audit:hardcoding": "node lib/audit/hardcodingAudit.mjs",
+    "audit:contrast": "node lib/audit/contrastAudit.mjs",
+    "audit:preflight": "npm run audit:hardcoding && npm run audit:contrast"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",

@@ -5,14 +5,16 @@ import { createDS, motionVars, typeStyle } from '@/components/ds';
 import { renderPattern, PATTERN_TYPES, PATTERN_VARIANTS, PatternType } from '@/components/patterns';
 import { defaultPack } from '@/lib/content/packs';
 import PillTabs from '@/components/PillTabs';
-import { serviceDS, serviceMobileTheme } from '@/lib/tokens/serviceTheme';
-
-const { Text, t: st } = serviceDS;
+import { useTheme } from '@/components/ThemeProvider';
+import { serviceDS, serviceMobileTheme, serviceDarkDS, serviceDarkMobileTheme } from '@/lib/tokens/serviceTheme';
 
 export default function PatternsClient() {
   const [activePattern, setActivePattern] = useState<PatternType>('main');
+  const { theme: appTheme } = useTheme();
+  const dark = appTheme === 'dark';
+  const { Text, t: st } = dark ? serviceDarkDS : serviceDS;
 
-  const theme = serviceMobileTheme;
+  const theme = dark ? serviceDarkMobileTheme : serviceMobileTheme;
   const ds = createDS(theme, true);
 
   const variants = PATTERN_VARIANTS[activePattern];
