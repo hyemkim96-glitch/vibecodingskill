@@ -11,6 +11,7 @@ import { resolveTheme } from '@/lib/tokens/resolveTheme';
 import { hexToOklch, oklchToHex } from '@/lib/tokens/oklch';
 import { makeBrandHarmony } from '@/lib/tokens/palette';
 import { createDS, motionVars } from '@/components/ds';
+import { useTheme } from '@/components/ThemeProvider';
 import styles from './TokenPage.module.css';
 
 type TabKey = 'designMd' | 'css' | 'tailwind' | 'json' | 'figma';
@@ -201,6 +202,8 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
   const brandPatterns = BRAND_PATTERNS[token.slug] ?? (PATTERN_TYPES.map(p => p.key) as PatternType[]);
   const brandCompCats = BRAND_COMP_CATS[token.slug] ?? (COMPONENT_CATEGORIES.map(c => c.key) as ComponentCategory[]);
 
+  const { theme: appTheme } = useTheme();
+
   const [activeTab,       setActiveTab]       = useState<TabKey>('designMd');
   const [platform,        setPlatform]        = useState<Platform>('mobile');
   const [copied,          setCopied]          = useState(false);
@@ -212,10 +215,14 @@ export default function TokenPageClient({ token, mobileCodes, webCodes }: Props)
   const codes = platform === 'mobile' ? mobileCodes : webCodes;
   const p = token.platforms[platform];
 
-  /* Brand DS — same token names, brand-specific values */
+  /* Brand DS — brand primary preserved, structural colors switch to dark foundation when app is dark */
+  const effectiveToken = useMemo(
+    () => appTheme === 'dark' ? { ...token, theme: 'dark' as const } : token,
+    [token, appTheme],
+  );
   const brandTheme = useMemo(
-    () => resolveTheme(token, platform, 'brand'),
-    [token, platform],
+    () => resolveTheme(effectiveToken, platform, 'brand'),
+    [effectiveToken, platform],
   );
   const brandDS = useMemo(() => {
     const ds = createDS(brandTheme);
