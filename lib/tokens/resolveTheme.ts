@@ -1,6 +1,6 @@
 import { BrandToken } from '@/types/token';
 import { lightTokens, darkTokens } from './semanticTokens';
-import { deriveTintOklch, ensureContrastOklch, relativeLuminance } from './oklch';
+import { deriveTintOklch, ensureContrastOklch, relativeLuminance, hexToOklch } from './oklch';
 import { makeBrandHarmony, BrandHueStep } from './palette';
 
 /**
@@ -292,16 +292,26 @@ export function resolveTheme(
     c.find((col) => /primary|주요 액션|CTA/i.test(col.role))?.value ??
     c.find((col) => !isNeutral(col.name))?.value ??
     (isDark ? darkTokens['--color-fill-brand'] : lightTokens['--color-fill-brand']);
-  // In dark mode, lift a brand primary that's too dark to read on the dark canvas
-  // (e.g. Musinsa's near-black) until it clears WCAG AA against bg. Hue is
-  // preserved, so the brand still reads as itself — black simply inverts toward
-  // white. No-op when the primary is already legible (e.g. Toss blue).
-  const primary = isDark
-    ? ensureContrastOklch(brandPrimaryRaw, darkTokens['--color-bg-normal'], 4.5)
-    : brandPrimaryRaw;
-  // Prefer an explicit brand override (e.g. Kakao brown on yellow, Daangn white on orange)
+  // Dark-mode primary handling. A near-black achromatic brand primary (29CM,
+  // Musinsa) only reaches mid-grey under a minimal-contrast lift, which reads as
+  // a disabled button. For those, fully invert to the dark-mode ink (near-white)
+  // so the CTA becomes a white button. Chromatic-but-dark primaries are just
+  // lifted until they clear WCAG AA, hue preserved. No-op on already-legible
+  // primaries (e.g. Toss blue, Kakao yellow).
+  const { l: rawL, c: rawC } = hexToOklch(brandPrimaryRaw);
+  const isNearBlackBrand = isDark && rawC < 0.045 && rawL < 0.45;
+  const primary = !isDark
+    ? brandPrimaryRaw
+    : isNearBlackBrand
+      ? darkTokens['--color-text-normal']
+      : ensureContrastOklch(brandPrimaryRaw, darkTokens['--color-bg-normal'], 4.5);
+  // Prefer an explicit brand override (e.g. Kakao brown on yellow, Daangn white on
+  // orange) — but not when we've inverted a black primary to white, since the
+  // light-mode override (white ink for a black button) would vanish on white.
   const onPrimaryExplicit = c.find((col) => /CTA 텍스트|버튼 텍스트/i.test(col.role))?.value;
-  const onPrimary = onPrimaryExplicit ?? contrastOn(primary);
+  const onPrimary = isNearBlackBrand
+    ? contrastOn(primary)
+    : (onPrimaryExplicit ?? contrastOn(primary));
 
   // accent: first non-neutral colour that isn't the brand primary
   const accent =
