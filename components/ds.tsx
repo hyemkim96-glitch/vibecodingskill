@@ -306,13 +306,15 @@ export function createDS(t: ResolvedTheme, wireframe = false): DS {
     </div>
   );
 
-  // Review stars read as gold/amber regardless of brand — a stable Foundation
-  // semantic, so the colour comes from t.warning (amber), never a hardcoded hex.
+  // Rating stars adopt the brand's primary colour so the component reads as
+  // part of the active theme rather than a fixed amber. Never a hardcoded hex.
   const Rating: DS['Rating'] = ({ value = 4, max = 5, size = 16 }) => {
-    const star = t.starFill;
+    const star = t.primary;
     const gid = React.useId();
     return (
-    <div style={{ display: 'inline-flex', alignItems: 'center', gap: 2 }}>
+    // min size hugs the stars; max size fills the container and wraps instead
+    // of overflowing when the column is too narrow for the full row.
+    <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 2, maxWidth: '100%', minWidth: 0 }}>
       {Array.from({ length: max }, (_, i) => {
         const filled = i < Math.floor(value);
         const half = !filled && i < value;

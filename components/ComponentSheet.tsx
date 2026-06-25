@@ -469,14 +469,14 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
                     </div>
                   ))}
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: space.sm }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: space.sm }}>
                   <Rating value={4} size={20} />
                   <Text role="bodySm" weight={t.weightBold}>4.0</Text>
                   <Text role="caption" color={t.textMuted}>(1,284)</Text>
                 </div>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: space.md }}>
                   {([12, 16, 20, 24] as const).map((sz) => (
-                    <div key={sz} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: space.xs, flexShrink: 0 }}>
+                    <div key={sz} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: space.xs, minWidth: 0 }}>
                       <Rating value={4} max={5} size={sz} />
                       <Text role="caption" color={t.textMuted}>{sz}px</Text>
                     </div>
