@@ -4,9 +4,8 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { BrandToken } from '@/types/token';
 import PillTabs from '@/components/PillTabs';
-import { useTheme } from '@/components/ThemeProvider';
+import PageHeader from '@/components/PageHeader';
 import styles from './TokensIndex.module.css';
-import { serviceDS, serviceDarkDS } from '@/lib/tokens/serviceTheme';
 import { contrastOn } from '@/lib/tokens/resolveTheme';
 import { lightTokens } from '@/lib/tokens/semanticTokens';
 
@@ -87,8 +86,6 @@ function BrandMiniUI({ token }: { token: BrandToken }) {
 
 export default function TokensIndexClient({ tokens }: { tokens: BrandToken[] }) {
   const [activeFilter, setActiveFilter] = useState('전체');
-  const { theme } = useTheme();
-  const { Text, t: st } = theme === 'dark' ? serviceDarkDS : serviceDS;
 
   const filtered = activeFilter === '전체'
     ? tokens
@@ -96,14 +93,10 @@ export default function TokensIndexClient({ tokens }: { tokens: BrandToken[] }) 
 
   return (
     <div className={styles.page}>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: st.space.sm }}>
-        <Text role="caption" weight={st.weightMedium} style={{ letterSpacing: '0.1em', textTransform: 'uppercase', color: st.textSub }}>
-          Templates
-        </Text>
-        <Text role="bodySm" color={st.textSub} weight={st.weightMedium} style={{ lineHeight: 1.65 }}>
-          브랜드 디자인 시스템 템플릿의 컬러·타이포·여백·모양을 한 번에 확인합니다.
-        </Text>
-      </div>
+      <PageHeader
+        eyebrow="Templates"
+        description="브랜드 디자인 시스템 템플릿의 컬러·타이포·여백·모양을 한 번에 확인합니다."
+      />
 
       <div className={styles.filterBar}>
         <PillTabs

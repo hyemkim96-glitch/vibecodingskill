@@ -4,8 +4,9 @@ import { useState } from 'react';
 import { ResolvedTheme } from '@/lib/tokens/resolveTheme';
 import { typeStyle, createDS, motionVars } from '@/components/ds';
 import PillTabs from '@/components/PillTabs';
+import PageHeader from '@/components/PageHeader';
 import { useTheme } from '@/components/ThemeProvider';
-import { serviceDS, serviceMobileTheme, serviceDarkDS, serviceDarkMobileTheme } from '@/lib/tokens/serviceTheme';
+import { serviceMobileTheme, serviceDarkMobileTheme } from '@/lib/tokens/serviceTheme';
 import { neutral, hues, HueName } from '@/lib/tokens/palette';
 import { lightTokens, darkTokens } from '@/lib/tokens/semanticTokens';
 import { lightRoleTokens, darkRoleTokens, lightVariantTokens, darkVariantTokens } from '@/lib/tokens/roleTokens';
@@ -33,18 +34,13 @@ export default function FoundationClient() {
   // follow the app theme explicitly (CSS-var elements switch on their own).
   const t = dark ? serviceDarkMobileTheme : serviceMobileTheme;
   const ds = createDS(t, true);
-  const { Text: ServiceText, t: st } = dark ? serviceDarkDS : serviceDS;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.xl }}>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: st.space.sm }}>
-        <ServiceText role="caption" weight={st.weightMedium} style={{ letterSpacing: '0.1em', textTransform: 'uppercase', color: st.textSub }}>
-          Foundation
-        </ServiceText>
-        <ServiceText role="body" color={st.textMuted}>
-          토큰 = 파운데이션 — 모든 컴포넌트의 컬러·타이포·여백은 이 토큰을 따릅니다.
-        </ServiceText>
-      </div>
+      <PageHeader
+        eyebrow="Foundation"
+        description="토큰 = 파운데이션 — 모든 컴포넌트의 컬러·타이포·여백은 이 토큰을 따릅니다."
+      />
 
       <PillTabs tabs={CATEGORIES} active={active} onChange={setActive} />
 

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { ExternalLink } from 'lucide-react';
 import { IWikiTerm } from '@/types/wiki';
 import { useTheme } from '@/components/ThemeProvider';
+import PageHeader from '@/components/PageHeader';
 import styles from './Wiki.module.css';
 import { serviceDS, serviceDarkDS } from '@/lib/tokens/serviceTheme';
 
@@ -14,7 +15,7 @@ export default function WikiClient({ terms }: { terms: IWikiTerm[] }) {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<SortOrder>('default');
   const { theme } = useTheme();
-  const { Text, t } = theme === 'dark' ? serviceDarkDS : serviceDS;
+  const { t } = theme === 'dark' ? serviceDarkDS : serviceDS;
 
   const allCategories = Array.from(
     new Set(terms.map((term) => term.category).filter(Boolean)),
@@ -42,14 +43,10 @@ export default function WikiClient({ terms }: { terms: IWikiTerm[] }) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.xl }}>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.sm }}>
-        <Text role="caption" weight={t.weightMedium} style={{ letterSpacing: '0.1em', textTransform: 'uppercase', color: t.textSub }}>
-          Wiki
-        </Text>
-        <Text role="bodySm" color={t.textSub} weight={t.weightMedium} style={{ lineHeight: 1.65 }}>
-          디자인 시스템 용어 사전과 공통 언어로 작업 속도를 높입니다.
-        </Text>
-      </div>
+      <PageHeader
+        eyebrow="Wiki"
+        description="디자인 시스템 용어 사전과 공통 언어로 작업 속도를 높입니다."
+      />
 
       <div className={styles.toolbar}>
         <input

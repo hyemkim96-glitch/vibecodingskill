@@ -5,6 +5,7 @@ import { createDS, motionVars, typeStyle } from '@/components/ds';
 import { renderPattern, PATTERN_TYPES, PATTERN_VARIANTS, PatternType } from '@/components/patterns';
 import { defaultPack } from '@/lib/content/packs';
 import PillTabs from '@/components/PillTabs';
+import PageHeader from '@/components/PageHeader';
 import { useTheme } from '@/components/ThemeProvider';
 import { serviceDS, serviceMobileTheme, serviceDarkDS, serviceDarkMobileTheme } from '@/lib/tokens/serviceTheme';
 
@@ -12,7 +13,7 @@ export default function PatternsClient() {
   const [activePattern, setActivePattern] = useState<PatternType>('main');
   const { theme: appTheme } = useTheme();
   const dark = appTheme === 'dark';
-  const { Text, t: st } = dark ? serviceDarkDS : serviceDS;
+  const { t: st } = dark ? serviceDarkDS : serviceDS;
 
   const theme = dark ? serviceDarkMobileTheme : serviceMobileTheme;
   const ds = createDS(theme, true);
@@ -23,16 +24,10 @@ export default function PatternsClient() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: st.space.xl }}>
       {/* 헤더 */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: st.space.lg }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: st.space.sm }}>
-          <Text role="caption" weight={st.weightMedium} style={{ letterSpacing: '0.1em', textTransform: 'uppercase', color: st.textSub }}>
-            UI Patterns
-          </Text>
-          <Text role="body" color={st.textMuted}>
-            {PATTERN_TYPES.find((p) => p.key === activePattern)?.desc}
-          </Text>
-        </div>
-      </div>
+      <PageHeader
+        eyebrow="UI Patterns"
+        description={PATTERN_TYPES.find((p) => p.key === activePattern)?.desc}
+      />
 
       <PillTabs tabs={PATTERN_TYPES} active={activePattern} onChange={setActivePattern} />
 
