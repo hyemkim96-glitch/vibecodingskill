@@ -41,7 +41,7 @@ export default function FoundationClient() {
         <ServiceText role="caption" weight={st.weightMedium} style={{ letterSpacing: '0.1em', textTransform: 'uppercase', color: st.textSub }}>
           Foundation
         </ServiceText>
-        <ServiceText role="caption" color={st.textMuted}>
+        <ServiceText role="body" color={st.textMuted}>
           토큰 = 파운데이션 — 모든 컴포넌트의 컬러·타이포·여백은 이 토큰을 따릅니다.
         </ServiceText>
       </div>

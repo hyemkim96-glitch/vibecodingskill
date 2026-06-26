@@ -28,7 +28,7 @@ export default function PatternsClient() {
           <Text role="caption" weight={st.weightMedium} style={{ letterSpacing: '0.1em', textTransform: 'uppercase', color: st.textSub }}>
             UI Patterns
           </Text>
-          <Text role="caption" color={st.textMuted}>
+          <Text role="body" color={st.textMuted}>
             {PATTERN_TYPES.find((p) => p.key === activePattern)?.desc}
           </Text>
         </div>
