@@ -5,10 +5,31 @@ import Navigation from "@/components/Navigation";
 import WikiProvider from "@/components/WikiProvider";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { createClient } from "@/lib/supabase/server";
+import { SITE_URL, SITE_NAME } from "@/lib/site";
+
+const TITLE = "Design MD — AI 빌더를 위한 브랜드 디자인 토큰";
+const DESCRIPTION = "한국 주요 서비스 9개의 디자인 시스템을 AI에 바로 넣을 수 있는 4계층 토큰(.md)으로 제공합니다.";
 
 export const metadata: Metadata = {
-  title: "Design MD — AI 빌더를 위한 브랜드 디자인 토큰",
-  description: "세계 유수 브랜드의 디자인 시스템을 AI에 바로 넣을 수 있는 .md 토큰으로 제공합니다.",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: TITLE,
+    template: `%s — ${SITE_NAME}`,
+  },
+  description: DESCRIPTION,
+  openGraph: {
+    type: "website",
+    siteName: SITE_NAME,
+    title: TITLE,
+    description: DESCRIPTION,
+    url: SITE_URL,
+    locale: "ko_KR",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: TITLE,
+    description: DESCRIPTION,
+  },
 };
 
 export default async function RootLayout({
