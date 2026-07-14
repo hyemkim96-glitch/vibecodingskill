@@ -28,28 +28,28 @@ const LAYERS = [
     tier: '01',
     name: 'Palette',
     nameKo: '원시 팔레트',
-    desc: 'OKLCH 기반 지각 균등 색상 원시값. 뉴트럴 13단계 + 상태 5종. 어떤 브랜드 컬러도 이 표에서 파생됩니다.',
+    desc: 'OKLCH 기반 지각 균등 색상 원시값. 뉴트럴 13단계 + 상태 5종. 어떤 브랜드 컬러도 이 표에서 파생돼요.',
     code: 'neutral[900].hex',
   },
   {
     tier: '02',
     name: 'Semantic',
     nameKo: '시멘틱 토큰',
-    desc: '배경·채움·텍스트·테두리 역할로 추상화. 라이트/다크 각각 독립 정의. CSS 변수로 직접 참조됩니다.',
+    desc: '배경·채움·텍스트·테두리 역할로 추상화. 라이트/다크 각각 독립 정의. CSS 변수로 직접 참조해요.',
     code: '--color-fill-normal',
   },
   {
     tier: '03',
     name: 'Role',
     nameKo: '롤 토큰',
-    desc: '컴포넌트 슬롯 단위 토큰. 버튼 배경, 카드 보더 등 구체적 역할. 브랜드 오버라이드 진입점입니다.',
+    desc: '컴포넌트 슬롯 단위 토큰. 버튼 배경, 카드 보더 등 구체적 역할. 브랜드 오버라이드 진입점이에요.',
     code: '--comp-button-primary-bg',
   },
   {
     tier: '04',
     name: 'Variant',
     nameKo: '변형 토큰',
-    desc: 'hover·pressed·disabled 인터랙션 상태 파생 토큰. 각 슬롯마다 자동 계산되어 모션과 연결됩니다.',
+    desc: 'hover·pressed·disabled 인터랙션 상태 파생 토큰. 각 슬롯마다 자동 계산되어 모션과 연결돼요.',
     code: '--comp-button-primary-bg-hover',
   },
 ];
@@ -59,25 +59,25 @@ const FEATURES = [
     icon: '◈',
     tag: 'Color Science',
     title: 'OKLCH 기반\n지각 균등 팔레트',
-    desc: 'sRGB 도구의 한계를 넘어 사람 눈이 인식하는 밝기를 수학적으로 균등 분배합니다. 어두운 배경에서도 대비가 정확히 유지되고, WCAG AA를 빌드 타임에 검증합니다.',
+    desc: 'sRGB 도구의 한계를 넘어 사람 눈이 인식하는 밝기를 수학적으로 균등하게 분배해요. 어두운 배경에서도 대비가 정확히 유지되고, WCAG AA는 빌드 타임에 검증해요.',
   },
   {
     icon: '⧉',
     tag: '4-Layer Token',
     title: '4계층 토큰\n캐스케이드',
-    desc: 'Palette → Semantic → Role → Variant. 프로덕션 DS 아키텍처와 동일 구조입니다. 각 계층은 바로 위 계층만 참조해 AI가 변경 범위를 예측할 수 있습니다.',
+    desc: 'Palette → Semantic → Role → Variant. 프로덕션 DS 아키텍처와 동일한 구조예요. 각 계층이 바로 위 계층만 참조하니, AI도 변경 범위를 예측할 수 있어요.',
   },
   {
     icon: '▦',
     tag: 'Live Preview',
     title: '실시간\n컴포넌트 미리보기',
-    desc: '버튼, 카드, 입력, 배지, 네비게이션, 스테퍼, 패턴까지. 모든 컴포넌트가 브랜드 토큰에 반응해 즉시 렌더링됩니다. 다크 모드 자동 지원.',
+    desc: '버튼, 카드, 입력, 배지, 네비게이션, 스테퍼, 패턴까지. 모든 컴포넌트가 브랜드 토큰에 반응해 즉시 그려져요. 다크 모드도 자동으로 지원해요.',
   },
   {
     icon: '◷',
     tag: 'AI-Ready Export',
     title: '5가지 포맷\n즉시 내보내기',
-    desc: 'CSS 변수, Tailwind Config, 디자인 토큰 JSON, Figma 변수, Design.md. AI 코딩 도구에 한 번 붙여넣기만 하면 브랜드 정체성이 코드 전반에 자동으로 적용됩니다.',
+    desc: 'CSS 변수, Tailwind Config, 디자인 토큰 JSON, Figma 변수, Design.md. AI 코딩 도구에 한 번만 붙여넣으면 브랜드 정체성이 코드 전반에 자동으로 적용돼요.',
   },
 ];
 
@@ -130,8 +130,8 @@ export default function LandingPage() {
         </h1>
 
         <p className={styles.heroDesc}>
-          한국 주요 서비스 9개의 디자인 시스템을 OKLCH 4계층 토큰으로 즉시 제공합니다.
-          Design.md 한 장으로 AI가 프로덕션 수준 UI를 완성합니다.
+          한국 주요 서비스 9개의 디자인 시스템을 OKLCH 4계층 토큰으로 바로 꺼내 써요.
+          Design.md 한 장이면 AI가 프로덕션 수준 UI를 완성해요.
         </p>
 
         <div className={styles.heroCtas}>
@@ -176,9 +176,9 @@ export default function LandingPage() {
               하나의 엔진으로<br />모든 브랜드를
             </h2>
             <p className={styles.sectionDesc}>
-              브랜드마다 디자인 시스템을 직접 구축할 필요 없습니다.
-              이미 검증된 9개 서비스의 토큰을 그대로 활용하세요.
-              Figma 없이도 AI가 브랜드를 완전히 이해합니다.
+              브랜드마다 디자인 시스템을 직접 만들 필요 없어요.
+              이미 검증된 9개 서비스의 토큰을 그대로 활용해보세요.
+              Figma 없이도 AI가 브랜드를 온전히 이해해요.
             </p>
           </div>
           <div className={styles.statsRow}>
@@ -242,8 +242,8 @@ export default function LandingPage() {
             </div>
             <div className={styles.stepTitle}>원하는 브랜드의<br />토큰 페이지 입장</div>
             <p className={styles.stepDesc}>
-              깔끔한 금융, 일상의 연결, 동네 생활권 등 9개 브랜드 중 레퍼런스로 삼을 서비스를 선택합니다.
-              각 브랜드의 실제 컬러·타이포·스페이싱이 토큰으로 정리되어 있습니다.
+              깔끔한 금융, 일상의 연결, 동네 생활권 등 9개 브랜드 중 레퍼런스로 삼을 서비스를 골라요.
+              각 브랜드의 실제 컬러·타이포·스페이싱이 토큰으로 정리되어 있어요.
             </p>
             <div className={styles.stepPreview}>
               {brands.slice(0, 5).map(b => (
@@ -263,7 +263,7 @@ export default function LandingPage() {
             <div className={styles.stepTitle}>색상·타이포·컴포넌트를<br />실시간 확인</div>
             <p className={styles.stepDesc}>
               OKLCH 팔레트, 시멘틱 롤 색상, 타이포그래피 스케일, 스페이싱, 컴포넌트 미리보기를
-              한 페이지에서 확인합니다. 다크 모드도 즉시 전환됩니다.
+              한 페이지에서 확인해요. 다크 모드도 바로 전환돼요.
             </p>
             <div className={styles.stepPreview}>
               {([
@@ -287,8 +287,8 @@ export default function LandingPage() {
             </div>
             <div className={styles.stepTitle}>AI에 붙여넣거나<br />코드에 바로 적용</div>
             <p className={styles.stepDesc}>
-              CSS 변수, Tailwind, JSON, Figma 변수, Design.md 중 원하는 포맷으로 한 번에 내보냅니다.
-              AI 코딩 도구에 Design.md를 붙여넣으면 끝입니다.
+              CSS 변수, Tailwind, JSON, Figma 변수, Design.md 중 원하는 포맷으로 한 번에 내보내요.
+              AI 코딩 도구에 Design.md를 붙여넣으면 끝이에요.
             </p>
             <div className={styles.stepPreview}>
               {['CSS 변수', 'Tailwind Config', '디자인 토큰 JSON', 'Figma 변수', 'Design.md'].map(f => (
@@ -318,8 +318,8 @@ export default function LandingPage() {
               4계층 토큰<br />캐스케이드
             </h2>
             <p className={styles.sectionDesc}>
-              모든 값은 반드시 바로 위 계층에서만 참조합니다.
-              AI가 이 구조를 이해하면 브랜드 일관성이 코드 전반에 자동으로 전파됩니다.
+              모든 값은 반드시 바로 위 계층에서만 참조해요.
+              AI가 이 구조를 이해하면 브랜드 일관성이 코드 전반에 자동으로 퍼져요.
             </p>
           </div>
           <div className={styles.cascadeWrap}>
@@ -383,8 +383,8 @@ export default function LandingPage() {
               Design.md —<br />AI 브랜드 컨텍스트
             </h2>
             <p className={styles.sectionDesc}>
-              구조화된 마크다운으로 AI가 색상·타이포·컴포넌트 롤을 모두 이해합니다.
-              Claude, GPT, Cursor 어디든 바로 붙여넣기 한 장으로 브랜드 UI를 완성합니다.
+              구조화된 마크다운이라 AI가 색상·타이포·컴포넌트 롤을 다 이해해요.
+              Claude, GPT, Cursor 어디든 붙여넣기 한 장이면 브랜드 UI가 완성돼요.
             </p>
             <Link href="/tokens/toss" className={styles.ctaSecondary} style={{ alignSelf: 'flex-start', marginTop: 'var(--spacing-2)' }}>
               토스 토큰 보기 →
@@ -411,7 +411,7 @@ export default function LandingPage() {
           지금 바로 탐색해보세요
         </h2>
         <p className={styles.ctaSectionDesc}>
-          9개 브랜드 × 5가지 포맷 × 4계층 토큰 — 무료로 사용할 수 있습니다.
+          9개 브랜드 × 5가지 포맷 × 4계층 토큰 — 무료로 사용할 수 있어요.
         </p>
         <div className={styles.heroCtas}>
           <Link href="/tokens" className={styles.ctaPrimary}>
