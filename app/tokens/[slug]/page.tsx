@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!token) return {};
 
   const title = `${token.nameKo ?? token.name} 디자인 토큰 — ${token.tagline}`;
-  const description = `${token.nameKo ?? token.name}(${token.category}) 디자인 시스템을 OKLCH 4계층 토큰으로 제공합니다. ${token.description}`;
+  const description = `${token.nameKo ?? token.name}(${token.category}) 디자인 시스템을 OKLCH 4계층 토큰으로 제공해요. ${token.description}`;
 
   return {
     title,

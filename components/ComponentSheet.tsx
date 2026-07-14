@@ -235,7 +235,7 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
                 <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
                   <Card>
                     <Text role="bodySm" weight={t.weightBold} style={{ display: 'block', marginBottom: space.xs }}>카드 제목</Text>
-                    <Text role="caption" color={t.textSub}>카드 본문 텍스트가 여기에 들어갑니다. 두 줄 이상이 될 수 있어요.</Text>
+                    <Text role="caption" color={t.textSub}>카드 본문 텍스트가 여기에 들어가요. 두 줄 이상이 될 수 있어요.</Text>
                   </Card>
                   <Card interactive={false} style={{ background: t.primary }}>
                     <Text role="bodySm" weight={t.weightBold} color={t.onPrimary} style={{ display: 'block', marginBottom: space.xs }}>강조 카드</Text>
@@ -512,10 +512,10 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
             <RowGrid space={space}>
               <Tile t={t} ds={ds} title="토스트 & 알림" col={2}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
-                  <Toast message="저장되었습니다" />
-                  <Toast message="결제가 완료되었습니다" tone="success" />
-                  <Toast message="오류가 발생했습니다" tone="danger" action="다시 시도" />
-                  <Toast message="재고가 부족합니다" tone="warning" />
+                  <Toast message="저장했어요" />
+                  <Toast message="결제를 완료했어요" tone="success" />
+                  <Toast message="오류가 발생했어요" tone="danger" action="다시 시도" />
+                  <Toast message="재고가 부족해요" tone="warning" />
                   <Toast message="새로운 업데이트가 있어요" tone="info" action="확인" />
                 </div>
               </Tile>
@@ -696,13 +696,13 @@ export default function ComponentSheet({ theme: t, category, signature }: { them
           <RowGrid space={space}>
             <Tile t={t} ds={ds} title="수신 버블" col={2}>
               <ChatList messages={[{ text: '주문하신 상품이 배송 출발했어요 📦', time: '오전 10:24' }]} />
-              <ChatList messages={[{ text: '긴 수신 메시지는 말풍선 안에서 자동으로 줄 바꿈 처리됩니다. 여러 줄이 될 수 있어요.' }]} />
+              <ChatList messages={[{ text: '긴 수신 메시지는 말풍선 안에서 자동으로 줄 바꿈돼요. 여러 줄이 될 수 있어요.' }]} />
               <ChatList messages={[{ text: '타임스탬프 없는 메시지' }]} />
             </Tile>
 
             <Tile t={t} ds={ds} title="발신 버블" col={2}>
               <ChatList messages={[{ text: '감사합니다! 잘 받겠습니다 😊', me: true, time: '오전 10:25' }]} />
-              <ChatList messages={[{ text: '긴 발신 메시지도 동일하게 줄 바꿈이 적용되어 말풍선 너비 안에서 자연스럽게 표시됩니다.', me: true }]} />
+              <ChatList messages={[{ text: '긴 발신 메시지도 동일하게 줄 바꿈이 적용되어 말풍선 너비 안에서 자연스럽게 표시돼요.', me: true }]} />
               <ChatList messages={[{ text: '짧은 발신', me: true }]} />
             </Tile>
           </RowGrid>

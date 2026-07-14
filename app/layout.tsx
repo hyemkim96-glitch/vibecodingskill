@@ -8,7 +8,7 @@ import { createClient } from "@/lib/supabase/server";
 import { SITE_URL, SITE_NAME } from "@/lib/site";
 
 const TITLE = "Design MD — AI 빌더를 위한 브랜드 디자인 토큰";
-const DESCRIPTION = "한국 주요 서비스 9개의 디자인 시스템을 AI에 바로 넣을 수 있는 4계층 토큰(.md)으로 제공합니다.";
+const DESCRIPTION = "한국 주요 서비스 9개의 디자인 시스템을 AI에 바로 넣을 수 있는 4계층 토큰(.md)으로 제공해요.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

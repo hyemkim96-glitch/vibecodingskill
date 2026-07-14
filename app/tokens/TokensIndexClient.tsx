@@ -95,7 +95,7 @@ export default function TokensIndexClient({ tokens }: { tokens: BrandToken[] }) 
     <div className={styles.page}>
       <PageHeader
         eyebrow="Templates"
-        description="브랜드 디자인 시스템 템플릿의 컬러·타이포·여백·모양을 한 번에 확인합니다."
+        description="브랜드 디자인 시스템 템플릿의 컬러·타이포·여백·모양을 한 번에 확인해요."
       />
 
       <div className={styles.filterBar}>

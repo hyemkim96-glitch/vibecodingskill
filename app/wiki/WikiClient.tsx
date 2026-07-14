@@ -45,7 +45,7 @@ export default function WikiClient({ terms }: { terms: IWikiTerm[] }) {
     <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.xl }}>
       <PageHeader
         eyebrow="Wiki"
-        description="디자인 시스템 용어 사전과 공통 언어로 작업 속도를 높입니다."
+        description="디자인 시스템 용어 사전과 공통 언어로 작업 속도를 높여요."
       />
 
       <div className={styles.toolbar}>
@@ -116,7 +116,7 @@ export default function WikiClient({ terms }: { terms: IWikiTerm[] }) {
         </div>
       ) : (
         <div className={styles.empty}>
-          {searchTerm ? '검색 결과가 없습니다.' : '등록된 용어가 없습니다.'}
+          {searchTerm ? '검색 결과가 없어요.' : '등록된 용어가 없어요.'}
         </div>
       )}
     </div>

@@ -42,7 +42,7 @@ interface Props {
   mobileCodes: Record<TabKey, string>;
 }
 
-const KOREAN_SAMPLE = '한글은 아름다운 언어입니다. 디자인 시스템이 이를 담아냅니다.';
+const KOREAN_SAMPLE = '한글은 아름다운 언어예요. 디자인 시스템이 이를 잘 담아내요.';
 const LATIN_SAMPLE  = 'The quick brown fox jumps over the lazy dog';
 
 /* ── Section nav ── */

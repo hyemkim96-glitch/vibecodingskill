@@ -7,8 +7,8 @@ export default function AuthCodeError() {
         <div className={styles.container}>
             <div className={styles.errorBox}>
                 <ShieldAlert size={48} className={styles.icon} />
-                <h1>인증 오류가 발생했습니다.</h1>
-                <p>인증 링크가 만료되었거나 이미 사용되었을 수 있습니다. 다시 로그인을 시도해주세요.</p>
+                <h1>인증 오류가 발생했어요.</h1>
+                <p>인증 링크가 만료됐거나 이미 사용됐을 수 있어요. 다시 로그인해주세요.</p>
 
                 <div className={styles.actions}>
                     <Link href="/auth/login" className={styles.primaryBtn}>

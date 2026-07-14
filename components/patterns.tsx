@@ -352,7 +352,7 @@ function PatternAuth({ ds, pack, platform, variant = 'login' }: { ds: DS; pack: 
       <div style={{ display: 'flex', flexDirection: 'column', gap: space.md }}>
         <div>
           <Text role="h2" weight={t.weightBold} style={{ display: 'block', marginBottom: space.xs }}>회원가입</Text>
-          <Text role="caption" color={t.textSub}>서비스를 이용하려면 계정이 필요합니다</Text>
+          <Text role="caption" color={t.textSub}>서비스를 이용하려면 계정이 필요해요</Text>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: space.sm }}>
           <Input label="이름" placeholder="홍길동" />
@@ -666,11 +666,11 @@ function PatternHistory({ ds, pack, variant = 'bank' }: { ds: DS; pack: ContentP
   /* ── 활동 내역 ── */
   if (variant === 'activity') {
     const activities = [
-      { icon: 'heart' as const, text: '내 게시글에 좋아요를 눌렀습니다', sub: '오늘 오전 10:32', color: t.danger },
+      { icon: 'heart' as const, text: '내 게시글에 좋아요를 눌렀어요', sub: '오늘 오전 10:32', color: t.danger },
       { icon: 'chat' as const, text: '새 댓글: "정말 좋아 보여요!"', sub: '어제 오후 3:15', color: t.info },
       { icon: 'star' as const, text: '리뷰가 도움됐어요 +5', sub: '2일 전', color: t.starFill },
       { icon: 'bell' as const, text: '관심 상품 가격이 내렸어요', sub: '3일 전', color: t.warning },
-      { icon: 'package' as const, text: '주문이 배송 완료되었습니다', sub: '5일 전', color: t.success },
+      { icon: 'package' as const, text: '주문이 배송 완료됐어요', sub: '5일 전', color: t.success },
     ];
     return (
       <Screen ds={ds} topBar={<TopBar title="활동 내역" actions={[{ icon: 'settings' }]} />}>
@@ -845,7 +845,7 @@ function PatternPayment({ ds, pack, platform, variant = 'checkout' }: { ds: DS; 
             <Icon name="check" size={28} color={ensureContrast(t.primary, t.primaryTint)} />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: space.xs }}>
-            <Text role="h2" weight={t.weightBold}>결제가 완료되었습니다</Text>
+            <Text role="h2" weight={t.weightBold}>결제를 완료했어요</Text>
             <Text role="caption" color={t.textSub}>주문번호 #ORD-2024-06-{String(Math.floor(Math.random() * 90000) + 10000)}</Text>
           </div>
           <div style={{ width: '100%', background: t.surface, borderRadius: t.radius.card, border: `1px solid ${t.border}`, padding: t.cardPad, display: 'flex', flexDirection: 'column', gap: space.sm }}>

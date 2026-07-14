@@ -24,9 +24,9 @@ export default function LoginPage() {
         });
 
         if (error) {
-            setMessage({ type: 'error', text: '오류가 발생했습니다: ' + error.message });
+            setMessage({ type: 'error', text: '오류가 발생했어요: ' + error.message });
         } else {
-            setMessage({ type: 'success', text: '매직 링크가 이메일로 전송되었습니다. 이메일을 확인해주세요!' });
+            setMessage({ type: 'success', text: '매직 링크를 이메일로 보냈어요. 이메일을 확인해주세요!' });
         }
         setLoading(false);
     };

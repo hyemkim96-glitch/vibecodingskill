@@ -39,7 +39,7 @@ export default function FoundationClient() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.xl }}>
       <PageHeader
         eyebrow="Foundation"
-        description="토큰 = 파운데이션 — 모든 컴포넌트의 컬러·타이포·여백은 이 토큰을 따릅니다."
+        description="토큰 = 파운데이션 — 모든 컴포넌트의 컬러·타이포·여백은 이 토큰을 따라요."
       />
 
       <PillTabs tabs={CATEGORIES} active={active} onChange={setActive} />
@@ -393,8 +393,8 @@ function TypePanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
     { name: 'display', role: 'display', sample: '브랜드 디자인을 코드로' },
     { name: 'h1',      role: 'h1',      sample: '디자인 시스템 파운데이션' },
     { name: 'h2',      role: 'h2',      sample: '컴포넌트 라이브러리 구조' },
-    { name: 'body',    role: 'body',    sample: '사용자가 직접 확인할 수 있는 디자인 토큰 기반의 일관된 UI 시스템입니다.' },
-    { name: 'bodySm',  role: 'bodySm',  sample: '모든 컴포넌트의 컬러·여백·타이포그래피는 파운데이션 토큰을 따릅니다.' },
+    { name: 'body',    role: 'body',    sample: '사용자가 직접 확인할 수 있는 디자인 토큰 기반의 일관된 UI 시스템이에요.' },
+    { name: 'bodySm',  role: 'bodySm',  sample: '모든 컴포넌트의 컬러·여백·타이포그래피는 파운데이션 토큰을 따라요.' },
     { name: 'caption', role: 'caption', sample: '라이트·다크 모드 / WCAG AA 대비비 / OKLCH 균등 명도' },
   ];
 
@@ -462,7 +462,7 @@ function TypePanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
             <div key={label} style={{ borderRadius: t.radius.card, padding: t.space.md, background: t.surface, border: `1px solid ${t.border}` }}>
               <div style={{ ...cap(t), color: t.textMuted, marginBottom: t.space.sm }}>{label}</div>
               <p style={{ ...bodySm(t), lineHeight: lh, color: t.textMain, fontFamily: t.font, margin: 0 }}>
-                사용자가 직접 확인할 수 있는 디자인 토큰 기반의 일관된 UI 시스템입니다. 컴포넌트 라이브러리와 파운데이션은 항상 동기화됩니다.
+                사용자가 직접 확인할 수 있는 디자인 토큰 기반의 일관된 UI 시스템이에요. 컴포넌트 라이브러리와 파운데이션은 항상 함께 업데이트돼요.
               </p>
               <div style={{ marginTop: t.space.sm, ...cap(t), color: t.textMuted }}>{note}</div>
             </div>
@@ -663,7 +663,7 @@ function RatioPanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
     <div>
       <Section t={t} title="콘텐츠 비율 토큰" first>
         <p style={{ ...cap(t), color: t.textSub, marginBottom: t.space.xl }}>
-          이미지·썸네일·카드 UI의 가로세로 비율 기준입니다. 고정 높이(px) 대신 <code>aspect-ratio</code> CSS 속성으로 비율을 지정하면 컨테이너 너비에 따라 자동으로 높이가 결정됩니다.
+          이미지·썸네일·카드 UI의 가로세로 비율 기준이에요. 고정 높이(px) 대신 <code>aspect-ratio</code> CSS 속성으로 비율을 지정하면 컨테이너 너비에 따라 자동으로 높이가 정해져요.
         </p>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: t.space.md, alignItems: 'start' }}>
           {RATIOS.map(({ label, ratio, desc, css }) => (
@@ -682,7 +682,7 @@ function RatioPanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
 
       <Section t={t} title="카드 UI 비율 예시">
         <p style={{ ...cap(t), color: t.textSub, marginBottom: t.space.lg }}>
-          동일한 카드 컴포넌트에 비율 토큰만 교체해 보여줍니다.
+          동일한 카드 컴포넌트에 비율 토큰만 교체해 보여줘요.
         </p>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: t.space.md, alignItems: 'start' }}>
           {([
@@ -720,10 +720,10 @@ function EffectPanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
       <Section t={t} title="원칙" first>
         <div style={{ display: 'flex', flexDirection: 'column', gap: t.space.sm }}>
           {[
-            '엘리베이션은 4단계 스케일(sm→xl)만 사용 — 임의의 그림자 값을 컴포넌트에 직접 작성하지 않습니다.',
-            '높이가 올라갈수록 blur와 불투명도가 함께 커져 깊이가 일관되게 읽힙니다.',
-            '같은 평면(같은 레이어)의 요소는 같은 엘리베이션을 공유합니다.',
-            '다크 모드에서는 그림자 불투명도가 자동으로 강해져 어두운 표면에서도 깊이가 보입니다.',
+            '엘리베이션은 4단계 스케일(sm→xl)만 사용 — 임의의 그림자 값을 컴포넌트에 직접 작성하지 않아요.',
+            '높이가 올라갈수록 blur와 불투명도가 함께 커져 깊이가 일관되게 읽혀요.',
+            '같은 평면(같은 레이어)의 요소는 같은 엘리베이션을 공유해요.',
+            '다크 모드에서는 그림자 불투명도가 자동으로 강해져 어두운 표면에서도 깊이가 보여요.',
           ].map((line) => (
             <div key={line} style={{ display: 'flex', gap: t.space.sm, alignItems: 'flex-start' }}>
               <span style={{ color: t.textMuted }}>·</span>
@@ -815,7 +815,7 @@ function MotionPanel({ t, ds }: { t: Theme; ds: ReturnType<typeof createDS> }) {
                 animation: `fd-toast ${dur * 4}ms ${m.easing} infinite`,
               }}>
                 <span style={{ width: 8, height: 8, borderRadius: '9999px', background: t.onPrimary, opacity: 0.9, flexShrink: 0 }} />
-                <span style={{ ...cap(t), color: t.onPrimary, fontWeight: t.weightBold }}>저장되었습니다</span>
+                <span style={{ ...cap(t), color: t.onPrimary, fontWeight: t.weightBold }}>저장했어요</span>
               </div>
             </div>
             <div style={{ ...cap(t), color: t.textMuted, marginTop: t.space.sm }}>토스트 · 스낵바 · 알림</div>

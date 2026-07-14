@@ -21,7 +21,7 @@ export default async function AdminPage() {
     return (
       <div style={{ textAlign: 'center', padding: '80px 20px' }}>
         <ShieldAlert size={48} />
-        <h1>접근 권한이 없습니다.</h1>
+        <h1>접근 권한이 없어요.</h1>
         <p>관리자 계정으로 로그인해주세요.</p>
         <Link href="/">홈으로 가기</Link>
       </div>
