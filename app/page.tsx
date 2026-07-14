@@ -173,7 +173,7 @@ export default function LandingPage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-4)' }}>
             <p className={styles.sectionEyebrow}>By the numbers</p>
             <h2 className={styles.sectionTitle}>
-              하나의 엔진으로<br />모든 브랜드를
+              하나의 엔진으로<br />모든 브랜드를 구현해요
             </h2>
             <p className={styles.sectionDesc}>
               브랜드마다 디자인 시스템을 직접 만들 필요 없어요.
@@ -203,7 +203,7 @@ export default function LandingPage() {
       <section className={styles.section}>
         <p className={styles.sectionEyebrow}>Supported brands</p>
         <h2 className={styles.sectionTitle} style={{ marginBottom: 'var(--spacing-8)' }}>
-          9개 브랜드 디자인 시스템
+          9개 브랜드 디자인 시스템을 담았어요
         </h2>
         <div className={styles.brandGrid}>
           {brands.map(b => {
@@ -231,7 +231,7 @@ export default function LandingPage() {
       <section className={styles.section}>
         <p className={styles.sectionEyebrow}>How it works</p>
         <h2 className={styles.sectionTitle} style={{ marginBottom: 'var(--spacing-8)' }}>
-          세 단계로 완성
+          세 단계로 완성해요
         </h2>
         <div className={styles.stepsGrid}>
 
@@ -315,7 +315,7 @@ export default function LandingPage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-4)', position: 'sticky', top: 'calc(var(--nav-height) + var(--spacing-8))' }}>
             <p className={styles.sectionEyebrow}>Token Architecture</p>
             <h2 className={styles.sectionTitle}>
-              4계층 토큰<br />캐스케이드
+              4계층 토큰<br />캐스케이드로 설계했어요
             </h2>
             <p className={styles.sectionDesc}>
               모든 값은 반드시 바로 위 계층에서만 참조해요.
@@ -380,7 +380,7 @@ export default function LandingPage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-4)' }}>
             <p className={styles.sectionEyebrow}>AI-Ready Format</p>
             <h2 className={styles.sectionTitle}>
-              Design.md —<br />AI 브랜드 컨텍스트
+              Design.md —<br />AI 브랜드 컨텍스트예요
             </h2>
             <p className={styles.sectionDesc}>
               구조화된 마크다운이라 AI가 색상·타이포·컴포넌트 롤을 다 이해해요.
