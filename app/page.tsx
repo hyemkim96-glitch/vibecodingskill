@@ -126,7 +126,7 @@ export default function LandingPage() {
 
         <h1 className={styles.heroHeadline}>
           AI 빌더를 위한<br />
-          <span className={styles.heroHeadlineAccent}>브랜드 토큰</span> 엔진
+          <span className={styles.heroHeadlineAccent}>브랜드 토큰</span> 엔진이에요
         </h1>
 
         <p className={styles.heroDesc}>
